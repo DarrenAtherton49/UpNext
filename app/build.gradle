@@ -1,0 +1,99 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+
+    def appConfig = rootProject.appConfig
+
+    compileSdkVersion appConfig.compileSdkVersion
+    buildToolsVersion appConfig.buildToolsVersion
+
+    defaultConfig {
+        applicationId appConfig.applicationId
+        minSdkVersion appConfig.minSdkVersion
+        targetSdkVersion appConfig.targetSdkVersion
+        versionCode appConfig.versionCode
+        versionName appConfig.versionName
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+        resConfigs "en"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    // Always show the result of every unit test, even if it passes.
+    testOptions.unitTests.all {
+        testLogging {
+            events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+        }
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+        test.java.srcDirs += 'src/test/kotlin'
+        androidTest.java.srcDirs += 'src/androidTest/kotlin'
+    }
+}
+
+androidExtensions {
+    experimental = true
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    def dependencies = rootProject.appDependencies
+    def testDependencies = rootProject.testDependencies
+
+    implementation dependencies.kotlin
+    implementation dependencies.material
+    implementation dependencies.appCompat
+    implementation dependencies.legacySupportV4
+    implementation dependencies.recyclerView
+    implementation dependencies.constraintLayout
+    implementation dependencies.lifecycleExtensions
+    implementation dependencies.navigationFragmentKTX
+    implementation dependencies.navigationUiKTX
+    implementation dependencies.dagger
+    implementation dependencies.rxJava2
+    implementation dependencies.rxAndroid
+    implementation dependencies.moshi
+    implementation dependencies.moshiKotlin
+    implementation dependencies.glide
+
+    kapt dependencies.lifecycleCompiler
+    kapt dependencies.daggerCompiler
+    kapt dependencies.glideCompiler
+
+    debugImplementation dependencies.leakCanary
+    debugImplementation dependencies.leakCanaryFragments
+    releaseImplementation dependencies.leakCanaryNoOp
+
+    testImplementation testDependencies.junit
+    testImplementation testDependencies.mockito
+    testImplementation testDependencies.hamcrest
+    testImplementation testDependencies.archTesting
+
+    androidTestImplementation testDependencies.espressoCore
+    androidTestImplementation testDependencies.espressoContrib
+}
+
+/*
+All direct/transitive dependencies shared between your test and production APKs need to be
+excluded from the test APK! This is necessary because both APKs will contain the same classes. Not
+excluding these dependencies from your test configuration will result in an dex pre-verifier error
+at runtime. More info in this tools bug: (https://code.google.com/p/android/issues/detail?id=192497)
+*/
+configurations.compile.dependencies.each { compileDependency ->
+    println "Excluding compile dependency: ${compileDependency.getName()}"
+    configurations.androidTestCompile.dependencies.each { androidTestCompileDependency ->
+        configurations.androidTestCompile.exclude module: "${compileDependency.getName()}"
+    }
+}
