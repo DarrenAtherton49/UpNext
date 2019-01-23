@@ -20,7 +20,6 @@ class MainActivity : BaseActivity() {
     override val layoutResId: Int = R.layout.activity_main
 
     @Inject lateinit var vmFactory: ViewModelProvider.Factory
-    @Inject lateinit var viewPagerAdapter: MainViewPagerAdapter
     private lateinit var viewModel: MainViewModel
     private lateinit var appBarConfiguration: AppBarConfiguration
 
@@ -76,7 +75,7 @@ class MainActivity : BaseActivity() {
     override fun initInjection() {
         DaggerMainComponent.builder()
                 .appComponent(getAppComponent())
-                .mainModule(MainModule(this))
+                .mainModule(MainModule())
                 .build()
                 .inject(this)
     }
