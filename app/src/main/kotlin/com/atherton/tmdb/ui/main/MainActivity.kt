@@ -75,7 +75,6 @@ class MainActivity : BaseActivity() {
     override fun initInjection() {
         DaggerMainComponent.builder()
                 .appComponent(getAppComponent())
-                .mainModule(MainModule())
                 .build()
                 .inject(this)
     }
