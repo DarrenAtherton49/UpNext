@@ -28,6 +28,10 @@ android {
         }
     }
 
+    buildTypes.each {
+        it.buildConfigField 'String', 'TMDB_API_KEY', tmdb_api_key
+    }
+
     // Always show the result of every unit test, even if it passes.
     testOptions.unitTests.all {
         testLogging {
