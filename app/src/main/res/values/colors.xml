@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#15142A</color>
+    <color name="colorBase">#15142A</color>
+    <color name="colorPrimary">@color/colorBase</color>
     <color name="colorPrimaryVariant">#282749</color>
     <color name="colorOnPrimary">#FFFFFF</color>
     <color name="colorSecondary">#ffeb3b</color>
@@ -10,7 +11,7 @@
     <color name="colorOnError">#000000</color>
     <color name="colorSurface">#282749</color>
     <color name="colorOnSurface">#FFFFFF</color>
-    <color name="colorBackground">#15142A</color>
-    <color name="colorStatusBar">#15142A</color>
-    <color name="colorNavigationBar">#15142A</color>
+    <color name="colorBackground">@color/colorBase</color>
+    <color name="colorStatusBar">@color/colorBase</color>
+    <color name="colorNavigationBar">@color/colorBase</color>
 </resources>
