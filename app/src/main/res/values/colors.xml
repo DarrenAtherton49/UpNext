@@ -2,7 +2,6 @@
 <resources>
     <color name="colorBase">#15142A</color>
     <color name="white">#FFFFFF</color>
-    <color name="faded_white">#FFFFFF</color>
 
     <color name="colorPrimary">@color/colorBase</color>
     <color name="colorPrimaryVariant">#282749</color>
