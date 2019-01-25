@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorBase">#15142A</color>
+    <color name="white">#FFFFFF</color>
+    <color name="faded_white">#FFFFFF</color>
+
     <color name="colorPrimary">@color/colorBase</color>
     <color name="colorPrimaryVariant">#282749</color>
-    <color name="colorOnPrimary">#FFFFFF</color>
+    <color name="colorOnPrimary">@color/white</color>
     <color name="colorSecondary">#ffeb3b</color>
     <color name="colorOnSecondary">#000000</color>
     <color name="colorSecondaryVariant">#ffff72</color>
     <color name="colorError">#f44336</color>
     <color name="colorOnError">#000000</color>
     <color name="colorSurface">#282749</color>
-    <color name="colorOnSurface">#FFFFFF</color>
+    <color name="colorOnSurface">@color/white</color>
     <color name="colorBackground">@color/colorBase</color>
+    <color name="colorOnBackground">@color/white</color>
     <color name="colorStatusBar">@color/colorBase</color>
     <color name="colorNavigationBar">@color/colorBase</color>
 </resources>

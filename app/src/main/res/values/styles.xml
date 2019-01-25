@@ -13,8 +13,11 @@
         <item name="colorSurface">@color/colorSurface</item>
         <item name="colorOnSurface">@color/colorOnSurface</item>
         <item name="android:colorBackground">@color/colorBackground</item>
+        <item name="colorOnBackground">@color/colorOnBackground</item>
         <item name="android:statusBarColor">@color/colorStatusBar</item>
         <item name="android:navigationBarColor">@color/colorNavigationBar</item>
+        <item name="textInputStyle">@style/AppTextInputLayout</item>
+        <item name="editTextStyle">@style/AppEditText</item>
         <item name="fontFamily">@font/roboto_mono</item>
         <item name="android:fontFamily">@font/roboto_mono</item>
     </style>
@@ -22,6 +25,15 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark"/>
+
+    <style name="AppTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="hintTextColor">@color/white</item>
+        <item name="boxStrokeColor">@color/text_input_layout_stroke</item>
+    </style>
+
+    <style name="AppEditText" parent="Widget.MaterialComponents.TextInputEditText.OutlinedBox">
+        <item name="android:textCursorDrawable">@null</item> <!-- forces cursor to be same color as text -->
+    </style>
 
     <!--
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">

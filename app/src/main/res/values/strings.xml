@@ -19,4 +19,7 @@
     <string name="main_dialog_internet_required_negative_button">Exit</string>
     <string name="main_dialog_internet_required_positive_button">Try again</string>
 
+    <!-- DiscoverFragment -->
+    <string name="discover_search_label">Search by text</string>
+
 </resources>
