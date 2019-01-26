@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.atherton.tmdb.App
 import com.atherton.tmdb.BuildConfig
 import com.atherton.tmdb.data.api.TmdbApiKeyInterceptor
+import com.atherton.tmdb.data.api.TmdbMultiSearchResponseAdapter
 import com.atherton.tmdb.data.api.TmdbSearchService
 import com.atherton.tmdb.data.preferences.LocalStorage
 import com.atherton.tmdb.data.preferences.Storage
@@ -30,7 +31,7 @@ import javax.inject.Singleton
 
 @Singleton
 @Component(
-        modules = [AppModule::class]
+    modules = [AppModule::class]
 )
 interface AppComponent {
 
@@ -47,7 +48,7 @@ interface AppComponent {
 
 
 @Module(
-        includes = [ViewModelModule::class]
+    includes = [ViewModelModule::class]
 )
 class AppModule(private val application: Application) {
 
@@ -63,7 +64,7 @@ class AppModule(private val application: Application) {
 
     @Provides
     @Singleton internal fun provideSharedPrefs(): SharedPreferences =
-            application.getSharedPreferences("com.atherton.movies_preferences", Context.MODE_PRIVATE)
+        application.getSharedPreferences("com.atherton.movies_preferences", Context.MODE_PRIVATE)
 
     @Provides
     @Singleton internal fun provideNetworkManager(): NetworkManager {
@@ -73,15 +74,16 @@ class AppModule(private val application: Application) {
 
     @Provides
     @Singleton internal fun provideSchedulers(): RxSchedulers = RxSchedulers(
-            io = Schedulers.io(),
-            main = AndroidSchedulers.mainThread()
+        io = Schedulers.io(),
+        main = AndroidSchedulers.mainThread()
     )
 
     @Provides
     @Singleton internal fun provideMoshi(): Moshi {
         return Moshi.Builder()
-                .add(KotlinJsonAdapterFactory())
-                .build()
+            .add(TmdbMultiSearchResponseAdapter())
+            .add(KotlinJsonAdapterFactory())
+            .build()
     }
 
     @Provides
@@ -91,21 +93,21 @@ class AppModule(private val application: Application) {
         }
 
         val okHttpClient = OkHttpClient.Builder()
-                .addInterceptor(TmdbApiKeyInterceptor(BuildConfig.TMDB_API_KEY))
-                .addInterceptor(loggingInterceptor)
-                .build()
+            .addInterceptor(TmdbApiKeyInterceptor(BuildConfig.TMDB_API_KEY))
+            .addInterceptor(loggingInterceptor)
+            .build()
 
         return Retrofit.Builder()
-                .baseUrl(tmdbBaseUrl)
-                .client(okHttpClient)
-                .addConverterFactory(MoshiConverterFactory.create(moshi))
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .build()
+            .baseUrl(tmdbBaseUrl)
+            .client(okHttpClient)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .build()
     }
 
     @Provides
     @Singleton internal fun provideTmdbSearchService(retrofit: Retrofit): TmdbSearchService =
-            retrofit.create(TmdbSearchService::class.java)
+        retrofit.create(TmdbSearchService::class.java)
 
     @Provides
     @Singleton internal fun provideStorage(localStorage: LocalStorage): Storage = localStorage

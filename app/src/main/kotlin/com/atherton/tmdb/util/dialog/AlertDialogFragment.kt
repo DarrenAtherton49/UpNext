@@ -45,13 +45,13 @@ class AlertDialogFragment : DialogFragment() {
 
     companion object {
         fun newInstance(
-                title: String,
-                message: String,
-                negativeButtonText: String? = null,
-                negativeOnClick: OnClickListener? = null,
-                positiveButtonText: String? = null,
-                positiveOnClick: OnClickListener? = null,
-                cancellable: Boolean = true
+            title: String,
+            message: String,
+            negativeButtonText: String? = null,
+            negativeOnClick: OnClickListener? = null,
+            positiveButtonText: String? = null,
+            positiveOnClick: OnClickListener? = null,
+            cancellable: Boolean = true
         ): AlertDialogFragment {
             return AlertDialogFragment().apply {
                 arguments = Bundle().apply {

@@ -7,8 +7,8 @@ import dagger.Module
 
 @PerView
 @Component(
-        dependencies = [AppComponent::class],
-        modules = [DiscoverModule::class]
+    dependencies = [AppComponent::class],
+    modules = [DiscoverModule::class]
 )
 interface DiscoverComponent {
 

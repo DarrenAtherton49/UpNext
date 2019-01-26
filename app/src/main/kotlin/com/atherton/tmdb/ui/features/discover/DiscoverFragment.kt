@@ -1,13 +1,17 @@
 package com.atherton.tmdb.ui.features.discover
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.atherton.tmdb.R
+import com.atherton.tmdb.data.api.TmdbSearchService
 import com.atherton.tmdb.ui.main.MainViewModel
 import com.atherton.tmdb.util.base.BaseFragment
 import com.atherton.tmdb.util.extensions.getActivityViewModel
 import com.atherton.tmdb.util.extensions.getAppComponent
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class DiscoverFragment : BaseFragment() {
@@ -19,7 +23,7 @@ class DiscoverFragment : BaseFragment() {
     private lateinit var mainViewModel: MainViewModel
     //private lateinit var recyclerAdapter: ScheduleAdapter //todo
 
-    //@Inject lateinit var api: TmdbSearchService
+    @Inject lateinit var api: TmdbSearchService
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -28,6 +32,17 @@ class DiscoverFragment : BaseFragment() {
         mainViewModel = getActivityViewModel(vmFactory, MainViewModel::class.java)
 
         observeViewModels()
+
+        val x = api.searchMulti("Tom Cruise")
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                it.results.forEach { res ->
+                    Log.d("darren", res.toString())
+                }
+            }, {
+                Log.d("darren", it.toString())
+            })
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
