@@ -1,10 +1,10 @@
 package com.atherton.tmdb
 
 import android.app.Application
-import com.squareup.leakcanary.LeakCanary
 import com.atherton.tmdb.util.injection.AppComponent
 import com.atherton.tmdb.util.injection.AppModule
 import com.atherton.tmdb.util.injection.DaggerAppComponent
+import com.squareup.leakcanary.LeakCanary
 
 class App : Application() {
 

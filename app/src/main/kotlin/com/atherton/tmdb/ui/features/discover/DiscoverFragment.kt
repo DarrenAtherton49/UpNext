@@ -19,6 +19,8 @@ class DiscoverFragment : BaseFragment() {
     private lateinit var mainViewModel: MainViewModel
     //private lateinit var recyclerAdapter: ScheduleAdapter //todo
 
+    //@Inject lateinit var api: TmdbSearchService
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 

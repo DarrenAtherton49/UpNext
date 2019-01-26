@@ -68,6 +68,10 @@ dependencies {
     implementation dependencies.dagger
     implementation dependencies.rxJava2
     implementation dependencies.rxAndroid
+    implementation dependencies.retrofit
+    implementation dependencies.retrofitRxJava2Adapter
+    implementation dependencies.retrofitMoshiConverter
+    implementation dependencies.okHttpLoggingInterceptor
     implementation dependencies.moshi
     implementation dependencies.moshiKotlin
     implementation dependencies.glide
