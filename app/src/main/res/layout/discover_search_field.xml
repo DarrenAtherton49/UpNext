@@ -7,26 +7,43 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/keyline_2x">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/searchTextInputLayout"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="@dimen/keyline_2x"
-        app:hintEnabled="true"
-        android:hint="@string/discover_search_textfield_label">
+        android:orientation="vertical"
+        android:gravity="center">
 
-        <com.google.android.material.textfield.TextInputEditText
-            style="@style/AppEditText"
-            android:id="@+id/searchEditText"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/searchTextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:clickable="true"
-            android:cursorVisible="false"
-            tools:ignore="KeyboardInaccessibleWidget"/>
+            android:layout_marginTop="@dimen/keyline_2x"
+            android:layout_marginStart="@dimen/keyline_2x"
+            android:layout_marginEnd="@dimen/keyline_2x"
+            app:hintEnabled="true"
+            android:hint="@string/discover_search_textfield_label">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputEditText
+                style="@style/AppEditText"
+                android:id="@+id/searchEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:clickable="true"
+                android:cursorVisible="false"
+                tools:ignore="KeyboardInaccessibleWidget"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:id="@+id/advancedSearchButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text="@string/discover_advanced_search_button"/>
+
+    </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>

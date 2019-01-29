@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.atherton.tmdb.R
 import com.atherton.tmdb.data.api.TmdbSearchService
 import com.atherton.tmdb.ui.main.MainViewModel
@@ -20,8 +21,8 @@ class DiscoverFragment : BaseFragment() {
     override val layoutResId: Int = R.layout.fragment_discover
 
     @Inject lateinit var vmFactory: ViewModelProvider.Factory
-    private lateinit var discoverViewModel: DiscoverViewModel
-    private lateinit var mainViewModel: MainViewModel
+    private lateinit var viewModel: DiscoverViewModel
+    private lateinit var activityViewModel: MainViewModel
     //private lateinit var recyclerAdapter: ScheduleAdapter //todo
 
     @Inject lateinit var api: TmdbSearchService
@@ -29,8 +30,8 @@ class DiscoverFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        //scheduleViewModel = getViewModel(vmFactory, DailyListViewModel::class.java) //todo
-        mainViewModel = getActivityViewModel(vmFactory, MainViewModel::class.java)
+        //viewModel = getViewModel(vmFactory, DiscoverViewModel::class.java) //todo
+        activityViewModel = getActivityViewModel(vmFactory, MainViewModel::class.java)
 
         observeViewModels()
 
@@ -52,6 +53,7 @@ class DiscoverFragment : BaseFragment() {
 
         searchEditText.setOnClickListener {
             //todo dispatch action to viewmodel to say 'search edit text clicked'
+            findNavController().navigate(R.id.actionGoToSearchResults)
         }
     }
 

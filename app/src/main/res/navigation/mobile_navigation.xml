@@ -10,6 +10,20 @@
         android:id="@+id/discoverFragment"
         android:name="com.atherton.tmdb.ui.features.discover.DiscoverFragment"
         android:label="@string/fragment_label_discover"
-        tools:layout="@layout/fragment_discover"/>
+        tools:layout="@layout/fragment_discover">
+        <action
+            android:id="@+id/actionGoToSearchResults"
+            app:destination="@+id/searchResultsFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/searchResultsFragment"
+        android:name="com.atherton.tmdb.ui.features.search.results.SearchResultsFragment"
+        android:label="@string/fragment_label_search_results"
+        tools:layout="@layout/fragment_search_results"/>
 
 </navigation>

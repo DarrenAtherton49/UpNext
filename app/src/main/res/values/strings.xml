@@ -7,6 +7,7 @@
 
     <!-- Fragment labels -->
     <string name="fragment_label_discover">Discover</string>
+    <string name="fragment_label_search_results">Search</string>
 
     <!-- MainActivity - startup error dialog -->
     <string name="main_dialog_startup_error_title">Something went wrong!</string>
@@ -21,7 +22,6 @@
 
     <!-- DiscoverFragment -->
     <string name="discover_search_textfield_label">Find Movies, TV or People…</string>
-    <string name="discover_search_tab">Search</string>
-    <string name="discover_advanced_tab">Advanced</string>
+    <string name="discover_advanced_search_button">Advanced Search</string>
 
 </resources>

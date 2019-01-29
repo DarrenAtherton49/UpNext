@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
@@ -101,6 +102,13 @@ fun FloatingActionButton.show(show: Boolean) {
     if (show) show() else hide()
 }
 
-fun ioThread(block : () -> Unit) {
+fun ioThread(block: () -> Unit) {
     Executors.newSingleThreadExecutor().execute(block)
+}
+
+fun View.showSoftKeyboard() {
+    if (requestFocus()) {
+        val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
+    }
 }
