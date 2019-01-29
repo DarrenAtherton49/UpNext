@@ -20,6 +20,8 @@
     <string name="main_dialog_internet_required_positive_button">Try again</string>
 
     <!-- DiscoverFragment -->
-    <string name="discover_search_label">Search by text</string>
+    <string name="discover_search_textfield_label">Find Movies, TV or People…</string>
+    <string name="discover_search_tab">Search</string>
+    <string name="discover_advanced_tab">Advanced</string>
 
 </resources>

@@ -12,6 +12,7 @@ import com.atherton.tmdb.util.extensions.getActivityViewModel
 import com.atherton.tmdb.util.extensions.getAppComponent
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.discover_search_field.*
 import javax.inject.Inject
 
 class DiscoverFragment : BaseFragment() {
@@ -33,7 +34,7 @@ class DiscoverFragment : BaseFragment() {
 
         observeViewModels()
 
-        val x = api.searchMulti("Tom Cruise")
+        val x = api.searchMulti("Gleaming the cube")
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
@@ -48,6 +49,10 @@ class DiscoverFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
+
+        searchEditText.setOnClickListener {
+            //todo dispatch action to viewmodel to say 'search edit text clicked'
+        }
     }
 
     //todo
