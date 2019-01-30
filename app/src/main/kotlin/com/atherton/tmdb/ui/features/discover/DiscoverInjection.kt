@@ -1,5 +1,7 @@
 package com.atherton.tmdb.ui.features.discover
 
+import com.atherton.tmdb.ui.features.discover.featured.DiscoverFragment
+import com.atherton.tmdb.ui.features.discover.search.SearchResultsFragment
 import com.atherton.tmdb.util.injection.AppComponent
 import com.atherton.tmdb.util.injection.PerView
 import dagger.Component
@@ -13,6 +15,7 @@ import dagger.Module
 interface DiscoverComponent {
 
     fun inject(discoverFragment: DiscoverFragment)
+    fun inject(searchResultsFragment: SearchResultsFragment)
 }
 
 

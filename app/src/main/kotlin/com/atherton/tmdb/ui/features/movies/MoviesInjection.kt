@@ -1,4 +1,4 @@
-package com.atherton.tmdb.ui.main
+package com.atherton.tmdb.ui.features.movies
 
 import com.atherton.tmdb.util.injection.AppComponent
 import com.atherton.tmdb.util.injection.PerView
@@ -8,13 +8,13 @@ import dagger.Module
 @PerView
 @Component(
     dependencies = [AppComponent::class],
-    modules = [MainModule::class]
+    modules = [MoviesModule::class]
 )
-interface MainComponent {
+interface MoviesComponent {
 
-    fun inject(mainActivity: MainActivity)
+    fun inject(moviesFragment: MoviesFragment)
 }
 
 
 @Module
-class MainModule
+class MoviesModule

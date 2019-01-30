@@ -1,4 +1,4 @@
-package com.atherton.tmdb.ui.features.search.results
+package com.atherton.tmdb.ui.features.tv
 
 import com.atherton.tmdb.util.injection.AppComponent
 import com.atherton.tmdb.util.injection.PerView
@@ -8,13 +8,13 @@ import dagger.Module
 @PerView
 @Component(
     dependencies = [AppComponent::class],
-    modules = [SearchResultsModule::class]
+    modules = [TvShowsModule::class]
 )
-interface SearchResultsComponent {
+interface TvShowsComponent {
 
-    fun inject(searchResultsFragment: SearchResultsFragment)
+    fun inject(tvShowsFragment: TvShowsFragment)
 }
 
 
 @Module
-class SearchResultsModule
+class TvShowsModule

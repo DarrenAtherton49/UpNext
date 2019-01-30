@@ -2,7 +2,7 @@ package com.atherton.tmdb.util.injection
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.atherton.tmdb.ui.features.discover.DiscoverViewModel
+import com.atherton.tmdb.ui.features.discover.featured.DiscoverViewModel
 import com.atherton.tmdb.ui.main.MainViewModel
 import com.atherton.tmdb.util.base.ViewModelFactory
 import com.atherton.tmdb.util.base.ViewModelKey

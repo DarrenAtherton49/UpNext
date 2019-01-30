@@ -1,28 +1,34 @@
-package com.atherton.tmdb.ui.features.search.results
+package com.atherton.tmdb.ui.features.discover.featured
 
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.atherton.tmdb.R
+import com.atherton.tmdb.data.api.TmdbSearchService
+import com.atherton.tmdb.ui.features.discover.DaggerDiscoverComponent
 import com.atherton.tmdb.ui.main.MainViewModel
 import com.atherton.tmdb.util.base.BaseFragment
 import com.atherton.tmdb.util.extensions.getActivityViewModel
 import com.atherton.tmdb.util.extensions.getAppComponent
-import com.atherton.tmdb.util.extensions.showSoftKeyboard
-import kotlinx.android.synthetic.main.search_results_search_field.*
+import kotlinx.android.synthetic.main.discover_search_field.*
 import javax.inject.Inject
 
-class SearchResultsFragment : BaseFragment() {
+class DiscoverFragment : BaseFragment() {
 
-    override val layoutResId: Int = R.layout.fragment_search_results
+    override val layoutResId: Int = R.layout.fragment_discover
 
     @Inject lateinit var vmFactory: ViewModelProvider.Factory
+    private lateinit var viewModel: DiscoverViewModel
     private lateinit var activityViewModel: MainViewModel
+    //private lateinit var recyclerAdapter: ScheduleAdapter //todo
+
+    @Inject lateinit var api: TmdbSearchService
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        //viewModel = getViewModel(vmFactory, SearchResultsViewModel::class.java) //todo
+        //viewModel = getViewModel(vmFactory, DiscoverViewModel::class.java) //todo
         activityViewModel = getActivityViewModel(vmFactory, MainViewModel::class.java)
 
         observeViewModels()
@@ -30,14 +36,12 @@ class SearchResultsFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        //todo only show this if we are in search results mode and not advanced search results mode as the search field won't be there
-        //todo check the MVI state to see if it is !detaching
-        searchEditText.showSoftKeyboard()
-
-        //todo when fragment goes away, we need to hide the keyboard (could do this as part of the MVI state or an event?)
-
         initRecyclerView()
+
+        searchEditText.setOnClickListener {
+            //todo dispatch action to viewmodel to say 'search edit text clicked'
+            findNavController().navigate(R.id.actionGoToSearchResults)
+        }
     }
 
     //todo
@@ -56,13 +60,13 @@ class SearchResultsFragment : BaseFragment() {
     }
 
     override fun initInjection() {
-        DaggerSearchResultsComponent.builder()
-            .appComponent(getAppComponent())
-            .build()
-            .inject(this)
+        DaggerDiscoverComponent.builder()
+                .appComponent(getAppComponent())
+                .build()
+                .inject(this)
     }
 
     companion object {
-        fun newInstance() = SearchResultsFragment()
+        fun newInstance() = DiscoverFragment()
     }
 }

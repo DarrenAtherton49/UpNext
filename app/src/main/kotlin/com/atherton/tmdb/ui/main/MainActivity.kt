@@ -23,6 +23,8 @@ class MainActivity : BaseActivity() {
     private lateinit var viewModel: MainViewModel
     private lateinit var appBarConfiguration: AppBarConfiguration
 
+    private val topLevelDestinationIds = setOf(R.id.moviesFragment, R.id.tvShowsFragment, R.id.discoverFragment)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -49,10 +51,10 @@ class MainActivity : BaseActivity() {
     }
 
     private fun setupNavigation(navController: NavController) {
-        appBarConfiguration = AppBarConfiguration(navController.graph)
+        appBarConfiguration = AppBarConfiguration(topLevelDestinationIds)
 
         // toolbar
-        setupActionBarWithNavController(navController)
+        setupActionBarWithNavController(navController, appBarConfiguration)
 
         // bottom navigation
         bottomNavigation.setupWithNavController(navController)

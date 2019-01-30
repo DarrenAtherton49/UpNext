@@ -1,4 +1,4 @@
-package com.atherton.tmdb.ui.features.discover
+package com.atherton.tmdb.ui.features.discover.featured
 
 import android.util.Log
 import com.atherton.tmdb.util.base.BaseViewModel
