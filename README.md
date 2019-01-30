@@ -1,1 +1,1 @@
-# TMDB App for Android
+# UpNext App for Android

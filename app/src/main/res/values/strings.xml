@@ -1,6 +1,8 @@
 <resources>
-    <string name="app_name">Movies App</string>
-    <string name="action_settings">Settings</string>
+    <string name="app_name">UpNext</string>
+
+    <!-- Menu -->
+    <string name="menu_action_settings">Settings</string>
 
     <!-- Bottom navigation-->
     <string name="bottom_nav_shows">Shows</string>

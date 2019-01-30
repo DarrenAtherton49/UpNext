@@ -5,8 +5,20 @@ apply plugin: 'kotlin-kapt'
 
 android {
 
-    def appConfig = rootProject.appConfig
+    def keystorePropertiesFile = rootProject.file("keystore.properties")
+    def keystoreProperties = new Properties()
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
+    signingConfigs {
+        UpNextRelease {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+        }
+    }
+
+    def appConfig = rootProject.appConfig
     compileSdkVersion appConfig.compileSdkVersion
     buildToolsVersion appConfig.buildToolsVersion
 
@@ -20,25 +32,22 @@ android {
         vectorDrawables.useSupportLibrary = true
         resConfigs "en"
     }
-
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.UpNextRelease
         }
     }
-
     buildTypes.each {
         it.buildConfigField 'String', 'TMDB_API_KEY', tmdb_api_key
     }
-
     // Always show the result of every unit test, even if it passes.
     testOptions.unitTests.all {
         testLogging {
             events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
         }
     }
-
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
         test.java.srcDirs += 'src/test/kotlin'
@@ -51,11 +60,9 @@ androidExtensions {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     def dependencies = rootProject.appDependencies
     def testDependencies = rootProject.testDependencies
-
     implementation dependencies.kotlin
     implementation dependencies.material
     implementation dependencies.appCompat
@@ -75,20 +82,16 @@ dependencies {
     implementation dependencies.moshi
     implementation dependencies.moshiKotlin
     implementation dependencies.glide
-
     kapt dependencies.lifecycleCompiler
     kapt dependencies.daggerCompiler
     kapt dependencies.glideCompiler
-
     debugImplementation dependencies.leakCanary
     debugImplementation dependencies.leakCanaryFragments
     releaseImplementation dependencies.leakCanaryNoOp
-
     testImplementation testDependencies.junit
     testImplementation testDependencies.mockito
     testImplementation testDependencies.hamcrest
     testImplementation testDependencies.archTesting
-
     androidTestImplementation testDependencies.espressoCore
     androidTestImplementation testDependencies.espressoContrib
 }

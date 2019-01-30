@@ -2,7 +2,7 @@
 ext {
 
     appConfig = [
-            applicationId:      "com.atherton.tmdb",
+            applicationId:      "com.atherton.upnext",
             minSdkVersion:      21,
             targetSdkVersion:   28,
             compileSdkVersion:  28,
