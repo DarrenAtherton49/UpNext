@@ -23,7 +23,7 @@ class MainActivity : BaseActivity() {
     private lateinit var viewModel: MainViewModel
     private lateinit var appBarConfiguration: AppBarConfiguration
 
-    private val topLevelDestinationIds = setOf(R.id.moviesFragment, R.id.tvShowsFragment, R.id.discoverFragment)
+    private val topLevelDestinationIds = setOf(R.id.moviesFragment, R.id.showsFragment, R.id.discoverFragment)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -77,7 +77,7 @@ fun <T : ViewModel> Fragment.getViewModel(vmFactory: ViewModelProvider.Factory, 
 }
 
 fun <T : ViewModel> Fragment.getActivityViewModel(vmFactory: ViewModelProvider.Factory, modelClass: Class<T>): T {
-    return ViewModelProviders.of(activity!!, vmFactory).get(modelClass)
+    return ViewModelProviders.of(requireActivity(), vmFactory).get(modelClass)
 }
 
 fun <T : ViewModel> AppCompatActivity.getViewModel(vmFactory: ViewModelProvider.Factory, modelClass: Class<T>): T {
@@ -111,4 +111,9 @@ fun View.showSoftKeyboard() {
         val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
     }
+}
+
+fun View.hideSoftKeyboard() {
+    val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    inputMethodManager.hideSoftInputFromWindow(windowToken, InputMethodManager.HIDE_IMPLICIT_ONLY)
 }

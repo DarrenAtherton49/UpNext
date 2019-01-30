@@ -30,7 +30,7 @@ data class TmdbMultiSearchResult(
     @Json(name = "title") val title: String?,
     @Json(name = "video") val video: Boolean?,
 
-    // TV specific fields
+    // Show specific fields
     @Json(name = "first_air_date") val firstAirDate: String?,
     @Json(name = "origin_country") val originCountry: List<String>?,
     @Json(name = "original_name") val originalName: String?,

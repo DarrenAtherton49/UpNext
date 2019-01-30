@@ -1,4 +1,4 @@
-package com.atherton.tmdb.ui.features.tv
+package com.atherton.tmdb.ui.features.shows
 
 
 import android.os.Bundle
@@ -10,9 +10,9 @@ import com.atherton.tmdb.util.extensions.getActivityViewModel
 import com.atherton.tmdb.util.extensions.getAppComponent
 import javax.inject.Inject
 
-class TvShowsFragment : BaseFragment() {
+class ShowsFragment : BaseFragment() {
 
-    override val layoutResId: Int = R.layout.fragment_tv_shows
+    override val layoutResId: Int = R.layout.fragment_shows
 
     @Inject lateinit var vmFactory: ViewModelProvider.Factory
     private lateinit var activityViewModel: MainViewModel
@@ -31,13 +31,13 @@ class TvShowsFragment : BaseFragment() {
     }
 
     override fun initInjection() {
-        DaggerTvShowsComponent.builder()
+        DaggerShowsComponent.builder()
             .appComponent(getAppComponent())
             .build()
             .inject(this)
     }
 
     companion object {
-        fun newInstance() = TvShowsFragment()
+        fun newInstance() = ShowsFragment()
     }
 }

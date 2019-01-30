@@ -2,9 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/tvShowsFragment"
+        android:id="@+id/showsFragment"
         android:icon="@drawable/ic_tv_black_24dp"
-        android:title="@string/bottom_nav_tv_shows"/>
+        android:title="@string/bottom_nav_shows"/>
 
     <item
         android:id="@+id/moviesFragment"

@@ -3,12 +3,12 @@
     <string name="action_settings">Settings</string>
 
     <!-- Bottom navigation-->
-    <string name="bottom_nav_tv_shows">TV Shows</string>
+    <string name="bottom_nav_shows">Shows</string>
     <string name="bottom_nav_movies">Movies</string>
     <string name="bottom_nav_discover">Discover</string>
 
     <!-- Fragment labels -->
-    <string name="fragment_label_tv_shows">TV Shows</string>
+    <string name="fragment_label_shows">Shows</string>
     <string name="fragment_label_movies">Movies</string>
     <string name="fragment_label_discover">Discover</string>
     <string name="fragment_label_search_results">Search</string>
@@ -25,7 +25,7 @@
     <string name="main_dialog_internet_required_positive_button">Try again</string>
 
     <!-- DiscoverFragment -->
-    <string name="discover_search_textfield_label">Find Movies, TV or People…</string>
+    <string name="discover_search_textfield_label">Find Movies, Shows or People…</string>
     <string name="discover_advanced_search_button">Advanced Search</string>
 
 </resources>

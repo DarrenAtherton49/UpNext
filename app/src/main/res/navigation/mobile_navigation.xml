@@ -4,13 +4,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobileNavigation"
-    app:startDestination="@id/tvShowsFragment">
+    app:startDestination="@id/showsFragment">
 
     <fragment
-        android:id="@+id/tvShowsFragment"
-        android:name="com.atherton.tmdb.ui.features.tv.TvShowsFragment"
-        android:label="@string/fragment_label_tv_shows"
-        tools:layout="@layout/fragment_tv_shows"/>
+        android:id="@+id/showsFragment"
+        android:name="com.atherton.tmdb.ui.features.shows.ShowsFragment"
+        android:label="@string/fragment_label_shows"
+        tools:layout="@layout/fragment_shows"/>
 
     <fragment
         android:id="@+id/moviesFragment"
