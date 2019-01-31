@@ -6,7 +6,7 @@
     android:id="@+id/mainCoordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ui.main.MainActivity">
+    tools:context="presentation.main.MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -31,7 +31,7 @@
         app:navGraph="@navigation/mobile_navigation"
         app:defaultNavHost="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context=".ui.main.MainActivity"/>
+        tools:context=".presentation.main.MainActivity"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"

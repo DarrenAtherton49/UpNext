@@ -1,4 +1,4 @@
-package com.atherton.upnext.ui.main
+package com.atherton.upnext.presentation.main
 
 import android.os.Bundle
 import android.view.Menu

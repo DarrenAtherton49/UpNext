@@ -1,4 +1,4 @@
-package com.atherton.upnext.ui.features.discover.featured
+package com.atherton.upnext.presentation.features.discover.featured
 
 import android.util.Log
 import com.atherton.upnext.util.base.BaseViewModel

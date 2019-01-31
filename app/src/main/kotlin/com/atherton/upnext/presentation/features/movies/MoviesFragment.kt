@@ -1,18 +1,18 @@
-package com.atherton.upnext.ui.features.shows
+package com.atherton.upnext.presentation.features.movies
 
 
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.R
-import com.atherton.upnext.ui.main.MainViewModel
+import com.atherton.upnext.presentation.main.MainViewModel
 import com.atherton.upnext.util.base.BaseFragment
 import com.atherton.upnext.util.extensions.getActivityViewModel
 import com.atherton.upnext.util.extensions.getAppComponent
 import javax.inject.Inject
 
-class ShowsFragment : BaseFragment() {
+class MoviesFragment : BaseFragment() {
 
-    override val layoutResId: Int = R.layout.fragment_shows
+    override val layoutResId: Int = R.layout.fragment_movies
 
     @Inject lateinit var vmFactory: ViewModelProvider.Factory
     private lateinit var activityViewModel: MainViewModel
@@ -31,13 +31,13 @@ class ShowsFragment : BaseFragment() {
     }
 
     override fun initInjection() {
-        DaggerShowsComponent.builder()
+        DaggerMoviesComponent.builder()
             .appComponent(getAppComponent())
             .build()
             .inject(this)
     }
 
     companion object {
-        fun newInstance() = ShowsFragment()
+        fun newInstance() = MoviesFragment()
     }
 }

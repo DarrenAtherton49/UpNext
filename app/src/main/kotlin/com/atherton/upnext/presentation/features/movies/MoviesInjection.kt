@@ -1,4 +1,4 @@
-package com.atherton.upnext.ui.features.shows
+package com.atherton.upnext.presentation.features.movies
 
 import com.atherton.upnext.util.injection.AppComponent
 import com.atherton.upnext.util.injection.PerView
@@ -8,13 +8,13 @@ import dagger.Module
 @PerView
 @Component(
     dependencies = [AppComponent::class],
-    modules = [ShowsModule::class]
+    modules = [MoviesModule::class]
 )
-interface ShowsComponent {
+interface MoviesComponent {
 
-    fun inject(showsFragment: ShowsFragment)
+    fun inject(moviesFragment: MoviesFragment)
 }
 
 
 @Module
-class ShowsModule
+class MoviesModule

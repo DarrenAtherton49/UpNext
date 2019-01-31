@@ -1,7 +1,7 @@
-package com.atherton.upnext.ui.features.discover
+package com.atherton.upnext.presentation.features.discover
 
-import com.atherton.upnext.ui.features.discover.featured.DiscoverFragment
-import com.atherton.upnext.ui.features.discover.search.SearchResultsFragment
+import com.atherton.upnext.presentation.features.discover.featured.DiscoverFragment
+import com.atherton.upnext.presentation.features.discover.search.SearchResultsFragment
 import com.atherton.upnext.util.injection.AppComponent
 import com.atherton.upnext.util.injection.PerView
 import dagger.Component

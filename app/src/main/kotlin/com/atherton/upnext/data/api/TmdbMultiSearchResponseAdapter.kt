@@ -11,10 +11,10 @@ class TmdbMultiSearchResponseAdapter {
      * and maps them into the correct entities based on 'media_type'.
      */
     @FromJson
-    fun fromJson(searchResults: List<TmdbMultiSearchResult>): List<TmdbMultiSearchEntity>? =
+    fun fromJson(searchResults: List<TmdbMultiSearchResult>): List<TmdbMultiSearchModel>? =
         searchResults.toSpecificEntities()
 
-    private fun List<TmdbMultiSearchResult>?.toSpecificEntities(): List<TmdbMultiSearchEntity>? {
+    private fun List<TmdbMultiSearchResult>?.toSpecificEntities(): List<TmdbMultiSearchModel>? {
         return this?.map {
             when (it.mediaType) {
                 "movie" -> it.toMovie()
@@ -66,7 +66,7 @@ class TmdbMultiSearchResponseAdapter {
         TmdbPersonResult(adultContent, id, knownFor.toSpecificEntities(), name, popularity, profilePath)
 
     @ToJson
-    fun toJson(entity: List<TmdbMultiSearchEntity>): List<TmdbMultiSearchResult> {
+    fun toJson(entity: List<TmdbMultiSearchModel>): List<TmdbMultiSearchResult> {
         throw UnsupportedOperationException()
     }
 }

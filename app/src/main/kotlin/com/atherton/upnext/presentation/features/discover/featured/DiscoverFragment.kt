@@ -1,4 +1,4 @@
-package com.atherton.upnext.ui.features.discover.featured
+package com.atherton.upnext.presentation.features.discover.featured
 
 import android.os.Bundle
 import android.view.View
@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.atherton.upnext.R
 import com.atherton.upnext.data.api.TmdbSearchService
-import com.atherton.upnext.ui.features.discover.DaggerDiscoverComponent
-import com.atherton.upnext.ui.main.MainViewModel
+import com.atherton.upnext.presentation.features.discover.DaggerDiscoverComponent
+import com.atherton.upnext.presentation.main.MainViewModel
 import com.atherton.upnext.util.base.BaseFragment
 import com.atherton.upnext.util.extensions.getActivityViewModel
 import com.atherton.upnext.util.extensions.getAppComponent

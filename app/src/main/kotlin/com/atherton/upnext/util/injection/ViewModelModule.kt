@@ -2,8 +2,8 @@ package com.atherton.upnext.util.injection
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.atherton.upnext.ui.features.discover.featured.DiscoverViewModel
-import com.atherton.upnext.ui.main.MainViewModel
+import com.atherton.upnext.presentation.features.discover.featured.DiscoverViewModel
+import com.atherton.upnext.presentation.main.MainViewModel
 import com.atherton.upnext.util.base.ViewModelFactory
 import com.atherton.upnext.util.base.ViewModelKey
 import dagger.Binds

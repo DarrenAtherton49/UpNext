@@ -8,19 +8,19 @@
 
     <fragment
         android:id="@+id/showsFragment"
-        android:name="com.atherton.upnext.ui.features.shows.ShowsFragment"
+        android:name="com.atherton.upnext.presentation.features.shows.ShowsFragment"
         android:label="@string/fragment_label_shows"
         tools:layout="@layout/fragment_shows"/>
 
     <fragment
         android:id="@+id/moviesFragment"
-        android:name="com.atherton.upnext.ui.features.movies.MoviesFragment"
+        android:name="com.atherton.upnext.presentation.features.movies.MoviesFragment"
         android:label="@string/fragment_label_movies"
         tools:layout="@layout/fragment_movies"/>
 
     <fragment
         android:id="@+id/discoverFragment"
-        android:name="com.atherton.upnext.ui.features.discover.featured.DiscoverFragment"
+        android:name="com.atherton.upnext.presentation.features.discover.featured.DiscoverFragment"
         android:label="@string/fragment_label_discover"
         tools:layout="@layout/fragment_discover">
         <action
@@ -34,7 +34,7 @@
 
     <fragment
         android:id="@+id/searchResultsFragment"
-        android:name="com.atherton.upnext.ui.features.discover.search.SearchResultsFragment"
+        android:name="com.atherton.upnext.presentation.features.discover.search.SearchResultsFragment"
         android:label="@string/fragment_label_search_results"
         tools:layout="@layout/fragment_search_results"/>
 

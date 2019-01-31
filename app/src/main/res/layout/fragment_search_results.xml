@@ -4,18 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.features.discover.search.SearchResultsFragment">
+    tools:context=".presentation.features.discover.search.SearchResultsFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_margin="@dimen/keyline_2x">
+        android:layout_marginTop="@dimen/keyline_2x"
+        android:layout_marginStart="@dimen/keyline_2x"
+        android:layout_marginEnd="@dimen/keyline_2x">
 
         <include layout="@layout/search_results_search_field"/>
 
-    </LinearLayout>
+        <include
+            layout="@layout/base_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/keyline_2x"/>
 
-    <!-- //todo RecyclerView with Grid of results -->
+    </LinearLayout>
 
 </FrameLayout>

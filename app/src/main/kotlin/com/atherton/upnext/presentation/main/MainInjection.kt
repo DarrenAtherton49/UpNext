@@ -1,4 +1,4 @@
-package com.atherton.upnext.ui.main
+package com.atherton.upnext.presentation.main
 
 import com.atherton.upnext.util.injection.AppComponent
 import com.atherton.upnext.util.injection.PerView
