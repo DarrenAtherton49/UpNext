@@ -14,6 +14,7 @@ import com.atherton.upnext.util.base.BaseFragment
 import com.atherton.upnext.util.extensions.getActivityViewModel
 import com.atherton.upnext.util.extensions.getAppComponent
 import com.atherton.upnext.util.extensions.showSoftKeyboard
+import com.atherton.upnext.util.recyclerview.GridSpacingItemDecoration
 import kotlinx.android.synthetic.main.base_recycler_view.*
 import kotlinx.android.synthetic.main.search_results_search_field.*
 import javax.inject.Inject
@@ -54,6 +55,12 @@ class SearchResultsFragment : BaseFragment() {
         recyclerView.apply {
             adapter = recyclerViewAdapter
             layoutManager = GridLayoutManager(context, GRID_NUM_COLUMNS)
+            addItemDecoration(
+                GridSpacingItemDecoration(
+                    GRID_NUM_COLUMNS,
+                    resources.getDimensionPixelSize(R.dimen.search_results_grid_spacing)
+                )
+            )
         }
         //todo add spacing ItemDecoration
         recyclerViewAdapter.submitList(
