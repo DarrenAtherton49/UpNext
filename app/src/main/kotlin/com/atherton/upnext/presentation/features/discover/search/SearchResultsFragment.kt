@@ -24,14 +24,18 @@ class SearchResultsFragment : BaseFragment() {
     override val layoutResId: Int = R.layout.fragment_search_results
 
     @Inject lateinit var vmFactory: ViewModelProvider.Factory
-    private lateinit var activityViewModel: MainViewModel
-    private lateinit var recyclerViewAdapter: SearchResultsAdapter
+    private val activityViewModel: MainViewModel by lazy {
+        getActivityViewModel(vmFactory, MainViewModel::class.java)
+
+    }
+    private val recyclerViewAdapter: SearchResultsAdapter by lazy {
+        SearchResultsAdapter {
+            //todo dispatch click action to viewmodel/MVI
+        }
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        //viewModel = getViewModel(vmFactory, SearchResultsViewModel::class.java) //todo
-        activityViewModel = getActivityViewModel(vmFactory, MainViewModel::class.java)
 
         observeViewModels()
     }
@@ -49,9 +53,6 @@ class SearchResultsFragment : BaseFragment() {
     }
 
     private fun initRecyclerView() {
-        recyclerViewAdapter = SearchResultsAdapter {
-            //todo dispatch click action to viewmodel/MVI
-        }
         recyclerView.apply {
             adapter = recyclerViewAdapter
             layoutManager = GridLayoutManager(context, GRID_NUM_COLUMNS)

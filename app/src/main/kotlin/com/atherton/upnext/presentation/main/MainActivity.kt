@@ -6,7 +6,6 @@ import android.view.MenuItem
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.*
 import com.atherton.upnext.R
 import com.atherton.upnext.util.base.BaseActivity
@@ -21,9 +20,14 @@ class MainActivity : BaseActivity() {
 
     @Inject lateinit var vmFactory: ViewModelProvider.Factory
     private lateinit var viewModel: MainViewModel
-    private lateinit var appBarConfiguration: AppBarConfiguration
 
     private val topLevelDestinationIds = setOf(R.id.moviesFragment, R.id.showsFragment, R.id.discoverFragment)
+    private val appBarConfiguration: AppBarConfiguration by lazy {
+        AppBarConfiguration(topLevelDestinationIds)
+    }
+    private val navController: NavController by lazy {
+        findNavController(R.id.navHostFragment)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,13 +35,8 @@ class MainActivity : BaseActivity() {
         viewModel = getViewModel(vmFactory, MainViewModel::class.java)
 
         observeViewModel()
-
         setSupportActionBar(toolbar)
-
-        val host: NavHostFragment = supportFragmentManager
-                .findFragmentById(R.id.navHostFragment) as NavHostFragment? ?: return
-
-        setupNavigation(host.navController)
+        setupNavigation()
     }
 
     private fun observeViewModel() {
@@ -50,9 +49,7 @@ class MainActivity : BaseActivity() {
         return true
     }
 
-    private fun setupNavigation(navController: NavController) {
-        appBarConfiguration = AppBarConfiguration(topLevelDestinationIds)
-
+    private fun setupNavigation() {
         // toolbar
         setupActionBarWithNavController(navController, appBarConfiguration)
 
@@ -66,12 +63,12 @@ class MainActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return NavigationUI.onNavDestinationSelected(
                 item,
-                findNavController(R.id.navHostFragment)
+                navController
         ) || super.onOptionsItemSelected(item)
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        return findNavController(R.id.navHostFragment).navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
     override fun initInjection() {

@@ -15,13 +15,12 @@ class MoviesFragment : BaseFragment() {
     override val layoutResId: Int = R.layout.fragment_movies
 
     @Inject lateinit var vmFactory: ViewModelProvider.Factory
-    private lateinit var activityViewModel: MainViewModel
+    private val activityViewModel: MainViewModel by lazy {
+        getActivityViewModel(vmFactory, MainViewModel::class.java)
 
+    }
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        //viewModel = getViewModel(vmFactory, MoviesViewModel::class.java) //todo
-        activityViewModel = getActivityViewModel(vmFactory, MainViewModel::class.java)
 
         observeViewModels()
     }

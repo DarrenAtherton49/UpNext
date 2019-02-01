@@ -11,6 +11,7 @@ import com.atherton.upnext.presentation.main.MainViewModel
 import com.atherton.upnext.util.base.BaseFragment
 import com.atherton.upnext.util.extensions.getActivityViewModel
 import com.atherton.upnext.util.extensions.getAppComponent
+import com.atherton.upnext.util.extensions.getViewModel
 import kotlinx.android.synthetic.main.discover_search_field.*
 import javax.inject.Inject
 
@@ -19,17 +20,18 @@ class DiscoverFragment : BaseFragment() {
     override val layoutResId: Int = R.layout.fragment_discover
 
     @Inject lateinit var vmFactory: ViewModelProvider.Factory
-    private lateinit var viewModel: DiscoverViewModel
-    private lateinit var activityViewModel: MainViewModel
-    //private lateinit var recyclerAdapter: ScheduleAdapter //todo
+    private val activityViewModel: MainViewModel by lazy {
+        getActivityViewModel(vmFactory, MainViewModel::class.java)
+
+    }
+    private val viewModel: DiscoverViewModel by lazy {
+        getViewModel(vmFactory, DiscoverViewModel::class.java)
+    }
 
     @Inject lateinit var api: TmdbSearchService
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        //viewModel = getViewModel(vmFactory, DiscoverViewModel::class.java) //todo
-        activityViewModel = getActivityViewModel(vmFactory, MainViewModel::class.java)
 
         observeViewModels()
     }
