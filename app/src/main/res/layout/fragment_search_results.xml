@@ -20,7 +20,7 @@
             layout="@layout/base_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/keyline_2x"/>
+            android:paddingBottom="@dimen/keyline_2x"/>
 
     </LinearLayout>
 
