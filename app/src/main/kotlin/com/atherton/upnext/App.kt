@@ -1,6 +1,7 @@
 package com.atherton.upnext
 
 import android.app.Application
+import com.atherton.upnext.util.extensions.onAndroidPieOrLater
 import com.atherton.upnext.util.injection.AppComponent
 import com.atherton.upnext.util.injection.AppModule
 import com.atherton.upnext.util.injection.DaggerAppComponent
@@ -19,7 +20,14 @@ class App : Application() {
             // You should not init your app in this process.
             return
         }
-        LeakCanary.install(this)
+
+        /*
+         * Only using LeakCanary on devices running lower than Android P due to a bug in AOSP causing
+         * excessive leaks. See https://github.com/square/leakcanary/issues/1081.
+         */
+        if (!onAndroidPieOrLater()) {
+            LeakCanary.install(this)
+        }
 
         initInjection()
     }

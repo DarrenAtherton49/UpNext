@@ -11,7 +11,7 @@ import com.atherton.upnext.data.model.TvShow
 import com.atherton.upnext.util.extensions.inflateLayout
 
 class SearchResultsAdapter(
-    private val onClickListener: () -> Unit
+    private val onClickListener: () -> Unit //todo use this
 ) : ListAdapter<SearchModel, SearchResultViewHolder>(SearchResultsDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchResultViewHolder {

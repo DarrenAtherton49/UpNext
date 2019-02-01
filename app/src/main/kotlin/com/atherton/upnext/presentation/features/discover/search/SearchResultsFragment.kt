@@ -62,7 +62,7 @@ class SearchResultsFragment : BaseFragment() {
                 )
             )
         }
-        //todo add spacing ItemDecoration
+        //todo remove sample data
         recyclerViewAdapter.submitList(
             listOf(
                 Movie(
