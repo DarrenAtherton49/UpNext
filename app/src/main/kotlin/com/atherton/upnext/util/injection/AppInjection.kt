@@ -55,9 +55,6 @@ interface AppComponent {
 )
 class AppModule(private val application: Application) {
 
-    private val tmdbApiVersion = 3
-    private val tmdbBaseUrl = "https://api.themoviedb.org/$tmdbApiVersion/"
-
     @Provides
     @Singleton @ApplicationContext
     internal fun provideApplicationContext(): Context = application
@@ -96,12 +93,12 @@ class AppModule(private val application: Application) {
         }
 
         val okHttpClient = OkHttpClient.Builder()
-            .addInterceptor(TmdbApiKeyInterceptor(BuildConfig.TMDB_API_KEY))
+            .addInterceptor(TmdbApiKeyInterceptor(BuildConfig.TMDB_API_KEY, TMDB_API_HOST))
             .addInterceptor(loggingInterceptor)
             .build()
 
         return Retrofit.Builder()
-            .baseUrl(tmdbBaseUrl)
+            .baseUrl(TMDB_API_URL)
             .client(okHttpClient)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .addCallAdapterFactory(KotlinRxJava2CallAdapterFactory.create())
@@ -120,5 +117,11 @@ class AppModule(private val application: Application) {
     @Singleton internal fun provideSearchRepository(searchService: TmdbSearchService): SearchRepository {
         return CachingSearchRepository(searchService)
 
+    }
+
+    companion object {
+        private const val TMDB_API_VERSION = 3
+        private const val TMDB_API_HOST = "api.themoviedb.org"
+        private const val TMDB_API_URL = "https://$TMDB_API_HOST/$TMDB_API_VERSION/"
     }
 }
