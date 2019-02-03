@@ -63,35 +63,39 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     def dependencies = rootProject.appDependencies
     def testDependencies = rootProject.testDependencies
+    implementation dependencies.appCompat
+    implementation dependencies.constraintLayout
+    implementation dependencies.dagger
+    implementation dependencies.glide
     implementation dependencies.kotlin
     implementation dependencies.material
-    implementation dependencies.appCompat
     implementation dependencies.legacySupportV4
-    implementation dependencies.recyclerView
-    implementation dependencies.constraintLayout
     implementation dependencies.lifecycleExtensions
-    implementation dependencies.navigationFragmentKTX
-    implementation dependencies.navigationUiKTX
-    implementation dependencies.dagger
-    implementation dependencies.rxJava2
-    implementation dependencies.rxAndroid
-    implementation dependencies.retrofit
-    implementation dependencies.retrofitRxJava2Adapter
-    implementation dependencies.retrofitMoshiConverter
-    implementation dependencies.okHttpLoggingInterceptor
     implementation dependencies.moshi
     implementation dependencies.moshiKotlin
-    implementation dependencies.glide
-    kapt dependencies.lifecycleCompiler
+    implementation dependencies.navigationFragmentKTX
+    implementation dependencies.navigationUiKTX
+    implementation dependencies.okHttpLoggingInterceptor
+    implementation dependencies.recyclerView
+    implementation dependencies.retrofit
+    implementation dependencies.retrofitMoshiConverter
+    implementation dependencies.retrofitRxJava2Adapter
+    implementation dependencies.roxie
+    implementation dependencies.rxAndroid
+    implementation dependencies.rxJava2
+
     kapt dependencies.daggerCompiler
     kapt dependencies.glideCompiler
+    kapt dependencies.lifecycleCompiler
+
     debugImplementation dependencies.leakCanary
     debugImplementation dependencies.leakCanaryFragments
     releaseImplementation dependencies.leakCanaryNoOp
+
+    testImplementation testDependencies.archTesting
+    testImplementation testDependencies.hamcrest
     testImplementation testDependencies.junit
     testImplementation testDependencies.mockito
-    testImplementation testDependencies.hamcrest
-    testImplementation testDependencies.archTesting
     androidTestImplementation testDependencies.espressoCore
     androidTestImplementation testDependencies.espressoContrib
 }

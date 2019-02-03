@@ -6,6 +6,11 @@
     android:layout_height="wrap_content"
     android:background="@android:color/holo_green_light">
 
+    <ImageView
+        android:id="@+id/movieImageView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/search_results_image_height"/>
+    
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
