@@ -4,7 +4,7 @@ package com.atherton.upnext.data.model
  * App-level/domain models. All network/data models should be mapped to the below models before use.
  */
 
-
+data class ApiError(val statusMessage: String, val statusCode: Int)
 
 /**
  * Wrapper to unify the movie, tv and person results below into one 'type' - useful for 'when' statements etc.

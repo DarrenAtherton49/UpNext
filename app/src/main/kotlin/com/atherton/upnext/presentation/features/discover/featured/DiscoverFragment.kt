@@ -1,17 +1,22 @@
 package com.atherton.upnext.presentation.features.discover.featured
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.atherton.upnext.R
-import com.atherton.upnext.data.api.TmdbSearchService
+import com.atherton.upnext.data.model.SearchModel
+import com.atherton.upnext.data.repository.Response
+import com.atherton.upnext.data.repository.search.SearchRepository
 import com.atherton.upnext.presentation.features.discover.DaggerDiscoverComponent
 import com.atherton.upnext.presentation.main.MainViewModel
 import com.atherton.upnext.util.base.BaseFragment
 import com.atherton.upnext.util.extensions.getActivityViewModel
 import com.atherton.upnext.util.extensions.getAppComponent
 import com.atherton.upnext.util.extensions.getViewModel
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.discover_search_field.*
 import javax.inject.Inject
 
@@ -28,7 +33,7 @@ class DiscoverFragment : BaseFragment() {
         getViewModel(vmFactory, DiscoverViewModel::class.java)
     }
 
-    @Inject lateinit var api: TmdbSearchService
+    @Inject lateinit var repository: SearchRepository
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -42,8 +47,20 @@ class DiscoverFragment : BaseFragment() {
 
         searchEditText.setOnClickListener {
             //todo dispatch action to viewmodel to say 'search edit text clicked'
+            //todo replace 'findNavController' with lazy delegate if used more than once
             findNavController().navigate(R.id.actionGoToSearchResults)
         }
+
+        val x = repository.searchMulti("Gleaming the cube")
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { response: Response<List<SearchModel>> ->
+                when (response) {
+                    is Response.Success -> {
+                        Log.d("darren", response.toString())
+                    }
+                }
+            }
     }
 
     //todo

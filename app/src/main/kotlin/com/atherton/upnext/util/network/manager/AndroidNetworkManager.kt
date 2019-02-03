@@ -1,4 +1,4 @@
-package com.atherton.upnext.util.network
+package com.atherton.upnext.util.network.manager
 
 import android.net.ConnectivityManager
 import android.net.NetworkInfo

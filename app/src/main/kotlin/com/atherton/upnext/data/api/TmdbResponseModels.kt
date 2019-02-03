@@ -6,10 +6,16 @@ import com.squareup.moshi.Json
  * Network/data models. The below models should always be mapped to app-level/domain models before use.
  */
 
+// Retrofit/Moshi deserialize to this class when there is an API error.
+data class TmdbApiError(
+    @Json(name = "status_message") val statusMessage: String,
+    @Json(name = "status_code") val statusCode: Int
+)
+
 data class TmdbMultiSearchResponse(
     @Json(name = "page") val page: Int,
     @Json(name = "total_pages") val totalPages: Int,
-    @Json(name = "total_results") val totalResults: Int,
+    @Json(name = "total_results") val totalResults: Int, //todo should we show this in UI?
     @Json(name = "results") val results: List<TmdbMultiSearchModel>
 )
 

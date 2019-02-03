@@ -1,17 +1,13 @@
 package com.atherton.upnext.data.mapper
 
-import com.atherton.upnext.data.api.TmdbMovieResult
-import com.atherton.upnext.data.api.TmdbMultiSearchModel
-import com.atherton.upnext.data.api.TmdbPersonResult
-import com.atherton.upnext.data.api.TmdbTvResult
-import com.atherton.upnext.data.model.Movie
-import com.atherton.upnext.data.model.Person
-import com.atherton.upnext.data.model.SearchModel
-import com.atherton.upnext.data.model.TvShow
+import com.atherton.upnext.data.api.*
+import com.atherton.upnext.data.model.*
 
 /*
  * A collection of extension functions to map from network models to app-level/domain models.
  */
+
+fun TmdbApiError.toDomainApiError(): ApiError = ApiError(statusMessage, statusCode)
 
 fun List<TmdbMultiSearchModel>?.toDomainSearchModels(): List<SearchModel> {
     return this?.map { searchResult ->

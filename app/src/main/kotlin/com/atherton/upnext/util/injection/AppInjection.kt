@@ -12,8 +12,11 @@ import com.atherton.upnext.data.api.TmdbMultiSearchResponseAdapter
 import com.atherton.upnext.data.api.TmdbSearchService
 import com.atherton.upnext.data.preferences.LocalStorage
 import com.atherton.upnext.data.preferences.Storage
-import com.atherton.upnext.util.network.AndroidNetworkManager
-import com.atherton.upnext.util.network.NetworkManager
+import com.atherton.upnext.data.repository.search.CachingSearchRepository
+import com.atherton.upnext.data.repository.search.SearchRepository
+import com.atherton.upnext.util.network.manager.AndroidNetworkManager
+import com.atherton.upnext.util.network.manager.NetworkManager
+import com.atherton.upnext.util.network.retrofit.KotlinRxJava2CallAdapterFactory
 import com.atherton.upnext.util.threading.RxSchedulers
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -43,7 +46,7 @@ interface AppComponent {
     fun schedulers(): RxSchedulers
     fun storage(): Storage
     fun viewModelFactory(): ViewModelProvider.Factory
-    fun tmdbSearchService(): TmdbSearchService
+    fun searchRepository(): SearchRepository
 }
 
 
@@ -101,6 +104,7 @@ class AppModule(private val application: Application) {
             .baseUrl(tmdbBaseUrl)
             .client(okHttpClient)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .addCallAdapterFactory(KotlinRxJava2CallAdapterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
     }
@@ -111,4 +115,10 @@ class AppModule(private val application: Application) {
 
     @Provides
     @Singleton internal fun provideStorage(localStorage: LocalStorage): Storage = localStorage
+
+    @Provides
+    @Singleton internal fun provideSearchRepository(searchService: TmdbSearchService): SearchRepository {
+        return CachingSearchRepository(searchService)
+
+    }
 }
