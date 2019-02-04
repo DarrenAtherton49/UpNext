@@ -6,6 +6,8 @@ import com.atherton.upnext.util.injection.AppComponent
 import com.atherton.upnext.util.injection.AppModule
 import com.atherton.upnext.util.injection.DaggerAppComponent
 import com.squareup.leakcanary.LeakCanary
+import com.ww.roxie.Roxie
+import timber.log.Timber
 
 class App : Application() {
 
@@ -28,6 +30,16 @@ class App : Application() {
         if (!onAndroidPieOrLater()) {
             LeakCanary.install(this)
         }
+
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        }
+
+        Roxie.enableLogging(object : Roxie.Logger {
+            override fun log(msg: String) {
+                Timber.tag("Roxie").d(msg)
+            }
+        })
 
         initInjection()
     }

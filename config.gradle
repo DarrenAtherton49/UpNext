@@ -33,6 +33,7 @@ ext {
     runnerVersion = '0.5'
     rxAndroidVersion = '2.0.2'
     rxJavaVersion = '2.1.15'
+    timberVersion = '4.7.1'
 
 
     appDependencies = [
@@ -61,7 +62,8 @@ ext {
         retrofitMoshiConverter:    "com.squareup.retrofit2:converter-moshi:$retrofitVersion",
         roxie:                     "com.ww:roxie:$roxieVersion",
         rxAndroid:                 "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion",
-        rxJava2:                   "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
+        rxJava2:                   "io.reactivex.rxjava2:rxjava:$rxJavaVersion",
+        timber:                    "com.jakewharton.timber:timber:$timberVersion"
     ]
 
 

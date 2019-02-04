@@ -83,6 +83,7 @@ dependencies {
     implementation dependencies.roxie
     implementation dependencies.rxAndroid
     implementation dependencies.rxJava2
+    implementation dependencies.timber
 
     kapt dependencies.daggerCompiler
     kapt dependencies.glideCompiler
