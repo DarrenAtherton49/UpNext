@@ -124,7 +124,10 @@ fun View.hideSoftKeyboard() {
 
 fun onAndroidPieOrLater(): Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
 
-fun EditText.whenTextChanges(block: (String) -> Unit) {
+fun EditText.whenTextChanges(emitInitialValue: Boolean = false, block: (String) -> Unit) {
+    if (emitInitialValue) {
+        block.invoke(this.text.toString())
+    }
     addTextChangedListener(object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {}
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}

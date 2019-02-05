@@ -11,7 +11,6 @@ import com.atherton.upnext.presentation.main.MainViewModelFactory
 import com.atherton.upnext.util.base.BaseFragment
 import com.atherton.upnext.util.extensions.*
 import com.atherton.upnext.util.recyclerview.GridSpacingItemDecoration
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.base_recycler_view.*
 import kotlinx.android.synthetic.main.search_results_search_field.*
 import javax.inject.Inject
@@ -41,8 +40,6 @@ class SearchResultsFragment : BaseFragment<SearchResultsAction, SearchResultsSta
         }
     }
 
-    private val disposables: CompositeDisposable = CompositeDisposable()
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -50,13 +47,21 @@ class SearchResultsFragment : BaseFragment<SearchResultsAction, SearchResultsSta
         //todo check the MVI state to see if it is !detaching
         searchEditText.showSoftKeyboard()
 
-        searchEditText.whenTextChanges {
-            viewModel.dispatch(SearchResultsAction.SearchTextChanged(it))
+        // load popular on first launch
+        if (savedInstanceState == null) {
+            viewModel.dispatch(SearchResultsAction.SearchTextChanged(""))
         }
 
         //todo when fragment goes away, we need to hide the keyboard (could do this as part of the MVI state or an view effect?)
 
         initRecyclerView()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        searchEditText.whenTextChanges {
+            viewModel.dispatch(SearchResultsAction.SearchTextChanged(it))
+        }
     }
 
     override fun renderState(state: SearchResultsState) {
