@@ -18,10 +18,10 @@ class MoviesFragment : BaseFragment<MoviesAction, MoviesState, MoviesViewModel>(
     override val layoutResId: Int = R.layout.fragment_movies
     override val stateBundleKey: String = "bundle_key_movies_state"
 
-    @field:[Inject Named(MainViewModelFactory.NAME)]
+    @Inject @field:Named(MainViewModelFactory.NAME)
     lateinit var mainVmFactory: ViewModelProvider.Factory
 
-    @field:[Inject Named(MoviesViewModelFactory.NAME)]
+    @Inject @field:Named(MoviesViewModelFactory.NAME)
     lateinit var vmFactory: ViewModelProvider.Factory
 
     private val activityViewModel: MainViewModel by lazy {

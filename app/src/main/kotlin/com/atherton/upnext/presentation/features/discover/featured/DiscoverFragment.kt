@@ -20,10 +20,10 @@ class DiscoverFragment : BaseFragment<DiscoverAction, DiscoverState, DiscoverVie
     override val layoutResId: Int = R.layout.fragment_discover
     override val stateBundleKey: String = "bundle_key_discover_state"
 
-    @field:[Inject Named(MainViewModelFactory.NAME)]
+    @Inject @field:Named(MainViewModelFactory.NAME)
     lateinit var mainVmFactory: ViewModelProvider.Factory
 
-    @field:[Inject Named(DiscoverViewModelFactory.NAME)]
+    @Inject @field:Named(DiscoverViewModelFactory.NAME)
     lateinit var vmFactory: ViewModelProvider.Factory
 
     private val activityViewModel: MainViewModel by lazy {

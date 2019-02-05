@@ -20,7 +20,7 @@ class MainActivity : BaseActivity<MainAction, MainState, MainViewModel>() {
     override val layoutResId: Int = R.layout.activity_main
     override val stateBundleKey: String = "bundle_key_main_state"
 
-    @field:[Inject Named(MainViewModelFactory.NAME)]
+    @Inject @field:Named(MainViewModelFactory.NAME)
     lateinit var vmFactory: ViewModelProvider.Factory
 
     override val viewModel: MainViewModel by lazy {

@@ -23,10 +23,10 @@ class SearchResultsFragment : BaseFragment<SearchResultsAction, SearchResultsSta
     override val layoutResId: Int = R.layout.fragment_search_results
     override val stateBundleKey: String = "bundle_key_search_results_state"
 
-    @field:[Inject Named(MainViewModelFactory.NAME)]
+    @Inject @field:Named(MainViewModelFactory.NAME)
     lateinit var mainVmFactory: ViewModelProvider.Factory
 
-    @field:[Inject Named(SearchResultsViewModelFactory.NAME)]
+    @Inject @field:Named(SearchResultsViewModelFactory.NAME)
     lateinit var vmFactory: ViewModelProvider.Factory
 
     private val activityViewModel: MainViewModel by lazy {
