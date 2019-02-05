@@ -12,6 +12,7 @@ import com.ww.roxie.BaseAction
 import com.ww.roxie.BaseState
 import com.ww.roxie.BaseViewModel
 import com.ww.roxie.Reducer
+import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.plusAssign
 import kotlinx.android.parcel.Parcelize
@@ -69,9 +70,12 @@ class SearchResultsViewModel @Inject constructor(
     }
 
     private fun bindActions() {
-        //todo maybe pass it debounce on first time?
         val textSearchedChange = actions.ofType<SearchResultsAction.SearchTextChanged>()
-            .debounce(250, TimeUnit.MILLISECONDS)
+            .debounce { action ->
+                // only debounce if query contains text, otherwise show popular straight away
+                val milliseconds: Long = if (action.query.isBlank()) 0 else 250
+                Observable.just(action).debounce(milliseconds, TimeUnit.MILLISECONDS)
+            }
             .distinctUntilChanged()
             .switchMap { action ->
                 searchMultiUseCase.build(action.query)
