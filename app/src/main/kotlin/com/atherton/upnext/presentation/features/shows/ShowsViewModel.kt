@@ -1,4 +1,4 @@
-package com.atherton.upnext.presentation.main
+package com.atherton.upnext.presentation.features.shows
 
 import android.os.Parcelable
 import androidx.lifecycle.ViewModel
@@ -7,17 +7,14 @@ import com.atherton.upnext.util.injection.PerView
 import com.ww.roxie.BaseAction
 import com.ww.roxie.BaseState
 import com.ww.roxie.BaseViewModel
-import io.reactivex.subjects.PublishSubject
 import kotlinx.android.parcel.Parcelize
 import javax.inject.Inject
 
-class MainViewModel @Inject constructor(
-    initialState: MainState?
-): BaseViewModel<MainAction, MainState>() {
+class ShowsViewModel @Inject constructor(
+    initialState: ShowsState?
+): BaseViewModel<ShowsAction, ShowsState>() {
 
-    override val initialState = initialState ?: MainState()
-
-    val subject: PublishSubject<String> = PublishSubject.create()
+    override val initialState = initialState ?: ShowsState()
 
     init {
         bindActions()
@@ -32,30 +29,31 @@ class MainViewModel @Inject constructor(
 // MVI
 //================================================================================
 
-sealed class MainAction : BaseAction {
-    object Load : MainAction() //todo maybe remove
+sealed class ShowsAction : BaseAction {
+    object Load : ShowsAction() //todo maybe remove
 }
 
-sealed class MainChange {
-    object Loading : MainChange() //todo maybe remove
+sealed class ShowsChange {
+    object Loading : ShowsChange() //todo maybe remove
 }
 
 @Parcelize
-data class MainState(@Transient val isIdle: Boolean = true): BaseState, Parcelable
+data class ShowsState(@Transient val isIdle: Boolean = true): BaseState, Parcelable
+
 
 //================================================================================
 // Factory
 //================================================================================
 
 @PerView
-class MainViewModelFactory(
-    private val initialState: MainState?
+class ShowsViewModelFactory(
+    private val initialState: ShowsState?
 ) : ViewModelProvider.Factory {
 
     @Suppress("unchecked_cast")
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T = MainViewModel(initialState) as T
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T  = ShowsViewModel(initialState) as T
 
     companion object {
-        const val NAME = "MainViewModelFactory"
+        const val NAME = "ShowsViewModelFactory"
     }
 }

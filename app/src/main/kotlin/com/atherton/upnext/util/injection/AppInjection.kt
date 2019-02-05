@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.net.ConnectivityManager
-import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.App
 import com.atherton.upnext.BuildConfig
 import com.atherton.upnext.data.api.TmdbApiKeyInterceptor
@@ -12,6 +11,8 @@ import com.atherton.upnext.data.api.TmdbMultiSearchResponseAdapter
 import com.atherton.upnext.data.api.TmdbSearchService
 import com.atherton.upnext.data.preferences.LocalStorage
 import com.atherton.upnext.data.preferences.Storage
+import com.atherton.upnext.data.repository.movies.CachingMoviesRepository
+import com.atherton.upnext.data.repository.movies.MoviesRepository
 import com.atherton.upnext.data.repository.search.CachingSearchRepository
 import com.atherton.upnext.data.repository.search.SearchRepository
 import com.atherton.upnext.util.network.manager.AndroidNetworkManager
@@ -45,14 +46,12 @@ interface AppComponent {
     fun networkManager(): NetworkManager
     fun schedulers(): RxSchedulers
     fun storage(): Storage
-    fun viewModelFactory(): ViewModelProvider.Factory
     fun searchRepository(): SearchRepository
+    fun moviesRepository(): MoviesRepository
 }
 
 
-@Module(
-    includes = [ViewModelModule::class]
-)
+@Module
 class AppModule(private val application: Application) {
 
     @Provides
@@ -116,8 +115,10 @@ class AppModule(private val application: Application) {
     @Provides
     @Singleton internal fun provideSearchRepository(searchService: TmdbSearchService): SearchRepository {
         return CachingSearchRepository(searchService)
-
     }
+
+    @Provides
+    @Singleton internal fun provideMoviesRepository(): MoviesRepository = CachingMoviesRepository()
 
     companion object {
         private const val TMDB_API_VERSION = 3

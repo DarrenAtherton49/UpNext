@@ -19,7 +19,7 @@ class CachingSearchRepository @Inject constructor(
     override fun searchMulti(query: String): Single<Response<List<SearchModel>>> {
         return searchService.searchMulti(query)
             .map {
-                it.toDomainResponse { response -> response.results.toDomainSearchModels() }
+                it.toDomainResponse(false) { response -> response.results.toDomainSearchModels() }
             }
     }
 }

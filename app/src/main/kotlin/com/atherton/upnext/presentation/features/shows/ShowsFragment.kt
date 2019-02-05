@@ -5,33 +5,47 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.R
 import com.atherton.upnext.presentation.main.MainViewModel
+import com.atherton.upnext.presentation.main.MainViewModelFactory
 import com.atherton.upnext.util.base.BaseFragment
 import com.atherton.upnext.util.extensions.getActivityViewModel
 import com.atherton.upnext.util.extensions.getAppComponent
+import com.atherton.upnext.util.extensions.getViewModel
 import javax.inject.Inject
+import javax.inject.Named
 
-class ShowsFragment : BaseFragment() {
+class ShowsFragment : BaseFragment<ShowsAction, ShowsState, ShowsViewModel>() {
 
     override val layoutResId: Int = R.layout.fragment_shows
+    override val stateBundleKey: String = "bundle_key_shows_state"
 
-    @Inject lateinit var vmFactory: ViewModelProvider.Factory
+    @field:[Inject Named(MainViewModelFactory.NAME)]
+    lateinit var mainVmFactory: ViewModelProvider.Factory
+
+    @field:[Inject Named(ShowsViewModelFactory.NAME)]
+    lateinit var vmFactory: ViewModelProvider.Factory
+
     private val activityViewModel: MainViewModel by lazy {
-        getActivityViewModel(vmFactory, MainViewModel::class.java)
+        getActivityViewModel<MainViewModel>(mainVmFactory)
 
+    }
+    override val viewModel: ShowsViewModel by lazy {
+        getViewModel<ShowsViewModel>(vmFactory)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        observeViewModels()
+        //todo dispatch action
     }
 
-    private fun observeViewModels() {
+    override fun renderState(state: ShowsState) {
 
     }
 
-    override fun initInjection() {
+    override fun initInjection(initialState: ShowsState?) {
         DaggerShowsComponent.builder()
+            .showsModule(ShowsModule(initialState))
+            .mainModule(mainModule)
             .appComponent(getAppComponent())
             .build()
             .inject(this)

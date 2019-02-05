@@ -82,6 +82,7 @@ dependencies {
     implementation dependencies.retrofitRxJava2Adapter
     implementation dependencies.roxie
     implementation dependencies.rxAndroid
+    implementation dependencies.rxKotlin
     implementation dependencies.rxJava2
     implementation dependencies.timber
 

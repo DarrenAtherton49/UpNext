@@ -5,32 +5,39 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.atherton.upnext.R
-import com.atherton.upnext.presentation.features.discover.DaggerDiscoverComponent
 import com.atherton.upnext.presentation.main.MainViewModel
+import com.atherton.upnext.presentation.main.MainViewModelFactory
 import com.atherton.upnext.util.base.BaseFragment
 import com.atherton.upnext.util.extensions.getActivityViewModel
 import com.atherton.upnext.util.extensions.getAppComponent
 import com.atherton.upnext.util.extensions.getViewModel
 import kotlinx.android.synthetic.main.discover_search_field.*
 import javax.inject.Inject
+import javax.inject.Named
 
-class DiscoverFragment : BaseFragment() {
+class DiscoverFragment : BaseFragment<DiscoverAction, DiscoverState, DiscoverViewModel>() {
 
     override val layoutResId: Int = R.layout.fragment_discover
+    override val stateBundleKey: String = "bundle_key_discover_state"
 
-    @Inject lateinit var vmFactory: ViewModelProvider.Factory
+    @field:[Inject Named(MainViewModelFactory.NAME)]
+    lateinit var mainVmFactory: ViewModelProvider.Factory
+
+    @field:[Inject Named(DiscoverViewModelFactory.NAME)]
+    lateinit var vmFactory: ViewModelProvider.Factory
+
     private val activityViewModel: MainViewModel by lazy {
-        getActivityViewModel(vmFactory, MainViewModel::class.java)
+        getActivityViewModel<MainViewModel>(mainVmFactory)
 
     }
-    private val viewModel: DiscoverViewModel by lazy {
-        getViewModel(vmFactory, DiscoverViewModel::class.java)
+    override val viewModel: DiscoverViewModel by lazy {
+        getViewModel<DiscoverViewModel>(vmFactory)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        observeViewModels()
+        //todo dispatch action
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -44,6 +51,10 @@ class DiscoverFragment : BaseFragment() {
         }
     }
 
+    override fun renderState(state: DiscoverState) {
+
+    }
+
     //todo
     private fun initRecyclerView() {
 //        recyclerAdapter = DailyAdapter { item ->
@@ -55,15 +66,13 @@ class DiscoverFragment : BaseFragment() {
 //        }
     }
 
-    private fun observeViewModels() {
-
-    }
-
-    override fun initInjection() {
+    override fun initInjection(initialState: DiscoverState?) {
         DaggerDiscoverComponent.builder()
-                .appComponent(getAppComponent())
-                .build()
-                .inject(this)
+            .discoverModule(DiscoverModule(initialState))
+            .mainModule(mainModule)
+            .appComponent(getAppComponent())
+            .build()
+            .inject(this)
     }
 
     companion object {

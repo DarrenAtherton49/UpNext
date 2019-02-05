@@ -73,16 +73,16 @@ fun <T> LiveData<T>.observe(owner: LifecycleOwner, observer: (T?) -> Unit) {
     this.observe(owner, Observer(observer))
 }
 
-fun <T : ViewModel> Fragment.getViewModel(vmFactory: ViewModelProvider.Factory, modelClass: Class<T>): T {
-    return ViewModelProviders.of(this, vmFactory).get(modelClass)
+inline fun <reified T : ViewModel> Fragment.getViewModel(vmFactory: ViewModelProvider.Factory): T {
+    return ViewModelProviders.of(this, vmFactory).get(T::class.java)
 }
 
-fun <T : ViewModel> Fragment.getActivityViewModel(vmFactory: ViewModelProvider.Factory, modelClass: Class<T>): T {
-    return ViewModelProviders.of(requireActivity(), vmFactory).get(modelClass)
+inline fun <reified T : ViewModel> Fragment.getActivityViewModel(vmFactory: ViewModelProvider.Factory): T {
+    return ViewModelProviders.of(requireActivity(), vmFactory).get(T::class.java)
 }
 
-fun <T : ViewModel> AppCompatActivity.getViewModel(vmFactory: ViewModelProvider.Factory, modelClass: Class<T>): T {
-    return ViewModelProviders.of(this, vmFactory).get(modelClass)
+inline fun <reified T : ViewModel> AppCompatActivity.getViewModel(vmFactory: ViewModelProvider.Factory): T {
+    return ViewModelProviders.of(this, vmFactory).get(T::class.java)
 }
 
 fun View.showShortSnackbar(@StringRes stringResId: Int) {

@@ -1,4 +1,4 @@
-package com.atherton.upnext.presentation.features.shows
+package com.atherton.upnext.presentation.features.discover.featured
 
 import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.presentation.main.MainComponent
@@ -13,20 +13,20 @@ import javax.inject.Named
 @PerView
 @Component(
     dependencies = [AppComponent::class],
-    modules = [MainModule::class, ShowsModule::class]
+    modules = [MainModule::class, DiscoverModule::class]
 )
-interface ShowsComponent : MainComponent {
+interface DiscoverComponent : MainComponent {
 
-    fun inject(showsFragment: ShowsFragment)
+    fun inject(discoverFragment: DiscoverFragment)
 }
 
 
 @Module
-class ShowsModule(private val initialState: ShowsState?) {
+class DiscoverModule(private val initialState: DiscoverState?) {
 
     @Provides
-    @Named(ShowsViewModelFactory.NAME)
+    @Named(DiscoverViewModelFactory.NAME)
     @PerView internal fun provideViewModelFactory(): ViewModelProvider.Factory {
-        return ShowsViewModelFactory(initialState)
+        return DiscoverViewModelFactory(initialState)
     }
 }

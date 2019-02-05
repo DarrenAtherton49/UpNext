@@ -13,13 +13,19 @@ import com.atherton.upnext.util.extensions.getAppComponent
 import com.atherton.upnext.util.extensions.getViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
+import javax.inject.Named
 
-class MainActivity : BaseActivity() {
+class MainActivity : BaseActivity<MainAction, MainState, MainViewModel>() {
 
     override val layoutResId: Int = R.layout.activity_main
+    override val stateBundleKey: String = "bundle_key_main_state"
 
-    @Inject lateinit var vmFactory: ViewModelProvider.Factory
-    private lateinit var viewModel: MainViewModel
+    @field:[Inject Named(MainViewModelFactory.NAME)]
+    lateinit var vmFactory: ViewModelProvider.Factory
+
+    override val viewModel: MainViewModel by lazy {
+        getViewModel<MainViewModel>(vmFactory)
+    }
 
     private val topLevelDestinationIds = setOf(R.id.moviesFragment, R.id.showsFragment, R.id.discoverFragment)
     private val appBarConfiguration: AppBarConfiguration by lazy {
@@ -32,15 +38,16 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel = getViewModel(vmFactory, MainViewModel::class.java)
-
-        observeViewModel()
         setSupportActionBar(toolbar)
         setupNavigation()
     }
 
     private fun observeViewModel() {
 
+    }
+
+    override fun renderState(state: MainState) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -71,10 +78,11 @@ class MainActivity : BaseActivity() {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-    override fun initInjection() {
+    override fun initInjection(initialState: MainState?) {
         DaggerMainComponent.builder()
-                .appComponent(getAppComponent())
-                .build()
-                .inject(this)
+            .mainModule(MainModule(initialState))
+            .appComponent(getAppComponent())
+            .build()
+            .inject(this)
     }
 }
