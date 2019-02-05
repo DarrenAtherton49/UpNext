@@ -7,10 +7,10 @@
     android:background="@android:color/holo_red_dark">
 
     <TextView
+        android:id="@+id/movieTitleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:gravity="center"
-        android:text="Movie"/>
+        android:gravity="center"/>
 
 </LinearLayout>

@@ -5,14 +5,13 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.atherton.upnext.R
+import com.atherton.upnext.data.repository.Response
 import com.atherton.upnext.presentation.main.MainViewModel
 import com.atherton.upnext.presentation.main.MainViewModelFactory
 import com.atherton.upnext.util.base.BaseFragment
-import com.atherton.upnext.util.extensions.getActivityViewModel
-import com.atherton.upnext.util.extensions.getAppComponent
-import com.atherton.upnext.util.extensions.getViewModel
-import com.atherton.upnext.util.extensions.showSoftKeyboard
+import com.atherton.upnext.util.extensions.*
 import com.atherton.upnext.util.recyclerview.GridSpacingItemDecoration
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.base_recycler_view.*
 import kotlinx.android.synthetic.main.search_results_search_field.*
 import javax.inject.Inject
@@ -42,6 +41,8 @@ class SearchResultsFragment : BaseFragment<SearchResultsAction, SearchResultsSta
         }
     }
 
+    private val disposables: CompositeDisposable = CompositeDisposable()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -49,29 +50,34 @@ class SearchResultsFragment : BaseFragment<SearchResultsAction, SearchResultsSta
         //todo check the MVI state to see if it is !detaching
         searchEditText.showSoftKeyboard()
 
+        searchEditText.whenTextChanges {
+            viewModel.dispatch(SearchResultsAction.SearchTextChanged(it))
+        }
+
         //todo when fragment goes away, we need to hide the keyboard (could do this as part of the MVI state or an view effect?)
 
         initRecyclerView()
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        viewModel.dispatch(SearchResultsAction.LoadPopular)
-    }
-
     override fun renderState(state: SearchResultsState) {
         when {
-            state.isLoading -> {
-
+            state.results.isNotEmpty() -> {
+                recyclerViewAdapter.submitList(state.results)
             }
             state.failure != null -> {
-
-            }
-            else -> {
-
+                val errorMessage: String = when (state.failure) {
+                    is Response.Failure.AppError.Generic -> ""
+                    is Response.Failure.AppError.NoResourcesFound -> "no results found"
+                    is Response.Failure.ServerError -> ""
+                    is Response.Failure.NetworkError -> ""
+                }
+                //todo show error layout
+                //todo set error message
             }
         }
+        progressBar.isVisible = state.isLoading
+        recyclerView.isVisible = !state.results.isEmpty()
+        //todo errorLayout.isVisible = state.failure != null
     }
 
     private fun initRecyclerView() {

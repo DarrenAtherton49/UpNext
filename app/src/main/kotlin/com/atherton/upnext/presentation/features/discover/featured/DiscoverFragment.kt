@@ -45,7 +45,7 @@ class DiscoverFragment : BaseFragment<DiscoverAction, DiscoverState, DiscoverVie
         initRecyclerView()
 
         searchEditText.setOnClickListener {
-            //todo dispatch action to viewmodel to say 'search edit text clicked'
+            //todo dispatch action to viewmodel to say 'search edit query clicked'
             //todo replace 'findNavController' with lazy delegate if used more than once
             findNavController().navigate(R.id.actionGoToSearchResults)
         }

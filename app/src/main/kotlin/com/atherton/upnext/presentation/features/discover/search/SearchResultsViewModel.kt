@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.data.model.SearchModel
 import com.atherton.upnext.data.repository.Response
-import com.atherton.upnext.domain.usecase.LoadPopularUseCase
+import com.atherton.upnext.domain.usecase.SearchMultiUseCase
 import com.atherton.upnext.util.injection.PerView
 import com.atherton.upnext.util.threading.RxSchedulers
 import com.ww.roxie.BaseAction
@@ -16,11 +16,12 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.plusAssign
 import kotlinx.android.parcel.Parcelize
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class SearchResultsViewModel @Inject constructor(
     initialState: SearchResultsState?,
-    private val loadPopularUseCase: LoadPopularUseCase,
+    private val searchMultiUseCase: SearchMultiUseCase,
     private val schedulers: RxSchedulers
 ): BaseViewModel<SearchResultsAction, SearchResultsState>() {
 
@@ -31,6 +32,7 @@ class SearchResultsViewModel @Inject constructor(
             is SearchResultsChange.Loading -> state.copy( // loading state (could be with or without previous/cached results)
                 isIdle = false,
                 isLoading = true,
+                query = state.query,
                 results = state.results,
                 cached = state.cached,
                 failure = null
@@ -41,6 +43,7 @@ class SearchResultsViewModel @Inject constructor(
                         state.copy(
                             isIdle = false,
                             isLoading = false,
+                            query = change.query,
                             results = change.response.data,
                             cached = change.response.cached,
                             failure = null
@@ -50,8 +53,9 @@ class SearchResultsViewModel @Inject constructor(
                         state.copy(
                             isIdle = false,
                             isLoading = false,
+                            query = change.query,
                             results = emptyList(),
-                            cached = state.cached,
+                            cached = false,
                             failure = change.response
                         )
                     }
@@ -65,17 +69,20 @@ class SearchResultsViewModel @Inject constructor(
     }
 
     private fun bindActions() {
-        val loadPopularResultsChange = actions.ofType<SearchResultsAction.LoadPopular>()
-            .switchMap {
-                loadPopularUseCase.build()
+        //todo maybe pass it debounce on first time?
+        val textSearchedChange = actions.ofType<SearchResultsAction.SearchTextChanged>()
+            .debounce(250, TimeUnit.MILLISECONDS)
+            .distinctUntilChanged()
+            .switchMap { action ->
+                searchMultiUseCase.build(action.query)
                     .subscribeOn(schedulers.io)
                     .toObservable()
-                    .map<SearchResultsChange> { SearchResultsChange.Result(it) }
-                    .defaultIfEmpty(SearchResultsChange.Result(Response.Failure.AppError.NoResourcesFound))
+                    .map<SearchResultsChange> { SearchResultsChange.Result(action.query, it) }
+                    .defaultIfEmpty(SearchResultsChange.Result(action.query, Response.Failure.AppError.NoResourcesFound))
                     .startWith(SearchResultsChange.Loading)
             }
 
-        disposables += loadPopularResultsChange
+        disposables += textSearchedChange
             .scan(initialState, reducer)
             .filter { !it.isIdle }
             .distinctUntilChanged()
@@ -89,19 +96,20 @@ class SearchResultsViewModel @Inject constructor(
 //================================================================================
 
 sealed class SearchResultsAction : BaseAction {
-    object LoadPopular : SearchResultsAction()
+    data class SearchTextChanged(val query: String) : SearchResultsAction()
     object ResultClicked : SearchResultsAction()
 }
 
 sealed class SearchResultsChange {
     object Loading : SearchResultsChange()
-    data class Result(val response: Response<List<SearchModel>>) : SearchResultsChange()
+    data class Result(val query: String, val response: Response<List<SearchModel>>) : SearchResultsChange()
 }
 
 @Parcelize
 data class SearchResultsState(
     @Transient val isIdle: Boolean = true,
     @Transient val isLoading: Boolean = false,
+    val query: String = "",
     val results: List<SearchModel> = emptyList(),
     val cached: Boolean = false,
     val failure: Response.Failure? = null
@@ -115,13 +123,13 @@ data class SearchResultsState(
 @PerView
 class SearchResultsViewModelFactory(
     private val initialState: SearchResultsState?,
-    private val loadPopularUseCase: LoadPopularUseCase,
+    private val searchMultiUseCase: SearchMultiUseCase,
     private val schedulers: RxSchedulers
 ) : ViewModelProvider.Factory {
 
     @Suppress("unchecked_cast")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return SearchResultsViewModel(initialState, loadPopularUseCase, schedulers) as T
+        return SearchResultsViewModel(initialState, searchMultiUseCase, schedulers) as T
     }
 
     companion object {

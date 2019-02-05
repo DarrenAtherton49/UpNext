@@ -12,10 +12,10 @@
         android:layout_height="@dimen/search_results_image_height"/>
     
     <TextView
+        android:id="@+id/tvShowTitleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:gravity="center"
-        android:text="Person"/>
+        android:gravity="center"/>
 
 </LinearLayout>

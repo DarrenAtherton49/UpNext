@@ -1,7 +1,7 @@
 package com.atherton.upnext.presentation.features.discover.search
 
 import androidx.lifecycle.ViewModelProvider
-import com.atherton.upnext.domain.usecase.LoadPopularUseCase
+import com.atherton.upnext.domain.usecase.SearchMultiUseCase
 import com.atherton.upnext.presentation.main.MainComponent
 import com.atherton.upnext.presentation.main.MainModule
 import com.atherton.upnext.util.injection.AppComponent
@@ -29,9 +29,9 @@ class SearchModule(private val initialState: SearchResultsState?) {
     @Provides
     @Named(SearchResultsViewModelFactory.NAME)
     @PerView internal fun provideViewModelFactory(
-        loadPopularUseCase: LoadPopularUseCase,
+        searchMultiUseCase: SearchMultiUseCase,
         schedulers: RxSchedulers
     ): ViewModelProvider.Factory {
-        return SearchResultsViewModelFactory(initialState, loadPopularUseCase, schedulers)
+        return SearchResultsViewModelFactory(initialState, searchMultiUseCase, schedulers)
     }
 }

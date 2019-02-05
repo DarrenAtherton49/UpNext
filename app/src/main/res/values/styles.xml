@@ -32,7 +32,7 @@
     </style>
 
     <style name="AppEditText" parent="Widget.MaterialComponents.TextInputEditText.OutlinedBox">
-        <item name="android:textCursorDrawable">@null</item> <!-- forces cursor to be same color as text -->
+        <item name="android:textCursorDrawable">@null</item> <!-- forces cursor to be same color as query -->
     </style>
 
 </resources>

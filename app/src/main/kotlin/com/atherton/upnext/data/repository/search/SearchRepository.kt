@@ -9,7 +9,7 @@ interface SearchRepository {
     /**
      * Search for tv shows, movies and people in one call.
      *
-     * @param query the text to search for
+     * @param query the query to search for
      */
     fun searchMulti(query: String): Single<Response<List<SearchModel>>>
 }

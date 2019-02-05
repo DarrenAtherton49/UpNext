@@ -53,6 +53,7 @@ private class SearchResultsDiffCallback : DiffUtil.ItemCallback<SearchModel>() {
         return oldItem.id == newItem.id && oldItem::class == newItem::class
     }
 
-    //todo if we ever represent 'saved/watched' state in the search results UI, we will need to update this.
-    override fun areContentsTheSame(oldItem: SearchModel, newItem: SearchModel): Boolean = true
+    override fun areContentsTheSame(oldItem: SearchModel, newItem: SearchModel): Boolean {
+        return oldItem == newItem
+    }
 }
