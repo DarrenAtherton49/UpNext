@@ -16,6 +16,7 @@ class CachingSearchRepository @Inject constructor(
     private val searchService: TmdbSearchService
 ) : SearchRepository {
 
+    //todo Observable.zip(config, search) and map image urls into domain object
     override fun searchMulti(query: String): Single<Response<List<SearchModel>>> {
         return searchService.searchMulti(query)
             .map {
