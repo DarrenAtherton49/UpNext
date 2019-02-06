@@ -1,10 +1,10 @@
 package com.atherton.upnext.domain.usecase
 
-import com.atherton.upnext.data.model.Person
-import com.atherton.upnext.data.model.SearchModel
-import com.atherton.upnext.data.repository.Response
-import com.atherton.upnext.data.repository.movies.MoviesRepository
-import com.atherton.upnext.data.repository.search.SearchRepository
+import com.atherton.upnext.domain.model.Response
+import com.atherton.upnext.domain.model.Person
+import com.atherton.upnext.domain.model.SearchModel
+import com.atherton.upnext.domain.repository.MoviesRepository
+import com.atherton.upnext.domain.repository.SearchRepository
 import io.reactivex.Single
 import javax.inject.Inject
 

@@ -1,5 +1,6 @@
 package com.atherton.upnext.data.api
 
+import com.atherton.upnext.data.model.*
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
 
@@ -25,8 +26,8 @@ class TmdbMultiSearchResponseAdapter {
         }
     }
 
-    private fun TmdbMultiSearchResult.toMovie(): TmdbMovieResult {
-        return TmdbMovieResult(
+    private fun TmdbMultiSearchResult.toMovie(): TmdbMovie {
+        return TmdbMovie(
             adultContent,
             backdropPath,
             genreIds,
@@ -44,8 +45,8 @@ class TmdbMultiSearchResponseAdapter {
         )
     }
 
-    private fun TmdbMultiSearchResult.toTvShow(): TmdbTvResult {
-        return TmdbTvResult(
+    private fun TmdbMultiSearchResult.toTvShow(): TmdbTvShow {
+        return TmdbTvShow(
             backdropPath,
             firstAirDate,
             genreIds,
@@ -62,8 +63,8 @@ class TmdbMultiSearchResponseAdapter {
         )
     }
 
-    private fun TmdbMultiSearchResult.toPerson(): TmdbPersonResult =
-        TmdbPersonResult(adultContent, id, knownFor.toSpecificEntities(), name, popularity, profilePath)
+    private fun TmdbMultiSearchResult.toPerson(): TmdbPerson =
+        TmdbPerson(adultContent, id, knownFor.toSpecificEntities(), name, popularity, profilePath)
 
     @ToJson
     fun toJson(entity: List<TmdbMultiSearchModel>): List<TmdbMultiSearchResult> {

@@ -1,4 +1,4 @@
-package com.atherton.upnext.data.model
+package com.atherton.upnext.domain.model
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
@@ -59,3 +59,13 @@ data class Person(
     val popularity: Float?,
     val profilePath: String?
 ) : SearchModel(id)
+
+data class Config(
+    val baseUrl: String,
+    val secureBaseUrl: String,
+    val backdropSizes: List<String>,
+    val logoSizes: List<String>,
+    val posterSizes: List<String>,
+    val profileSizes: List<String>,
+    val stillSizes: List<String>
+)

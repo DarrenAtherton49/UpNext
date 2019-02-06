@@ -3,8 +3,8 @@ package com.atherton.upnext.presentation.features.discover.search
 import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.atherton.upnext.data.model.SearchModel
-import com.atherton.upnext.data.repository.Response
+import com.atherton.upnext.domain.model.SearchModel
+import com.atherton.upnext.domain.model.Response
 import com.atherton.upnext.domain.usecase.SearchMultiUseCase
 import com.atherton.upnext.util.injection.PerView
 import com.atherton.upnext.util.threading.RxSchedulers

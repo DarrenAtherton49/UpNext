@@ -1,4 +1,4 @@
-package com.atherton.upnext.util.network.retrofit
+package com.atherton.upnext.data.model
 
 import java.io.IOException
 

@@ -1,7 +1,8 @@
-package com.atherton.upnext.data.repository.movies
+package com.atherton.upnext.data.repository
 
-import com.atherton.upnext.data.model.Movie
-import com.atherton.upnext.data.repository.Response
+import com.atherton.upnext.domain.model.Movie
+import com.atherton.upnext.domain.model.Response
+import com.atherton.upnext.domain.repository.MoviesRepository
 import io.reactivex.Single
 import javax.inject.Inject
 import javax.inject.Singleton

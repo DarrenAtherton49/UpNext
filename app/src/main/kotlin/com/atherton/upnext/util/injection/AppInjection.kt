@@ -7,14 +7,17 @@ import android.net.ConnectivityManager
 import com.atherton.upnext.App
 import com.atherton.upnext.BuildConfig
 import com.atherton.upnext.data.api.TmdbApiKeyInterceptor
+import com.atherton.upnext.data.api.TmdbConfigService
 import com.atherton.upnext.data.api.TmdbMultiSearchResponseAdapter
 import com.atherton.upnext.data.api.TmdbSearchService
 import com.atherton.upnext.data.preferences.LocalStorage
 import com.atherton.upnext.data.preferences.Storage
-import com.atherton.upnext.data.repository.movies.CachingMoviesRepository
-import com.atherton.upnext.data.repository.movies.MoviesRepository
-import com.atherton.upnext.data.repository.search.CachingSearchRepository
-import com.atherton.upnext.data.repository.search.SearchRepository
+import com.atherton.upnext.data.repository.CachingConfigRepository
+import com.atherton.upnext.data.repository.CachingMoviesRepository
+import com.atherton.upnext.data.repository.CachingSearchRepository
+import com.atherton.upnext.domain.repository.ConfigRepository
+import com.atherton.upnext.domain.repository.MoviesRepository
+import com.atherton.upnext.domain.repository.SearchRepository
 import com.atherton.upnext.util.network.manager.AndroidNetworkManager
 import com.atherton.upnext.util.network.manager.NetworkManager
 import com.atherton.upnext.util.network.retrofit.KotlinRxJava2CallAdapterFactory
@@ -35,12 +38,11 @@ import javax.inject.Singleton
 
 @Singleton
 @Component(
-    modules = [AppModule::class]
+    modules = [AppModule::class, RepositoryModule::class, ServiceModule::class]
 )
 interface AppComponent {
 
-    @ApplicationContext
-    fun context(): Context
+    @ApplicationContext fun context(): Context
     fun application(): App
     fun sharedPreferences(): SharedPreferences
     fun networkManager(): NetworkManager
@@ -48,6 +50,7 @@ interface AppComponent {
     fun storage(): Storage
     fun searchRepository(): SearchRepository
     fun moviesRepository(): MoviesRepository
+    fun configRepository(): ConfigRepository
 }
 
 
@@ -106,23 +109,38 @@ class AppModule(private val application: Application) {
     }
 
     @Provides
-    @Singleton internal fun provideTmdbSearchService(retrofit: Retrofit): TmdbSearchService =
-        retrofit.create(TmdbSearchService::class.java)
-
-    @Provides
     @Singleton internal fun provideStorage(localStorage: LocalStorage): Storage = localStorage
-
-    @Provides
-    @Singleton internal fun provideSearchRepository(searchService: TmdbSearchService): SearchRepository {
-        return CachingSearchRepository(searchService)
-    }
-
-    @Provides
-    @Singleton internal fun provideMoviesRepository(): MoviesRepository = CachingMoviesRepository()
 
     companion object {
         private const val TMDB_API_VERSION = 3
         private const val TMDB_API_HOST = "api.themoviedb.org"
         private const val TMDB_API_URL = "https://$TMDB_API_HOST/$TMDB_API_VERSION/"
     }
+}
+
+@Module
+class RepositoryModule {
+
+    @Provides
+    @Singleton internal fun provideSearchRepository(searchService: TmdbSearchService): SearchRepository =
+        CachingSearchRepository(searchService)
+
+    @Provides
+    @Singleton internal fun provideMoviesRepository(): MoviesRepository = CachingMoviesRepository()
+
+    @Provides
+    @Singleton internal fun provideConfigRepository(configService: TmdbConfigService): ConfigRepository =
+        CachingConfigRepository(configService)
+}
+
+@Module
+class ServiceModule {
+
+    @Provides
+    @Singleton internal fun provideTmdbSearchService(retrofit: Retrofit): TmdbSearchService =
+        retrofit.create(TmdbSearchService::class.java)
+
+    @Provides
+    @Singleton internal fun provideTmdbConfigService(retrofit: Retrofit): TmdbConfigService =
+        retrofit.create(TmdbConfigService::class.java)
 }

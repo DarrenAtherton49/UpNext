@@ -2,9 +2,9 @@ package com.atherton.upnext.presentation.features.discover.search
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.atherton.upnext.data.model.Movie
-import com.atherton.upnext.data.model.Person
-import com.atherton.upnext.data.model.TvShow
+import com.atherton.upnext.domain.model.Movie
+import com.atherton.upnext.domain.model.Person
+import com.atherton.upnext.domain.model.TvShow
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_movie_search_result.*
 import kotlinx.android.synthetic.main.item_person_search_result.*

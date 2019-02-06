@@ -4,10 +4,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.atherton.upnext.R
-import com.atherton.upnext.data.model.Movie
-import com.atherton.upnext.data.model.Person
-import com.atherton.upnext.data.model.SearchModel
-import com.atherton.upnext.data.model.TvShow
+import com.atherton.upnext.domain.model.Movie
+import com.atherton.upnext.domain.model.Person
+import com.atherton.upnext.domain.model.SearchModel
+import com.atherton.upnext.domain.model.TvShow
 import com.atherton.upnext.util.extensions.inflateLayout
 
 class SearchResultsAdapter(

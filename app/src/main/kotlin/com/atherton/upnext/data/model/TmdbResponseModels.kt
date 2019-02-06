@@ -1,4 +1,4 @@
-package com.atherton.upnext.data.api
+package com.atherton.upnext.data.model
 
 import com.squareup.moshi.Json
 
@@ -11,6 +11,21 @@ data class TmdbApiError(
     @Json(name = "status_message") val statusMessage: String,
     @Json(name = "status_code") val statusCode: Int
 )
+
+data class TmdbConfiguration(
+    @Json(name = "change_keys") val changeKeys: List<String>,
+    @Json(name = "images") val images: Images
+) {
+    data class Images(
+        @Json(name = "backdrop_sizes") val backdropSizes: List<String>,
+        @Json(name = "base_url") val baseUrl: String,
+        @Json(name = "logo_sizes") val logoSizes: List<String>,
+        @Json(name = "poster_sizes") val posterSizes: List<String>,
+        @Json(name = "profile_sizes") val profileSizes: List<String>,
+        @Json(name = "secure_base_url") val secureBaseUrl: String,
+        @Json(name = "still_sizes") val stillSizes: List<String>
+    )
+}
 
 data class TmdbMultiSearchResponse(
     @Json(name = "page") val page: Int,
@@ -55,7 +70,7 @@ data class TmdbMultiSearchResult(
  */
 sealed class TmdbMultiSearchModel
 
-data class TmdbTvResult(
+data class TmdbTvShow(
     @Json(name = "backdrop_path") val backdropPath: String?,
     @Json(name = "first_air_date") val firstAirDate: String?,
     @Json(name = "genre_ids") val genreIds: List<Int>?,
@@ -71,7 +86,7 @@ data class TmdbTvResult(
     @Json(name = "vote_count") val voteCount: Int?
 ) : TmdbMultiSearchModel()
 
-data class TmdbMovieResult(
+data class TmdbMovie(
     @Json(name = "adult") val adultContent: Boolean?,
     @Json(name = "backdrop_path") val backdropPath: String?,
     @Json(name = "genre_ids") val genreIds: List<Int>?,
@@ -88,7 +103,7 @@ data class TmdbMovieResult(
     @Json(name = "vote_count") val voteCount: Int?
 ) : TmdbMultiSearchModel()
 
-data class TmdbPersonResult(
+data class TmdbPerson(
     @Json(name = "adult") val adultContent: Boolean?,
     @Json(name = "id") val id: Int?,
     @Json(name = "known_for") val knownFor: List<TmdbMultiSearchModel>?, // can be tv shows or movies

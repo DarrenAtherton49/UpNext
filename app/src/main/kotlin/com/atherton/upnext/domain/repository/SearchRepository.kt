@@ -1,7 +1,7 @@
-package com.atherton.upnext.data.repository.search
+package com.atherton.upnext.domain.repository
 
-import com.atherton.upnext.data.model.SearchModel
-import com.atherton.upnext.data.repository.Response
+import com.atherton.upnext.domain.model.SearchModel
+import com.atherton.upnext.domain.model.Response
 import io.reactivex.Single
 
 interface SearchRepository {
