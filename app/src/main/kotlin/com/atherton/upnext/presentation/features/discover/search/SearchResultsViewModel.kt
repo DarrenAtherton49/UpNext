@@ -142,7 +142,7 @@ private fun List<SearchModel>.withImageUrls(config: Config?): List<SearchModel> 
 
     //todo write function to generate path based on device screen size?
     fun buildPosterPath(posterPath: String?, config: Config): String? =
-        posterPath?.let { "${config.secureBaseUrl}${config.posterSizes[1]}$posterPath" }
+        posterPath?.let { "${config.secureBaseUrl}${config.posterSizes[2]}$posterPath" }
 
     //todo write function to generate path based on device screen size?
     fun buildProfilePath(profilePath: String?, config: Config): String? =

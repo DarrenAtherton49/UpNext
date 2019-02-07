@@ -18,15 +18,33 @@ class CachingConfigRepository @Inject constructor(
     private val localConfigStore: LocalConfigStore
 ) : ConfigRepository {
 
+    private var cachedConfig: Config? = null
+
     //todo check for config from network every 3 days. Pass an 'isStale' function into the cacher to check.
     override fun getConfig(): Single<Config> {
-        return configService.getConfig()
-            .map { response ->
-                when (response) {
-                    is NetworkResponse.Success -> response.body.toDomainConfig()
-                    else -> localConfigStore.getConfig().toDomainConfig()
+        return if (cachedConfig != null) {
+            Single.just(cachedConfig)
+        } else {
+            configService.getConfig()
+                .map { response ->
+                    when (response) {
+                        is NetworkResponse.Success -> response.body.toDomainConfig()
+                        else -> localConfigStore.getConfig().toDomainConfig()
+                    }
                 }
-            }
+                .doAfterSuccess { cachedConfig = it }
+        }
     }
-    //todo fall back on stored json config file using cacher
+
+//    //todo check for config from network every 3 days. Pass an 'isStale' function into the cacher to check.
+//    override fun getConfig(): Single<Config> {
+//        return configService.getConfig()
+//            .map { response ->
+//                when (response) {
+//                    is NetworkResponse.Success -> response.body.toDomainConfig()
+//                    else -> localConfigStore.getConfig().toDomainConfig()
+//                }
+//            }
+//    }
+    //todo fall back on stored json config file using cacher mechanism/class
 }

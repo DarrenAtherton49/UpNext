@@ -25,7 +25,6 @@ sealed class SearchResultViewHolder(
     private val requestOptions: RequestOptions by lazy {
         RequestOptions()
             .transforms(CenterCrop(), RoundedCorners(20))
-            .placeholder(R.drawable.ic_image_white_24dp)
             .error(R.drawable.ic_broken_image_white_24dp)
     }
 
