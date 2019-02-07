@@ -15,4 +15,7 @@
     <!-- -The two values below should have a ratio of 1:1.5 as they are posters -->
     <dimen name="search_results_image_width">104dp</dimen>
     <dimen name="search_results_image_height">156dp</dimen>
+
+    <!-- Backdrop aspect ratio is 1.77777777777778 or 16:9 -->
+
 </resources>
