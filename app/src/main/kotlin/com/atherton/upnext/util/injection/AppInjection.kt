@@ -6,10 +6,11 @@ import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import com.atherton.upnext.App
 import com.atherton.upnext.BuildConfig
-import com.atherton.upnext.data.api.TmdbApiKeyInterceptor
-import com.atherton.upnext.data.api.TmdbConfigService
-import com.atherton.upnext.data.api.TmdbMultiSearchResponseAdapter
-import com.atherton.upnext.data.api.TmdbSearchService
+import com.atherton.upnext.data.local.LocalConfigStore
+import com.atherton.upnext.data.network.TmdbApiKeyInterceptor
+import com.atherton.upnext.data.network.TmdbConfigService
+import com.atherton.upnext.data.network.TmdbMultiSearchResponseAdapter
+import com.atherton.upnext.data.network.TmdbSearchService
 import com.atherton.upnext.data.preferences.LocalStorage
 import com.atherton.upnext.data.preferences.Storage
 import com.atherton.upnext.data.repository.CachingConfigRepository
@@ -43,11 +44,7 @@ import javax.inject.Singleton
 interface AppComponent {
 
     @ApplicationContext fun context(): Context
-    fun application(): App
-    fun sharedPreferences(): SharedPreferences
-    fun networkManager(): NetworkManager
     fun schedulers(): RxSchedulers
-    fun storage(): Storage
     fun searchRepository(): SearchRepository
     fun moviesRepository(): MoviesRepository
     fun configRepository(): ConfigRepository
@@ -129,8 +126,12 @@ class RepositoryModule {
     @Singleton internal fun provideMoviesRepository(): MoviesRepository = CachingMoviesRepository()
 
     @Provides
-    @Singleton internal fun provideConfigRepository(configService: TmdbConfigService): ConfigRepository =
-        CachingConfigRepository(configService)
+    @Singleton internal fun provideConfigRepository(
+        configService: TmdbConfigService,
+        localConfigStore: LocalConfigStore
+    ): ConfigRepository {
+        return CachingConfigRepository(configService, localConfigStore)
+    }
 }
 
 @Module

@@ -1,6 +1,6 @@
 package com.atherton.upnext.data.repository
 
-import com.atherton.upnext.data.api.TmdbSearchService
+import com.atherton.upnext.data.network.TmdbSearchService
 import com.atherton.upnext.data.mapper.toDomainResponse
 import com.atherton.upnext.data.mapper.toDomainSearchModels
 import com.atherton.upnext.domain.model.Response

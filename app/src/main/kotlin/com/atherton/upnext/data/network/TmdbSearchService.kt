@@ -1,4 +1,4 @@
-package com.atherton.upnext.data.api
+package com.atherton.upnext.data.network
 
 import com.atherton.upnext.data.model.NetworkResponse
 import com.atherton.upnext.data.model.TmdbApiError

@@ -23,6 +23,7 @@ import com.atherton.upnext.App
 import com.atherton.upnext.util.injection.AppComponent
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import com.squareup.moshi.Moshi
 import java.util.concurrent.Executors
 
 fun Context.getDrawableCompat(@DrawableRes id: Int): Drawable? = ContextCompat.getDrawable(this, id)
@@ -136,3 +137,5 @@ fun EditText.whenTextChanges(emitInitialValue: Boolean = false, block: (String) 
         }
     })
 }
+
+inline fun <reified T> Moshi.adapt(json: String): T? = this.adapter(T::class.java).fromJson(json)

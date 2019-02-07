@@ -1,4 +1,4 @@
-package com.atherton.upnext.data.api
+package com.atherton.upnext.data.network
 
 import com.atherton.upnext.data.model.NetworkResponse
 import com.atherton.upnext.data.model.TmdbApiError
@@ -9,5 +9,5 @@ import retrofit2.http.GET
 interface TmdbConfigService {
 
     @GET("configuration")
-    fun getConfiguration(): Single<NetworkResponse<TmdbConfiguration, TmdbApiError>>
+    fun getConfig(): Single<NetworkResponse<TmdbConfiguration, TmdbApiError>>
 }

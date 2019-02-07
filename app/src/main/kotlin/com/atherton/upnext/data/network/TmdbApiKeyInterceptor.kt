@@ -1,4 +1,4 @@
-package com.atherton.upnext.data.api
+package com.atherton.upnext.data.network
 
 import okhttp3.Interceptor
 import okhttp3.Response
