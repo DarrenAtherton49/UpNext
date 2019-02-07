@@ -67,5 +67,5 @@ data class Config(
     val logoSizes: List<String>,
     val posterSizes: List<String>,
     val profileSizes: List<String>,
-    val stillSizes: List<String>
+    val stillSizes: List<String> // for episode still images
 )

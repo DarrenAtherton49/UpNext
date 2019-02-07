@@ -94,6 +94,8 @@ class SearchResultsViewModel @Inject constructor(
                     .startWith(SearchResultsChange.Loading)
             }
 
+        //todo add search model clicked change
+
         disposables += textSearchedChange
             .scan(initialState, reducer)
             .filter { !it.isIdle }
@@ -109,7 +111,7 @@ class SearchResultsViewModel @Inject constructor(
 
 sealed class SearchResultsAction : BaseAction {
     data class SearchTextChanged(val query: String) : SearchResultsAction()
-    object ResultClicked : SearchResultsAction()
+    data class ResultClicked(val searchModel: SearchModel) : SearchResultsAction()
 }
 
 sealed class SearchResultsChange {

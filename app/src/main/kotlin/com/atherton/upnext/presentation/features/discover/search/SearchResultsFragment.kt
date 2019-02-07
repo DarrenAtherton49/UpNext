@@ -10,6 +10,7 @@ import com.atherton.upnext.presentation.main.MainViewModel
 import com.atherton.upnext.presentation.main.MainViewModelFactory
 import com.atherton.upnext.util.base.BaseFragment
 import com.atherton.upnext.util.extensions.*
+import com.atherton.upnext.util.glide.GlideApp
 import com.atherton.upnext.util.recyclerview.GridSpacingItemDecoration
 import kotlinx.android.synthetic.main.base_recycler_view.*
 import kotlinx.android.synthetic.main.search_results_search_field.*
@@ -35,8 +36,8 @@ class SearchResultsFragment : BaseFragment<SearchResultsAction, SearchResultsSta
         getViewModel<SearchResultsViewModel>(vmFactory)
     }
     private val recyclerViewAdapter: SearchResultsAdapter by lazy {
-        SearchResultsAdapter {
-            viewModel.dispatch(SearchResultsAction.ResultClicked) //todo add search result item as parameter
+        SearchResultsAdapter(GlideApp.with(this)) { searchModel ->
+            viewModel.dispatch(SearchResultsAction.ResultClicked(searchModel))
         }
     }
 
@@ -108,8 +109,6 @@ class SearchResultsFragment : BaseFragment<SearchResultsAction, SearchResultsSta
     }
 
     companion object {
-        fun newInstance() = SearchResultsFragment()
-
         private const val GRID_NUM_COLUMNS = 3
     }
 }

@@ -4,6 +4,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
+    <dimen name="keyline">8dp</dimen>
     <dimen name="keyline_2x">16dp</dimen>
 
     <item name="match_parent" format="integer" type="dimen">-1</item>
@@ -11,6 +12,7 @@
 
     <!-- SearchResultsFragment -->
     <dimen name="search_results_grid_spacing">16dp</dimen>
-    <dimen name="search_results_image_height">96dp</dimen> <!--todo find proper aspect ratio and use best height -->
-
+    <!-- -The two values below should have a ratio of 1:1.5 as they are posters -->
+    <dimen name="search_results_image_width">104dp</dimen>
+    <dimen name="search_results_image_height">156dp</dimen>
 </resources>

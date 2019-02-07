@@ -1,5 +1,6 @@
 package com.atherton.upnext.presentation.features.discover.search
 
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -9,17 +10,21 @@ import com.atherton.upnext.domain.model.Person
 import com.atherton.upnext.domain.model.SearchModel
 import com.atherton.upnext.domain.model.TvShow
 import com.atherton.upnext.util.extensions.inflateLayout
+import com.atherton.upnext.util.glide.GlideRequests
 
+//todo preload some images when scrolling https://bumptech.github.io/glide/int/recyclerview.html
 class SearchResultsAdapter(
-    private val onClickListener: () -> Unit //todo use this
+    private val imageLoader: GlideRequests,
+    private val onClickListener: (SearchModel) -> Unit
 ) : ListAdapter<SearchModel, SearchResultViewHolder>(SearchResultsDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchResultViewHolder {
+        val view: View = parent.inflateLayout(R.layout.item_search_result)
         return when (viewType) {
-            TV_VIEW_TYPE -> TvShowSearchResultViewHolder(parent.inflateLayout(R.layout.item_tv_search_result))
-            MOVIE_VIEW_TYPE -> MovieSearchResultViewHolder(parent.inflateLayout(R.layout.item_movie_search_result))
-            PERSON_VIEW_TYPE -> PersonSearchResultViewHolder(parent.inflateLayout(R.layout.item_person_search_result))
-            else -> MovieSearchResultViewHolder(parent.inflateLayout(R.layout.item_movie_search_result))
+            TV_VIEW_TYPE -> TvShowSearchResultViewHolder(view, imageLoader).withClickListener()
+            MOVIE_VIEW_TYPE -> MovieSearchResultViewHolder(view, imageLoader).withClickListener()
+            PERSON_VIEW_TYPE -> PersonSearchResultViewHolder(view, imageLoader).withClickListener()
+            else -> MovieSearchResultViewHolder(view, imageLoader).withClickListener()
         }
     }
 
@@ -31,12 +36,21 @@ class SearchResultsAdapter(
         }
     }
 
+    private fun SearchResultViewHolder.withClickListener(): SearchResultViewHolder = this.apply {
+        itemView.setOnClickListener { onClickListener.invoke(getItem(adapterPosition)) }
+    }
+
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
             is TvShow -> TV_VIEW_TYPE
             is Movie -> MOVIE_VIEW_TYPE
             is Person -> PERSON_VIEW_TYPE
         }
+    }
+
+    override fun onViewRecycled(holder: SearchResultViewHolder) {
+        super.onViewRecycled(holder)
+        holder.clear()
     }
 
     companion object {
