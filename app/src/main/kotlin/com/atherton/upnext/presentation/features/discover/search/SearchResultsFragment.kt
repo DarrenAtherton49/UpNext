@@ -71,6 +71,7 @@ class SearchResultsFragment : BaseFragment<SearchResultsAction, SearchResultsSta
                 recyclerViewAdapter.submitList(state.results)
             }
             state.failure != null -> {
+                //todo use string resources instead of hard coding below
                 val errorMessage: String = when (state.failure) {
                     is Response.Failure.AppError.Generic -> ""
                     is Response.Failure.AppError.NoResourcesFound -> "no results found"

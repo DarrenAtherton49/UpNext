@@ -2,6 +2,7 @@ package com.atherton.upnext.presentation.features.discover.search
 
 import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.domain.usecase.GetConfigUseCase
+import com.atherton.upnext.domain.usecase.PopularMoviesTvUseCase
 import com.atherton.upnext.domain.usecase.SearchMultiUseCase
 import com.atherton.upnext.presentation.main.MainComponent
 import com.atherton.upnext.presentation.main.MainModule
@@ -32,8 +33,14 @@ class SearchModule(private val initialState: SearchResultsState?) {
     @PerView internal fun provideViewModelFactory(
         searchMultiUseCase: SearchMultiUseCase,
         getConfigUseCase: GetConfigUseCase,
+        popularMoviesTvUseCase: PopularMoviesTvUseCase,
         schedulers: RxSchedulers
     ): ViewModelProvider.Factory {
-        return SearchResultsViewModelFactory(initialState, searchMultiUseCase, getConfigUseCase, schedulers)
+        return SearchResultsViewModelFactory(
+            initialState,
+            searchMultiUseCase,
+            popularMoviesTvUseCase,
+            getConfigUseCase,
+            schedulers)
     }
 }

@@ -7,18 +7,17 @@ import android.net.ConnectivityManager
 import com.atherton.upnext.App
 import com.atherton.upnext.BuildConfig
 import com.atherton.upnext.data.local.LocalConfigStore
-import com.atherton.upnext.data.network.TmdbApiKeyInterceptor
-import com.atherton.upnext.data.network.TmdbConfigService
-import com.atherton.upnext.data.network.TmdbMultiSearchResponseAdapter
-import com.atherton.upnext.data.network.TmdbSearchService
+import com.atherton.upnext.data.network.*
 import com.atherton.upnext.data.preferences.LocalStorage
 import com.atherton.upnext.data.preferences.Storage
 import com.atherton.upnext.data.repository.CachingConfigRepository
-import com.atherton.upnext.data.repository.CachingMoviesRepository
+import com.atherton.upnext.data.repository.CachingMovieRepository
 import com.atherton.upnext.data.repository.CachingSearchRepository
+import com.atherton.upnext.data.repository.CachingTvShowRepository
 import com.atherton.upnext.domain.repository.ConfigRepository
-import com.atherton.upnext.domain.repository.MoviesRepository
+import com.atherton.upnext.domain.repository.MovieRepository
 import com.atherton.upnext.domain.repository.SearchRepository
+import com.atherton.upnext.domain.repository.TvShowRepository
 import com.atherton.upnext.util.network.manager.AndroidNetworkManager
 import com.atherton.upnext.util.network.manager.NetworkManager
 import com.atherton.upnext.util.network.retrofit.KotlinRxJava2CallAdapterFactory
@@ -45,8 +44,9 @@ interface AppComponent {
 
     @ApplicationContext fun context(): Context
     fun schedulers(): RxSchedulers
+    fun tvShowRepository(): TvShowRepository
+    fun movieRepository(): MovieRepository
     fun searchRepository(): SearchRepository
-    fun moviesRepository(): MoviesRepository
     fun configRepository(): ConfigRepository
 }
 
@@ -119,11 +119,16 @@ class AppModule(private val application: Application) {
 class RepositoryModule {
 
     @Provides
-    @Singleton internal fun provideSearchRepository(searchService: TmdbSearchService): SearchRepository =
-        CachingSearchRepository(searchService)
+    @Singleton internal fun provideTvShowRepository(tvShowService: TmdbTvShowService): TvShowRepository
+        = CachingTvShowRepository(tvShowService)
 
     @Provides
-    @Singleton internal fun provideMoviesRepository(): MoviesRepository = CachingMoviesRepository()
+    @Singleton internal fun provideMovieRepository(movieService: TmdbMovieService): MovieRepository =
+        CachingMovieRepository(movieService)
+
+    @Provides
+    @Singleton internal fun provideSearchRepository(searchService: TmdbSearchService): SearchRepository =
+        CachingSearchRepository(searchService)
 
     @Provides
     @Singleton internal fun provideConfigRepository(
@@ -136,6 +141,14 @@ class RepositoryModule {
 
 @Module
 class ServiceModule {
+
+    @Provides
+    @Singleton internal fun provideTvShowService(retrofit: Retrofit): TmdbTvShowService =
+        retrofit.create(TmdbTvShowService::class.java)
+
+    @Provides
+    @Singleton internal fun provideMovieService(retrofit: Retrofit): TmdbMovieService =
+        retrofit.create(TmdbMovieService::class.java)
 
     @Provides
     @Singleton internal fun provideTmdbSearchService(retrofit: Retrofit): TmdbSearchService =

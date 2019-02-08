@@ -4,7 +4,7 @@ import com.atherton.upnext.domain.model.Movie
 import com.atherton.upnext.domain.model.Response
 import io.reactivex.Single
 
-interface MoviesRepository {
+interface MovieRepository {
 
     fun popular(): Single<Response<List<Movie>>>
 }

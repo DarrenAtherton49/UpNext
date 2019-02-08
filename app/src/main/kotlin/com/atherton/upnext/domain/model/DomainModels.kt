@@ -13,7 +13,7 @@ data class ApiError(val statusMessage: String, val statusCode: Int): Parcelable
 /**
  * Wrapper to unify the movie, tv and person results below into one 'type' - useful for 'when' statements etc.
  */
-sealed class SearchModel(open val id: Int?): Parcelable
+sealed class SearchModel(open val id: Int?, open val popularity: Float?): Parcelable
 
 @Parcelize
 data class TvShow(
@@ -27,10 +27,10 @@ data class TvShow(
     val originalName: String?,
     val overview: String?,
     val posterPath: String?,
-    val popularity: Float?,
+    override val popularity: Float?,
     val voteAverage: Float?,
     val voteCount: Int?
-) : SearchModel(id)
+) : SearchModel(id, popularity)
 
 @Parcelize
 data class Movie(
@@ -41,14 +41,14 @@ data class Movie(
     val originalLanguage: String?,
     val originalTitle: String?,
     val overview: String?,
-    val popularity: Float?,
+    override val popularity: Float?,
     val posterPath: String?,
     val releaseDate: String?,
     val title: String?,
     val video: Boolean?,
     val voteAverage: Float?,
     val voteCount: Int?
-) : SearchModel(id)
+) : SearchModel(id, popularity)
 
 @Parcelize
 data class Person(
@@ -56,9 +56,9 @@ data class Person(
     override val id: Int?,
     val knownFor: List<SearchModel>?, // can be movies or tv shows
     val name: String?,
-    val popularity: Float?,
+    override val popularity: Float?,
     val profilePath: String?
-) : SearchModel(id)
+) : SearchModel(id, popularity)
 
 data class Config(
     val baseUrl: String,

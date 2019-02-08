@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.domain.model.*
 import com.atherton.upnext.domain.usecase.GetConfigUseCase
+import com.atherton.upnext.domain.usecase.PopularMoviesTvUseCase
 import com.atherton.upnext.domain.usecase.SearchMultiUseCase
 import com.atherton.upnext.util.injection.PerView
 import com.atherton.upnext.util.threading.RxSchedulers
@@ -24,6 +25,7 @@ import javax.inject.Inject
 class SearchResultsViewModel @Inject constructor(
     initialState: SearchResultsState?,
     private val searchMultiUseCase: SearchMultiUseCase,
+    private val popularMoviesTvUseCase: PopularMoviesTvUseCase,
     private val getConfigUseCase: GetConfigUseCase,
     private val schedulers: RxSchedulers
 ): BaseViewModel<SearchResultsAction, SearchResultsState>() {
@@ -80,7 +82,13 @@ class SearchResultsViewModel @Inject constructor(
             }
             .distinctUntilChanged()
             .switchMap { action ->
-                searchMultiUseCase.build(action.query).zipWith(getConfigUseCase.build())
+                val query = action.query
+                val observable = if (query.isBlank()) {
+                    popularMoviesTvUseCase.build()
+                } else {
+                    searchMultiUseCase.build(query)
+                }
+                observable.zipWith(getConfigUseCase.build())
                     .subscribeOn(schedulers.io)
                     .toObservable()
                     .map<SearchResultsChange> { SearchResultsChange.Result(action.query, it.first, it.second) }
@@ -181,13 +189,20 @@ private fun List<SearchModel>.withImageUrls(config: Config?): List<SearchModel> 
 class SearchResultsViewModelFactory(
     private val initialState: SearchResultsState?,
     private val searchMultiUseCase: SearchMultiUseCase,
+    private val popularMoviesTvUseCase: PopularMoviesTvUseCase,
     private val getConfigUseCase: GetConfigUseCase,
     private val schedulers: RxSchedulers
 ) : ViewModelProvider.Factory {
 
     @Suppress("unchecked_cast")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return SearchResultsViewModel(initialState, searchMultiUseCase, getConfigUseCase, schedulers) as T
+        return SearchResultsViewModel(
+            initialState,
+            searchMultiUseCase,
+            popularMoviesTvUseCase,
+            getConfigUseCase,
+            schedulers
+        ) as T
     }
 
     companion object {

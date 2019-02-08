@@ -59,7 +59,7 @@ internal fun List<TmdbMultiSearchModel>?.toDomainSearchModels(): List<SearchMode
     } ?: emptyList()
 }
 
-private fun TmdbTvShow.toDomainTvShow(): TvShow {
+fun TmdbTvShow.toDomainTvShow(): TvShow {
     return TvShow(
         backdropPath,
         firstAirDate,
@@ -77,7 +77,7 @@ private fun TmdbTvShow.toDomainTvShow(): TvShow {
     )
 }
 
-private fun TmdbMovie.toDomainMovie(): Movie {
+fun TmdbMovie.toDomainMovie(): Movie {
     return Movie(
         adultContent,
         backdropPath,
@@ -96,7 +96,7 @@ private fun TmdbMovie.toDomainMovie(): Movie {
     )
 }
 
-private fun TmdbPerson.toDomainPerson(): Person {
+fun TmdbPerson.toDomainPerson(): Person {
     return Person(
         adultContent,
         id,

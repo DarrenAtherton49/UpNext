@@ -27,11 +27,11 @@ data class TmdbConfiguration(
     )
 }
 
-data class TmdbMultiSearchResponse(
+data class PagedResponse<T> (
     @Json(name = "page") val page: Int,
     @Json(name = "total_pages") val totalPages: Int,
     @Json(name = "total_results") val totalResults: Int, //todo should we show this in UI?
-    @Json(name = "results") val results: List<TmdbMultiSearchModel>
+    @Json(name = "results") val results: List<T>
 )
 
 data class TmdbMultiSearchResult(
