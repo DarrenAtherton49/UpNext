@@ -23,6 +23,10 @@
             android:layout_height="match_parent"
             android:paddingBottom="@dimen/keyline_2x"/>
 
+        <include
+            layout="@layout/search_results_error_layout"
+            android:visibility="gone"/>
+
     </LinearLayout>
 
 </FrameLayout>

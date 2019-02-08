@@ -10,8 +10,8 @@ import com.atherton.upnext.domain.model.*
 /**
  * Maps a NetworkResponse to a domain Result.
  *
- * @param dataMapper provides a way to map from data layer models to app-level/domain models
  * @param cachedData whether or not the data is old/cached
+ * @param dataMapper provides a way to map from data layer models to app-level/domain models
  *
  */
 internal fun <DATA : Any, DOMAIN : Any> NetworkResponse<DATA, TmdbApiError>.toDomainResponse(
@@ -19,16 +19,9 @@ internal fun <DATA : Any, DOMAIN : Any> NetworkResponse<DATA, TmdbApiError>.toDo
     dataMapper: (DATA) -> DOMAIN
 ): Response<DOMAIN> {
     return when (this) {
-        is NetworkResponse.Success -> {
-            Response.Success(dataMapper(body), cachedData)
-        }
-        is NetworkResponse.ServerError<TmdbApiError
-            > -> {
-            Response.Failure.ServerError(error?.toDomainApiError(), code)
-        }
-        is NetworkResponse.NetworkError -> {
-            Response.Failure.NetworkError(error)
-        }
+        is NetworkResponse.Success -> Response.Success(dataMapper(body), cachedData)
+        is NetworkResponse.ServerError<TmdbApiError> -> Response.Failure.ServerError(error?.toDomainApiError(), code)
+        is NetworkResponse.NetworkError -> Response.Failure.NetworkError(error)
     }
 }
 
@@ -47,7 +40,6 @@ internal fun TmdbConfiguration.toDomainConfig(): Config {
         )
     }
 }
-
 
 internal fun List<TmdbMultiSearchModel>?.toDomainSearchModels(): List<SearchModel> {
     return this?.map { searchResult ->

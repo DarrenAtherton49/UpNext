@@ -16,7 +16,7 @@ import com.atherton.upnext.util.glide.GlideRequests
 class SearchResultsAdapter(
     private val imageLoader: GlideRequests,
     private val onClickListener: (SearchModel) -> Unit
-) : ListAdapter<SearchModel, SearchResultViewHolder>(SearchResultsDiffCallback()) {
+) : ListAdapter<SearchModel, SearchResultViewHolder>(SearchResultsDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchResultViewHolder {
         val view: View = parent.inflateLayout(R.layout.item_search_result)
@@ -57,17 +57,18 @@ class SearchResultsAdapter(
         private const val TV_VIEW_TYPE = 0
         private const val MOVIE_VIEW_TYPE = 1
         private const val PERSON_VIEW_TYPE = 2
-    }
-}
 
-private class SearchResultsDiffCallback : DiffUtil.ItemCallback<SearchModel>() {
+        private object SearchResultsDiffCallback : DiffUtil.ItemCallback<SearchModel>() {
 
-    // TMDB ids are not globally unique - only unique per type (e.g. movie)
-    override fun areItemsTheSame(oldItem: SearchModel, newItem: SearchModel): Boolean {
-        return oldItem.id == newItem.id && oldItem::class == newItem::class
-    }
+            // TMDB ids are not globally unique - only unique per type (e.g. movie)
+            override fun areItemsTheSame(oldItem: SearchModel, newItem: SearchModel): Boolean {
+                return oldItem.id == newItem.id && oldItem::class == newItem::class
+            }
 
-    override fun areContentsTheSame(oldItem: SearchModel, newItem: SearchModel): Boolean {
-        return oldItem == newItem
+            override fun areContentsTheSame(oldItem: SearchModel, newItem: SearchModel): Boolean {
+                return oldItem == newItem
+            }
+        }
+
     }
 }

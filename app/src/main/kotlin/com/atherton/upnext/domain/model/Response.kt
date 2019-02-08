@@ -1,7 +1,9 @@
 package com.atherton.upnext.domain.model
 
 import android.os.Parcelable
+import com.atherton.upnext.util.parcel.IOExceptionParceler
 import kotlinx.android.parcel.Parcelize
+import kotlinx.android.parcel.TypeParceler
 import java.io.IOException
 
 /**
@@ -22,12 +24,7 @@ sealed class Response<out T : Any> {
 
         // A request that didn't result in a response from the server.
         @Parcelize
+        @TypeParceler<IOException, IOExceptionParceler>()
         data class NetworkError(val error: IOException) : Failure()
-
-        // A request that resulted in a non-network failure (e.g. because of no resource found or some business logic).
-        sealed class AppError : Failure() {
-            @Parcelize object Generic : AppError()
-            @Parcelize object NoResourcesFound : AppError()
-        }
     }
 }

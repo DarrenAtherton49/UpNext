@@ -13,7 +13,8 @@ import com.ww.roxie.BaseAction
 import com.ww.roxie.BaseState
 import com.ww.roxie.BaseViewModel
 import com.ww.roxie.Reducer
-import io.reactivex.Observable.just
+import io.reactivex.Observable
+import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.zipWith
@@ -74,37 +75,46 @@ class SearchResultsViewModel @Inject constructor(
     }
 
     private fun bindActions() {
+
+        val searchTransformer: ObservableTransformer<SearchResultsAction.SearchTextChanged, SearchResultsChange> = ObservableTransformer {
+                it.switchMap { action ->
+                    val query = action.query
+                    val observable = if (query.isBlank()) {
+                        popularMoviesTvUseCase.build()
+                    } else {
+                        searchMultiUseCase.build(query)
+                    }
+                    observable.zipWith(getConfigUseCase.build())
+                        .subscribeOn(schedulers.io)
+                        .toObservable()
+                        .map<SearchResultsChange> { SearchResultsChange.Result(action.query, it.first, it.second) }
+                        .defaultIfEmpty(
+                            SearchResultsChange.Result(
+                                query = action.query,
+                                response = Response.Success(emptyList(), false),
+                                config = null
+                            )
+                        )
+                        .startWith(SearchResultsChange.Loading)
+                }
+        }
+
         val textSearchedChange = actions.ofType<SearchResultsAction.SearchTextChanged>()
             .debounce { action ->
                 // only debounce if query contains text, otherwise show popular straight away
                 val milliseconds: Long = if (action.query.isBlank()) 0 else 250
-                just(action).debounce(milliseconds, TimeUnit.MILLISECONDS)
+                Observable.just(action).debounce(milliseconds, TimeUnit.MILLISECONDS)
             }
             .distinctUntilChanged()
-            .switchMap { action ->
-                val query = action.query
-                val observable = if (query.isBlank()) {
-                    popularMoviesTvUseCase.build()
-                } else {
-                    searchMultiUseCase.build(query)
-                }
-                observable.zipWith(getConfigUseCase.build())
-                    .subscribeOn(schedulers.io)
-                    .toObservable()
-                    .map<SearchResultsChange> { SearchResultsChange.Result(action.query, it.first, it.second) }
-                    .defaultIfEmpty(
-                        SearchResultsChange.Result(
-                            query = action.query,
-                            response = Response.Failure.AppError.NoResourcesFound,
-                            config = null
-                        )
-                    )
-                    .startWith(SearchResultsChange.Loading)
-            }
+            .compose(searchTransformer)
 
-        //todo add search model clicked change
+        //todo debounce this slightly (before the compose) to prevent multiple clicks
+        val retryButtonChange = actions.ofType<SearchResultsAction.SearchTextChanged>()
+            .compose(searchTransformer)
 
-        disposables += textSearchedChange
+        val allChanges = Observable.merge(textSearchedChange, retryButtonChange)
+
+        disposables += allChanges
             .scan(initialState, reducer)
             .filter { !it.isIdle }
             .distinctUntilChanged()
@@ -133,13 +143,34 @@ sealed class SearchResultsChange {
 
 @Parcelize
 data class SearchResultsState(
-    @Transient val isIdle: Boolean = true,
-    @Transient val isLoading: Boolean = false,
+    val isIdle: Boolean = true,
+    val isLoading: Boolean = false,
     val query: String = "",
     val results: List<SearchModel> = emptyList(),
     val cached: Boolean = false,
     val failure: Response.Failure? = null
 ) : BaseState, Parcelable
+
+sealed class SearchResultsState2(open val query: String) {
+
+    object Idle : SearchResultsState2(query = "")
+
+    data class Content(
+        val results: List<SearchModel> = emptyList(),
+        val cached: Boolean = false,
+        override val query: String
+    ) : SearchResultsState2(query)
+
+    data class Loading(
+        val results: List<SearchModel> = emptyList(),
+        override val query: String
+    ) : SearchResultsState2(query)
+
+    data class Error(
+        val failure: Response.Failure,
+        override val query: String
+    ) : SearchResultsState2(query)
+}
 
 //================================================================================
 // View-Specific Mappers
