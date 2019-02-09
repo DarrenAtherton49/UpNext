@@ -15,7 +15,6 @@ import com.atherton.upnext.util.recyclerview.GridSpacingItemDecoration
 import kotlinx.android.synthetic.main.base_recycler_view.*
 import kotlinx.android.synthetic.main.search_results_error_layout.*
 import kotlinx.android.synthetic.main.search_results_search_field.*
-import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -39,7 +38,7 @@ class SearchResultsFragment : BaseFragment<SearchResultsAction, SearchResultsSta
     }
     private val recyclerViewAdapter: SearchResultsAdapter by lazy {
         SearchResultsAdapter(GlideApp.with(this)) { searchModel ->
-            viewModel.dispatch(SearchResultsAction.ResultClicked(searchModel))
+            viewModel.dispatch(SearchResultsAction.SearchResultClicked(searchModel))
         }
     }
 
@@ -58,17 +57,10 @@ class SearchResultsFragment : BaseFragment<SearchResultsAction, SearchResultsSta
         //todo when fragment goes away, we need to hide the keyboard (could do this as part of the MVI state or an view effect?)
 
         retryButton.setOnClickListener {
-            viewModel.dispatch(SearchResultsAction.SearchTextChanged(searchEditText.text.toString()))
+            viewModel.dispatch(SearchResultsAction.RetryButtonClicked(searchEditText.text.toString()))
         }
 
         initRecyclerView()
-
-
-        val s = "hello"
-        when {
-            s is String -> Timber.tag("darren").d("found1")
-            s.equals("hello") -> Timber.tag("darren").d("found2")
-        }
     }
 
     override fun onResume() {
@@ -79,19 +71,32 @@ class SearchResultsFragment : BaseFragment<SearchResultsAction, SearchResultsSta
     }
 
     override fun renderState(state: SearchResultsState) {
-        // it is important that we check these in this order, because a state can be successful (failure == null)
-        // but still have no results (results.isEmpty()). If we were to check (results.isEmpty()) first, then we
-        // would miss out on a potential failure (failure != null) because we can have a failure state that
-        // also has an empty list. Might be better to move to a sealed class approach so separate this issue.
-        when {
-            state.failure != null -> errorTextView.text = generateErrorMessage(state.failure)
-            state.results.isNotEmpty() -> recyclerViewAdapter.submitList(state.results)
-            state.results.isEmpty() -> errorTextView.text = getString(R.string.search_results_error_network_try_again)
+        when (state) {
+            is SearchResultsState.Loading -> {
+                progressBar.isVisible = true
+                recyclerView.isVisible = false
+                errorLayout.isVisible = false
+            }
+            is SearchResultsState.Content -> {
+                progressBar.isVisible = false
+                if (state.results.isEmpty()) {
+                    recyclerView.isVisible = false
+                    errorLayout.isVisible = true
+                    errorTextView.text = getString(R.string.search_results_error_network_try_again)
+                } else {
+                    recyclerView.isVisible = true
+                    errorLayout.isVisible = false
+                    recyclerViewAdapter.submitList(state.results)
+                }
+            }
+            is SearchResultsState.Error -> {
+                progressBar.isVisible = false
+                recyclerView.isVisible = false
+                errorLayout.isVisible = true
+                errorTextView.text = generateErrorMessage(state.failure)
+                retryButton.isVisible = state.failure is Response.Failure.NetworkError
+            }
         }
-        progressBar.isVisible = state.isLoading
-        recyclerView.isVisible = state.results.isNotEmpty()
-        errorLayout.isVisible = state.failure != null || state.results.isEmpty()
-        retryButton.isVisible = state.failure != null && state.failure is Response.Failure.NetworkError
     }
 
     private fun generateErrorMessage(failure: Response.Failure): String {

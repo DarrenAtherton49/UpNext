@@ -31,39 +31,28 @@ class SearchResultsViewModel @Inject constructor(
     private val schedulers: RxSchedulers
 ): BaseViewModel<SearchResultsAction, SearchResultsState>() {
 
-    override val initialState = initialState ?: SearchResultsState()
+    override val initialState = initialState ?: SearchResultsState.Idle
 
-    private val reducer: Reducer<SearchResultsState, SearchResultsChange> = { state, change ->
+    private val reducer: Reducer<SearchResultsState, SearchResultsChange> = { oldState, change ->
         when (change) {
-            is SearchResultsChange.Loading -> state.copy( // loading state (could be with or without previous/cached results)
-                isIdle = false,
-                isLoading = true,
-                query = state.query,
-                results = state.results,
-                cached = state.cached,
-                failure = null
-            )
+            is SearchResultsChange.Loading -> {
+                when (oldState) {
+                    is SearchResultsState.Loading -> oldState.copy(results = oldState.results, query = oldState.query)
+                    is SearchResultsState.Content -> oldState.copy(results = oldState.results, query = oldState.query)
+                    else -> SearchResultsState.Loading(results = emptyList(), query = oldState.query)
+                }
+            }
             is SearchResultsChange.Result -> {
                 when (change.response) {
                     is Response.Success -> { // success state (could be fresh or cached data)
-                        state.copy(
-                            isIdle = false,
-                            isLoading = false,
-                            query = change.query,
+                        SearchResultsState.Content(
                             results = change.response.data.withImageUrls(change.config),
                             cached = change.response.cached,
-                            failure = null
+                            query = change.query
                         )
                     }
-                    is Response.Failure -> { // error state (could be with or without previous/cached results)
-                        state.copy(
-                            isIdle = false,
-                            isLoading = false,
-                            query = change.query,
-                            results = emptyList(),
-                            cached = false,
-                            failure = change.response
-                        )
+                    is Response.Failure -> {
+                        SearchResultsState.Error(failure = change.response, query = change.query)
                     }
                 }
             }
@@ -79,15 +68,17 @@ class SearchResultsViewModel @Inject constructor(
         val searchTransformer: ObservableTransformer<SearchResultsAction.SearchTextChanged, SearchResultsChange> = ObservableTransformer {
                 it.switchMap { action ->
                     val query = action.query
-                    val observable = if (query.isBlank()) {
+                    val dataSourceSingle = if (query.isBlank()) {
                         popularMoviesTvUseCase.build()
                     } else {
                         searchMultiUseCase.build(query)
                     }
-                    observable.zipWith(getConfigUseCase.build())
+                    dataSourceSingle.zipWith(getConfigUseCase.build())
                         .subscribeOn(schedulers.io)
                         .toObservable()
-                        .map<SearchResultsChange> { SearchResultsChange.Result(action.query, it.first, it.second) }
+                        .map<SearchResultsChange> { dataAndConfigPair ->
+                            SearchResultsChange.Result(action.query, dataAndConfigPair.first, dataAndConfigPair.second)
+                        }
                         .defaultIfEmpty(
                             SearchResultsChange.Result(
                                 query = action.query,
@@ -108,15 +99,16 @@ class SearchResultsViewModel @Inject constructor(
             .distinctUntilChanged()
             .compose(searchTransformer)
 
-        //todo debounce this slightly (before the compose) to prevent multiple clicks
-        val retryButtonChange = actions.ofType<SearchResultsAction.SearchTextChanged>()
+        val retryButtonChange = actions.ofType<SearchResultsAction.RetryButtonClicked>()
+            .map { SearchResultsAction.SearchTextChanged(it.query) }
+            .throttleFirst(300, TimeUnit.MILLISECONDS)
             .compose(searchTransformer)
 
         val allChanges = Observable.merge(textSearchedChange, retryButtonChange)
 
         disposables += allChanges
             .scan(initialState, reducer)
-            .filter { !it.isIdle }
+            .filter { it !is SearchResultsState.Idle }
             .distinctUntilChanged()
             .observeOn(schedulers.main)
             .subscribe(state::setValue, Timber::e)
@@ -129,7 +121,8 @@ class SearchResultsViewModel @Inject constructor(
 
 sealed class SearchResultsAction : BaseAction {
     data class SearchTextChanged(val query: String) : SearchResultsAction()
-    data class ResultClicked(val searchModel: SearchModel) : SearchResultsAction()
+    data class RetryButtonClicked(val query: String) : SearchResultsAction()
+    data class SearchResultClicked(val searchModel: SearchModel) : SearchResultsAction()
 }
 
 sealed class SearchResultsChange {
@@ -141,35 +134,29 @@ sealed class SearchResultsChange {
     ) : SearchResultsChange()
 }
 
-@Parcelize
-data class SearchResultsState(
-    val isIdle: Boolean = true,
-    val isLoading: Boolean = false,
-    val query: String = "",
-    val results: List<SearchModel> = emptyList(),
-    val cached: Boolean = false,
-    val failure: Response.Failure? = null
-) : BaseState, Parcelable
+sealed class SearchResultsState(open val query: String): BaseState, Parcelable {
 
-sealed class SearchResultsState2(open val query: String) {
+    @Parcelize
+    object Idle : SearchResultsState("")
 
-    object Idle : SearchResultsState2(query = "")
+    @Parcelize
+    data class Loading(
+        val results: List<SearchModel> = emptyList(),
+        override val query: String
+    ) : SearchResultsState(query)
 
+    @Parcelize
     data class Content(
         val results: List<SearchModel> = emptyList(),
         val cached: Boolean = false,
         override val query: String
-    ) : SearchResultsState2(query)
+    ) : SearchResultsState(query)
 
-    data class Loading(
-        val results: List<SearchModel> = emptyList(),
-        override val query: String
-    ) : SearchResultsState2(query)
-
+    @Parcelize
     data class Error(
         val failure: Response.Failure,
         override val query: String
-    ) : SearchResultsState2(query)
+    ) : SearchResultsState(query)
 }
 
 //================================================================================
