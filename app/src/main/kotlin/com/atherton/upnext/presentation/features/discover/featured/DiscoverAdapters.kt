@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.item_discover_section.view.*
 
 class DiscoverSectionAdapter(
     private val imageLoader: GlideRequests,
+    private val childRecyclerItemSpacingPx: Int,
     private val onClickListener: (SearchModel) -> Unit
 ) : ListAdapter<DiscoverSection, DiscoverSectionViewHolder>(DiscoverSectionsDiffCallback) {
 
@@ -27,7 +28,11 @@ class DiscoverSectionAdapter(
     private lateinit var childAdapterStates: HashMap<String, Parcelable?>
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DiscoverSectionViewHolder {
-        return DiscoverSectionViewHolder.create(parent.inflateLayout(R.layout.item_discover_section), recyclerViewPool)
+        return DiscoverSectionViewHolder.create(
+            parent.inflateLayout(R.layout.item_discover_section),
+            recyclerViewPool,
+            childRecyclerItemSpacingPx
+        )
     }
 
     override fun onBindViewHolder(holder: DiscoverSectionViewHolder, position: Int) {

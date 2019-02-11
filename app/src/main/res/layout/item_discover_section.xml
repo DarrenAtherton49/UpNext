@@ -10,7 +10,6 @@
         android:id="@+id/sectionTitleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/keyline"
         android:layout_marginBottom="@dimen/keyline_2x"/>
 
     <androidx.recyclerview.widget.RecyclerView

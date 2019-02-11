@@ -9,6 +9,7 @@ import com.atherton.upnext.domain.model.Movie
 import com.atherton.upnext.domain.model.Person
 import com.atherton.upnext.domain.model.TvShow
 import com.atherton.upnext.util.glide.GlideRequests
+import com.atherton.upnext.util.recyclerview.LinearSpacingItemDecoration
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
@@ -30,13 +31,20 @@ class DiscoverSectionViewHolder(
     }
 
     companion object Factory {
-        fun create(itemView: View, recycledViewPool: RecyclerView.RecycledViewPool): DiscoverSectionViewHolder {
+        fun create(
+            itemView: View,
+            recycledViewPool: RecyclerView.RecycledViewPool,
+            itemSpacingPx: Int
+        ): DiscoverSectionViewHolder {
             val holder = DiscoverSectionViewHolder(itemView)
 
             // The line below ensures that child RecyclerView does not capture vertical scrolls,
             // as we want the outer RecyclerView to handle those instead.
             itemView.childRecyclerView.isNestedScrollingEnabled = false
             itemView.childRecyclerView.setHasFixedSize(true)
+            itemView.childRecyclerView.addItemDecoration(
+                LinearSpacingItemDecoration(itemSpacingPx, LinearSpacingItemDecoration.Orientation.Horizontal)
+            )
 
             val layoutManager = LinearLayoutManager(itemView.context, RecyclerView.HORIZONTAL, false).apply {
                 initialPrefetchItemCount = ITEM_PREFETCH_COUNT //todo set based on orientation
