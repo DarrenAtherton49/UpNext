@@ -1,7 +1,6 @@
 package com.atherton.upnext.presentation.features.movies
 
 
-import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.R
 import com.atherton.upnext.presentation.main.MainViewModel
@@ -30,12 +29,6 @@ class MoviesFragment : BaseFragment<MoviesAction, MoviesState, MoviesViewModel>(
     }
     override val viewModel: MoviesViewModel by lazy {
         getViewModel<MoviesViewModel>(vmFactory)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        //todo dispatch action
     }
 
     override fun renderState(state: MoviesState) {

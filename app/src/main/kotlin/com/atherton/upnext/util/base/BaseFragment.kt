@@ -22,11 +22,11 @@ abstract class BaseFragment<Action : BaseAction, State, ViewModel : BaseViewMode
     protected abstract val viewModel: ViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
         // support process death by re-supplying last state to ViewModel
         val lastState: State? = savedInstanceState?.getParcelable(stateBundleKey)
         initInjection(lastState)
+
+        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
