@@ -18,15 +18,15 @@ class TmdbMultiSearchResponseAdapter {
     private fun List<TmdbMultiSearchResult>?.toSpecificEntities(): List<TmdbMultiSearchModel>? {
         return this?.map {
             when (it.mediaType) {
-                "movie" -> it.toMovie()
-                "tv" -> it.toTvShow()
-                "person" -> it.toPerson()
+                "movie" -> it.toTmdbMovie()
+                "tv" -> it.toTmdbTvShow()
+                "person" -> it.toTmdbPerson()
                 else -> throw IllegalArgumentException("media_type should be either 'movie', 'tv' or 'person'.")
             }
         }
     }
 
-    private fun TmdbMultiSearchResult.toMovie(): TmdbMovie {
+    private fun TmdbMultiSearchResult.toTmdbMovie(): TmdbMovie {
         return TmdbMovie(
             adultContent,
             backdropPath,
@@ -45,7 +45,7 @@ class TmdbMultiSearchResponseAdapter {
         )
     }
 
-    private fun TmdbMultiSearchResult.toTvShow(): TmdbTvShow {
+    private fun TmdbMultiSearchResult.toTmdbTvShow(): TmdbTvShow {
         return TmdbTvShow(
             backdropPath,
             firstAirDate,
@@ -63,7 +63,7 @@ class TmdbMultiSearchResponseAdapter {
         )
     }
 
-    private fun TmdbMultiSearchResult.toPerson(): TmdbPerson =
+    private fun TmdbMultiSearchResult.toTmdbPerson(): TmdbPerson =
         TmdbPerson(adultContent, id, knownFor.toSpecificEntities(), name, popularity, profilePath)
 
     @ToJson

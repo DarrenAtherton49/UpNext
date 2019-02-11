@@ -21,10 +21,23 @@
         <include layout="@layout/discover_search_field"/>
 
         <include
+            layout="@layout/discover_error_layout"
+            android:visibility="gone"/>
+
+        <include
             layout="@layout/base_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingBottom="@dimen/keyline_2x"/>
+
+        <ProgressBar
+            style="?android:attr/progressBarStyle"
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:indeterminate="true"
+            android:visibility="gone"/>
 
     </LinearLayout>
 

@@ -3,7 +3,7 @@ package com.atherton.upnext.data.repository
 import com.atherton.upnext.data.local.LocalConfigStore
 import com.atherton.upnext.data.mapper.toDomainConfig
 import com.atherton.upnext.data.model.NetworkResponse
-import com.atherton.upnext.data.network.TmdbConfigService
+import com.atherton.upnext.data.network.service.TmdbConfigService
 import com.atherton.upnext.domain.model.Config
 import com.atherton.upnext.domain.repository.ConfigRepository
 import io.reactivex.Single

@@ -27,4 +27,10 @@ sealed class Response<out T : Any> {
         @TypeParceler<IOException, IOExceptionParceler>()
         data class NetworkError(val error: IOException) : Failure()
     }
+
+    fun dataOrNull(): T? {
+        return if (this is Response.Success) {
+            this.data
+        } else null
+    }
 }

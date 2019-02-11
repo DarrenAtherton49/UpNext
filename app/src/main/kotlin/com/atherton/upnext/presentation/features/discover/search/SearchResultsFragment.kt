@@ -13,7 +13,7 @@ import com.atherton.upnext.util.extensions.*
 import com.atherton.upnext.util.glide.GlideApp
 import com.atherton.upnext.util.recyclerview.GridSpacingItemDecoration
 import kotlinx.android.synthetic.main.base_recycler_view.*
-import kotlinx.android.synthetic.main.search_results_error_layout.*
+import kotlinx.android.synthetic.main.discover_error_layout.*
 import kotlinx.android.synthetic.main.search_results_search_field.*
 import javax.inject.Inject
 import javax.inject.Named
@@ -93,26 +93,9 @@ class SearchResultsFragment : BaseFragment<SearchResultsAction, SearchResultsSta
                 progressBar.isVisible = false
                 recyclerView.isVisible = false
                 errorLayout.isVisible = true
-                errorTextView.text = generateErrorMessage(state.failure)
+                errorTextView.text = state.failure.generateErrorMessage(requireContext())
                 retryButton.isVisible = state.failure is Response.Failure.NetworkError
             }
-        }
-    }
-
-    private fun generateErrorMessage(failure: Response.Failure): String {
-        return when (failure) {
-            is Response.Failure.ServerError -> {
-                val apiError = failure.error
-                if (apiError != null) {
-                    getString(R.string.search_results_error_server_with_error).format(
-                        failure.code,
-                        apiError.statusCode
-                    )
-                } else {
-                    getString(R.string.search_results_error_server).format(failure.code)
-                }
-            }
-            is Response.Failure.NetworkError -> getString(R.string.search_results_error_network)
         }
     }
 

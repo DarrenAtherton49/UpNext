@@ -8,6 +8,10 @@ import com.atherton.upnext.App
 import com.atherton.upnext.BuildConfig
 import com.atherton.upnext.data.local.LocalConfigStore
 import com.atherton.upnext.data.network.*
+import com.atherton.upnext.data.network.service.TmdbConfigService
+import com.atherton.upnext.data.network.service.TmdbMovieService
+import com.atherton.upnext.data.network.service.TmdbSearchService
+import com.atherton.upnext.data.network.service.TmdbTvShowService
 import com.atherton.upnext.data.preferences.LocalStorage
 import com.atherton.upnext.data.preferences.Storage
 import com.atherton.upnext.data.repository.CachingConfigRepository

@@ -6,16 +6,17 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.atherton.upnext.R
+import com.atherton.upnext.domain.model.Response
 import com.atherton.upnext.presentation.main.MainViewModel
 import com.atherton.upnext.presentation.main.MainViewModelFactory
 import com.atherton.upnext.util.base.BaseFragment
-import com.atherton.upnext.util.extensions.getActivityViewModel
-import com.atherton.upnext.util.extensions.getAppComponent
-import com.atherton.upnext.util.extensions.getViewModel
+import com.atherton.upnext.util.extensions.*
 import com.atherton.upnext.util.glide.GlideApp
 import com.atherton.upnext.util.recyclerview.LinearSpacingItemDecoration
 import kotlinx.android.synthetic.main.base_recycler_view.*
+import kotlinx.android.synthetic.main.discover_error_layout.*
 import kotlinx.android.synthetic.main.discover_search_field.*
+import kotlinx.android.synthetic.main.fragment_discover.*
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -33,7 +34,6 @@ class DiscoverFragment : BaseFragment<DiscoverAction, DiscoverState, DiscoverVie
 
     private val activityViewModel: MainViewModel by lazy {
         getActivityViewModel<MainViewModel>(mainVmFactory)
-
     }
     override val viewModel: DiscoverViewModel by lazy {
         getViewModel<DiscoverViewModel>(vmFactory)
@@ -56,17 +56,42 @@ class DiscoverFragment : BaseFragment<DiscoverAction, DiscoverState, DiscoverVie
         searchEditText.setOnClickListener {
             //todo dispatch action to viewmodel to say 'search edit query clicked'
             //todo replace 'findNavController' with lazy delegate if used more than once
-            findNavController().navigate(com.atherton.upnext.R.id.actionGoToSearchResults)
+            findNavController().navigate(R.id.actionGoToSearchResults)
         }
 
-        //todo add retry button click listener
+        retryButton.setOnClickListener {
+            viewModel.dispatch(DiscoverAction.RetryButtonClicked)
+        }
 
         initRecyclerView()
     }
 
     override fun renderState(state: DiscoverState) {
-        if (state is DiscoverState.Content) {
-            recyclerViewAdapter.submitData(state.results)
+        when (state) {
+            is DiscoverState.Loading -> {
+                progressBar.isVisible = true
+                recyclerView.isVisible = false
+                errorLayout.isVisible = false
+            }
+            is DiscoverState.Content -> {
+                progressBar.isVisible = false
+                if (state.results.isEmpty()) {
+                    recyclerView.isVisible = false
+                    errorLayout.isVisible = true
+                    errorTextView.text = getString(R.string.search_results_error_network_try_again)
+                } else {
+                    recyclerView.isVisible = true
+                    errorLayout.isVisible = false
+                    recyclerViewAdapter.submitData(state.results)
+                }
+            }
+            is DiscoverState.Error -> {
+                progressBar.isVisible = false
+                recyclerView.isVisible = false
+                errorLayout.isVisible = true
+                errorTextView.text = state.failure.generateErrorMessage(requireContext())
+                retryButton.isVisible = state.failure is Response.Failure.NetworkError
+            }
         }
     }
 
@@ -78,8 +103,6 @@ class DiscoverFragment : BaseFragment<DiscoverAction, DiscoverState, DiscoverVie
             adapter = recyclerViewAdapter
             layoutManager = LinearLayoutManager(context)
         }
-
-        //todo add spacing item decoration
     }
 
     override fun initInjection(initialState: DiscoverState?) {

@@ -1,4 +1,4 @@
-package com.atherton.upnext.data.network
+package com.atherton.upnext.data.network.service
 
 import com.atherton.upnext.data.model.*
 import io.reactivex.Single

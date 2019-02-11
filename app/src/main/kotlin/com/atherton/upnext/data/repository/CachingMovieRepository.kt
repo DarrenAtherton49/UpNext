@@ -6,7 +6,7 @@ import com.atherton.upnext.data.model.NetworkResponse
 import com.atherton.upnext.data.model.TmdbApiError
 import com.atherton.upnext.data.model.TmdbMovie
 import com.atherton.upnext.data.model.TmdbPagedResponse
-import com.atherton.upnext.data.network.TmdbMovieService
+import com.atherton.upnext.data.network.service.TmdbMovieService
 import com.atherton.upnext.domain.model.Movie
 import com.atherton.upnext.domain.model.Response
 import com.atherton.upnext.domain.repository.MovieRepository

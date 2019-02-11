@@ -51,9 +51,7 @@ class DiscoverViewModel @Inject constructor(
                             results = change.response.data.toDiscoverSections(titleProvider, change.config)
                         )
                     }
-                    is Response.Failure -> {
-                        DiscoverState.Error(failure = change.response)
-                    }
+                    is Response.Failure -> DiscoverState.Error(failure = change.response)
                 }
             }
         }
@@ -149,9 +147,9 @@ private fun DiscoverFeaturedResponse.toDiscoverSections(
         nowPlayingMovies?.let {
             add(DiscoverSection(titleProvider.invoke(DiscoverTitle.NowPlaying), it.withDiscoverSearchImageUrls(config)))
         }
-//        topRatedTvMovies?.let {
-//            add(DiscoverSection(titleProvider.invoke(DiscoverTitle.TopRated), it.withDiscoverSearchImageUrls(config)))
-//        }
+        topRatedTvMovies?.let {
+            add(DiscoverSection(titleProvider.invoke(DiscoverTitle.TopRated), it.withDiscoverSearchImageUrls(config)))
+        }
     }.toList()
 }
 

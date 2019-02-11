@@ -22,7 +22,7 @@
         android:paddingBottom="@dimen/keyline_2x"/>
 
     <include
-        layout="@layout/search_results_error_layout"
+        layout="@layout/discover_error_layout"
         android:visibility="gone"/>
 
 </LinearLayout>

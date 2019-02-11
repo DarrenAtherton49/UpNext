@@ -1,7 +1,9 @@
 package com.atherton.upnext.domain.usecase
 
+import com.atherton.upnext.domain.model.Movie
 import com.atherton.upnext.domain.model.Response
 import com.atherton.upnext.domain.model.SearchModel
+import com.atherton.upnext.domain.model.TvShow
 import com.atherton.upnext.domain.repository.MovieRepository
 import com.atherton.upnext.domain.repository.TvShowRepository
 import io.reactivex.Single
@@ -48,33 +50,26 @@ class GetFeaturedMoviesTvUseCase @Inject constructor(
                     listOf(
                         popularTvResponse,
                         popularMoviesResponse,
-                        nowPlayingMoviesResponse
+                        nowPlayingMoviesResponse,
+                        topRatedTvResponse,
+                        topRatedMoviesResponse
                     )
                 )
                 if (failedResponse != null) { // all responses failed, return first failed response found
                     failedResponse
                 } else { // there was at least 1 successful response
-                    var popularTv: List<SearchModel>? = null
-                    var popularMovies: List<SearchModel>? = null
-                    var nowPlayingMovies: List<SearchModel>? = null
-                    var topRatedTv: List<SearchModel>? = null
-                    var topRatedMovies: List<SearchModel>? = null
+                    val popularTv: List<SearchModel>? = popularTvResponse.dataOrNull()
+                    val popularMovies: List<SearchModel>? = popularMoviesResponse.dataOrNull()
+                    val nowPlayingMovies: List<SearchModel>? = nowPlayingMoviesResponse.dataOrNull()
+                    val topRatedTv: List<SearchModel>? = topRatedTvResponse.dataOrNull()
+                    val topRatedMovies: List<SearchModel>? = topRatedMoviesResponse.dataOrNull()
                     //todo add more
-
-                    if (popularTvResponse is Response.Success) {
-                        popularTv = popularTvResponse.data
-                    }
-                    if (popularMoviesResponse is Response.Success) {
-                        popularMovies = popularMoviesResponse.data
-                    }
-                    if (nowPlayingMoviesResponse is Response.Success) {
-                        nowPlayingMovies = nowPlayingMoviesResponse.data
-                    }
 
                     Response.Success(
                         DiscoverFeaturedResponse(
                             popularTvMovies = generatePopular(popularTv, popularMovies),
-                            nowPlayingMovies = nowPlayingMovies
+                            nowPlayingMovies = nowPlayingMovies,
+                            topRatedTvMovies = generateTopRated(topRatedTv, topRatedMovies)
                         ),
                         cached = false
                     )
@@ -101,6 +96,21 @@ class GetFeaturedMoviesTvUseCase @Inject constructor(
         } else null
     }
 
+    private fun generateTopRated(topRatedTv: List<SearchModel>?, topRatedMovies: List<SearchModel>?): List<SearchModel>? {
+        val topRated: MutableList<SearchModel> = ArrayList()
+        topRatedTv?.let { topRated.addAll(it) }
+        topRatedMovies?.let { topRated.addAll(it) }
+        return if (topRated.isNotEmpty()) {
+            topRated.toList().sortedByDescending {
+                when (it) {
+                    is TvShow -> it.voteAverage
+                    is Movie -> it.voteAverage
+                    else -> it.popularity // won't ever hit this as it's always tv or movies
+                }
+            }
+        } else null
+    }
+
     /**
      * Iterates through all responses and if it finds that all responses contain a failure, then it returns
      * the first one it finds as all failures will be for the same reason.
@@ -119,6 +129,6 @@ class GetFeaturedMoviesTvUseCase @Inject constructor(
 
 data class DiscoverFeaturedResponse(
     val popularTvMovies: List<SearchModel>?,
-    val nowPlayingMovies: List<SearchModel>?
-    //val topRatedTvMovies: List<SearchModel>?
+    val nowPlayingMovies: List<SearchModel>?,
+    val topRatedTvMovies: List<SearchModel>?
 )
