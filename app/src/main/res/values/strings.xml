@@ -26,9 +26,21 @@
     <string name="main_dialog_internet_required_negative_button">Exit</string>
     <string name="main_dialog_internet_required_positive_button">Try again</string>
 
+    <!-- ShowsFragment -->
+    <string name="shows_tab_up_next">Up Next</string>
+    <string name="shows_tab_watchlist">Watchlist</string>
+    <string name="shows_tab_finished">Finished</string>
+
+    <!-- MoviesFragment -->
+    <string name="movies_tab_watchlist">Watchlist</string>
+    <string name="movies_tab_finished">Finished</string>
+
     <!-- DiscoverFragment -->
     <string name="discover_search_textfield_label">Find Movies, Shows or People…</string>
     <string name="discover_advanced_search_button">Advanced Search</string>
+    <string name="discover_section_title_popular">Most popular</string>
+    <string name="discover_section_title_now_playing">Now in theatres</string>
+    <string name="discover_section_title_top_rated">Top rated</string>
 
     <!-- SearchResultsFragment -->
     <string name="search_results_error_no_results_found">No results found</string>

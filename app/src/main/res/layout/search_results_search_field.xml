@@ -27,7 +27,7 @@
                 android:hint="@string/discover_search_textfield_label">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    style="@style/AppEditText"
+                    style="@style/SearchEditText"
                     android:id="@+id/searchEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

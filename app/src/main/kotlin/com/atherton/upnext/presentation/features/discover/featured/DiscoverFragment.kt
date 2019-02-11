@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.atherton.upnext.R
 import com.atherton.upnext.presentation.main.MainViewModel
 import com.atherton.upnext.presentation.main.MainViewModelFactory
@@ -11,6 +12,8 @@ import com.atherton.upnext.util.base.BaseFragment
 import com.atherton.upnext.util.extensions.getActivityViewModel
 import com.atherton.upnext.util.extensions.getAppComponent
 import com.atherton.upnext.util.extensions.getViewModel
+import com.atherton.upnext.util.glide.GlideApp
+import kotlinx.android.synthetic.main.base_recycler_view.*
 import kotlinx.android.synthetic.main.discover_search_field.*
 import javax.inject.Inject
 import javax.inject.Named
@@ -33,49 +36,62 @@ class DiscoverFragment : BaseFragment<DiscoverAction, DiscoverState, DiscoverVie
     override val viewModel: DiscoverViewModel by lazy {
         getViewModel<DiscoverViewModel>(vmFactory)
     }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        //todo dispatch action
+    private val recyclerViewAdapter: DiscoverSectionAdapter by lazy {
+        DiscoverSectionAdapter(GlideApp.with(this)) { searchModel ->
+            //todo viewModel.dispatch(DiscoverAction.SearchModelClicked(searchModel))
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
 
+        // load sections on first launch
+        if (savedInstanceState == null) {
+            viewModel.dispatch(DiscoverAction.Load)
+        }
+
         searchEditText.setOnClickListener {
             //todo dispatch action to viewmodel to say 'search edit query clicked'
             //todo replace 'findNavController' with lazy delegate if used more than once
             findNavController().navigate(R.id.actionGoToSearchResults)
         }
+
+        //todo add retry button click listener
+
+        initRecyclerView()
     }
 
     override fun renderState(state: DiscoverState) {
-
+        if (state is DiscoverState.Content) {
+            recyclerViewAdapter.submitData(state.results)
+        }
     }
 
-    //todo
     private fun initRecyclerView() {
-//        recyclerAdapter = DailyAdapter { item ->
-//            dailyViewModel.itemClicked(item)
-//        }
-//        recyclerView.apply {
-//            adapter = recyclerAdapter
-//            layoutManager = LinearLayoutManager(context)
-//        }
+        recyclerView.apply {
+            setHasFixedSize(true)
+            adapter = recyclerViewAdapter
+            layoutManager = LinearLayoutManager(context)
+        }
+
+        //todo add spacing item decoration
     }
 
     override fun initInjection(initialState: DiscoverState?) {
         DaggerDiscoverComponent.builder()
-            .discoverModule(DiscoverModule(initialState))
+            .discoverModule(DiscoverModule(initialState, this::titleProvider))
             .mainModule(mainModule)
             .appComponent(getAppComponent())
             .build()
             .inject(this)
     }
 
-    companion object {
-        fun newInstance() = DiscoverFragment()
+    private fun titleProvider(discoverTitle: DiscoverTitle): String {
+        return when (discoverTitle) {
+            is DiscoverTitle.Popular -> getString(R.string.discover_section_title_popular)
+            is DiscoverTitle.NowPlaying -> getString(R.string.discover_section_title_now_playing)
+            is DiscoverTitle.TopRated -> getString(R.string.discover_section_title_top_rated)
+        }
     }
 }

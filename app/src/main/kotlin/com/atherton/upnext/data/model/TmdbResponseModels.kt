@@ -27,7 +27,7 @@ data class TmdbConfiguration(
     )
 }
 
-data class PagedResponse<T> (
+open class TmdbPagedResponse<T> (
     @Json(name = "page") val page: Int,
     @Json(name = "total_pages") val totalPages: Int,
     @Json(name = "total_results") val totalResults: Int, //todo should we show this in UI?
@@ -111,3 +111,16 @@ data class TmdbPerson(
     @Json(name = "popularity") val popularity: Float?,
     @Json(name = "profile_path") val profilePath: String?
 ) : TmdbMultiSearchModel()
+
+class TmdbNowPlayingMoviesResponse<T>(
+    @Json(name = "page") page: Int,
+    @Json(name = "total_pages") totalPages: Int,
+    @Json(name = "total_results") totalResults: Int, //todo should we show this in UI?
+    @Json(name = "results") results: List<T>
+) : TmdbPagedResponse<T>(page, totalPages, totalResults, results
+) {
+    data class Dates(
+        @Json(name = "minimum") val minimum: String,
+        @Json(name = "maximum") val maximum: String
+    )
+}

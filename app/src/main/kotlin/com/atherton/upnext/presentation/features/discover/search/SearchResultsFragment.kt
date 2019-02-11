@@ -118,6 +118,7 @@ class SearchResultsFragment : BaseFragment<SearchResultsAction, SearchResultsSta
 
     private fun initRecyclerView() {
         recyclerView.apply {
+            setHasFixedSize(true)
             adapter = recyclerViewAdapter
             layoutManager = GridLayoutManager(context, GRID_NUM_COLUMNS)
             addItemDecoration(

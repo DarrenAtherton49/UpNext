@@ -1,29 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.features.discover.featured.DiscoverFragment"
+    android:orientation="vertical"
     android:focusable="true"
-    android:focusableInTouchMode="true">
+    android:focusableInTouchMode="true"
+    android:animateLayoutChanges="true"
+    android:layout_marginTop="@dimen/keyline_2x"
+    android:layout_marginStart="@dimen/keyline_2x"
+    android:layout_marginEnd="@dimen/keyline_2x"
+    tools:context=".presentation.features.discover.featured.DiscoverFragment">
 
-    <androidx.core.widget.NestedScrollView
+    <include layout="@layout/discover_search_field"/>
+
+    <include
+        layout="@layout/base_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/keyline_2x"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_margin="@dimen/keyline_2x">
-
-            <include layout="@layout/discover_search_field"/>
-
-            <!-- //todo have various RecyclerViews showing featured/trending content etc from Discover API -->
-
-        </LinearLayout>
-
-    </androidx.core.widget.NestedScrollView>
-
-</FrameLayout>
+</LinearLayout>

@@ -10,6 +10,8 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class ApiError(val statusMessage: String, val statusCode: Int): Parcelable
 
+data class DataWithConfig<T>(val data: T, val config: Config)
+
 /**
  * Wrapper to unify the movie, tv and person results below into one 'type' - useful for 'when' statements etc.
  */

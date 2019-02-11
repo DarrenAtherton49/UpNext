@@ -6,5 +6,6 @@ import io.reactivex.Single
 
 interface TvShowRepository {
 
-    fun popular(): Single<Response<List<TvShow>>>
+    fun getPopular(): Single<Response<List<TvShow>>>
+    fun getTopRated(): Single<Response<List<TvShow>>>
 }

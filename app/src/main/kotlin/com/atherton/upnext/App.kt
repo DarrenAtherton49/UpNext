@@ -11,6 +11,9 @@ import timber.log.Timber
 
 class App : Application() {
 
+    //todo check TMDB terms of service and display 'powered by TMDB' logo
+    //todo cut down models that we use in fragments/adapters to only contain the fields we need (e.g. instead of whole movie)
+
     internal lateinit var appComponent: AppComponent
         private set
 

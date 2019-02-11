@@ -13,15 +13,12 @@ import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_search_result.*
 
-
-
 sealed class SearchResultViewHolder(
     override val containerView: View,
     private val imageLoader: GlideRequests
 ) : RecyclerView.ViewHolder(containerView),
     LayoutContainer {
 
-    //todo bind placeholder and error
     private val requestOptions: RequestOptions by lazy {
         RequestOptions()
             .transforms(CenterCrop(), RoundedCorners(20))

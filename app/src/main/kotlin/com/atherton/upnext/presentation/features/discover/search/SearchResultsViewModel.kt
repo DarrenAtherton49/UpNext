@@ -3,10 +3,13 @@ package com.atherton.upnext.presentation.features.discover.search
 import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.atherton.upnext.domain.model.*
+import com.atherton.upnext.domain.model.Config
+import com.atherton.upnext.domain.model.Response
+import com.atherton.upnext.domain.model.SearchModel
 import com.atherton.upnext.domain.usecase.GetConfigUseCase
-import com.atherton.upnext.domain.usecase.PopularMoviesTvUseCase
+import com.atherton.upnext.domain.usecase.GetPopularMoviesTvUseCase
 import com.atherton.upnext.domain.usecase.SearchMultiUseCase
+import com.atherton.upnext.presentation.features.discover.withDiscoverSearchImageUrls
 import com.atherton.upnext.util.injection.PerView
 import com.atherton.upnext.util.threading.RxSchedulers
 import com.ww.roxie.BaseAction
@@ -14,7 +17,7 @@ import com.ww.roxie.BaseState
 import com.ww.roxie.BaseViewModel
 import com.ww.roxie.Reducer
 import io.reactivex.Observable
-import io.reactivex.ObservableTransformer
+import io.reactivex.Observable.merge
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.zipWith
@@ -26,7 +29,7 @@ import javax.inject.Inject
 class SearchResultsViewModel @Inject constructor(
     initialState: SearchResultsState?,
     private val searchMultiUseCase: SearchMultiUseCase,
-    private val popularMoviesTvUseCase: PopularMoviesTvUseCase,
+    private val popularMoviesTvUseCase: GetPopularMoviesTvUseCase,
     private val getConfigUseCase: GetConfigUseCase,
     private val schedulers: RxSchedulers
 ): BaseViewModel<SearchResultsAction, SearchResultsState>() {
@@ -44,9 +47,9 @@ class SearchResultsViewModel @Inject constructor(
             }
             is SearchResultsChange.Result -> {
                 when (change.response) {
-                    is Response.Success -> { // success state (could be fresh or cached data)
+                    is Response.Success -> {
                         SearchResultsState.Content(
-                            results = change.response.data.withImageUrls(change.config),
+                            results = change.response.data.withDiscoverSearchImageUrls(change.config),
                             cached = change.response.cached,
                             query = change.query
                         )
@@ -64,30 +67,22 @@ class SearchResultsViewModel @Inject constructor(
     }
 
     private fun bindActions() {
-
-        val searchTransformer: ObservableTransformer<SearchResultsAction.SearchTextChanged, SearchResultsChange> = ObservableTransformer {
-                it.switchMap { action ->
-                    val query = action.query
-                    val dataSourceSingle = if (query.isBlank()) {
-                        popularMoviesTvUseCase.build()
-                    } else {
-                        searchMultiUseCase.build(query)
-                    }
-                    dataSourceSingle.zipWith(getConfigUseCase.build())
-                        .subscribeOn(schedulers.io)
-                        .toObservable()
-                        .map<SearchResultsChange> { dataAndConfigPair ->
-                            SearchResultsChange.Result(action.query, dataAndConfigPair.first, dataAndConfigPair.second)
-                        }
-                        .defaultIfEmpty(
-                            SearchResultsChange.Result(
-                                query = action.query,
-                                response = Response.Success(emptyList(), false),
-                                config = null
-                            )
-                        )
-                        .startWith(SearchResultsChange.Loading)
+        fun Observable<SearchResultsAction.SearchTextChanged>.toResultChange(): Observable<SearchResultsChange> {
+            return this.switchMap { action ->
+                val query = action.query
+                val dataSourceSingle = if (query.isBlank()) {
+                    popularMoviesTvUseCase.build()
+                } else {
+                    searchMultiUseCase.build(query)
                 }
+                dataSourceSingle.zipWith(getConfigUseCase.build())
+                    .subscribeOn(schedulers.io)
+                    .toObservable()
+                    .map<SearchResultsChange> { dataAndConfigPair ->
+                        SearchResultsChange.Result(action.query, dataAndConfigPair.first, dataAndConfigPair.second)
+                    }
+                    .startWith(SearchResultsChange.Loading)
+            }
         }
 
         val textSearchedChange = actions.ofType<SearchResultsAction.SearchTextChanged>()
@@ -97,14 +92,14 @@ class SearchResultsViewModel @Inject constructor(
                 Observable.just(action).debounce(milliseconds, TimeUnit.MILLISECONDS)
             }
             .distinctUntilChanged()
-            .compose(searchTransformer)
+            .toResultChange()
 
         val retryButtonChange = actions.ofType<SearchResultsAction.RetryButtonClicked>()
             .map { SearchResultsAction.SearchTextChanged(it.query) }
-            .throttleFirst(300, TimeUnit.MILLISECONDS)
-            .compose(searchTransformer)
+            .throttleFirst(300, TimeUnit.MILLISECONDS) // prevent multiple clicks
+            .toResultChange()
 
-        val allChanges = Observable.merge(textSearchedChange, retryButtonChange)
+        val allChanges = merge(textSearchedChange, retryButtonChange)
 
         disposables += allChanges
             .scan(initialState, reducer)
@@ -130,7 +125,7 @@ sealed class SearchResultsChange {
     data class Result(
         val query: String,
         val response: Response<List<SearchModel>>,
-        val config: Config?
+        val config: Config
     ) : SearchResultsChange()
 }
 
@@ -160,46 +155,6 @@ sealed class SearchResultsState(open val query: String): BaseState, Parcelable {
 }
 
 //================================================================================
-// View-Specific Mappers
-//================================================================================
-
-// generate image urls for this screen using the base url, size and path
-private fun List<SearchModel>.withImageUrls(config: Config?): List<SearchModel> {
-
-    //todo write function to generate path based on device screen size?
-    fun buildPosterPath(posterPath: String?, config: Config): String? =
-        posterPath?.let { "${config.secureBaseUrl}${config.posterSizes[2]}$posterPath" }
-
-    //todo write function to generate path based on device screen size?
-    fun buildProfilePath(profilePath: String?, config: Config): String? =
-        profilePath?.let { "${config.secureBaseUrl}${config.profileSizes[1]}$profilePath" }
-
-    //todo write function to generate path based on device screen size?
-    fun buildBackdropPath(backdropPath: String?, config: Config): String? =
-        backdropPath?.let { "${config.secureBaseUrl}${config.profileSizes[1]}$backdropPath" }
-
-    return if (config != null) {
-        this.map {
-            when (it) {
-                is TvShow -> {
-                    it.copy(
-                        backdropPath = buildBackdropPath(it.backdropPath, config),
-                        posterPath = buildPosterPath(it.posterPath, config)
-                    )
-                }
-                is Movie -> {
-                    it.copy(
-                        backdropPath = buildBackdropPath(it.backdropPath, config),
-                        posterPath = buildPosterPath(it.posterPath, config)
-                    )
-                }
-                is Person -> it.copy(profilePath = buildProfilePath(it.profilePath, config))
-            }
-        }
-    } else this
-}
-
-//================================================================================
 // Factory
 //================================================================================
 
@@ -207,7 +162,7 @@ private fun List<SearchModel>.withImageUrls(config: Config?): List<SearchModel> 
 class SearchResultsViewModelFactory(
     private val initialState: SearchResultsState?,
     private val searchMultiUseCase: SearchMultiUseCase,
-    private val popularMoviesTvUseCase: PopularMoviesTvUseCase,
+    private val popularMoviesTvUseCase: GetPopularMoviesTvUseCase,
     private val getConfigUseCase: GetConfigUseCase,
     private val schedulers: RxSchedulers
 ) : ViewModelProvider.Factory {

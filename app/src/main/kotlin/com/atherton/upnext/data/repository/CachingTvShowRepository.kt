@@ -2,6 +2,10 @@ package com.atherton.upnext.data.repository
 
 import com.atherton.upnext.data.mapper.toDomainResponse
 import com.atherton.upnext.data.mapper.toDomainTvShow
+import com.atherton.upnext.data.model.NetworkResponse
+import com.atherton.upnext.data.model.TmdbApiError
+import com.atherton.upnext.data.model.TmdbPagedResponse
+import com.atherton.upnext.data.model.TmdbTvShow
 import com.atherton.upnext.data.network.TmdbTvShowService
 import com.atherton.upnext.domain.model.Response
 import com.atherton.upnext.domain.model.TvShow
@@ -17,14 +21,20 @@ class CachingTvShowRepository @Inject constructor(
     private val tvShowService: TmdbTvShowService
 ) : TvShowRepository {
 
-    override fun popular(): Single<Response<List<TvShow>>> {
-        return tvShowService.getPopular()
-            .map {
-                it.toDomainResponse(false) { response ->
-                    response.results.map { tvShow ->
-                        tvShow.toDomainTvShow()
-                    }
-                }
+    override fun getPopular(): Single<Response<List<TvShow>>> {
+        return tvShowService.getPopular().toDomainTvShows()
+    }
+
+    override fun getTopRated(): Single<Response<List<TvShow>>> {
+        return tvShowService.getTopRated().toDomainTvShows()
+    }
+
+    private fun Single<NetworkResponse<TmdbPagedResponse<TmdbTvShow>, TmdbApiError>>.toDomainTvShows()
+        : Single<Response<List<TvShow>>> {
+        return this.map {
+            it.toDomainResponse(false) { response ->
+                response.results.map { tvShow -> tvShow.toDomainTvShow() }
             }
+        }
     }
 }

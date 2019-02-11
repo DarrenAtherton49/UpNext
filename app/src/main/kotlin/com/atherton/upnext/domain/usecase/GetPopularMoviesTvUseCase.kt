@@ -8,7 +8,7 @@ import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import javax.inject.Inject
 
-class PopularMoviesTvUseCase @Inject constructor(
+class GetPopularMoviesTvUseCase @Inject constructor(
     private val tvShowRepository: TvShowRepository,
     private val movieRepository: MovieRepository
 ) {
@@ -22,8 +22,8 @@ class PopularMoviesTvUseCase @Inject constructor(
      */
     fun build(): Single<Response<List<SearchModel>>> {
         return Single.zip(
-            tvShowRepository.popular(),
-            movieRepository.popular(),
+            tvShowRepository.getPopular(),
+            movieRepository.getPopular(),
             BiFunction { tvResponse, moviesResponse ->
                 when {
                     tvResponse is Response.Success && moviesResponse is Response.Success -> {

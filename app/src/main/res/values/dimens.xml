@@ -6,9 +6,15 @@
 
     <dimen name="keyline">8dp</dimen>
     <dimen name="keyline_2x">16dp</dimen>
+    <dimen name="keyline_4x">32dp</dimen>
 
     <item name="match_parent" format="integer" type="dimen">-1</item>
     <item name="wrap_content" format="integer" type="dimen">-2</item>
+
+    <!-- DiscoverFragment -->
+    <dimen name="discover_result_item_width">112dp</dimen>
+    <dimen name="discover_result_image_width">104dp</dimen>
+    <dimen name="discover_result_image_height">156dp</dimen>
 
     <!-- SearchResultsFragment -->
     <dimen name="search_results_grid_spacing">16dp</dimen>
