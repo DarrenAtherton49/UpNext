@@ -25,7 +25,6 @@ class MoviesFragment : BaseFragment<MoviesAction, MoviesState, MoviesViewModel>(
 
     private val activityViewModel: MainViewModel by lazy {
         getActivityViewModel<MainViewModel>(mainVmFactory)
-
     }
     override val viewModel: MoviesViewModel by lazy {
         getViewModel<MoviesViewModel>(vmFactory)
