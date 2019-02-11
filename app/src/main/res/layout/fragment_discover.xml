@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:fillViewport="true"
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:animateLayoutChanges="true"
@@ -13,12 +13,19 @@
     android:layout_marginEnd="@dimen/keyline_2x"
     tools:context=".presentation.features.discover.featured.DiscoverFragment">
 
-    <include layout="@layout/discover_search_field"/>
-
-    <include
-        layout="@layout/base_recycler_view"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="@dimen/keyline_2x"/>
+        android:orientation="vertical">
 
-</LinearLayout>
+        <include layout="@layout/discover_search_field"/>
+
+        <include
+            layout="@layout/base_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/keyline_2x"/>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>
