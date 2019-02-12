@@ -2,6 +2,7 @@ package com.atherton.upnext.presentation.features.shows
 
 
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.R
 import com.atherton.upnext.presentation.main.MainViewModel
@@ -18,6 +19,8 @@ class ShowsFragment : BaseFragment<ShowsAction, ShowsState, ShowsViewModel>() {
     override val layoutResId: Int = R.layout.fragment_shows
     override val stateBundleKey: String = "bundle_key_shows_state"
 
+    @Inject lateinit var viewPagerAdapter: ShowsViewPagerAdapter
+
     @Inject @field:Named(MainViewModelFactory.NAME)
     lateinit var mainVmFactory: ViewModelProvider.Factory
 
@@ -31,27 +34,30 @@ class ShowsFragment : BaseFragment<ShowsAction, ShowsState, ShowsViewModel>() {
     override val viewModel: ShowsViewModel by lazy {
         getViewModel<ShowsViewModel>(vmFactory)
     }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        //todo dispatch action
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initViewPager()
     }
 
     override fun renderState(state: ShowsState) {
 
     }
 
+    private fun initViewPager() {
+        //todo
+//        viewPagerAdapter.addFragment(getString(R.string.shows_tab_up_next), )
+//        viewPagerAdapter.addFragment(getString(R.string.shows_tab_watchlist), )
+//        viewPagerAdapter.addFragment(getString(R.string.shows_tab_finished), )
+//        viewPager.adapter = viewPagerAdapter
+//        tabLayout.setupWithViewPager(viewPager)
+    }
+
     override fun initInjection(initialState: ShowsState?) {
         DaggerShowsComponent.builder()
-            .showsModule(ShowsModule(initialState))
+            .showsModule(ShowsModule(initialState, childFragmentManager))
             .mainModule(mainModule)
             .appComponent(getAppComponent())
             .build()
             .inject(this)
-    }
-
-    companion object {
-        fun newInstance() = ShowsFragment()
     }
 }

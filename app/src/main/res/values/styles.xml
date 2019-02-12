@@ -49,4 +49,9 @@
         <item name="android:gravity">center_horizontal|top</item>
     </style>
 
+    <style name="TvMoviesTabLayout" parent="Widget.MaterialComponents.TabLayout.Colored">
+        <item name="tabMode">fixed</item>
+        <item name="tabGravity">center</item>
+    </style>
+
 </resources>
