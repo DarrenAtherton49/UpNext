@@ -1,4 +1,4 @@
-package com.atherton.upnext.presentation.features.discover
+package com.atherton.upnext.presentation.features.discover.featured
 
 import com.atherton.upnext.domain.model.*
 
