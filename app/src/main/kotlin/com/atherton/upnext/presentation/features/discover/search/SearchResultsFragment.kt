@@ -18,7 +18,8 @@ import kotlinx.android.synthetic.main.search_results_search_field.*
 import javax.inject.Inject
 import javax.inject.Named
 
-class SearchResultsFragment : BaseFragment<SearchResultsAction, SearchResultsState, SearchResultsViewModel>() {
+class SearchResultsFragment
+    : BaseFragment<SearchResultsAction, SearchResultsState, SearchResultsViewEffect, SearchResultsViewModel>() {
 
     override val layoutResId: Int = R.layout.fragment_search_results
     override val stateBundleKey: String = "bundle_key_search_results_state"
@@ -97,6 +98,10 @@ class SearchResultsFragment : BaseFragment<SearchResultsAction, SearchResultsSta
                 retryButton.isVisible = state.failure is Response.Failure.NetworkError
             }
         }
+    }
+
+    override fun processViewEffects(viewEffect: SearchResultsViewEffect) {
+        //todo
     }
 
     private fun initRecyclerView() {

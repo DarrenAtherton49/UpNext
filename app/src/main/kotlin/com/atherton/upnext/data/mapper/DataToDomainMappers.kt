@@ -1,5 +1,6 @@
 package com.atherton.upnext.data.mapper
 
+import com.atherton.upnext.data.local.AppSettings
 import com.atherton.upnext.data.model.*
 import com.atherton.upnext.domain.model.*
 
@@ -97,4 +98,11 @@ fun TmdbPerson.toDomainPerson(): Person {
         popularity,
         profilePath
     )
+}
+
+fun AppSettings.DiscoverViewToggleSetting.toDomainToggleMode(): DiscoverViewMode {
+    return when (this) {
+        is AppSettings.DiscoverViewToggleSetting.Grid -> DiscoverViewMode.Grid
+        is AppSettings.DiscoverViewToggleSetting.Carousel -> DiscoverViewMode.Carousel
+    }
 }

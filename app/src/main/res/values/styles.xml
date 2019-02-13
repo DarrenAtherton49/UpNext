@@ -35,9 +35,9 @@
         <item name="android:textCursorDrawable">@null</item> <!-- forces cursor to be same color as query -->
     </style>
 
-    <style name="DiscoverSectionTitleText" parent="TextAppearance.MaterialComponents.Headline6">
-        <item name="android:minLines">@integer/discover_section_title_min_lines</item>
-        <item name="android:maxLines">@integer/discover_section_title_max_lines</item>
+    <style name="DiscoverCarouselSectionTitleText" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:minLines">@integer/discover_carousel_section_title_min_lines</item>
+        <item name="android:maxLines">@integer/discover_carousel_section_title_max_lines</item>
         <item name="android:ellipsize">end</item>
         <item name="android:gravity">center_horizontal|start</item>
     </style>

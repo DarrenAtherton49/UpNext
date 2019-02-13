@@ -1,16 +1,11 @@
-package com.atherton.upnext.presentation.features.shows
+package com.atherton.upnext.util.viewpager
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import com.atherton.upnext.util.injection.PerView
 import java.util.*
-import javax.inject.Inject
 
-@PerView
-class ShowsViewPagerAdapter @Inject constructor(
-    fragmentManager: FragmentManager
-) : FragmentPagerAdapter(fragmentManager) {
+class FragmentViewPagerAdapter(fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager) {
 
     private val fragmentTitleList: MutableList<String> = ArrayList()
     private val fragmentList: MutableList<Fragment> = ArrayList()
@@ -19,10 +14,10 @@ class ShowsViewPagerAdapter @Inject constructor(
 
     override fun getCount(): Int = fragmentList.count()
 
+    override fun getPageTitle(position: Int): CharSequence = fragmentTitleList[position]
+
     fun addFragment(fragmentTitle: String, fragment: Fragment) {
         fragmentTitleList.add(fragmentTitle)
         fragmentList.add(fragment)
     }
-
-    override fun getPageTitle(position: Int): CharSequence = fragmentTitleList[position]
 }

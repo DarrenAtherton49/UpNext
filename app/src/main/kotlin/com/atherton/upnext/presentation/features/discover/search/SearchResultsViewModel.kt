@@ -10,11 +10,13 @@ import com.atherton.upnext.domain.usecase.GetConfigUseCase
 import com.atherton.upnext.domain.usecase.GetPopularMoviesTvUseCase
 import com.atherton.upnext.domain.usecase.SearchMultiUseCase
 import com.atherton.upnext.presentation.features.discover.withDiscoverSearchImageUrls
+import com.atherton.upnext.util.base.BaseViewEffect
+import com.atherton.upnext.util.base.UpNextViewModel
+import com.atherton.upnext.util.extensions.preventMultipleClicks
 import com.atherton.upnext.util.injection.PerView
 import com.atherton.upnext.util.threading.RxSchedulers
 import com.ww.roxie.BaseAction
 import com.ww.roxie.BaseState
-import com.ww.roxie.BaseViewModel
 import com.ww.roxie.Reducer
 import io.reactivex.Observable
 import io.reactivex.Observable.merge
@@ -32,7 +34,7 @@ class SearchResultsViewModel @Inject constructor(
     private val popularMoviesTvUseCase: GetPopularMoviesTvUseCase,
     private val getConfigUseCase: GetConfigUseCase,
     private val schedulers: RxSchedulers
-): BaseViewModel<SearchResultsAction, SearchResultsState>() {
+): UpNextViewModel<SearchResultsAction, SearchResultsState, SearchResultsViewEffect>() {
 
     override val initialState = initialState ?: SearchResultsState.Idle
 
@@ -96,7 +98,7 @@ class SearchResultsViewModel @Inject constructor(
 
         val retryButtonChange = actions.ofType<SearchResultsAction.RetryButtonClicked>()
             .map { SearchResultsAction.SearchTextChanged(it.query) }
-            .throttleFirst(300, TimeUnit.MILLISECONDS) // prevent multiple clicks
+            .preventMultipleClicks()
             .toResultChange()
 
         val allChanges = merge(textSearchedChange, retryButtonChange)
@@ -153,6 +155,8 @@ sealed class SearchResultsState(open val query: String): BaseState, Parcelable {
         override val query: String
     ) : SearchResultsState(query)
 }
+
+sealed class SearchResultsViewEffect : BaseViewEffect
 
 //================================================================================
 // Factory

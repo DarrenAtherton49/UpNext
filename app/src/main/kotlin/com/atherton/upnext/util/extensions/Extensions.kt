@@ -24,14 +24,11 @@ import com.atherton.upnext.util.injection.AppComponent
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.moshi.Moshi
-import java.util.concurrent.Executors
 
 fun Context.getDrawableCompat(@DrawableRes id: Int): Drawable? = ContextCompat.getDrawable(this, id)
 
 fun ViewGroup.inflateLayout(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false): View =
     LayoutInflater.from(context).inflate(layoutRes, this, attachToRoot)
-
-fun CharSequence?.notNullOrBlank(): Boolean = this != null && !this.isBlank()
 
 internal fun Context.getAppComponent(): AppComponent {
     return if (this is Application) {
@@ -105,10 +102,6 @@ inline var View.isVisible: Boolean
 
 fun FloatingActionButton.show(show: Boolean) {
     if (show) show() else hide()
-}
-
-fun ioThread(block: () -> Unit) {
-    Executors.newSingleThreadExecutor().execute(block)
 }
 
 fun View.showSoftKeyboard() {

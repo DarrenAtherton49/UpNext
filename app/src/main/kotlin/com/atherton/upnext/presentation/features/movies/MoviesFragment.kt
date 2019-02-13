@@ -12,7 +12,7 @@ import com.atherton.upnext.util.extensions.getViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
-class MoviesFragment : BaseFragment<MoviesAction, MoviesState, MoviesViewModel>() {
+class MoviesFragment : BaseFragment<MoviesAction, MoviesState, MoviesViewEffect, MoviesViewModel>() {
 
     override val layoutResId: Int = R.layout.fragment_movies
     override val stateBundleKey: String = "bundle_key_movies_state"
@@ -32,6 +32,10 @@ class MoviesFragment : BaseFragment<MoviesAction, MoviesState, MoviesViewModel>(
 
     override fun renderState(state: MoviesState) {
 
+    }
+
+    override fun processViewEffects(viewEffect: MoviesViewEffect) {
+        //todo
     }
 
     override fun initInjection(initialState: MoviesState?) {

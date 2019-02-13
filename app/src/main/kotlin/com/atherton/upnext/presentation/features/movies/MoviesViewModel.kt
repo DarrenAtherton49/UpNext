@@ -3,16 +3,17 @@ package com.atherton.upnext.presentation.features.movies
 import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.atherton.upnext.util.base.BaseViewEffect
+import com.atherton.upnext.util.base.UpNextViewModel
 import com.atherton.upnext.util.injection.PerView
 import com.ww.roxie.BaseAction
 import com.ww.roxie.BaseState
-import com.ww.roxie.BaseViewModel
 import kotlinx.android.parcel.Parcelize
 import javax.inject.Inject
 
 class MoviesViewModel @Inject constructor(
     initialState: MoviesState?
-): BaseViewModel<MoviesAction, MoviesState>() {
+): UpNextViewModel<MoviesAction, MoviesState, MoviesViewEffect>() {
 
     override val initialState = initialState ?: MoviesState()
 
@@ -40,6 +41,7 @@ sealed class MoviesChange {
 @Parcelize
 data class MoviesState(@Transient val isIdle: Boolean = true): BaseState, Parcelable
 
+sealed class MoviesViewEffect : BaseViewEffect
 
 //================================================================================
 // Factory

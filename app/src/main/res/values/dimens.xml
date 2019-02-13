@@ -12,8 +12,8 @@
     <item name="wrap_content" format="integer" type="dimen">-2</item>
 
     <!-- DiscoverFragment -->
-    <dimen name="discover_section_recyclerview_spacing">16dp</dimen>
-    <dimen name="discover_result_item_recyclerview_spacing">16dp</dimen>
+    <dimen name="discover_carousel_recyclerview_section_spacing">16dp</dimen>
+    <dimen name="discover_carousel_recyclerview_child_spacing">16dp</dimen>
     <dimen name="discover_result_item_width">112dp</dimen>
     <dimen name="discover_result_image_width">104dp</dimen>
     <dimen name="discover_result_image_height">156dp</dimen>

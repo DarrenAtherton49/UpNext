@@ -10,9 +10,12 @@ import com.atherton.upnext.presentation.main.MainModule
 import com.atherton.upnext.util.extensions.observe
 import com.ww.roxie.BaseAction
 import com.ww.roxie.BaseState
-import com.ww.roxie.BaseViewModel
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 
-abstract class BaseFragment<Action : BaseAction, State, ViewModel : BaseViewModel<Action, State>>
+abstract class BaseFragment<Action : BaseAction,
+    State, ViewEffect : BaseViewEffect,
+    ViewModel : UpNextViewModel<Action, State, ViewEffect>>
     : Fragment()
     where State : BaseState,
           State : Parcelable {
@@ -20,6 +23,8 @@ abstract class BaseFragment<Action : BaseAction, State, ViewModel : BaseViewMode
     protected abstract val layoutResId: Int
     protected abstract val stateBundleKey: String
     protected abstract val viewModel: ViewModel
+
+    private val disposables: CompositeDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // support process death by re-supplying last state to ViewModel
@@ -41,6 +46,18 @@ abstract class BaseFragment<Action : BaseAction, State, ViewModel : BaseViewMode
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        disposables += viewModel.viewEffects().subscribe {
+            processViewEffects(it)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        disposables.clear()
+    }
+
     // support process death by saving last ViewModel state in bundle
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -50,6 +67,8 @@ abstract class BaseFragment<Action : BaseAction, State, ViewModel : BaseViewMode
     protected abstract fun initInjection(initialState: State?)
 
     protected abstract fun renderState(state: State)
+
+    protected abstract fun processViewEffects(viewEffect: ViewEffect)
 
     protected val mainModule: MainModule by lazy { MainModule(null) }
 }

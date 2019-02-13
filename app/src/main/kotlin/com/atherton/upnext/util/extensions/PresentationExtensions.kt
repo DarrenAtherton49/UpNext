@@ -3,6 +3,8 @@ package com.atherton.upnext.util.extensions
 import android.content.Context
 import com.atherton.upnext.R
 import com.atherton.upnext.domain.model.Response
+import io.reactivex.Observable
+import java.util.concurrent.TimeUnit
 
 fun Response.Failure.generateErrorMessage(context: Context): String {
     return when (this) {
@@ -19,4 +21,8 @@ fun Response.Failure.generateErrorMessage(context: Context): String {
         }
         is Response.Failure.NetworkError -> context.getString(R.string.search_results_error_network)
     }
+}
+
+fun <T> Observable<T>.preventMultipleClicks(): Observable<T> {
+    return this.throttleFirst(300, TimeUnit.MILLISECONDS)
 }

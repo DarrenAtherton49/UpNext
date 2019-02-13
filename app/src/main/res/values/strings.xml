@@ -1,8 +1,10 @@
 <resources>
     <string name="app_name">UpNext</string>
 
-    <!-- Menu -->
+    <!-- Menu actions-->
     <string name="menu_action_settings">Settings</string>
+    <string name="menu_action_search">Search</string>
+    <string name="menu_action_toggle_view">Toggle view</string>
 
     <!-- Bottom navigation-->
     <string name="bottom_nav_shows">Shows</string>
@@ -38,11 +40,13 @@
     <!-- DiscoverFragment -->
     <string name="discover_search_textfield_label">Find Movies, Shows or People…</string>
     <string name="discover_advanced_search_button">Advanced Search</string>
-    <string name="discover_section_title_popular">Most popular</string>
-    <string name="discover_section_title_now_playing">Now in theatres</string>
-    <string name="discover_section_title_top_rated">Top rated</string>
+    <string name="discover_carousel_section_title_popular">Most popular</string>
+    <string name="discover_carousel_section_title_now_playing">Now in theatres</string>
+    <string name="discover_carousel_section_title_top_rated">Top rated</string>
 
     <!-- SearchResultsFragment -->
+    <string name="search_results_search_textfield_label">Find Movies, Shows or People…</string>
+    <string name="search_results_advanced_search_button">Advanced Search</string>
     <string name="search_results_error_no_results_found">No results found</string>
     <string name="search_results_error_server">Server encountered a %d error, please try again later</string>
     <string name="search_results_error_server_with_error">Server encountered a %d error, please try again later (status code: %d)</string>

@@ -15,15 +15,15 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_discover_result.*
-import kotlinx.android.synthetic.main.item_discover_section.*
-import kotlinx.android.synthetic.main.item_discover_section.view.*
+import kotlinx.android.synthetic.main.item_discover_carousel_section.*
+import kotlinx.android.synthetic.main.item_discover_carousel_section.view.*
 
 class DiscoverSectionViewHolder(
     override val containerView: View
 ) : RecyclerView.ViewHolder(containerView),
     LayoutContainer {
 
-    fun bind(section: DiscoverSection, childAdapter: DiscoverChildAdapter?, childAdapterState: Parcelable?) {
+    fun bind(section: DiscoverCarouselSection, childAdapter: DiscoverChildAdapter?, childAdapterState: Parcelable?) {
         sectionTitleTextView.text = section.title
         childRecyclerView.adapter = childAdapter
         childAdapter?.submitList(section.data)

@@ -6,22 +6,17 @@ import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import com.atherton.upnext.App
 import com.atherton.upnext.BuildConfig
+import com.atherton.upnext.data.local.AppSettings
 import com.atherton.upnext.data.local.LocalConfigStore
-import com.atherton.upnext.data.network.*
+import com.atherton.upnext.data.local.SharedPreferencesStorage
+import com.atherton.upnext.data.network.TmdbApiKeyInterceptor
+import com.atherton.upnext.data.network.TmdbMultiSearchResponseAdapter
 import com.atherton.upnext.data.network.service.TmdbConfigService
 import com.atherton.upnext.data.network.service.TmdbMovieService
 import com.atherton.upnext.data.network.service.TmdbSearchService
 import com.atherton.upnext.data.network.service.TmdbTvShowService
-import com.atherton.upnext.data.preferences.LocalStorage
-import com.atherton.upnext.data.preferences.Storage
-import com.atherton.upnext.data.repository.CachingConfigRepository
-import com.atherton.upnext.data.repository.CachingMovieRepository
-import com.atherton.upnext.data.repository.CachingSearchRepository
-import com.atherton.upnext.data.repository.CachingTvShowRepository
-import com.atherton.upnext.domain.repository.ConfigRepository
-import com.atherton.upnext.domain.repository.MovieRepository
-import com.atherton.upnext.domain.repository.SearchRepository
-import com.atherton.upnext.domain.repository.TvShowRepository
+import com.atherton.upnext.data.repository.*
+import com.atherton.upnext.domain.repository.*
 import com.atherton.upnext.util.network.manager.AndroidNetworkManager
 import com.atherton.upnext.util.network.manager.NetworkManager
 import com.atherton.upnext.util.network.retrofit.KotlinRxJava2CallAdapterFactory
@@ -48,10 +43,12 @@ interface AppComponent {
 
     @ApplicationContext fun context(): Context
     fun schedulers(): RxSchedulers
+    fun settings(): AppSettings
     fun tvShowRepository(): TvShowRepository
     fun movieRepository(): MovieRepository
     fun searchRepository(): SearchRepository
     fun configRepository(): ConfigRepository
+    fun settingsRepository(): SettingsRepository
 }
 
 
@@ -67,7 +64,7 @@ class AppModule(private val application: Application) {
 
     @Provides
     @Singleton internal fun provideSharedPrefs(): SharedPreferences =
-        application.getSharedPreferences("com.atherton.movies_preferences", Context.MODE_PRIVATE)
+        application.getSharedPreferences("com.atherton.upnext_preferences", Context.MODE_PRIVATE)
 
     @Provides
     @Singleton internal fun provideNetworkManager(): NetworkManager {
@@ -110,7 +107,7 @@ class AppModule(private val application: Application) {
     }
 
     @Provides
-    @Singleton internal fun provideStorage(localStorage: LocalStorage): Storage = localStorage
+    @Singleton internal fun provideSettings(sharedPreferences: SharedPreferencesStorage): AppSettings = sharedPreferences
 
     companion object {
         private const val TMDB_API_VERSION = 3
@@ -140,6 +137,11 @@ class RepositoryModule {
         localConfigStore: LocalConfigStore
     ): ConfigRepository {
         return CachingConfigRepository(configService, localConfigStore)
+    }
+
+    @Provides
+    @Singleton internal fun provideSettingsRepository(appSettings: AppSettings): SettingsRepository {
+        return CachingSettingsRepository(appSettings)
     }
 }
 

@@ -30,9 +30,4 @@ class ShowsModule(private val initialState: ShowsState?, private val fragmentMan
     @PerView internal fun provideViewModelFactory(): ViewModelProvider.Factory {
         return ShowsViewModelFactory(initialState)
     }
-
-    @Provides
-    @PerView internal fun provideViewPagerAdapter(): ShowsViewPagerAdapter {
-        return ShowsViewPagerAdapter(fragmentManager)
-    }
 }

@@ -13,13 +13,13 @@ import com.atherton.upnext.domain.model.SearchModel
 import com.atherton.upnext.domain.model.TvShow
 import com.atherton.upnext.util.extensions.inflateLayout
 import com.atherton.upnext.util.glide.GlideRequests
-import kotlinx.android.synthetic.main.item_discover_section.view.*
+import kotlinx.android.synthetic.main.item_discover_carousel_section.view.*
 
-class DiscoverSectionAdapter(
+class DiscoverCarouselAdapter(
     private val imageLoader: GlideRequests,
     private val childRecyclerItemSpacingPx: Int,
     private val onClickListener: (SearchModel) -> Unit
-) : ListAdapter<DiscoverSection, DiscoverSectionViewHolder>(DiscoverSectionsDiffCallback) {
+) : ListAdapter<DiscoverCarouselSection, DiscoverSectionViewHolder>(DiscoverCarouselSectionsDiffCallback) {
 
     private val recyclerViewPool: RecyclerView.RecycledViewPool = RecyclerView.RecycledViewPool()
 
@@ -29,7 +29,7 @@ class DiscoverSectionAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DiscoverSectionViewHolder {
         return DiscoverSectionViewHolder.create(
-            parent.inflateLayout(R.layout.item_discover_section),
+            parent.inflateLayout(R.layout.item_discover_carousel_section),
             recyclerViewPool,
             childRecyclerItemSpacingPx
         )
@@ -50,12 +50,12 @@ class DiscoverSectionAdapter(
         super.onViewRecycled(holder)
     }
 
-    fun submitData(sections: List<DiscoverSection>) {
+    fun submitData(sections: List<DiscoverCarouselSection>) {
         initChildAdapters(sections)
         submitList(sections)
     }
 
-    private fun initChildAdapters(sections: List<DiscoverSection>) {
+    private fun initChildAdapters(sections: List<DiscoverCarouselSection>) {
         childAdapters = HashMap(sections.size)
         childAdapterStates = HashMap(sections.size)
 
@@ -66,13 +66,13 @@ class DiscoverSectionAdapter(
     }
 
     companion object {
-        private object DiscoverSectionsDiffCallback : DiffUtil.ItemCallback<DiscoverSection>() {
+        private object DiscoverCarouselSectionsDiffCallback : DiffUtil.ItemCallback<DiscoverCarouselSection>() {
 
-            override fun areItemsTheSame(oldItem: DiscoverSection, newItem: DiscoverSection): Boolean {
+            override fun areItemsTheSame(oldItem: DiscoverCarouselSection, newItem: DiscoverCarouselSection): Boolean {
                 return oldItem.title == newItem.title
             }
 
-            override fun areContentsTheSame(oldItem: DiscoverSection, newItem: DiscoverSection): Boolean {
+            override fun areContentsTheSame(oldItem: DiscoverCarouselSection, newItem: DiscoverCarouselSection): Boolean {
                 return oldItem == newItem
             }
         }

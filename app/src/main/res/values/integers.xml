@@ -2,8 +2,11 @@
 <resources>
 
     <!-- DiscoverFragment -->
-    <integer name="discover_section_title_min_lines">1</integer>
-    <integer name="discover_section_title_max_lines">1</integer>
+    <integer name="discover_carousel_section_title_min_lines">1</integer>
+    <integer name="discover_carousel_section_title_max_lines">1</integer>
+    <!-- Menu -->
+    <integer name="discover_menu_order_search">0</integer>
+    <integer name="discover_menu_order_toggle_view">1</integer>
 
     <!-- SearchResultsFragment -->
     <integer name="search_results_item_title_min_lines">2</integer>

@@ -71,3 +71,8 @@ data class Config(
     val profileSizes: List<String>,
     val stillSizes: List<String> // for episode still images
 )
+
+sealed class DiscoverViewMode {
+    object Grid : DiscoverViewMode()
+    object Carousel : DiscoverViewMode()
+}

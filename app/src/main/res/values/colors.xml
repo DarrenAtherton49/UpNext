@@ -17,4 +17,7 @@
     <color name="colorOnBackground">@color/white</color>
     <color name="colorStatusBar">@color/colorBase</color>
     <color name="colorNavigationBar">@color/colorBase</color>
+
+    <color name="ic_launcher_background">@color/colorBase</color>
+
 </resources>

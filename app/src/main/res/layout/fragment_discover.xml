@@ -8,9 +8,8 @@
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:animateLayoutChanges="true"
-    android:layout_marginTop="@dimen/keyline_2x"
-    android:layout_marginStart="@dimen/keyline_2x"
-    android:layout_marginEnd="@dimen/keyline_2x"
+    android:padding="@dimen/keyline_2x"
+    android:clipToPadding="false"
     tools:context=".presentation.features.discover.featured.DiscoverFragment">
 
     <LinearLayout
@@ -18,10 +17,16 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include layout="@layout/discover_search_field"/>
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
 
-        <include
-            layout="@layout/discover_error_layout"
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:visibility="gone"/>
 
         <include
@@ -30,14 +35,27 @@
             android:layout_height="match_parent"
             android:paddingBottom="@dimen/keyline_2x"/>
 
-        <ProgressBar
-            style="?android:attr/progressBarStyle"
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:indeterminate="true"
-            android:visibility="gone"/>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <include
+                layout="@layout/discover_error_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"/>
+
+            <ProgressBar
+                style="?android:attr/progressBarStyle"
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:indeterminate="true"
+                android:visibility="gone"/>
+
+        </FrameLayout>
 
     </LinearLayout>
 

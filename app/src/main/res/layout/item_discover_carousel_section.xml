@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <TextView
-        style="@style/DiscoverSectionTitleText"
+        style="@style/DiscoverCarouselSectionTitleText"
         android:id="@+id/sectionTitleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

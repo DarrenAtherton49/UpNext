@@ -11,15 +11,14 @@ import com.atherton.upnext.util.base.BaseFragment
 import com.atherton.upnext.util.extensions.getActivityViewModel
 import com.atherton.upnext.util.extensions.getAppComponent
 import com.atherton.upnext.util.extensions.getViewModel
+import com.atherton.upnext.util.viewpager.FragmentViewPagerAdapter
 import javax.inject.Inject
 import javax.inject.Named
 
-class ShowsFragment : BaseFragment<ShowsAction, ShowsState, ShowsViewModel>() {
+class ShowsFragment : BaseFragment<ShowsAction, ShowsState, ShowsViewEffect, ShowsViewModel>() {
 
     override val layoutResId: Int = R.layout.fragment_shows
     override val stateBundleKey: String = "bundle_key_shows_state"
-
-    @Inject lateinit var viewPagerAdapter: ShowsViewPagerAdapter
 
     @Inject @field:Named(MainViewModelFactory.NAME)
     lateinit var mainVmFactory: ViewModelProvider.Factory
@@ -34,6 +33,10 @@ class ShowsFragment : BaseFragment<ShowsAction, ShowsState, ShowsViewModel>() {
     override val viewModel: ShowsViewModel by lazy {
         getViewModel<ShowsViewModel>(vmFactory)
     }
+    private val viewPagerAdapter: FragmentViewPagerAdapter by lazy {
+        FragmentViewPagerAdapter(childFragmentManager)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViewPager()
@@ -41,6 +44,10 @@ class ShowsFragment : BaseFragment<ShowsAction, ShowsState, ShowsViewModel>() {
 
     override fun renderState(state: ShowsState) {
 
+    }
+
+    override fun processViewEffects(viewEffect: ShowsViewEffect) {
+        //todo
     }
 
     private fun initViewPager() {

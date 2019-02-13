@@ -3,16 +3,17 @@ package com.atherton.upnext.presentation.features.shows
 import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.atherton.upnext.util.base.BaseViewEffect
+import com.atherton.upnext.util.base.UpNextViewModel
 import com.atherton.upnext.util.injection.PerView
 import com.ww.roxie.BaseAction
 import com.ww.roxie.BaseState
-import com.ww.roxie.BaseViewModel
 import kotlinx.android.parcel.Parcelize
 import javax.inject.Inject
 
 class ShowsViewModel @Inject constructor(
     initialState: ShowsState?
-): BaseViewModel<ShowsAction, ShowsState>() {
+): UpNextViewModel<ShowsAction, ShowsState, ShowsViewEffect>() {
 
     override val initialState = initialState ?: ShowsState()
 
@@ -40,6 +41,7 @@ sealed class ShowsChange {
 @Parcelize
 data class ShowsState(@Transient val isIdle: Boolean = true): BaseState, Parcelable
 
+sealed class ShowsViewEffect : BaseViewEffect
 
 //================================================================================
 // Factory
