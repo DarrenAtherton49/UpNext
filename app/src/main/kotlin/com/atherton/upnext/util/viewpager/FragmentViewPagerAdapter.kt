@@ -20,4 +20,9 @@ class FragmentViewPagerAdapter(fragmentManager: FragmentManager) : FragmentPager
         fragmentTitleList.add(fragmentTitle)
         fragmentList.add(fragment)
     }
+
+    fun clear() {
+        fragmentTitleList.clear()
+        fragmentList.clear()
+    }
 }
