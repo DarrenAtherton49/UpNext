@@ -10,8 +10,6 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class ApiError(val statusMessage: String, val statusCode: Int): Parcelable
 
-data class DataWithConfig<T>(val data: T, val config: Config)
-
 /**
  * Wrapper to unify the movie, tv and person results below into one 'type' - useful for 'when' statements etc.
  */
@@ -72,7 +70,13 @@ data class Config(
     val stillSizes: List<String> // for episode still images
 )
 
-sealed class DiscoverViewMode {
-    object Grid : DiscoverViewMode()
-    object Carousel : DiscoverViewMode()
+sealed class DiscoverViewMode : Parcelable {
+    @Parcelize object Grid : DiscoverViewMode()
+    @Parcelize object Carousel : DiscoverViewMode()
+}
+
+sealed class DiscoverCategory {
+    object PopularTvMovies : DiscoverCategory()
+    object NowPlayingMovies : DiscoverCategory()
+    object TopRatedTvMovies : DiscoverCategory()
 }
