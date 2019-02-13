@@ -2,8 +2,8 @@ package com.atherton.upnext.presentation.features.discover.featured
 
 import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.domain.usecase.GetConfigUseCase
+import com.atherton.upnext.domain.usecase.GetDiscoverMoviesTvUseCase
 import com.atherton.upnext.domain.usecase.GetDiscoverViewModeUseCase
-import com.atherton.upnext.domain.usecase.GetFeaturedMoviesTvUseCase
 import com.atherton.upnext.domain.usecase.ToggleDiscoverViewModeUseCase
 import com.atherton.upnext.presentation.main.MainComponent
 import com.atherton.upnext.presentation.main.MainModule
@@ -37,7 +37,7 @@ class DiscoverModule(
     @PerView internal fun provideViewModelFactory(
         toggleDiscoverViewModeUseCase: ToggleDiscoverViewModeUseCase,
         getDiscoverViewModeUseCase: GetDiscoverViewModeUseCase,
-        getFeaturedMoviesTvUseCase: GetFeaturedMoviesTvUseCase,
+        getDiscoverMoviesTvUseCase: GetDiscoverMoviesTvUseCase,
         getConfigUseCase: GetConfigUseCase,
         schedulers: RxSchedulers
     ): ViewModelProvider.Factory {
@@ -45,7 +45,7 @@ class DiscoverModule(
             initialState,
             toggleDiscoverViewModeUseCase,
             getDiscoverViewModeUseCase,
-            getFeaturedMoviesTvUseCase,
+            getDiscoverMoviesTvUseCase,
             getConfigUseCase,
             schedulers,
             discoverStringProvider
