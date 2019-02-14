@@ -214,7 +214,11 @@ sealed class DiscoverViewEffect : BaseViewEffect {
 //================================================================================
 
 // this class is just used as the result of zipping the necessary Observables together
-data class DiscoverViewData(val searchModels: Response<List<SearchModel>>, val config: Config, val viewMode: SearchModelViewMode)
+data class DiscoverViewData(
+    val searchModels: Response<List<SearchModel>>,
+    val config: Config,
+    val viewMode: SearchModelViewMode
+)
 
 //================================================================================
 // Factory
