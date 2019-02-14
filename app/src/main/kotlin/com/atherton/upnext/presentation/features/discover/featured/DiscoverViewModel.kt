@@ -136,7 +136,7 @@ class DiscoverViewModel @Inject constructor(
         val searchActionClickedViewEffect = actions.ofType<DiscoverAction.SearchActionClicked>()
             .preventMultipleClicks()
             .subscribeOn(schedulers.io)
-            .map { DiscoverViewEffect.ShowSearchResultsScreen }
+            .map { DiscoverViewEffect.ShowSearchScreen }
 
         val searchModelClickedViewEffect = actions.ofType<DiscoverAction.SearchModelClicked>()
             .preventMultipleClicks()
@@ -208,7 +208,7 @@ sealed class DiscoverState : BaseState, Parcelable {
 sealed class DiscoverViewEffect : BaseViewEffect {
     data class ToggleViewMode(val viewMode: SearchModelViewMode) : DiscoverViewEffect()
     data class ShowSearchModelDetailScreen(val searchModel: SearchModel) : DiscoverViewEffect()
-    object ShowSearchResultsScreen : DiscoverViewEffect()
+    object ShowSearchScreen : DiscoverViewEffect()
 }
 
 //================================================================================

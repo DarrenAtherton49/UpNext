@@ -17,6 +17,7 @@
     <!-- -The two values below should have a ratio of 1:1.5 as they are posters -->
     <dimen name="search_model_image_width">104dp</dimen>
     <dimen name="search_model_image_height">156dp</dimen>
+    <dimen name="tv_movies_add_button_corner_radius">56dp</dimen>
 
     <!-- Backdrop aspect ratio is 1.77777777777778 or 16:9 -->
 

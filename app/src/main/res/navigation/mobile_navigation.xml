@@ -10,22 +10,10 @@
         android:id="@+id/showsFragment"
         android:name="com.atherton.upnext.presentation.features.shows.ShowsFragment"
         android:label="@string/fragment_label_shows"
-        tools:layout="@layout/fragment_shows"/>
-
-    <fragment
-        android:id="@+id/moviesFragment"
-        android:name="com.atherton.upnext.presentation.features.movies.MoviesFragment"
-        android:label="@string/fragment_label_movies"
-        tools:layout="@layout/fragment_movies"/>
-
-    <fragment
-        android:id="@+id/discoverFragment"
-        android:name="com.atherton.upnext.presentation.features.discover.featured.DiscoverFragment"
-        android:label="@string/fragment_label_discover"
-        tools:layout="@layout/fragment_discover">
+        tools:layout="@layout/fragment_shows">
         <action
-            android:id="@+id/actionGoToSearchResults"
-            app:destination="@+id/searchResultsFragment"
+            android:id="@+id/actionGoToSearch"
+            app:destination="@+id/searchFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
@@ -33,9 +21,37 @@
     </fragment>
 
     <fragment
-        android:id="@+id/searchResultsFragment"
-        android:name="com.atherton.upnext.presentation.features.discover.search.SearchResultsFragment"
+        android:id="@+id/moviesFragment"
+        android:name="com.atherton.upnext.presentation.features.movies.MoviesFragment"
+        android:label="@string/fragment_label_movies"
+        tools:layout="@layout/fragment_movies">
+        <action
+            android:id="@+id/actionGoToSearch"
+            app:destination="@+id/searchFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/discoverFragment"
+        android:name="com.atherton.upnext.presentation.features.discover.featured.DiscoverFragment"
+        android:label="@string/fragment_label_discover"
+        tools:layout="@layout/fragment_discover">
+        <action
+            android:id="@+id/actionGoToSearch"
+            app:destination="@+id/searchFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.atherton.upnext.presentation.features.discover.search.SearchFragment"
         android:label="@string/fragment_label_search_results"
-        tools:layout="@layout/fragment_search_results"/>
+        tools:layout="@layout/fragment_search"/>
 
 </navigation>

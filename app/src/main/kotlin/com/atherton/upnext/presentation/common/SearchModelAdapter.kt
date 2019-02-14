@@ -14,7 +14,7 @@ class SearchModelAdapter(
     private val imageLoader: GlideRequests,
     private val viewMode: SearchModelViewMode,
     private val onClickListener: (SearchModel) -> Unit
-) : ListAdapter<SearchModel, SearchModelViewHolder>(SearchResultsDiffCallback) {
+) : ListAdapter<SearchModel, SearchModelViewHolder>(SearchDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchModelViewHolder {
         val view: View = when (viewMode) {
@@ -59,7 +59,7 @@ class SearchModelAdapter(
         private const val MOVIE_VIEW_TYPE = 1
         private const val PERSON_VIEW_TYPE = 2
 
-        private object SearchResultsDiffCallback : DiffUtil.ItemCallback<SearchModel>() {
+        private object SearchDiffCallback : DiffUtil.ItemCallback<SearchModel>() {
 
             // TMDB ids are not globally unique - only unique per type (e.g. movie)
             override fun areItemsTheSame(oldItem: SearchModel, newItem: SearchModel): Boolean {

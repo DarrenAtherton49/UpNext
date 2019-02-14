@@ -119,7 +119,7 @@ class DiscoverFragment : BaseFragment<DiscoverAction, DiscoverState, DiscoverVie
                 if (state.results.isEmpty()) {
                     recyclerView.isVisible = false
                     errorLayout.isVisible = true
-                    errorTextView.text = getString(R.string.search_results_error_network_try_again)
+                    errorTextView.text = getString(R.string.search_error_network_try_again)
                 } else {
                     recyclerView.isVisible = true
                     errorLayout.isVisible = false
@@ -146,7 +146,7 @@ class DiscoverFragment : BaseFragment<DiscoverAction, DiscoverState, DiscoverVie
             is DiscoverViewEffect.ShowSearchModelDetailScreen -> {
                 //todo
             }
-            is DiscoverViewEffect.ShowSearchResultsScreen -> navController.navigate(R.id.actionGoToSearchResults)
+            is DiscoverViewEffect.ShowSearchScreen -> navController.navigate(R.id.actionGoToSearch)
         }
     }
 

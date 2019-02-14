@@ -20,29 +20,29 @@ import kotlinx.android.synthetic.main.search_results_search_field.*
 import javax.inject.Inject
 import javax.inject.Named
 
-class SearchResultsFragment
-    : BaseFragment<SearchResultsAction, SearchResultsState, SearchResultsViewEffect, SearchResultsViewModel>() {
+class SearchFragment
+    : BaseFragment<SearchAction, SearchState, SearchViewEffect, SearchViewModel>() {
 
-    override val layoutResId: Int = R.layout.fragment_search_results
+    override val layoutResId: Int = R.layout.fragment_search
     override val stateBundleKey: String = "bundle_key_search_results_state"
 
     @Inject @field:Named(MainViewModelFactory.NAME)
     lateinit var mainVmFactory: ViewModelProvider.Factory
 
-    @Inject @field:Named(SearchResultsViewModelFactory.NAME)
+    @Inject @field:Named(SearchViewModelFactory.NAME)
     lateinit var vmFactory: ViewModelProvider.Factory
 
     private val activityViewModel: MainViewModel by lazy {
         getActivityViewModel<MainViewModel>(mainVmFactory)
 
     }
-    override val viewModel: SearchResultsViewModel by lazy {
-        getViewModel<SearchResultsViewModel>(vmFactory)
+    override val viewModel: SearchViewModel by lazy {
+        getViewModel<SearchViewModel>(vmFactory)
     }
     private val recyclerViewAdapter: SearchModelAdapter by lazy {
         //todo make view mode toggleable
         SearchModelAdapter(GlideApp.with(this), SearchModelViewMode.Grid) { searchModel ->
-            viewModel.dispatch(SearchResultsAction.SearchResultClicked(searchModel))
+            viewModel.dispatch(SearchAction.SearchResultClicked(searchModel))
         }
     }
 
@@ -55,13 +55,13 @@ class SearchResultsFragment
 
         // load popular on first launch
         if (savedInstanceState == null) {
-            viewModel.dispatch(SearchResultsAction.SearchTextChanged(""))
+            viewModel.dispatch(SearchAction.SearchTextChanged(""))
         }
 
         //todo when fragment goes away, we need to hide the keyboard (could do this as part of the MVI state or an view effect?)
 
         retryButton.setOnClickListener {
-            viewModel.dispatch(SearchResultsAction.RetryButtonClicked(searchEditText.text.toString()))
+            viewModel.dispatch(SearchAction.RetryButtonClicked(searchEditText.text.toString()))
         }
 
         initRecyclerView()
@@ -70,30 +70,30 @@ class SearchResultsFragment
     override fun onResume() {
         super.onResume()
         searchEditText.whenTextChanges {
-            viewModel.dispatch(SearchResultsAction.SearchTextChanged(it))
+            viewModel.dispatch(SearchAction.SearchTextChanged(it))
         }
     }
 
-    override fun renderState(state: SearchResultsState) {
+    override fun renderState(state: SearchState) {
         when (state) {
-            is SearchResultsState.Loading -> {
+            is SearchState.Loading -> {
                 progressBar.isVisible = true
                 recyclerView.isVisible = false
                 errorLayout.isVisible = false
             }
-            is SearchResultsState.Content -> {
+            is SearchState.Content -> {
                 progressBar.isVisible = false
                 if (state.results.isEmpty()) {
                     recyclerView.isVisible = false
                     errorLayout.isVisible = true
-                    errorTextView.text = getString(R.string.search_results_error_network_try_again)
+                    errorTextView.text = getString(R.string.search_error_network_try_again)
                 } else {
                     recyclerView.isVisible = true
                     errorLayout.isVisible = false
                     recyclerViewAdapter.submitList(state.results)
                 }
             }
-            is SearchResultsState.Error -> {
+            is SearchState.Error -> {
                 progressBar.isVisible = false
                 recyclerView.isVisible = false
                 errorLayout.isVisible = true
@@ -103,7 +103,7 @@ class SearchResultsFragment
         }
     }
 
-    override fun processViewEffects(viewEffect: SearchResultsViewEffect) {
+    override fun processViewEffects(viewEffect: SearchViewEffect) {
         //todo
     }
 
@@ -122,8 +122,8 @@ class SearchResultsFragment
         }
     }
 
-    override fun initInjection(initialState: SearchResultsState?) {
-        DaggerSearchResultsComponent.builder()
+    override fun initInjection(initialState: SearchState?) {
+        DaggerSearchComponent.builder()
             .searchModule(SearchModule(initialState))
             .mainModule(mainModule)
             .appComponent(getAppComponent())

@@ -54,4 +54,12 @@
         <item name="tabGravity">center</item>
     </style>
 
+    <style name="AddContentButton" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/colorSecondaryVariant</item>
+        <item name="android:textColor">@color/colorOnSecondary</item>
+        <item name="rippleColor">@color/colorSecondary</item>
+        <item name="iconTint">@color/colorOnSecondary</item>
+        <item name="cornerRadius">@dimen/tv_movies_add_button_corner_radius</item>
+    </style>
+
 </resources>

@@ -4,6 +4,8 @@ package com.atherton.upnext.presentation.features.shows
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import com.atherton.upnext.R
 import com.atherton.upnext.presentation.main.MainViewModel
 import com.atherton.upnext.presentation.main.MainViewModelFactory
@@ -12,6 +14,7 @@ import com.atherton.upnext.util.extensions.getActivityViewModel
 import com.atherton.upnext.util.extensions.getAppComponent
 import com.atherton.upnext.util.extensions.getViewModel
 import com.atherton.upnext.util.viewpager.FragmentViewPagerAdapter
+import kotlinx.android.synthetic.main.fragment_shows.*
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -26,20 +29,18 @@ class ShowsFragment : BaseFragment<ShowsAction, ShowsState, ShowsViewEffect, Sho
     @Inject @field:Named(ShowsViewModelFactory.NAME)
     lateinit var vmFactory: ViewModelProvider.Factory
 
-    private val activityViewModel: MainViewModel by lazy {
-        getActivityViewModel<MainViewModel>(mainVmFactory)
-
-    }
-    override val viewModel: ShowsViewModel by lazy {
-        getViewModel<ShowsViewModel>(vmFactory)
-    }
-    private val viewPagerAdapter: FragmentViewPagerAdapter by lazy {
-        FragmentViewPagerAdapter(childFragmentManager)
-    }
+    private val activityViewModel: MainViewModel by lazy { getActivityViewModel<MainViewModel>(mainVmFactory) }
+    override val viewModel: ShowsViewModel by lazy { getViewModel<ShowsViewModel>(vmFactory) }
+    private val viewPagerAdapter: FragmentViewPagerAdapter by lazy { FragmentViewPagerAdapter(childFragmentManager) }
+    private val navController: NavController by lazy { findNavController() }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViewPager()
+
+        addShowButton.setOnClickListener {
+            viewModel.dispatch(ShowsAction.AddShowButtonClicked)
+        }
     }
 
     override fun renderState(state: ShowsState) {
@@ -47,7 +48,9 @@ class ShowsFragment : BaseFragment<ShowsAction, ShowsState, ShowsViewEffect, Sho
     }
 
     override fun processViewEffects(viewEffect: ShowsViewEffect) {
-        //todo
+        when (viewEffect) {
+            is ShowsViewEffect.ShowSearchScreen -> navController.navigate(R.id.actionGoToSearch)
+        }
     }
 
     private fun initViewPager() {
@@ -61,7 +64,7 @@ class ShowsFragment : BaseFragment<ShowsAction, ShowsState, ShowsViewEffect, Sho
 
     override fun initInjection(initialState: ShowsState?) {
         DaggerShowsComponent.builder()
-            .showsModule(ShowsModule(initialState, childFragmentManager))
+            .showsModule(ShowsModule(initialState))
             .mainModule(mainModule)
             .appComponent(getAppComponent())
             .build()

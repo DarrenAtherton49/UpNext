@@ -28,36 +28,36 @@ import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class SearchResultsViewModel @Inject constructor(
-    initialState: SearchResultsState?,
+class SearchViewModel @Inject constructor(
+    initialState: SearchState?,
     private val searchMultiUseCase: SearchMultiUseCase,
     private val popularMoviesTvUseCase: GetPopularMoviesTvUseCase,
     private val getConfigUseCase: GetConfigUseCase,
     private val schedulers: RxSchedulers
-): UpNextViewModel<SearchResultsAction, SearchResultsState, SearchResultsViewEffect>() {
+): UpNextViewModel<SearchAction, SearchState, SearchViewEffect>() {
 
-    override val initialState = initialState ?: SearchResultsState.Idle
+    override val initialState = initialState ?: SearchState.Idle
 
-    private val reducer: Reducer<SearchResultsState, SearchResultsChange> = { oldState, change ->
+    private val reducer: Reducer<SearchState, SearchChange> = { oldState, change ->
         when (change) {
-            is SearchResultsChange.Loading -> {
+            is SearchChange.Loading -> {
                 when (oldState) {
-                    is SearchResultsState.Loading -> oldState.copy(results = oldState.results, query = oldState.query)
-                    is SearchResultsState.Content -> oldState.copy(results = oldState.results, query = oldState.query)
-                    else -> SearchResultsState.Loading(results = emptyList(), query = oldState.query)
+                    is SearchState.Loading -> oldState.copy(results = oldState.results, query = oldState.query)
+                    is SearchState.Content -> oldState.copy(results = oldState.results, query = oldState.query)
+                    else -> SearchState.Loading(results = emptyList(), query = oldState.query)
                 }
             }
-            is SearchResultsChange.Result -> {
+            is SearchChange.Result -> {
                 when (change.response) {
                     is Response.Success -> {
-                        SearchResultsState.Content(
+                        SearchState.Content(
                             results = change.response.data.withDiscoverSearchImageUrls(change.config),
                             cached = change.response.cached,
                             query = change.query
                         )
                     }
                     is Response.Failure -> {
-                        SearchResultsState.Error(failure = change.response, query = change.query)
+                        SearchState.Error(failure = change.response, query = change.query)
                     }
                 }
             }
@@ -69,7 +69,7 @@ class SearchResultsViewModel @Inject constructor(
     }
 
     private fun bindActions() {
-        fun Observable<SearchResultsAction.SearchTextChanged>.toResultChange(): Observable<SearchResultsChange> {
+        fun Observable<SearchAction.SearchTextChanged>.toResultChange(): Observable<SearchChange> {
             return this.switchMap { action ->
                 val query = action.query
                 val dataSourceSingle = if (query.isBlank()) {
@@ -80,14 +80,14 @@ class SearchResultsViewModel @Inject constructor(
                 dataSourceSingle.zipWith(getConfigUseCase.build())
                     .subscribeOn(schedulers.io)
                     .toObservable()
-                    .map<SearchResultsChange> { dataAndConfigPair ->
-                        SearchResultsChange.Result(action.query, dataAndConfigPair.first, dataAndConfigPair.second)
+                    .map<SearchChange> { dataAndConfigPair ->
+                        SearchChange.Result(action.query, dataAndConfigPair.first, dataAndConfigPair.second)
                     }
-                    .startWith(SearchResultsChange.Loading)
+                    .startWith(SearchChange.Loading)
             }
         }
 
-        val textSearchedChange = actions.ofType<SearchResultsAction.SearchTextChanged>()
+        val textSearchedChange = actions.ofType<SearchAction.SearchTextChanged>()
             .debounce { action ->
                 // only debounce if query contains text, otherwise show popular straight away
                 val milliseconds: Long = if (action.query.isBlank()) 0 else 250
@@ -96,8 +96,8 @@ class SearchResultsViewModel @Inject constructor(
             .distinctUntilChanged()
             .toResultChange()
 
-        val retryButtonChange = actions.ofType<SearchResultsAction.RetryButtonClicked>()
-            .map { SearchResultsAction.SearchTextChanged(it.query) }
+        val retryButtonChange = actions.ofType<SearchAction.RetryButtonClicked>()
+            .map { SearchAction.SearchTextChanged(it.query) }
             .preventMultipleClicks()
             .toResultChange()
 
@@ -105,7 +105,7 @@ class SearchResultsViewModel @Inject constructor(
 
         disposables += allChanges
             .scan(initialState, reducer)
-            .filter { it !is SearchResultsState.Idle }
+            .filter { it !is SearchState.Idle }
             .distinctUntilChanged()
             .observeOn(schedulers.main)
             .subscribe(state::setValue, Timber::e)
@@ -116,55 +116,55 @@ class SearchResultsViewModel @Inject constructor(
 // MVI
 //================================================================================
 
-sealed class SearchResultsAction : BaseAction {
-    data class SearchTextChanged(val query: String) : SearchResultsAction()
-    data class RetryButtonClicked(val query: String) : SearchResultsAction()
-    data class SearchResultClicked(val searchModel: SearchModel) : SearchResultsAction()
+sealed class SearchAction : BaseAction {
+    data class SearchTextChanged(val query: String) : SearchAction()
+    data class RetryButtonClicked(val query: String) : SearchAction()
+    data class SearchResultClicked(val searchModel: SearchModel) : SearchAction()
 }
 
-sealed class SearchResultsChange {
-    object Loading : SearchResultsChange()
+sealed class SearchChange {
+    object Loading : SearchChange()
     data class Result(
         val query: String,
         val response: Response<List<SearchModel>>,
         val config: Config
-    ) : SearchResultsChange()
+    ) : SearchChange()
 }
 
-sealed class SearchResultsState(open val query: String): BaseState, Parcelable {
+sealed class SearchState(open val query: String): BaseState, Parcelable {
 
     @Parcelize
-    object Idle : SearchResultsState("")
+    object Idle : SearchState("")
 
     @Parcelize
     data class Loading(
         val results: List<SearchModel> = emptyList(),
         override val query: String
-    ) : SearchResultsState(query)
+    ) : SearchState(query)
 
     @Parcelize
     data class Content(
         val results: List<SearchModel> = emptyList(),
         val cached: Boolean = false,
         override val query: String
-    ) : SearchResultsState(query)
+    ) : SearchState(query)
 
     @Parcelize
     data class Error(
         val failure: Response.Failure,
         override val query: String
-    ) : SearchResultsState(query)
+    ) : SearchState(query)
 }
 
-sealed class SearchResultsViewEffect : BaseViewEffect
+sealed class SearchViewEffect : BaseViewEffect
 
 //================================================================================
 // Factory
 //================================================================================
 
 @PerView
-class SearchResultsViewModelFactory(
-    private val initialState: SearchResultsState?,
+class SearchViewModelFactory(
+    private val initialState: SearchState?,
     private val searchMultiUseCase: SearchMultiUseCase,
     private val popularMoviesTvUseCase: GetPopularMoviesTvUseCase,
     private val getConfigUseCase: GetConfigUseCase,
@@ -173,7 +173,7 @@ class SearchResultsViewModelFactory(
 
     @Suppress("unchecked_cast")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return SearchResultsViewModel(
+        return SearchViewModel(
             initialState,
             searchMultiUseCase,
             popularMoviesTvUseCase,
@@ -183,6 +183,6 @@ class SearchResultsViewModelFactory(
     }
 
     companion object {
-        const val NAME = "SearchResultsViewModelFactory"
+        const val NAME = "SearchViewModelFactory"
     }
 }

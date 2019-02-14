@@ -19,24 +19,24 @@ import javax.inject.Named
     dependencies = [AppComponent::class],
     modules = [MainModule::class, SearchModule::class]
 )
-interface SearchResultsComponent : MainComponent {
+interface SearchComponent : MainComponent {
 
-    fun inject(searchResultsFragment: SearchResultsFragment)
+    fun inject(searchFragment: SearchFragment)
 }
 
 
 @Module
-class SearchModule(private val initialState: SearchResultsState?) {
+class SearchModule(private val initialState: SearchState?) {
 
     @Provides
-    @Named(SearchResultsViewModelFactory.NAME)
+    @Named(SearchViewModelFactory.NAME)
     @PerView internal fun provideViewModelFactory(
         searchMultiUseCase: SearchMultiUseCase,
         getConfigUseCase: GetConfigUseCase,
         popularMoviesTvUseCase: GetPopularMoviesTvUseCase,
         schedulers: RxSchedulers
     ): ViewModelProvider.Factory {
-        return SearchResultsViewModelFactory(
+        return SearchViewModelFactory(
             initialState,
             searchMultiUseCase,
             popularMoviesTvUseCase,

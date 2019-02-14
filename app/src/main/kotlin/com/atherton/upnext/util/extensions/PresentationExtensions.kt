@@ -11,15 +11,15 @@ fun Response.Failure.generateErrorMessage(context: Context): String {
         is Response.Failure.ServerError -> {
             val apiError = this.error
             if (apiError != null) {
-                context.getString(R.string.search_results_error_server_with_error).format(
+                context.getString(R.string.search_error_server_with_error).format(
                     this.code,
                     apiError.statusCode
                 )
             } else {
-                context.getString(R.string.search_results_error_server).format(this.code)
+                context.getString(R.string.search_error_server).format(this.code)
             }
         }
-        is Response.Failure.NetworkError -> context.getString(R.string.search_results_error_network)
+        is Response.Failure.NetworkError -> context.getString(R.string.search_error_network)
     }
 }
 
