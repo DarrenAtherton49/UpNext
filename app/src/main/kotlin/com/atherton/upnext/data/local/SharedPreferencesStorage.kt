@@ -14,7 +14,7 @@ class SharedPreferencesStorage @Inject constructor(private val sharedPreferences
         return when (settingString) {
             VALUE_DISCOVER_VIEW_TOGGLE_GRID -> AppSettings.DiscoverViewToggleSetting.Grid
             VALUE_DISCOVER_VIEW_TOGGLE_LIST -> AppSettings.DiscoverViewToggleSetting.List
-            else -> AppSettings.DiscoverViewToggleSetting.List
+            else -> AppSettings.DiscoverViewToggleSetting.Grid
         }
     }
 
