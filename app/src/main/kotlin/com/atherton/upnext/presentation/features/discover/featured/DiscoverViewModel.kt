@@ -58,6 +58,7 @@ class DiscoverViewModel @Inject constructor(
                     is Response.Success -> {
                         DiscoverState.Content(
                             results = change.response.data.withDiscoverSearchImageUrls(change.config),
+                            cached = change.response.cached,
                             viewMode = change.viewMode
                         )
                     }
@@ -92,7 +93,6 @@ class DiscoverViewModel @Inject constructor(
                             viewMode = viewData.viewMode
                         )
                     }
-                    .startWith(DiscoverChange.Loading)
             }
         }
 
@@ -103,10 +103,12 @@ class DiscoverViewModel @Inject constructor(
         val loadDataChange = actions.ofType<DiscoverAction.Load>()
             .distinctUntilChanged()
             .toResultChange()
+            .startWith(DiscoverChange.Loading)
 
         val retryButtonChange = actions.ofType<DiscoverAction.RetryButtonClicked>()
             .map { DiscoverAction.Load }
             .toResultChange()
+            .startWith(DiscoverChange.Loading)
 
         val viewModeToggleChange = viewModeToggleAction
             .map { DiscoverAction.Load }
