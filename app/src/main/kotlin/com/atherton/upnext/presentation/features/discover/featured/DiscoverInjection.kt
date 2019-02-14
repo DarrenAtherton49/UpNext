@@ -27,10 +27,7 @@ interface DiscoverComponent : MainComponent {
 
 
 @Module
-class DiscoverModule(
-    private val initialState: DiscoverState?,
-    private val discoverStringProvider: DiscoverStringProvider
-) {
+class DiscoverModule(private val initialState: DiscoverState?) {
 
     @Provides
     @Named(DiscoverViewModelFactory.NAME)
@@ -47,8 +44,7 @@ class DiscoverModule(
             getDiscoverViewModeUseCase,
             getDiscoverMoviesTvUseCase,
             getConfigUseCase,
-            schedulers,
-            discoverStringProvider
+            schedulers
         )
     }
 }

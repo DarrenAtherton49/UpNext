@@ -2,7 +2,7 @@ package com.atherton.upnext.data.repository
 
 import com.atherton.upnext.data.local.AppSettings
 import com.atherton.upnext.data.mapper.toDomainToggleMode
-import com.atherton.upnext.domain.model.DiscoverViewMode
+import com.atherton.upnext.domain.model.SearchModelViewMode
 import com.atherton.upnext.domain.repository.SettingsRepository
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -13,7 +13,7 @@ class CachingSettingsRepository @Inject constructor(
     private val settings: AppSettings
 ) : SettingsRepository {
 
-    override fun getDiscoverViewMode(): DiscoverViewMode {
+    override fun getDiscoverViewMode(): SearchModelViewMode {
         return settings.getDiscoverViewSetting().toDomainToggleMode()
     }
 

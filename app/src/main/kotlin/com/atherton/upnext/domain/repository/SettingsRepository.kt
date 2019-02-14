@@ -1,9 +1,9 @@
 package com.atherton.upnext.domain.repository
 
-import com.atherton.upnext.domain.model.DiscoverViewMode
+import com.atherton.upnext.domain.model.SearchModelViewMode
 
 interface SettingsRepository {
 
-    fun getDiscoverViewMode(): DiscoverViewMode
+    fun getDiscoverViewMode(): SearchModelViewMode
     fun toggleDiscoverViewMode()
 }

@@ -1,4 +1,4 @@
-package com.atherton.upnext.presentation.features.discover.search
+package com.atherton.upnext.presentation.common
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
@@ -11,9 +11,9 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_search_result.*
+import kotlinx.android.synthetic.main.item_search_model_grid.*
 
-sealed class SearchResultViewHolder(
+sealed class SearchModelViewHolder(
     override val containerView: View,
     private val imageLoader: GlideRequests
 ) : RecyclerView.ViewHolder(containerView),
@@ -26,39 +26,39 @@ sealed class SearchResultViewHolder(
     }
 
     fun bind(title: String?, imageUrl: String?) {
-        titleTextView.text = title
-        imageLoader.load(imageUrl).apply(requestOptions).into(searchResultImageView)
+        searchModelTitleTextView.text = title
+        imageLoader.load(imageUrl).apply(requestOptions).into(searchModelImageView)
     }
 
     fun clear() {
-        imageLoader.clear(searchResultImageView)
+        imageLoader.clear(searchModelImageView)
     }
 }
 
-class TvShowSearchResultViewHolder(
+class TvShowModelViewHolder(
     override val containerView: View,
     imageLoader: GlideRequests
-) : SearchResultViewHolder(containerView, imageLoader) {
+) : SearchModelViewHolder(containerView, imageLoader) {
 
     fun bind(tvShow: TvShow) {
         super.bind(tvShow.name, tvShow.posterPath)
     }
 }
 
-class MovieSearchResultViewHolder(
+class MovieModelViewHolder(
     override val containerView: View,
     imageLoader: GlideRequests
-) : SearchResultViewHolder(containerView, imageLoader) {
+) : SearchModelViewHolder(containerView, imageLoader) {
 
     fun bind(movie: Movie) {
         super.bind(movie.title, movie.posterPath)
     }
 }
 
-class PersonSearchResultViewHolder(
+class PersonModelViewHolder(
     override val containerView: View,
     imageLoader: GlideRequests
-) : SearchResultViewHolder(containerView, imageLoader) {
+) : SearchModelViewHolder(containerView, imageLoader) {
 
     fun bind(person: Person) {
         super.bind(person.name, person.profilePath)

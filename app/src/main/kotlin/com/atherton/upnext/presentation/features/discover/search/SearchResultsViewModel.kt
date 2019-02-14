@@ -9,7 +9,7 @@ import com.atherton.upnext.domain.model.SearchModel
 import com.atherton.upnext.domain.usecase.GetConfigUseCase
 import com.atherton.upnext.domain.usecase.GetPopularMoviesTvUseCase
 import com.atherton.upnext.domain.usecase.SearchMultiUseCase
-import com.atherton.upnext.presentation.features.discover.featured.withDiscoverSearchImageUrls
+import com.atherton.upnext.presentation.common.withDiscoverSearchImageUrls
 import com.atherton.upnext.util.base.BaseViewEffect
 import com.atherton.upnext.util.base.UpNextViewModel
 import com.atherton.upnext.util.extensions.preventMultipleClicks

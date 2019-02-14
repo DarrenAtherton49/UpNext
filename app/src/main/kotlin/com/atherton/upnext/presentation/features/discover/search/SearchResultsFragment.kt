@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.atherton.upnext.R
 import com.atherton.upnext.domain.model.Response
+import com.atherton.upnext.domain.model.SearchModelViewMode
+import com.atherton.upnext.presentation.common.SearchModelAdapter
 import com.atherton.upnext.presentation.main.MainViewModel
 import com.atherton.upnext.presentation.main.MainViewModelFactory
 import com.atherton.upnext.util.base.BaseFragment
@@ -37,8 +39,9 @@ class SearchResultsFragment
     override val viewModel: SearchResultsViewModel by lazy {
         getViewModel<SearchResultsViewModel>(vmFactory)
     }
-    private val recyclerViewAdapter: SearchResultsAdapter by lazy {
-        SearchResultsAdapter(GlideApp.with(this)) { searchModel ->
+    private val recyclerViewAdapter: SearchModelAdapter by lazy {
+        //todo make view mode toggleable
+        SearchModelAdapter(GlideApp.with(this), SearchModelViewMode.Grid) { searchModel ->
             viewModel.dispatch(SearchResultsAction.SearchResultClicked(searchModel))
         }
     }
@@ -108,11 +111,12 @@ class SearchResultsFragment
         recyclerView.apply {
             setHasFixedSize(true)
             adapter = recyclerViewAdapter
-            layoutManager = GridLayoutManager(context, GRID_NUM_COLUMNS)
+            val numColumns = resources.getInteger(R.integer.search_model_grid_num_columns)
+            layoutManager = GridLayoutManager(context, numColumns)
             addItemDecoration(
                 GridSpacingItemDecoration(
-                    GRID_NUM_COLUMNS,
-                    resources.getDimensionPixelSize(R.dimen.search_results_grid_spacing)
+                    numColumns = numColumns,
+                    spacingInPixels = resources.getDimensionPixelSize(R.dimen.search_model_grid_spacing)
                 )
             )
         }
@@ -125,9 +129,5 @@ class SearchResultsFragment
             .appComponent(getAppComponent())
             .build()
             .inject(this)
-    }
-
-    companion object {
-        private const val GRID_NUM_COLUMNS = 3
     }
 }

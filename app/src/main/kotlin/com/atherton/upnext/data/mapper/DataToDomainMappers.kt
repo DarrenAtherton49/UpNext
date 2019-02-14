@@ -100,9 +100,9 @@ fun TmdbPerson.toDomainPerson(): Person {
     )
 }
 
-fun AppSettings.DiscoverViewToggleSetting.toDomainToggleMode(): DiscoverViewMode {
+fun AppSettings.DiscoverViewToggleSetting.toDomainToggleMode(): SearchModelViewMode {
     return when (this) {
-        is AppSettings.DiscoverViewToggleSetting.Grid -> DiscoverViewMode.Grid
-        is AppSettings.DiscoverViewToggleSetting.Carousel -> DiscoverViewMode.Carousel
+        is AppSettings.DiscoverViewToggleSetting.Grid -> SearchModelViewMode.Grid
+        is AppSettings.DiscoverViewToggleSetting.List -> SearchModelViewMode.List
     }
 }

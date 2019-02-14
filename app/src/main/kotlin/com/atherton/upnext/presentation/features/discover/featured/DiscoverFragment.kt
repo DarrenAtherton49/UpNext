@@ -5,15 +5,18 @@ import android.view.*
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.atherton.upnext.R
-import com.atherton.upnext.domain.model.DiscoverViewMode
 import com.atherton.upnext.domain.model.Response
+import com.atherton.upnext.domain.model.SearchModelViewMode
+import com.atherton.upnext.presentation.common.SearchModelAdapter
 import com.atherton.upnext.presentation.main.MainViewModel
 import com.atherton.upnext.presentation.main.MainViewModelFactory
 import com.atherton.upnext.util.base.BaseFragment
 import com.atherton.upnext.util.extensions.*
 import com.atherton.upnext.util.glide.GlideApp
+import com.atherton.upnext.util.recyclerview.GridSpacingItemDecoration
 import com.atherton.upnext.util.recyclerview.LinearSpacingItemDecoration
 import kotlinx.android.synthetic.main.base_recycler_view.*
 import kotlinx.android.synthetic.main.discover_error_layout.*
@@ -37,16 +40,23 @@ class DiscoverFragment : BaseFragment<DiscoverAction, DiscoverState, DiscoverVie
     override val viewModel: DiscoverViewModel by lazy { getViewModel<DiscoverViewModel>(vmFactory) }
     private val navController: NavController by lazy { findNavController() }
 
-    private val recyclerViewAdapter: DiscoverCarouselAdapter by lazy {
-        DiscoverCarouselAdapter(
-            GlideApp.with(this),
-            resources.getDimensionPixelSize(R.dimen.discover_carousel_recyclerview_child_spacing)
-        ) { searchModel ->
-            viewModel.dispatch(DiscoverAction.SearchModelClicked(searchModel))
-        }
+    private val listItemDecoration: LinearSpacingItemDecoration by lazy {
+        LinearSpacingItemDecoration(
+            spacingInPixels = resources.getDimensionPixelSize(R.dimen.search_model_list_spacing),
+            orientation = LinearSpacingItemDecoration.Orientation.Vertical
+        )
     }
 
-    private var viewMode: DiscoverViewMode? = null
+    private val gridItemDecoration: GridSpacingItemDecoration by lazy {
+        GridSpacingItemDecoration(
+            numColumns = resources.getInteger(R.integer.search_model_grid_num_columns),
+            spacingInPixels = resources.getDimensionPixelSize(R.dimen.search_model_grid_spacing)
+        )
+    }
+
+    private lateinit var recyclerViewAdapter: SearchModelAdapter
+
+    private var viewMode: SearchModelViewMode? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         setHasOptionsMenu(true)
@@ -55,8 +65,6 @@ class DiscoverFragment : BaseFragment<DiscoverAction, DiscoverState, DiscoverVie
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        initCarouselRecyclerView() //todo remove?
 
         viewModel.dispatch(DiscoverAction.Load)
 
@@ -75,8 +83,8 @@ class DiscoverFragment : BaseFragment<DiscoverAction, DiscoverState, DiscoverVie
     override fun onPrepareOptionsMenu(menu: Menu?) {
         viewMode?.let {
             val viewToggleLogo = when (it) {
-                is DiscoverViewMode.Carousel -> context?.getDrawableCompat(R.drawable.ic_view_grid_white_24dp)
-                is DiscoverViewMode.Grid -> context?.getDrawableCompat(R.drawable.ic_view_list_white_24dp)
+                is SearchModelViewMode.List -> context?.getDrawableCompat(R.drawable.ic_view_grid_white_24dp)
+                is SearchModelViewMode.Grid -> context?.getDrawableCompat(R.drawable.ic_view_list_white_24dp)
             }
             val menuItem = menu?.findItem(R.id.action_toggle_view)
             menuItem?.isVisible = true
@@ -115,7 +123,8 @@ class DiscoverFragment : BaseFragment<DiscoverAction, DiscoverState, DiscoverVie
                 } else {
                     recyclerView.isVisible = true
                     errorLayout.isVisible = false
-                    recyclerViewAdapter.submitData(state.results)
+                    initRecyclerView(state.viewMode)
+                    recyclerViewAdapter.submitList(state.results)
                 }
             }
             is DiscoverState.Error -> {
@@ -131,7 +140,7 @@ class DiscoverFragment : BaseFragment<DiscoverAction, DiscoverState, DiscoverVie
     override fun processViewEffects(viewEffect: DiscoverViewEffect) {
         when (viewEffect) {
             is DiscoverViewEffect.ToggleViewMode -> {
-                viewMode = viewEffect.viewMode
+                viewMode = viewEffect.viewMode // save value for onPrepareOptionsMenu()
                 activity?.invalidateOptionsMenu()
             }
             is DiscoverViewEffect.ShowSearchModelDetailScreen -> {
@@ -141,40 +150,36 @@ class DiscoverFragment : BaseFragment<DiscoverAction, DiscoverState, DiscoverVie
         }
     }
 
-    private fun initCarouselRecyclerView() {
-        //todo if (!notInitialized) - take into account rotation
-        val itemSpacing = resources.getDimensionPixelSize(R.dimen.discover_carousel_recyclerview_section_spacing)
+    private fun initRecyclerView(viewMode: SearchModelViewMode) {
         recyclerView.apply {
             setHasFixedSize(true)
-            addItemDecoration(LinearSpacingItemDecoration(itemSpacing, LinearSpacingItemDecoration.Orientation.Vertical))
+            if (itemDecorationCount > 0) {
+                removeItemDecorationAt(0)
+            }
+            when (viewMode) {
+                is SearchModelViewMode.Grid -> {
+                    addItemDecoration(gridItemDecoration)
+                    val numColumns = resources.getInteger(R.integer.search_model_grid_num_columns)
+                    layoutManager = GridLayoutManager(context, numColumns)
+                }
+                is SearchModelViewMode.List -> {
+                    addItemDecoration(listItemDecoration)
+                    layoutManager = LinearLayoutManager(context)
+                }
+            }
+            recyclerViewAdapter = SearchModelAdapter(GlideApp.with(this), viewMode) { searchModel ->
+                viewModel.dispatch(DiscoverAction.SearchModelClicked(searchModel))
+            }
             adapter = recyclerViewAdapter
-            layoutManager = LinearLayoutManager(context)
         }
-    }
-
-    private fun initGridViewPager() {
-        //todo if (!notInitialized) - take into account rotation
-//        viewPagerAdapter.addFragment(getString(R.string.shows_tab_up_next), )
-//        viewPagerAdapter.addFragment(getString(R.string.shows_tab_watchlist), )
-//        viewPagerAdapter.addFragment(getString(R.string.shows_tab_finished), )
-//        viewPager.adapter = viewPagerAdapter
-//        tabLayout.setupWithViewPager(viewPager)
     }
 
     override fun initInjection(initialState: DiscoverState?) {
         DaggerDiscoverComponent.builder()
-            .discoverModule(DiscoverModule(initialState, this::titleProvider))
+            .discoverModule(DiscoverModule(initialState))
             .mainModule(mainModule)
             .appComponent(getAppComponent())
             .build()
             .inject(this)
-    }
-
-    private fun titleProvider(discoverTitle: DiscoverTitle): String {
-        return when (discoverTitle) {
-            is DiscoverTitle.Popular -> getString(com.atherton.upnext.R.string.discover_carousel_section_title_popular)
-            is DiscoverTitle.NowPlaying -> getString(com.atherton.upnext.R.string.discover_carousel_section_title_now_playing)
-            is DiscoverTitle.TopRated -> getString(com.atherton.upnext.R.string.discover_carousel_section_title_top_rated)
-        }
     }
 }

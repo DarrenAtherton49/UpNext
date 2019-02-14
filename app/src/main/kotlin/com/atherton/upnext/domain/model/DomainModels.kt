@@ -70,9 +70,9 @@ data class Config(
     val stillSizes: List<String> // for episode still images
 )
 
-sealed class DiscoverViewMode : Parcelable {
-    @Parcelize object Grid : DiscoverViewMode()
-    @Parcelize object Carousel : DiscoverViewMode()
+sealed class SearchModelViewMode : Parcelable {
+    @Parcelize object Grid : SearchModelViewMode()
+    @Parcelize object List : SearchModelViewMode()
 }
 
 sealed class DiscoverCategory {

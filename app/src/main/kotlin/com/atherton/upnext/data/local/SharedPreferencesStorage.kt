@@ -13,8 +13,8 @@ class SharedPreferencesStorage @Inject constructor(private val sharedPreferences
         val settingString: String? = sharedPreferences[KEY_DISCOVER_VIEW_TOGGLE]
         return when (settingString) {
             VALUE_DISCOVER_VIEW_TOGGLE_GRID -> AppSettings.DiscoverViewToggleSetting.Grid
-            VALUE_DISCOVER_VIEW_TOGGLE_CAROUSEL -> AppSettings.DiscoverViewToggleSetting.Carousel
-            else -> AppSettings.DiscoverViewToggleSetting.Carousel
+            VALUE_DISCOVER_VIEW_TOGGLE_LIST -> AppSettings.DiscoverViewToggleSetting.List
+            else -> AppSettings.DiscoverViewToggleSetting.List
         }
     }
 
@@ -22,18 +22,18 @@ class SharedPreferencesStorage @Inject constructor(private val sharedPreferences
         val settingString: String? = sharedPreferences[KEY_DISCOVER_VIEW_TOGGLE]
         when (settingString) {
             VALUE_DISCOVER_VIEW_TOGGLE_GRID -> {
-                sharedPreferences[KEY_DISCOVER_VIEW_TOGGLE] = VALUE_DISCOVER_VIEW_TOGGLE_CAROUSEL
+                sharedPreferences[KEY_DISCOVER_VIEW_TOGGLE] = VALUE_DISCOVER_VIEW_TOGGLE_LIST
             }
-            VALUE_DISCOVER_VIEW_TOGGLE_CAROUSEL -> {
+            VALUE_DISCOVER_VIEW_TOGGLE_LIST -> {
                 sharedPreferences[KEY_DISCOVER_VIEW_TOGGLE] = VALUE_DISCOVER_VIEW_TOGGLE_GRID
             }
-            else -> sharedPreferences[KEY_DISCOVER_VIEW_TOGGLE] = VALUE_DISCOVER_VIEW_TOGGLE_CAROUSEL
+            else -> sharedPreferences[KEY_DISCOVER_VIEW_TOGGLE] = VALUE_DISCOVER_VIEW_TOGGLE_LIST
         }
     }
 
     companion object {
         private const val KEY_DISCOVER_VIEW_TOGGLE = "key_discover_view_toggle"
         private const val VALUE_DISCOVER_VIEW_TOGGLE_GRID = "value_discover_view_toggle_grid"
-        private const val VALUE_DISCOVER_VIEW_TOGGLE_CAROUSEL = "value_discover_view_toggle_carousel"
+        private const val VALUE_DISCOVER_VIEW_TOGGLE_LIST = "value_discover_view_toggle_carousel"
     }
 }

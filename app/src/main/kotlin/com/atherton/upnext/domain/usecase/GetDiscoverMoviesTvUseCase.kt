@@ -1,16 +1,14 @@
 package com.atherton.upnext.domain.usecase
 
-import com.atherton.upnext.domain.model.Movie
 import com.atherton.upnext.domain.model.Response
 import com.atherton.upnext.domain.model.SearchModel
-import com.atherton.upnext.domain.model.TvShow
 import com.atherton.upnext.domain.repository.MovieRepository
 import com.atherton.upnext.domain.repository.TvShowRepository
 import io.reactivex.Single
 import io.reactivex.functions.Function5
 import javax.inject.Inject
 
-class GetFeaturedMoviesTvUseCase @Inject constructor(
+class GetDiscoverMoviesTvUseCase @Inject constructor(
     private val tvShowRepository: TvShowRepository,
     private val movieRepository: MovieRepository
 ) {
@@ -21,7 +19,7 @@ class GetFeaturedMoviesTvUseCase @Inject constructor(
      * If none of the responses are successful, we propagate the error the first failed response
      * as all of the responses will likely have the same error reason.
      */
-    fun build(): Single<Response<DiscoverFeaturedResponse>> {
+    fun build(): Single<Response<List<SearchModel>>> {
         return Single.zip(
             tvShowRepository.getPopular(),
             movieRepository.getPopular(),
@@ -33,11 +31,11 @@ class GetFeaturedMoviesTvUseCase @Inject constructor(
                 Response<List<SearchModel>>,
                 Response<List<SearchModel>>,
                 Response<List<SearchModel>>,
-                Response<DiscoverFeaturedResponse>> { popularTvResponse,
-                                                      popularMoviesResponse,
-                                                      nowPlayingMoviesResponse,
-                                                      topRatedTvResponse,
-                                                      topRatedMoviesResponse ->
+                Response<List<SearchModel>>> { popularTvResponse,
+                                               popularMoviesResponse,
+                                               nowPlayingMoviesResponse,
+                                               topRatedTvResponse,
+                                               topRatedMoviesResponse ->
 
                 //todo add upcoming movies
                 //todo add airing tv today
@@ -65,50 +63,15 @@ class GetFeaturedMoviesTvUseCase @Inject constructor(
                     val topRatedMovies: List<SearchModel>? = topRatedMoviesResponse.dataOrNull()
                     //todo add more
 
-                    Response.Success(
-                        DiscoverFeaturedResponse(
-                            popularTvMovies = generatePopular(popularTv, popularMovies),
-                            nowPlayingMovies = nowPlayingMovies,
-                            topRatedTvMovies = generateTopRated(topRatedTv, topRatedMovies)
-                        ),
-                        cached = false
-                    )
+                    //todo  populate response
+                    val all = listOfNotNull(popularTv, popularMovies, nowPlayingMovies, topRatedTv, topRatedMovies)
+                        .flatMap { it.asIterable() }
+                        .distinct()
+                        .sortedByDescending { it.popularity }
 
+                    Response.Success(all, false) //todo check cached
                 }
             })
-    }
-
-    /**
-     * Takes the lists of popular tv shows and movies, checks if they are null and adds them to a combined list.
-     * Then we sort the combined list by popularity.
-     *
-     * @param popularTv a list of popular tv shows
-     * @param popularMovies a list of popular movies
-     *
-     * @return a combined list of popular tv shows and movies or null if none exist
-     */
-    private fun generatePopular(popularTv: List<SearchModel>?, popularMovies: List<SearchModel>?): List<SearchModel>? {
-        val popular: MutableList<SearchModel> = ArrayList()
-        popularTv?.let { popular.addAll(it) }
-        popularMovies?.let { popular.addAll(it) }
-        return if (popular.isNotEmpty()) {
-            popular.toList().sortedByDescending { it.popularity }
-        } else null
-    }
-
-    private fun generateTopRated(topRatedTv: List<SearchModel>?, topRatedMovies: List<SearchModel>?): List<SearchModel>? {
-        val topRated: MutableList<SearchModel> = ArrayList()
-        topRatedTv?.let { topRated.addAll(it) }
-        topRatedMovies?.let { topRated.addAll(it) }
-        return if (topRated.isNotEmpty()) {
-            topRated.toList().sortedByDescending {
-                when (it) {
-                    is TvShow -> it.voteAverage
-                    is Movie -> it.voteAverage
-                    else -> it.popularity // won't ever hit this as it's always tv or movies
-                }
-            }
-        } else null
     }
 
     /**
@@ -126,9 +89,3 @@ class GetFeaturedMoviesTvUseCase @Inject constructor(
         } else null
     }
 }
-
-data class DiscoverFeaturedResponse(
-    val popularTvMovies: List<SearchModel>?,
-    val nowPlayingMovies: List<SearchModel>?,
-    val topRatedTvMovies: List<SearchModel>?
-)

@@ -7,6 +7,6 @@ interface AppSettings {
 
     sealed class DiscoverViewToggleSetting {
         object Grid : DiscoverViewToggleSetting()
-        object Carousel : DiscoverViewToggleSetting()
+        object List : DiscoverViewToggleSetting()
     }
 }
