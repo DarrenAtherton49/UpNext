@@ -32,7 +32,7 @@ class SearchFragment
     @Inject @field:Named(SearchViewModelFactory.NAME)
     lateinit var vmFactory: ViewModelProvider.Factory
 
-    private val activityViewModel: MainViewModel by lazy {
+    private val sharedViewModel: MainViewModel by lazy {
         getActivityViewModel<MainViewModel>(mainVmFactory)
 
     }

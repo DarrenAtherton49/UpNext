@@ -5,15 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.util.base.BaseViewEffect
 import com.atherton.upnext.util.base.UpNextViewModel
-import com.atherton.upnext.util.extensions.preventMultipleClicks
 import com.atherton.upnext.util.injection.PerView
 import com.atherton.upnext.util.threading.RxSchedulers
 import com.ww.roxie.BaseAction
 import com.ww.roxie.BaseState
-import io.reactivex.rxkotlin.ofType
-import io.reactivex.rxkotlin.plusAssign
 import kotlinx.android.parcel.Parcelize
-import timber.log.Timber
 import javax.inject.Inject
 
 class MoviesViewModel @Inject constructor(
@@ -28,14 +24,7 @@ class MoviesViewModel @Inject constructor(
     }
 
     private fun bindActions() {
-        val addMovieClickedViewEffect = actions.ofType<MoviesAction.AddMovieButtonClicked>()
-            .preventMultipleClicks()
-            .subscribeOn(schedulers.io)
-            .map { MoviesViewEffect.ShowSearchScreen }
 
-        disposables += addMovieClickedViewEffect
-            .observeOn(schedulers.main)
-            .subscribe(viewEffects::onNext, Timber::e)
     }
 }
 
@@ -43,21 +32,16 @@ class MoviesViewModel @Inject constructor(
 // MVI
 //================================================================================
 
-sealed class MoviesAction : BaseAction {
-    object Load : MoviesAction() //todo maybe remove
-    object AddMovieButtonClicked : MoviesAction()
-}
+sealed class MoviesAction : BaseAction
 
 sealed class MoviesChange {
     object Loading : MoviesChange() //todo maybe remove
 }
 
 @Parcelize
-data class MoviesState(@Transient val isIdle: Boolean = true): BaseState, Parcelable
+data class MoviesState(val isIdle: Boolean = true): BaseState, Parcelable
 
-sealed class MoviesViewEffect : BaseViewEffect {
-    object ShowSearchScreen : MoviesViewEffect()
-}
+sealed class MoviesViewEffect : BaseViewEffect
 
 //================================================================================
 // Factory

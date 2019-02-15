@@ -93,6 +93,7 @@ class DiscoverViewModel @Inject constructor(
                             viewMode = viewData.viewMode
                         )
                     }
+                    .startWith(DiscoverChange.Loading)
             }
         }
 
@@ -103,12 +104,10 @@ class DiscoverViewModel @Inject constructor(
         val loadDataChange = actions.ofType<DiscoverAction.Load>()
             .distinctUntilChanged()
             .toResultChange()
-            .startWith(DiscoverChange.Loading)
 
         val retryButtonChange = actions.ofType<DiscoverAction.RetryButtonClicked>()
             .map { DiscoverAction.Load }
             .toResultChange()
-            .startWith(DiscoverChange.Loading)
 
         val viewModeToggleChange = viewModeToggleAction
             .map { DiscoverAction.Load }
@@ -133,11 +132,6 @@ class DiscoverViewModel @Inject constructor(
                     .map { DiscoverViewEffect.ToggleViewMode(it) }
             }
 
-        val searchActionClickedViewEffect = actions.ofType<DiscoverAction.SearchActionClicked>()
-            .preventMultipleClicks()
-            .subscribeOn(schedulers.io)
-            .map { DiscoverViewEffect.ShowSearchScreen }
-
         val searchModelClickedViewEffect = actions.ofType<DiscoverAction.SearchModelClicked>()
             .preventMultipleClicks()
             .subscribeOn(schedulers.io)
@@ -148,7 +142,6 @@ class DiscoverViewModel @Inject constructor(
         val viewEffectChanges = merge(
             loadViewModeViewEffect,
             viewModeToggleViewEffect,
-            searchActionClickedViewEffect,
             searchModelClickedViewEffect
         )
 
@@ -173,7 +166,6 @@ sealed class DiscoverAction : BaseAction {
     object Load : DiscoverAction()
     object RetryButtonClicked : DiscoverAction()
     object ViewModeToggleActionClicked : DiscoverAction()
-    object SearchActionClicked : DiscoverAction()
     data class SearchModelClicked(val searchModel: SearchModel) : DiscoverAction()
 }
 
@@ -208,7 +200,6 @@ sealed class DiscoverState : BaseState, Parcelable {
 sealed class DiscoverViewEffect : BaseViewEffect {
     data class ToggleViewMode(val viewMode: SearchModelViewMode) : DiscoverViewEffect()
     data class ShowSearchModelDetailScreen(val searchModel: SearchModel) : DiscoverViewEffect()
-    object ShowSearchScreen : DiscoverViewEffect()
 }
 
 //================================================================================

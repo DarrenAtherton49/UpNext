@@ -3,6 +3,7 @@ package com.atherton.upnext.presentation.main
 import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.util.injection.AppComponent
 import com.atherton.upnext.util.injection.PerView
+import com.atherton.upnext.util.threading.RxSchedulers
 import dagger.Component
 import dagger.Module
 import dagger.Provides
@@ -24,5 +25,7 @@ class MainModule(private val initialState: MainState?) {
 
     @Provides
     @Named(MainViewModelFactory.NAME)
-    @PerView internal fun provideViewModelFactory(): ViewModelProvider.Factory = MainViewModelFactory(initialState)
+    @PerView internal fun provideViewModelFactory(
+        schedulers: RxSchedulers
+    ): ViewModelProvider.Factory = MainViewModelFactory(initialState, schedulers)
 }

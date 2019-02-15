@@ -5,15 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.util.base.BaseViewEffect
 import com.atherton.upnext.util.base.UpNextViewModel
-import com.atherton.upnext.util.extensions.preventMultipleClicks
 import com.atherton.upnext.util.injection.PerView
 import com.atherton.upnext.util.threading.RxSchedulers
 import com.ww.roxie.BaseAction
 import com.ww.roxie.BaseState
-import io.reactivex.rxkotlin.ofType
-import io.reactivex.rxkotlin.plusAssign
 import kotlinx.android.parcel.Parcelize
-import timber.log.Timber
 import javax.inject.Inject
 
 class ShowsViewModel @Inject constructor(
@@ -28,14 +24,7 @@ class ShowsViewModel @Inject constructor(
     }
 
     private fun bindActions() {
-        val addShowClickedViewEffect = actions.ofType<ShowsAction.AddShowButtonClicked>()
-            .preventMultipleClicks()
-            .subscribeOn(schedulers.io)
-            .map { ShowsViewEffect.ShowSearchScreen }
 
-        disposables += addShowClickedViewEffect
-            .observeOn(schedulers.main)
-            .subscribe(viewEffects::onNext, Timber::e)
     }
 }
 
@@ -43,21 +32,16 @@ class ShowsViewModel @Inject constructor(
 // MVI
 //================================================================================
 
-sealed class ShowsAction : BaseAction {
-    object Load : ShowsAction() //todo maybe remove
-    object AddShowButtonClicked : ShowsAction()
-}
+sealed class ShowsAction : BaseAction
 
 sealed class ShowsChange {
     object Loading : ShowsChange() //todo maybe remove
 }
 
 @Parcelize
-data class ShowsState(@Transient val isIdle: Boolean = true): BaseState, Parcelable
+data class ShowsState(val isIdle: Boolean = true): BaseState, Parcelable
 
-sealed class ShowsViewEffect : BaseViewEffect {
-    object ShowSearchScreen : ShowsViewEffect()
-}
+sealed class ShowsViewEffect : BaseViewEffect
 
 //================================================================================
 // Factory

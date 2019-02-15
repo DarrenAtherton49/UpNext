@@ -42,6 +42,7 @@
     <!-- DiscoverFragment -->
     <string name="discover_search_textfield_label">Find Shows, Movies or People…</string>
     <string name="discover_advanced_search_button">Advanced Search</string>
+    <string name="discover_filter">Filter</string>
 
     <!-- SearchFragment -->
     <string name="search_textfield_label">Find Movies, Shows or People…</string>

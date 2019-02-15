@@ -11,6 +11,7 @@ import com.atherton.upnext.R
 import com.atherton.upnext.domain.model.Response
 import com.atherton.upnext.domain.model.SearchModelViewMode
 import com.atherton.upnext.presentation.common.SearchModelAdapter
+import com.atherton.upnext.presentation.main.MainAction
 import com.atherton.upnext.presentation.main.MainViewModel
 import com.atherton.upnext.presentation.main.MainViewModelFactory
 import com.atherton.upnext.util.base.BaseFragment
@@ -36,7 +37,7 @@ class DiscoverFragment : BaseFragment<DiscoverAction, DiscoverState, DiscoverVie
     @Inject @field:Named(DiscoverViewModelFactory.NAME)
     lateinit var vmFactory: ViewModelProvider.Factory
 
-    private val activityViewModel: MainViewModel by lazy { getActivityViewModel<MainViewModel>(mainVmFactory) }
+    private val sharedViewModel: MainViewModel by lazy { getActivityViewModel<MainViewModel>(mainVmFactory) }
     override val viewModel: DiscoverViewModel by lazy { getViewModel<DiscoverViewModel>(vmFactory) }
     private val navController: NavController by lazy { findNavController() }
 
@@ -96,7 +97,7 @@ class DiscoverFragment : BaseFragment<DiscoverAction, DiscoverState, DiscoverVie
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_search -> {
-                viewModel.dispatch(DiscoverAction.SearchActionClicked)
+                sharedViewModel.dispatch(MainAction.SearchActionClicked)
                 true
             }
             R.id.action_toggle_view -> {
@@ -146,7 +147,6 @@ class DiscoverFragment : BaseFragment<DiscoverAction, DiscoverState, DiscoverVie
             is DiscoverViewEffect.ShowSearchModelDetailScreen -> {
                 //todo
             }
-            is DiscoverViewEffect.ShowSearchScreen -> navController.navigate(R.id.actionGoToSearch)
         }
     }
 

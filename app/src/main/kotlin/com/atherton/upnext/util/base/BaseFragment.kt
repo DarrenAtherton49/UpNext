@@ -14,7 +14,8 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 
 abstract class BaseFragment<Action : BaseAction,
-    State, ViewEffect : BaseViewEffect,
+    State,
+    ViewEffect : BaseViewEffect,
     ViewModel : UpNextViewModel<Action, State, ViewEffect>>
     : Fragment()
     where State : BaseState,

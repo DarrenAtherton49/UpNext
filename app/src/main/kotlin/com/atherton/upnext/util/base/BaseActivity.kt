@@ -6,16 +6,22 @@ import androidx.appcompat.app.AppCompatActivity
 import com.atherton.upnext.util.extensions.observe
 import com.ww.roxie.BaseAction
 import com.ww.roxie.BaseState
-import com.ww.roxie.BaseViewModel
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 
-abstract class BaseActivity<Action : BaseAction, State, ViewModel : BaseViewModel<Action, State>>
+abstract class BaseActivity<Action : BaseAction,
+    State,
+    ViewEffect : BaseViewEffect,
+    ViewModel : UpNextViewModel<Action, State, ViewEffect>>
     : AppCompatActivity()
     where State : BaseState,
           State : Parcelable {
 
     protected abstract val layoutResId: Int
     protected abstract val stateBundleKey: String
-    protected abstract val viewModel: ViewModel
+    protected abstract val sharedViewModel: ViewModel
+
+    private val disposables: CompositeDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // support process death by re-supplying last state to ViewModel
@@ -26,18 +32,33 @@ abstract class BaseActivity<Action : BaseAction, State, ViewModel : BaseViewMode
 
         setContentView(layoutResId)
 
-        viewModel.observableState.observe(this) { state ->
+        sharedViewModel.observableState.observe(this) { state ->
             state?.let { renderState(state) }
         }
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        disposables += sharedViewModel.viewEffects().subscribe {
+            processViewEffects(it)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        disposables.clear()
     }
 
     // support process death by saving last ViewModel state in bundle
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putParcelable(stateBundleKey, viewModel.observableState.value)
+        outState.putParcelable(stateBundleKey, sharedViewModel.observableState.value)
     }
 
     protected abstract fun initInjection(initialState: State?)
 
     protected abstract fun renderState(state: State)
+
+    protected abstract fun processViewEffects(viewEffect: ViewEffect)
 }

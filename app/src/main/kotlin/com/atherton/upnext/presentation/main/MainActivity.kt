@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 import javax.inject.Named
 
-class MainActivity : BaseActivity<MainAction, MainState, MainViewModel>() {
+class MainActivity : BaseActivity<MainAction, MainState, MainViewEffect, MainViewModel>() {
 
     override val layoutResId: Int = R.layout.activity_main
     override val stateBundleKey: String = "bundle_key_main_state"
@@ -23,16 +23,12 @@ class MainActivity : BaseActivity<MainAction, MainState, MainViewModel>() {
     @Inject @field:Named(MainViewModelFactory.NAME)
     lateinit var vmFactory: ViewModelProvider.Factory
 
-    override val viewModel: MainViewModel by lazy {
-        getViewModel<MainViewModel>(vmFactory)
-    }
+    override val sharedViewModel: MainViewModel by lazy { getViewModel<MainViewModel>(vmFactory) }
+    private val navController: NavController by lazy { findNavController(R.id.navHostFragment) }
 
     private val topLevelDestinationIds = setOf(R.id.moviesFragment, R.id.showsFragment, R.id.discoverFragment)
     private val appBarConfiguration: AppBarConfiguration by lazy {
         AppBarConfiguration(topLevelDestinationIds)
-    }
-    private val navController: NavController by lazy {
-        findNavController(R.id.navHostFragment)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,12 +38,14 @@ class MainActivity : BaseActivity<MainAction, MainState, MainViewModel>() {
         setupNavigation()
     }
 
-    private fun observeViewModel() {
+    override fun renderState(state: MainState) {
 
     }
 
-    override fun renderState(state: MainState) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun processViewEffects(viewEffect: MainViewEffect) {
+        when (viewEffect) {
+            is MainViewEffect.ShowSearchScreen -> navController.navigate(R.id.actionSharedGoToSearch)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

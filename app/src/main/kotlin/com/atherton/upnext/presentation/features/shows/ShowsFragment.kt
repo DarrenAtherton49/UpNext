@@ -2,11 +2,10 @@ package com.atherton.upnext.presentation.features.shows
 
 
 import android.os.Bundle
-import android.view.View
+import android.view.*
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavController
-import androidx.navigation.fragment.findNavController
 import com.atherton.upnext.R
+import com.atherton.upnext.presentation.main.MainAction
 import com.atherton.upnext.presentation.main.MainViewModel
 import com.atherton.upnext.presentation.main.MainViewModelFactory
 import com.atherton.upnext.util.base.BaseFragment
@@ -29,17 +28,38 @@ class ShowsFragment : BaseFragment<ShowsAction, ShowsState, ShowsViewEffect, Sho
     @Inject @field:Named(ShowsViewModelFactory.NAME)
     lateinit var vmFactory: ViewModelProvider.Factory
 
-    private val activityViewModel: MainViewModel by lazy { getActivityViewModel<MainViewModel>(mainVmFactory) }
+    private val sharedViewModel: MainViewModel by lazy { getActivityViewModel<MainViewModel>(mainVmFactory) }
     override val viewModel: ShowsViewModel by lazy { getViewModel<ShowsViewModel>(vmFactory) }
     private val viewPagerAdapter: FragmentViewPagerAdapter by lazy { FragmentViewPagerAdapter(childFragmentManager) }
-    private val navController: NavController by lazy { findNavController() }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        setHasOptionsMenu(true)
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViewPager()
 
         addShowButton.setOnClickListener {
-            viewModel.dispatch(ShowsAction.AddShowButtonClicked)
+            sharedViewModel.dispatch(MainAction.AddShowButtonClicked)
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        if (menu != null && inflater != null) {
+            inflater.inflate(R.menu.menu_shows, menu)
+        }
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_search -> {
+                sharedViewModel.dispatch(MainAction.SearchActionClicked)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -48,9 +68,7 @@ class ShowsFragment : BaseFragment<ShowsAction, ShowsState, ShowsViewEffect, Sho
     }
 
     override fun processViewEffects(viewEffect: ShowsViewEffect) {
-        when (viewEffect) {
-            is ShowsViewEffect.ShowSearchScreen -> navController.navigate(R.id.actionGoToSearch)
-        }
+
     }
 
     private fun initViewPager() {

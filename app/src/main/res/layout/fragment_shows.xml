@@ -25,13 +25,15 @@
 
     </LinearLayout>
 
+    <!-- todo change marginBottom to keyline_2x -->
     <com.google.android.material.button.MaterialButton
-        style="@style/AddContentButton"
+        style="@style/PrimaryActionButton"
         android:id="@+id/addShowButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
         android:layout_marginBottom="100dp"
+        app:icon="@drawable/ic_add_white_24dp"
         android:text="@string/shows_add_tv_show"/>
 
 </FrameLayout>
