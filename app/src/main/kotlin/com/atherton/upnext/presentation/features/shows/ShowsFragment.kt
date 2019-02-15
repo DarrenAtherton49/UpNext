@@ -73,11 +73,12 @@ class ShowsFragment : BaseFragment<ShowsAction, ShowsState, ShowsViewEffect, Sho
 
     private fun initViewPager() {
         //todo
+        viewPagerAdapter.clear()
 //        viewPagerAdapter.addFragment(getString(R.string.shows_tab_up_next), )
 //        viewPagerAdapter.addFragment(getString(R.string.shows_tab_watchlist), )
 //        viewPagerAdapter.addFragment(getString(R.string.shows_tab_finished), )
-//        viewPager.adapter = viewPagerAdapter
-//        tabLayout.setupWithViewPager(viewPager)
+        viewPager.adapter = viewPagerAdapter
+        tabLayout.setupWithViewPager(viewPager)
     }
 
     override fun initInjection(initialState: ShowsState?) {
