@@ -28,7 +28,7 @@ class ShowsFragment : BaseFragment<ShowsAction, ShowsState, ShowsViewEffect, Sho
     @Inject @field:Named(ShowsViewModelFactory.NAME)
     lateinit var vmFactory: ViewModelProvider.Factory
 
-    private val sharedViewModel: MainViewModel by lazy { getActivityViewModel<MainViewModel>(mainVmFactory) }
+    override val sharedViewModel: MainViewModel by lazy { getActivityViewModel<MainViewModel>(mainVmFactory) }
     override val viewModel: ShowsViewModel by lazy { getViewModel<ShowsViewModel>(vmFactory) }
     private val viewPagerAdapter: FragmentViewPagerAdapter by lazy { FragmentViewPagerAdapter(childFragmentManager) }
 

@@ -27,7 +27,7 @@ class MoviesFragment : BaseFragment<MoviesAction, MoviesState, MoviesViewEffect,
     @Inject @field:Named(MoviesViewModelFactory.NAME)
     lateinit var vmFactory: ViewModelProvider.Factory
 
-    private val sharedViewModel: MainViewModel by lazy { getActivityViewModel<MainViewModel>(mainVmFactory) }
+    override val sharedViewModel: MainViewModel by lazy { getActivityViewModel<MainViewModel>(mainVmFactory) }
     override val viewModel: MoviesViewModel by lazy { getViewModel<MoviesViewModel>(vmFactory) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {

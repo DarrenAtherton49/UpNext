@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.atherton.upnext.presentation.main.MainModule
+import com.atherton.upnext.presentation.main.MainViewModel
 import com.atherton.upnext.util.extensions.observe
 import com.ww.roxie.BaseAction
 import com.ww.roxie.BaseState
@@ -24,6 +25,7 @@ abstract class BaseFragment<Action : BaseAction,
     protected abstract val layoutResId: Int
     protected abstract val stateBundleKey: String
     protected abstract val viewModel: ViewModel
+    protected abstract val sharedViewModel: MainViewModel
 
     private val disposables: CompositeDisposable = CompositeDisposable()
 

@@ -3,8 +3,6 @@ package com.atherton.upnext.presentation.features.discover.featured
 import android.os.Bundle
 import android.view.*
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavController
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.atherton.upnext.R
@@ -37,9 +35,8 @@ class DiscoverFragment : BaseFragment<DiscoverAction, DiscoverState, DiscoverVie
     @Inject @field:Named(DiscoverViewModelFactory.NAME)
     lateinit var vmFactory: ViewModelProvider.Factory
 
-    private val sharedViewModel: MainViewModel by lazy { getActivityViewModel<MainViewModel>(mainVmFactory) }
+    override val sharedViewModel: MainViewModel by lazy { getActivityViewModel<MainViewModel>(mainVmFactory) }
     override val viewModel: DiscoverViewModel by lazy { getViewModel<DiscoverViewModel>(vmFactory) }
-    private val navController: NavController by lazy { findNavController() }
 
     private val listItemDecoration: LinearSpacingItemDecoration by lazy {
         LinearSpacingItemDecoration(
