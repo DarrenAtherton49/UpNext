@@ -32,10 +32,7 @@ class SearchFragment
     @Inject @field:Named(SearchViewModelFactory.NAME)
     lateinit var vmFactory: ViewModelProvider.Factory
 
-    private val sharedViewModel: MainViewModel by lazy {
-        getActivityViewModel<MainViewModel>(mainVmFactory)
-
-    }
+    override val sharedViewModel: MainViewModel by lazy { getActivityViewModel<MainViewModel>(mainVmFactory) }
     override val viewModel: SearchViewModel by lazy {
         getViewModel<SearchViewModel>(vmFactory)
     }
