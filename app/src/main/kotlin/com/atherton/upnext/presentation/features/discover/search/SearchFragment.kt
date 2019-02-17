@@ -1,6 +1,7 @@
 package com.atherton.upnext.presentation.features.discover.search
 
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -11,6 +12,7 @@ import com.atherton.upnext.presentation.common.SearchModelAdapter
 import com.atherton.upnext.presentation.main.MainViewModel
 import com.atherton.upnext.presentation.main.MainViewModelFactory
 import com.atherton.upnext.util.base.BaseFragment
+import com.atherton.upnext.util.base.ToolbarOptions
 import com.atherton.upnext.util.extensions.*
 import com.atherton.upnext.util.glide.GlideApp
 import com.atherton.upnext.util.recyclerview.GridSpacingItemDecoration
@@ -36,6 +38,13 @@ class SearchFragment
     override val viewModel: SearchViewModel by lazy {
         getViewModel<SearchViewModel>(vmFactory)
     }
+
+    override val toolbarOptions: ToolbarOptions? = ToolbarOptions(
+        toolbarResId = R.id.toolbar,
+        titleResId = R.string.fragment_label_search,
+        menuResId = R.menu.menu_search
+    )
+
     private val recyclerViewAdapter: SearchModelAdapter by lazy {
         //todo make view mode toggleable
         SearchModelAdapter(GlideApp.with(this), SearchModelViewMode.Grid) { searchModel ->
@@ -68,6 +77,16 @@ class SearchFragment
         super.onResume()
         searchEditText.whenTextChanges {
             viewModel.dispatch(SearchAction.SearchTextChanged(it))
+        }
+    }
+
+    override fun onMenuItemClicked(menuItem: MenuItem): Boolean {
+        return when (menuItem.itemId) {
+            R.id.action_settings -> {
+                //todo dispatch action to open settings
+                true
+            }
+            else -> false
         }
     }
 

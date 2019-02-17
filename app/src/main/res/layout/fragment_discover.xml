@@ -1,46 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:animateLayoutChanges="true"
-    android:padding="@dimen/keyline_2x"
     android:clipToPadding="false"
     tools:context=".presentation.features.discover.featured.DiscoverFragment">
 
-    <include
-        layout="@layout/base_recycler_view"
+    <include layout="@layout/base_app_bar"/>
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="@dimen/keyline_2x"/>
+        android:padding="@dimen/keyline_2x">
 
-    <include
-        layout="@layout/discover_error_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone"/>
+        <include
+            layout="@layout/base_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/keyline_2x"/>
 
-    <ProgressBar
-        style="?android:attr/progressBarStyle"
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:indeterminate="true"
-        android:visibility="gone"/>
+        <include
+            layout="@layout/discover_error_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
 
-    <!-- todo change marginBottom to keyline_2x -->
-    <com.google.android.material.button.MaterialButton
-        style="@style/PrimaryActionButton"
-        android:id="@+id/filterButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="100dp"
-        app:icon="@drawable/ic_filter_list_white_24dp"
-        android:text="@string/discover_filter"/>
+        <ProgressBar
+            style="?android:attr/progressBarStyle"
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:visibility="gone"/>
 
-</FrameLayout>
+        <!-- todo change marginBottom to keyline_2x -->
+        <com.google.android.material.button.MaterialButton
+            style="@style/PrimaryActionButton"
+            android:id="@+id/filterButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="100dp"
+            app:icon="@drawable/ic_filter_list_white_24dp"
+            android:text="@string/discover_filter"/>
+
+    </FrameLayout>
+
+
+</LinearLayout>

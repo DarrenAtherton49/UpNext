@@ -2,13 +2,17 @@ package com.atherton.upnext.presentation.features.movies
 
 
 import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.R
 import com.atherton.upnext.presentation.main.MainAction
 import com.atherton.upnext.presentation.main.MainViewModel
 import com.atherton.upnext.presentation.main.MainViewModelFactory
 import com.atherton.upnext.util.base.BaseFragment
+import com.atherton.upnext.util.base.ToolbarOptions
 import com.atherton.upnext.util.extensions.getActivityViewModel
 import com.atherton.upnext.util.extensions.getAppComponent
 import com.atherton.upnext.util.extensions.getViewModel
@@ -30,10 +34,11 @@ class MoviesFragment : BaseFragment<MoviesAction, MoviesState, MoviesViewEffect,
     override val sharedViewModel: MainViewModel by lazy { getActivityViewModel<MainViewModel>(mainVmFactory) }
     override val viewModel: MoviesViewModel by lazy { getViewModel<MoviesViewModel>(vmFactory) }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        setHasOptionsMenu(true)
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
+    override val toolbarOptions: ToolbarOptions? = ToolbarOptions(
+        toolbarResId = R.id.toolbar,
+        titleResId = R.string.fragment_label_movies,
+        menuResId = R.menu.menu_movies
+    )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -50,13 +55,13 @@ class MoviesFragment : BaseFragment<MoviesAction, MoviesState, MoviesViewEffect,
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
+    override fun onMenuItemClicked(menuItem: MenuItem): Boolean {
+        return when (menuItem.itemId) {
             R.id.action_search -> {
                 sharedViewModel.dispatch(MainAction.SearchActionClicked)
                 true
             }
-            else -> super.onOptionsItemSelected(item)
+            else -> false
         }
     }
 

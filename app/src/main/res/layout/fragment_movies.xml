@@ -7,6 +7,8 @@
     android:layout_height="match_parent"
     tools:context=".presentation.features.movies.MoviesFragment">
 
+    <include layout="@layout/base_app_bar"/>
+
     <!-- todo change marginBottom to keyline_2x -->
     <com.google.android.material.button.MaterialButton
         style="@style/PrimaryActionButton"

@@ -1,7 +1,8 @@
 package com.atherton.upnext.presentation.features.discover.featured
 
 import android.os.Bundle
-import android.view.*
+import android.view.MenuItem
+import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,6 +14,7 @@ import com.atherton.upnext.presentation.main.MainAction
 import com.atherton.upnext.presentation.main.MainViewModel
 import com.atherton.upnext.presentation.main.MainViewModelFactory
 import com.atherton.upnext.util.base.BaseFragment
+import com.atherton.upnext.util.base.ToolbarOptions
 import com.atherton.upnext.util.extensions.*
 import com.atherton.upnext.util.glide.GlideApp
 import com.atherton.upnext.util.recyclerview.GridSpacingItemDecoration
@@ -52,14 +54,13 @@ class DiscoverFragment : BaseFragment<DiscoverAction, DiscoverState, DiscoverVie
         )
     }
 
+    override val toolbarOptions: ToolbarOptions? = ToolbarOptions(
+        toolbarResId = R.id.toolbar,
+        titleResId = R.string.fragment_label_discover,
+        menuResId = R.menu.menu_discover
+    )
+
     private lateinit var recyclerViewAdapter: SearchModelAdapter
-
-    private var viewMode: SearchModelViewMode? = null
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        setHasOptionsMenu(true)
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -71,28 +72,8 @@ class DiscoverFragment : BaseFragment<DiscoverAction, DiscoverState, DiscoverVie
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        if (menu != null && inflater != null) {
-            inflater.inflate(R.menu.menu_discover, menu)
-        }
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu?) {
-        viewMode?.let {
-            val viewToggleLogo = when (it) {
-                is SearchModelViewMode.List -> context?.getDrawableCompat(R.drawable.ic_view_grid_white_24dp)
-                is SearchModelViewMode.Grid -> context?.getDrawableCompat(R.drawable.ic_view_list_white_24dp)
-            }
-            val menuItem = menu?.findItem(R.id.action_toggle_view)
-            menuItem?.isVisible = true
-            menuItem?.icon = viewToggleLogo
-        }
-        super.onPrepareOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
+    override fun onMenuItemClicked(menuItem: MenuItem): Boolean {
+        return when (menuItem.itemId) {
             R.id.action_search -> {
                 sharedViewModel.dispatch(MainAction.SearchActionClicked)
                 true
@@ -101,7 +82,7 @@ class DiscoverFragment : BaseFragment<DiscoverAction, DiscoverState, DiscoverVie
                 viewModel.dispatch(DiscoverAction.ViewModeToggleActionClicked)
                 true
             }
-            else -> super.onOptionsItemSelected(item)
+            else -> false
         }
     }
 
@@ -138,8 +119,13 @@ class DiscoverFragment : BaseFragment<DiscoverAction, DiscoverState, DiscoverVie
     override fun processViewEffects(viewEffect: DiscoverViewEffect) {
         when (viewEffect) {
             is DiscoverViewEffect.ToggleViewMode -> {
-                viewMode = viewEffect.viewMode // save value for onPrepareOptionsMenu()
-                activity?.invalidateOptionsMenu()
+                editMenuItem(R.id.action_toggle_view) {
+                    isVisible = true
+                    icon = when (viewEffect.viewMode) {
+                        is SearchModelViewMode.List -> context?.getDrawableCompat(R.drawable.ic_view_grid_white_24dp)
+                        is SearchModelViewMode.Grid -> context?.getDrawableCompat(R.drawable.ic_view_list_white_24dp)
+                    }
+                }
             }
             is DiscoverViewEffect.ShowSearchModelDetailScreen -> {
                 //todo

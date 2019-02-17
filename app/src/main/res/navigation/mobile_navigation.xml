@@ -27,7 +27,7 @@
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.atherton.upnext.presentation.features.discover.search.SearchFragment"
-        android:label="@string/fragment_label_search_results"
+        android:label="@string/fragment_label_search"
         tools:layout="@layout/fragment_search"/>
 
     <action
