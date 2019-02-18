@@ -68,6 +68,7 @@ dependencies {
     implementation dependencies.dagger
     implementation dependencies.glide
     implementation dependencies.kotlin
+    implementation dependencies.kotlinReflect
     implementation dependencies.material
     implementation dependencies.legacySupportV4
     implementation dependencies.lifecycleExtensions

@@ -46,6 +46,7 @@ ext {
         glide:                     "com.github.bumptech.glide:glide:$glideVersion",
         glideCompiler:             "com.github.bumptech.glide:compiler:$glideVersion",
         kotlin:                    "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion",
+        kotlinReflect:             "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion",
         legacySupportV4:           "androidx.legacy:legacy-support-v4:$androidXVersion",
         leakCanary:                "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion",
         leakCanaryFragments:       "com.squareup.leakcanary:leakcanary-support-fragment:$leakCanaryVersion",

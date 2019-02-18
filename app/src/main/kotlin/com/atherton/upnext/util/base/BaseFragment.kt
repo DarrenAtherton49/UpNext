@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.atherton.upnext.presentation.main.MainActivity
 import com.atherton.upnext.presentation.main.MainModule
@@ -97,7 +96,7 @@ abstract class BaseFragment<Action : BaseAction,
                     view?.findViewById(id)
                 }
                 toolbar?.let { toolbar ->
-                    toolbar.setupWithNavController(findNavController(), mainActivity.appBarConfiguration)
+                    toolbar.setupWithNavController(mainActivity.navController, mainActivity.appBarConfiguration)
                     toolbarOptions.titleResId?.let { titleResId ->
                         toolbar.title = getString(titleResId)
                     }

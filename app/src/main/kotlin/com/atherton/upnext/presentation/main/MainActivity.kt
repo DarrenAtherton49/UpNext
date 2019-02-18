@@ -8,6 +8,8 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
 import com.atherton.upnext.R
+import com.atherton.upnext.presentation.navigation.AndroidNavigator
+import com.atherton.upnext.presentation.navigation.Navigator
 import com.atherton.upnext.util.base.BaseActivity
 import com.atherton.upnext.util.extensions.getAppComponent
 import com.atherton.upnext.util.extensions.getViewModel
@@ -24,7 +26,8 @@ class MainActivity : BaseActivity<MainAction, MainState, MainViewEffect, MainVie
     lateinit var vmFactory: ViewModelProvider.Factory
 
     override val sharedViewModel: MainViewModel by lazy { getViewModel<MainViewModel>(vmFactory) }
-    private val navController: NavController by lazy { findNavController(R.id.navHostFragment) }
+    val navController: NavController by lazy { findNavController(R.id.navHostFragment) }
+    private val navigator: Navigator by lazy { AndroidNavigator(navController) }
 
     private val topLevelDestinationIds = setOf(R.id.moviesFragment, R.id.showsFragment, R.id.discoverFragment)
     val appBarConfiguration: AppBarConfiguration by lazy {
@@ -43,8 +46,7 @@ class MainActivity : BaseActivity<MainAction, MainState, MainViewEffect, MainVie
 
     override fun processViewEffects(viewEffect: MainViewEffect) {
         when (viewEffect) {
-            //todo delegate any navigation actions to a Navigator interface
-            is MainViewEffect.ShowSearchScreen -> navController.navigate(R.id.actionSharedGoToSearch)
+            is MainViewEffect.ShowSearchScreen -> navigator.showSearchScreen()
         }
     }
 
