@@ -7,6 +7,9 @@
     <dimen name="keyline">8dp</dimen>
     <dimen name="keyline_2x">16dp</dimen>
     <dimen name="keyline_4x">32dp</dimen>
+    <dimen name="keyline_6x">48dp</dimen>
+    <dimen name="keyline_7x">56dp</dimen>
+    <dimen name="keyline_8x">64dp</dimen>
 
     <item name="match_parent" format="integer" type="dimen">-1</item>
     <item name="wrap_content" format="integer" type="dimen">-2</item>

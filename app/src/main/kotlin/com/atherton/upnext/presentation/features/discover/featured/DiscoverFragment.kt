@@ -19,7 +19,6 @@ import com.atherton.upnext.util.extensions.*
 import com.atherton.upnext.util.glide.GlideApp
 import com.atherton.upnext.util.recyclerview.GridSpacingItemDecoration
 import com.atherton.upnext.util.recyclerview.LinearSpacingItemDecoration
-import kotlinx.android.synthetic.main.base_recycler_view.*
 import kotlinx.android.synthetic.main.discover_error_layout.*
 import kotlinx.android.synthetic.main.fragment_discover.*
 import javax.inject.Inject

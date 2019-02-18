@@ -16,8 +16,8 @@ import com.atherton.upnext.util.base.ToolbarOptions
 import com.atherton.upnext.util.extensions.*
 import com.atherton.upnext.util.glide.GlideApp
 import com.atherton.upnext.util.recyclerview.GridSpacingItemDecoration
-import kotlinx.android.synthetic.main.base_recycler_view.*
 import kotlinx.android.synthetic.main.discover_error_layout.*
+import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.search_results_search_field.*
 import javax.inject.Inject
 import javax.inject.Named

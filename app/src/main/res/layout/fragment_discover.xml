@@ -14,14 +14,19 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="@dimen/keyline_2x">
+        android:layout_height="match_parent">
 
-        <include
-            layout="@layout/base_recycler_view"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="@dimen/keyline_2x"/>
+            android:paddingTop="@dimen/keyline_2x"
+            android:paddingStart="@dimen/keyline_2x"
+            android:paddingEnd="@dimen/keyline_2x"
+            android:paddingBottom="@dimen/keyline_8x"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:scrollbars="none"
+            android:clipToPadding="false"/>
 
         <include
             layout="@layout/discover_error_layout"
@@ -39,14 +44,13 @@
             android:indeterminate="true"
             android:visibility="gone"/>
 
-        <!-- todo change marginBottom to keyline_2x -->
         <com.google.android.material.button.MaterialButton
             style="@style/PrimaryActionButton"
             android:id="@+id/filterButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
-            android:layout_marginBottom="100dp"
+            android:layout_marginBottom="@dimen/keyline_2x"
             app:icon="@drawable/ic_filter_list_white_24dp"
             android:text="@string/discover_filter"/>
 

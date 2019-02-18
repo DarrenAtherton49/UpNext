@@ -15,18 +15,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_marginTop="@dimen/keyline_2x"
-        android:layout_marginStart="@dimen/keyline_2x"
-        android:layout_marginEnd="@dimen/keyline_2x"
+        android:layout_margin="@dimen/keyline_2x"
         android:animateLayoutChanges="true">
 
         <include layout="@layout/search_results_search_field"/>
 
-        <include
-            layout="@layout/base_recycler_view"
+        <androidx.recyclerview.widget.RecyclerView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="@dimen/keyline_2x"/>
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:scrollbars="none"
+            android:clipToPadding="false"/>
 
         <include
             layout="@layout/discover_error_layout"

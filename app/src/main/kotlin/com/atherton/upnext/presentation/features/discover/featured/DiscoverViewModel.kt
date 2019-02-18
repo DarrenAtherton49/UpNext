@@ -154,7 +154,7 @@ class DiscoverViewModel @Inject constructor(
 
         disposables += viewEffectChanges
             .observeOn(schedulers.main)
-            .subscribe(viewEffects::onNext, Timber::e)
+            .subscribe(viewEffects::accept, Timber::e)
     }
 }
 

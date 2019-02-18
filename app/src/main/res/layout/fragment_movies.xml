@@ -9,14 +9,13 @@
 
     <include layout="@layout/base_app_bar"/>
 
-    <!-- todo change marginBottom to keyline_2x -->
     <com.google.android.material.button.MaterialButton
         style="@style/PrimaryActionButton"
         android:id="@+id/addMovieButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="100dp"
+        android:layout_marginBottom="@dimen/keyline_2x"
         app:icon="@drawable/ic_add_white_24dp"
         android:text="@string/movies_add_movie"/>
 
