@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:animateLayoutChanges="true"
-    tools:context=".presentation.features.discover.featured.DiscoverFragment">
+    tools:context=".presentation.features.discover.content.DiscoverContentFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"

@@ -20,13 +20,13 @@
 
     <fragment
         android:id="@+id/discoverFragment"
-        android:name="com.atherton.upnext.presentation.features.discover.featured.DiscoverFragment"
+        android:name="com.atherton.upnext.presentation.features.discover.DiscoverTabsFragment"
         android:label="@string/fragment_label_discover"
-        tools:layout="@layout/fragment_discover"/>
+        tools:layout="@layout/fragment_discover_tabs"/>
 
     <fragment
         android:id="@+id/searchFragment"
-        android:name="com.atherton.upnext.presentation.features.discover.search.SearchFragment"
+        android:name="com.atherton.upnext.presentation.features.search.SearchFragment"
         android:label="@string/fragment_label_search"
         tools:layout="@layout/fragment_search"/>
 

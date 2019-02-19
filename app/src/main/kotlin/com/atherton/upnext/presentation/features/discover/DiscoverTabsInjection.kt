@@ -1,9 +1,8 @@
-package com.atherton.upnext.presentation.features.discover.featured
+package com.atherton.upnext.presentation.features.discover
 
 import androidx.lifecycle.ViewModelProvider
-import com.atherton.upnext.domain.usecase.GetConfigUseCase
-import com.atherton.upnext.domain.usecase.GetDiscoverMoviesTvUseCase
 import com.atherton.upnext.domain.usecase.GetDiscoverViewModeUseCase
+import com.atherton.upnext.domain.usecase.ToggleDiscoverViewModeUseCase
 import com.atherton.upnext.presentation.main.MainComponent
 import com.atherton.upnext.presentation.main.MainModule
 import com.atherton.upnext.util.injection.AppComponent
@@ -17,30 +16,28 @@ import javax.inject.Named
 @PerView
 @Component(
     dependencies = [AppComponent::class],
-    modules = [MainModule::class, DiscoverTabModule::class]
+    modules = [MainModule::class, DiscoverTabsModule::class]
 )
-interface DiscoverTabComponent : MainComponent {
+interface DiscoverTabsComponent : MainComponent {
 
-    fun inject(discoverTabFragment: DiscoverTabFragment)
+    fun inject(discoverFragment: DiscoverTabsFragment)
 }
 
 
 @Module
-class DiscoverTabModule(private val initialState: DiscoverTabState?) {
+class DiscoverTabsModule(private val initialState: DiscoverTabsState?) {
 
     @Provides
-    @Named(DiscoverTabViewModelFactory.NAME)
+    @Named(DiscoverTabsViewModelFactory.NAME)
     @PerView internal fun provideViewModelFactory(
+        toggleDiscoverViewModeUseCase: ToggleDiscoverViewModeUseCase,
         getDiscoverViewModeUseCase: GetDiscoverViewModeUseCase,
-        getDiscoverMoviesTvUseCase: GetDiscoverMoviesTvUseCase,
-        getConfigUseCase: GetConfigUseCase,
         schedulers: RxSchedulers
     ): ViewModelProvider.Factory {
-        return DiscoverTabViewModelFactory(
+        return DiscoverTabsViewModelFactory(
             initialState,
+            toggleDiscoverViewModeUseCase,
             getDiscoverViewModeUseCase,
-            getDiscoverMoviesTvUseCase,
-            getConfigUseCase,
             schedulers
         )
     }

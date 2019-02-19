@@ -1,4 +1,4 @@
-package com.atherton.upnext.presentation.features.discover.search
+package com.atherton.upnext.presentation.features.search
 
 import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.domain.usecase.*

@@ -1,4 +1,4 @@
-package com.atherton.upnext.presentation.features.discover.featured
+package com.atherton.upnext.presentation.features.discover.content
 
 import android.os.Bundle
 import android.view.MenuItem
@@ -21,25 +21,26 @@ import com.atherton.upnext.util.glide.GlideApp
 import com.atherton.upnext.util.recyclerview.GridSpacingItemDecoration
 import com.atherton.upnext.util.recyclerview.LinearSpacingItemDecoration
 import kotlinx.android.synthetic.main.discover_error_layout.*
-import kotlinx.android.synthetic.main.fragment_discover_tab.*
+import kotlinx.android.synthetic.main.fragment_discover_content.*
 import javax.inject.Inject
 import javax.inject.Named
 
 
-class DiscoverTabFragment : BaseFragment<DiscoverTabAction, DiscoverTabState, DiscoverTabViewEffect, DiscoverTabViewModel>() {
+class DiscoverContentFragment
+    : BaseFragment<DiscoverContentAction, DiscoverContentState, DiscoverContentViewEffect, DiscoverContentViewModel>() {
 
-    override val layoutResId: Int = com.atherton.upnext.R.layout.fragment_discover_tab
-    override val stateBundleKey: String by lazy { "bundle_key_discover_tab_${filter}_state" }
+    override val layoutResId: Int = com.atherton.upnext.R.layout.fragment_discover_content
+    override val stateBundleKey: String by lazy { "bundle_key_discover_content_${filter}_state" }
     private val filter: String by lazy { arguments?.getString(BUNDLE_KEY_FILTER) ?: "unknown" }
 
     @Inject @field:Named(MainViewModelFactory.NAME)
     lateinit var mainVmFactory: ViewModelProvider.Factory
 
-    @Inject @field:Named(DiscoverTabViewModelFactory.NAME)
+    @Inject @field:Named(DiscoverContentViewModelFactory.NAME)
     lateinit var vmFactory: ViewModelProvider.Factory
 
     override val sharedViewModel: MainViewModel by lazy { getActivityViewModel<MainViewModel>(mainVmFactory) }
-    override val viewModel: DiscoverTabViewModel by lazy { getViewModel<DiscoverTabViewModel>(vmFactory) }
+    override val viewModel: DiscoverContentViewModel by lazy { getViewModel<DiscoverContentViewModel>(vmFactory) }
 
     private val listItemDecoration: LinearSpacingItemDecoration by lazy {
         LinearSpacingItemDecoration(
@@ -62,10 +63,10 @@ class DiscoverTabFragment : BaseFragment<DiscoverTabAction, DiscoverTabState, Di
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.dispatch(DiscoverTabAction.Load)
+        viewModel.dispatch(DiscoverContentAction.Load)
 
         retryButton.setOnClickListener {
-            viewModel.dispatch(DiscoverTabAction.RetryButtonClicked)
+            viewModel.dispatch(DiscoverContentAction.RetryButtonClicked)
         }
     }
 
@@ -79,14 +80,14 @@ class DiscoverTabFragment : BaseFragment<DiscoverTabAction, DiscoverTabState, Di
         }
     }
 
-    override fun renderState(state: DiscoverTabState) {
+    override fun renderState(state: DiscoverContentState) {
         when (state) {
-            is DiscoverTabState.Loading -> {
+            is DiscoverContentState.Loading -> {
                 progressBar.isVisible = true
                 recyclerView.isVisible = false
                 errorLayout.isVisible = false
             }
-            is DiscoverTabState.Content -> {
+            is DiscoverContentState.Content -> {
                 progressBar.isVisible = false
                 if (state.results.isEmpty()) {
                     recyclerView.isVisible = false
@@ -99,7 +100,7 @@ class DiscoverTabFragment : BaseFragment<DiscoverTabAction, DiscoverTabState, Di
                     recyclerViewAdapter.submitList(state.results)
                 }
             }
-            is DiscoverTabState.Error -> {
+            is DiscoverContentState.Error -> {
                 progressBar.isVisible = false
                 recyclerView.isVisible = false
                 errorLayout.isVisible = true
@@ -109,13 +110,13 @@ class DiscoverTabFragment : BaseFragment<DiscoverTabAction, DiscoverTabState, Di
         }
     }
 
-    override fun processViewEffects(viewEffect: DiscoverTabViewEffect) {}
+    override fun processViewEffects(viewEffect: DiscoverContentViewEffect) {}
 
     override fun processSharedViewEffects(viewEffect: MainViewEffect) {
         when (viewEffect) {
             // view mode has been changed elsewhere (i.e. in the fragment containing the tabs), reload view with new setting
             is MainViewEffect.ToggleViewMode -> {
-                viewModel.dispatch(DiscoverTabAction.ViewModeToggleChanged)
+                viewModel.dispatch(DiscoverContentAction.ViewModeToggleChanged)
             }
         }
     }
@@ -138,15 +139,15 @@ class DiscoverTabFragment : BaseFragment<DiscoverTabAction, DiscoverTabState, Di
                 }
             }
             recyclerViewAdapter = SearchModelAdapter(GlideApp.with(this), viewMode) { searchModel ->
-                viewModel.dispatch(DiscoverTabAction.SearchModelClicked(searchModel))
+                viewModel.dispatch(DiscoverContentAction.SearchModelClicked(searchModel))
             }
             adapter = recyclerViewAdapter
         }
     }
 
-    override fun initInjection(initialState: DiscoverTabState?) {
-        DaggerDiscoverTabComponent.builder()
-            .discoverTabModule(DiscoverTabModule(initialState))
+    override fun initInjection(initialState: DiscoverContentState?) {
+        DaggerDiscoverContentComponent.builder()
+            .discoverContentModule(DiscoverContentModule(initialState))
             .mainModule(mainModule)
             .appComponent(getAppComponent())
             .build()
@@ -154,11 +155,11 @@ class DiscoverTabFragment : BaseFragment<DiscoverTabAction, DiscoverTabState, Di
     }
 
     companion object {
-        private const val BUNDLE_KEY_FILTER = "discover_tab_bundle_key_filter"
+        private const val BUNDLE_KEY_FILTER = "discover_content_bundle_key_filter"
 
-        //todo change filter to a proper type
-        fun newInstance(filter: String): DiscoverTabFragment {
-            return DiscoverTabFragment().apply {
+        //todo change filter to a proper type instead of a string (e.g. a sealed class)
+        fun newInstance(filter: String): DiscoverContentFragment {
+            return DiscoverContentFragment().apply {
                 arguments = Bundle().apply {
                     putString(BUNDLE_KEY_FILTER, filter)
                 }

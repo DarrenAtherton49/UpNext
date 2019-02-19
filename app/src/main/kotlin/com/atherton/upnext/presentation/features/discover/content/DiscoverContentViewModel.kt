@@ -1,4 +1,4 @@
-package com.atherton.upnext.presentation.features.discover.featured
+package com.atherton.upnext.presentation.features.discover.content
 
 import android.os.Parcelable
 import androidx.lifecycle.ViewModel
@@ -29,38 +29,38 @@ import kotlinx.android.parcel.Parcelize
 import timber.log.Timber
 import javax.inject.Inject
 
-class DiscoverTabViewModel @Inject constructor(
-    initialState: DiscoverTabState?,
+class DiscoverContentViewModel @Inject constructor(
+    initialState: DiscoverContentState?,
     private val getDiscoverViewModeUseCase: GetDiscoverViewModeUseCase,
     private val getDiscoverMoviesTvUseCase: GetDiscoverMoviesTvUseCase,
     private val getConfigUseCase: GetConfigUseCase,
     private val schedulers: RxSchedulers
-): UpNextViewModel<DiscoverTabAction, DiscoverTabState, DiscoverTabViewEffect>() {
+): UpNextViewModel<DiscoverContentAction, DiscoverContentState, DiscoverContentViewEffect>() {
 
-    override val initialState = initialState ?: DiscoverTabState.Idle
+    override val initialState = initialState ?: DiscoverContentState.Idle
 
-    private val reducer: Reducer<DiscoverTabState, DiscoverTabChange> = { oldState, change ->
+    private val reducer: Reducer<DiscoverContentState, DiscoverContentChange> = { oldState, change ->
         when (change) {
-            is DiscoverTabChange.Loading -> {
+            is DiscoverContentChange.Loading -> {
                 when (oldState) {
-                    is DiscoverTabState.Loading -> oldState.copy()
-                    is DiscoverTabState.Content -> {
-                        DiscoverTabState.Loading(results = oldState.results)
+                    is DiscoverContentState.Loading -> oldState.copy()
+                    is DiscoverContentState.Content -> {
+                        DiscoverContentState.Loading(results = oldState.results)
                     }
-                    is DiscoverTabState.Error -> DiscoverTabState.Loading()
-                    else -> DiscoverTabState.Loading()
+                    is DiscoverContentState.Error -> DiscoverContentState.Loading()
+                    else -> DiscoverContentState.Loading()
                 }
             }
-            is DiscoverTabChange.Result -> {
+            is DiscoverContentChange.Result -> {
                 when (change.response) {
                     is Response.Success -> {
-                        DiscoverTabState.Content(
+                        DiscoverContentState.Content(
                             results = change.response.data.withDiscoverSearchImageUrls(change.config),
                             cached = change.response.cached,
                             viewMode = change.viewMode
                         )
                     }
-                    is Response.Failure -> DiscoverTabState.Error(failure = change.response)
+                    is Response.Failure -> DiscoverContentState.Error(failure = change.response)
                 }
             }
         }
@@ -71,7 +71,7 @@ class DiscoverTabViewModel @Inject constructor(
     }
 
     private fun bindActions() {
-        fun Observable<DiscoverTabAction.Load>.toResultChange(): Observable<DiscoverTabChange> {
+        fun Observable<DiscoverContentAction.Load>.toResultChange(): Observable<DiscoverContentChange> {
             return this.switchMap {
                 zip(getDiscoverMoviesTvUseCase.build(),
                     getConfigUseCase.build(),
@@ -79,44 +79,44 @@ class DiscoverTabViewModel @Inject constructor(
                     Function3<Response<List<SearchModel>>,
                         Config,
                         SearchModelViewMode,
-                        DiscoverTabViewData> { searchModels, config, viewMode ->
-                        DiscoverTabViewData(searchModels, config, viewMode)
+                        DiscoverContentViewData> { searchModels, config, viewMode ->
+                        DiscoverContentViewData(searchModels, config, viewMode)
                     })
                     .subscribeOn(schedulers.io)
                     .toObservable()
-                    .map<DiscoverTabChange> { viewData ->
-                        DiscoverTabChange.Result(
+                    .map<DiscoverContentChange> { viewData ->
+                        DiscoverContentChange.Result(
                             response = viewData.searchModels,
                             config = viewData.config,
                             viewMode = viewData.viewMode
                         )
                     }
-                    .startWith(DiscoverTabChange.Loading)
+                    .startWith(DiscoverContentChange.Loading)
             }
         }
 
-        val loadDataChange = actions.ofType<DiscoverTabAction.Load>()
+        val loadDataChange = actions.ofType<DiscoverContentAction.Load>()
             .distinctUntilChanged()
             .toResultChange()
 
-        val viewModeToggleChange = actions.ofType<DiscoverTabAction.ViewModeToggleChanged>()
-            .map { DiscoverTabAction.Load }
+        val viewModeToggleChange = actions.ofType<DiscoverContentAction.ViewModeToggleChanged>()
+            .map { DiscoverContentAction.Load }
             .toResultChange()
 
-        val retryButtonChange = actions.ofType<DiscoverTabAction.RetryButtonClicked>()
-            .map { DiscoverTabAction.Load }
+        val retryButtonChange = actions.ofType<DiscoverContentAction.RetryButtonClicked>()
+            .map { DiscoverContentAction.Load }
             .toResultChange()
 
-        val searchModelClickedViewEffect = actions.ofType<DiscoverTabAction.SearchModelClicked>()
+        val searchModelClickedViewEffect = actions.ofType<DiscoverContentAction.SearchModelClicked>()
             .preventMultipleClicks()
             .subscribeOn(schedulers.io)
-            .map { DiscoverTabViewEffect.ShowSearchModelDetailScreen(it.searchModel) }
+            .map { DiscoverContentViewEffect.ShowSearchModelDetailScreen(it.searchModel) }
 
         val stateChanges = merge(loadDataChange, viewModeToggleChange, retryButtonChange)
 
         disposables += stateChanges
             .scan(initialState, reducer)
-            .filter { it !is DiscoverTabState.Idle }
+            .filter { it !is DiscoverContentState.Idle }
             .distinctUntilChanged()
             .observeOn(schedulers.main)
             .subscribe(state::setValue, Timber::e)
@@ -131,43 +131,43 @@ class DiscoverTabViewModel @Inject constructor(
 // MVI
 //================================================================================
 
-sealed class DiscoverTabAction : BaseAction {
-    object Load : DiscoverTabAction()
-    object ViewModeToggleChanged : DiscoverTabAction()
-    object RetryButtonClicked : DiscoverTabAction()
-    data class SearchModelClicked(val searchModel: SearchModel) : DiscoverTabAction()
+sealed class DiscoverContentAction : BaseAction {
+    object Load : DiscoverContentAction()
+    object ViewModeToggleChanged : DiscoverContentAction()
+    object RetryButtonClicked : DiscoverContentAction()
+    data class SearchModelClicked(val searchModel: SearchModel) : DiscoverContentAction()
 }
 
-sealed class DiscoverTabChange {
-    object Loading : DiscoverTabChange()
+sealed class DiscoverContentChange {
+    object Loading : DiscoverContentChange()
     data class Result(
         val response: Response<List<SearchModel>>,
         val config: Config,
         val viewMode: SearchModelViewMode
-    ) : DiscoverTabChange()
+    ) : DiscoverContentChange()
 }
 
-sealed class DiscoverTabState : BaseState, Parcelable {
+sealed class DiscoverContentState : BaseState, Parcelable {
 
     @Parcelize
-    object Idle : DiscoverTabState()
+    object Idle : DiscoverContentState()
 
     @Parcelize
-    data class Loading(val results: List<SearchModel> = emptyList()) : DiscoverTabState()
+    data class Loading(val results: List<SearchModel> = emptyList()) : DiscoverContentState()
 
     @Parcelize
     data class Content(
         val results: List<SearchModel> = emptyList(),
         val cached: Boolean = false,
         val viewMode: SearchModelViewMode
-    ) : DiscoverTabState()
+    ) : DiscoverContentState()
 
     @Parcelize
-    data class Error(val failure: Response.Failure) : DiscoverTabState()
+    data class Error(val failure: Response.Failure) : DiscoverContentState()
 }
 
-sealed class DiscoverTabViewEffect : BaseViewEffect {
-    data class ShowSearchModelDetailScreen(val searchModel: SearchModel) : DiscoverTabViewEffect()
+sealed class DiscoverContentViewEffect : BaseViewEffect {
+    data class ShowSearchModelDetailScreen(val searchModel: SearchModel) : DiscoverContentViewEffect()
 }
 
 //================================================================================
@@ -175,7 +175,7 @@ sealed class DiscoverTabViewEffect : BaseViewEffect {
 //================================================================================
 
 // this class is just used as the result of zipping the necessary Observables together
-private data class DiscoverTabViewData(
+private data class DiscoverContentViewData(
     val searchModels: Response<List<SearchModel>>,
     val config: Config,
     val viewMode: SearchModelViewMode
@@ -186,8 +186,8 @@ private data class DiscoverTabViewData(
 //================================================================================
 
 @PerView
-class DiscoverTabViewModelFactory(
-    private val initialState: DiscoverTabState?,
+class DiscoverContentViewModelFactory(
+    private val initialState: DiscoverContentState?,
     private val getDiscoverViewModeUseCase: GetDiscoverViewModeUseCase,
     private val getDiscoverMoviesTvUseCase: GetDiscoverMoviesTvUseCase,
     private val getConfigUseCase: GetConfigUseCase,
@@ -196,7 +196,7 @@ class DiscoverTabViewModelFactory(
 
     @Suppress("unchecked_cast")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return DiscoverTabViewModel(
+        return DiscoverContentViewModel(
             initialState,
             getDiscoverViewModeUseCase,
             getDiscoverMoviesTvUseCase,
@@ -206,6 +206,6 @@ class DiscoverTabViewModelFactory(
     }
 
     companion object {
-        const val NAME = "DiscoverTabViewModelFactory"
+        const val NAME = "DiscoverContentViewModelFactory"
     }
 }

@@ -39,10 +39,8 @@
     <string name="movies_tab_finished">Finished</string>
     <string name="movies_add_movie">Add a movie</string>
 
-    <!-- DiscoverFragment -->
-    <string name="discover_search_textfield_label">Find Shows, Movies or People…</string>
-    <string name="discover_advanced_search_button">Advanced Search</string>
-    <string name="discover_filter">Filter</string>
+    <!-- DiscoverTabsFragment -->
+    <string name="discover_tabs_filter_button">Filter</string>
 
     <!-- SearchFragment -->
     <string name="search_textfield_label">Find Movies, Shows or People…</string>

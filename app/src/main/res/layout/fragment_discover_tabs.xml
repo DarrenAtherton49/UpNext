@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:animateLayoutChanges="true"
     android:clipToPadding="false"
-    tools:context=".presentation.features.discover.featured.DiscoverFragment">
+    tools:context=".presentation.features.discover.DiscoverTabsFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -47,7 +47,7 @@
             android:layout_gravity="bottom|center_horizontal"
             android:layout_marginBottom="@dimen/keyline_2x"
             app:icon="@drawable/ic_filter_list_white_24dp"
-            android:text="@string/discover_filter"/>
+            android:text="@string/discover_tabs_filter_button"/>
 
     </FrameLayout>
 
