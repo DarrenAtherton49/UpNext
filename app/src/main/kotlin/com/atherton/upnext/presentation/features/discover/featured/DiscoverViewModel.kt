@@ -7,8 +7,6 @@ import com.atherton.upnext.domain.model.Config
 import com.atherton.upnext.domain.model.Response
 import com.atherton.upnext.domain.model.SearchModel
 import com.atherton.upnext.domain.model.SearchModelViewMode
-import com.atherton.upnext.domain.usecase.GetConfigUseCase
-import com.atherton.upnext.domain.usecase.GetDiscoverMoviesTvUseCase
 import com.atherton.upnext.domain.usecase.GetDiscoverViewModeUseCase
 import com.atherton.upnext.domain.usecase.ToggleDiscoverViewModeUseCase
 import com.atherton.upnext.presentation.common.withDiscoverSearchImageUrls
@@ -31,8 +29,6 @@ class DiscoverViewModel @Inject constructor(
     initialState: DiscoverState?,
     private val toggleDiscoverViewModeUseCase: ToggleDiscoverViewModeUseCase,
     private val getDiscoverViewModeUseCase: GetDiscoverViewModeUseCase,
-    private val getDiscoverMoviesTvUseCase: GetDiscoverMoviesTvUseCase,
-    private val getConfigUseCase: GetConfigUseCase,
     private val schedulers: RxSchedulers
 ): UpNextViewModel<DiscoverAction, DiscoverState, DiscoverViewEffect>() {
 
@@ -105,7 +101,7 @@ class DiscoverViewModel @Inject constructor(
 //================================================================================
 
 sealed class DiscoverAction : BaseAction {
-    object Load : DiscoverAction()
+    object Load : DiscoverAction() //todo use this to load filters (tabs)
     object LoadViewMode : DiscoverAction()
     object ViewModeToggleActionClicked : DiscoverAction()
 }
@@ -152,8 +148,6 @@ class DiscoverViewModelFactory(
     private val initialState: DiscoverState?,
     private val toggleDiscoverViewModeUseCase: ToggleDiscoverViewModeUseCase,
     private val getDiscoverViewModeUseCase: GetDiscoverViewModeUseCase,
-    private val getDiscoverMoviesTvUseCase: GetDiscoverMoviesTvUseCase,
-    private val getConfigUseCase: GetConfigUseCase,
     private val schedulers: RxSchedulers
 ) : ViewModelProvider.Factory {
 
@@ -163,8 +157,6 @@ class DiscoverViewModelFactory(
             initialState,
             toggleDiscoverViewModeUseCase,
             getDiscoverViewModeUseCase,
-            getDiscoverMoviesTvUseCase,
-            getConfigUseCase,
             schedulers
         ) as T
     }

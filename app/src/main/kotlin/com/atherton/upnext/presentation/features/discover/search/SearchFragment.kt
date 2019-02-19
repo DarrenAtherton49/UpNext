@@ -5,6 +5,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.atherton.upnext.R
 import com.atherton.upnext.domain.model.Response
 import com.atherton.upnext.domain.model.SearchModelViewMode
@@ -17,6 +18,7 @@ import com.atherton.upnext.util.base.ToolbarOptions
 import com.atherton.upnext.util.extensions.*
 import com.atherton.upnext.util.glide.GlideApp
 import com.atherton.upnext.util.recyclerview.GridSpacingItemDecoration
+import com.atherton.upnext.util.recyclerview.LinearSpacingItemDecoration
 import kotlinx.android.synthetic.main.discover_error_layout.*
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.search_results_search_field.*
@@ -39,18 +41,27 @@ class SearchFragment : BaseFragment<SearchAction, SearchState, SearchViewEffect,
         getViewModel<SearchViewModel>(vmFactory)
     }
 
+    private val listItemDecoration: LinearSpacingItemDecoration by lazy {
+        LinearSpacingItemDecoration(
+            spacingInPixels = resources.getDimensionPixelSize(R.dimen.search_model_list_spacing),
+            orientation = LinearSpacingItemDecoration.Orientation.Vertical
+        )
+    }
+
+    private val gridItemDecoration: GridSpacingItemDecoration by lazy {
+        GridSpacingItemDecoration(
+            numColumns = resources.getInteger(R.integer.search_model_grid_num_columns),
+            spacingInPixels = resources.getDimensionPixelSize(R.dimen.search_model_grid_spacing)
+        )
+    }
+
     override val toolbarOptions: ToolbarOptions? = ToolbarOptions(
         toolbarResId = R.id.toolbar,
         titleResId = R.string.fragment_label_search,
         menuResId = R.menu.menu_search
     )
 
-    private val recyclerViewAdapter: SearchModelAdapter by lazy {
-        //todo make view mode toggleable
-        SearchModelAdapter(GlideApp.with(this), SearchModelViewMode.Grid) { searchModel ->
-            viewModel.dispatch(SearchAction.SearchResultClicked(searchModel))
-        }
-    }
+    private lateinit var recyclerViewAdapter: SearchModelAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -59,18 +70,18 @@ class SearchFragment : BaseFragment<SearchAction, SearchState, SearchViewEffect,
         //todo check the MVI state to see if it is !detaching
         searchEditText.showSoftKeyboard()
 
+        retryButton.setOnClickListener {
+            viewModel.dispatch(SearchAction.RetryButtonClicked(searchEditText.text.toString()))
+        }
+
         // load popular on first launch
         if (savedInstanceState == null) {
             viewModel.dispatch(SearchAction.SearchTextChanged(""))
         }
 
+        viewModel.dispatch(SearchAction.LoadViewMode)
+
         //todo when fragment goes away, we need to hide the keyboard (could do this as part of the MVI state or an view effect?)
-
-        retryButton.setOnClickListener {
-            viewModel.dispatch(SearchAction.RetryButtonClicked(searchEditText.text.toString()))
-        }
-
-        initRecyclerView()
     }
 
     override fun onResume() {
@@ -84,6 +95,10 @@ class SearchFragment : BaseFragment<SearchAction, SearchState, SearchViewEffect,
         return when (menuItem.itemId) {
             R.id.action_settings -> {
                 //todo dispatch action to open settings
+                true
+            }
+            R.id.action_toggle_view -> {
+                viewModel.dispatch(SearchAction.ViewModeToggleActionClicked(searchEditText.text.toString()))
                 true
             }
             else -> false
@@ -106,6 +121,7 @@ class SearchFragment : BaseFragment<SearchAction, SearchState, SearchViewEffect,
                 } else {
                     recyclerView.isVisible = true
                     errorLayout.isVisible = false
+                    initRecyclerView(state.viewMode)
                     recyclerViewAdapter.submitList(state.results)
                 }
             }
@@ -120,25 +136,42 @@ class SearchFragment : BaseFragment<SearchAction, SearchState, SearchViewEffect,
     }
 
     override fun processViewEffects(viewEffect: SearchViewEffect) {
-        //todo
+        when (viewEffect) {
+            is SearchViewEffect.ToggleViewMode -> {
+                editMenuItem(R.id.action_toggle_view) {
+                    isVisible = true
+                    icon = when (viewEffect.viewMode) {
+                        is SearchModelViewMode.List -> context?.getDrawableCompat(R.drawable.ic_view_grid_white_24dp)
+                        is SearchModelViewMode.Grid -> context?.getDrawableCompat(R.drawable.ic_view_list_white_24dp)
+                    }
+                }
+            }
+        }
     }
 
-    override fun processSharedViewEffects(viewEffect: MainViewEffect) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun processSharedViewEffects(viewEffect: MainViewEffect) {}
 
-    private fun initRecyclerView() {
+    private fun initRecyclerView(viewMode: SearchModelViewMode) {
         recyclerView.apply {
             setHasFixedSize(true)
+            if (itemDecorationCount > 0) {
+                removeItemDecorationAt(0)
+            }
+            when (viewMode) {
+                is SearchModelViewMode.Grid -> {
+                    addItemDecoration(gridItemDecoration)
+                    val numColumns = resources.getInteger(R.integer.search_model_grid_num_columns)
+                    layoutManager = GridLayoutManager(context, numColumns)
+                }
+                is SearchModelViewMode.List -> {
+                    addItemDecoration(listItemDecoration)
+                    layoutManager = LinearLayoutManager(context)
+                }
+            }
+            recyclerViewAdapter = SearchModelAdapter(GlideApp.with(this), viewMode) { searchModel ->
+                viewModel.dispatch(SearchAction.SearchResultClicked(searchModel))
+            }
             adapter = recyclerViewAdapter
-            val numColumns = resources.getInteger(R.integer.search_model_grid_num_columns)
-            layoutManager = GridLayoutManager(context, numColumns)
-            addItemDecoration(
-                GridSpacingItemDecoration(
-                    numColumns = numColumns,
-                    spacingInPixels = resources.getDimensionPixelSize(R.dimen.search_model_grid_spacing)
-                )
-            )
         }
     }
 

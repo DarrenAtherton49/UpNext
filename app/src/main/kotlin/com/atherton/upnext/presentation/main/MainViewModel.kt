@@ -3,8 +3,6 @@ package com.atherton.upnext.presentation.main
 import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.atherton.upnext.domain.usecase.GetDiscoverViewModeUseCase
-import com.atherton.upnext.domain.usecase.ToggleDiscoverViewModeUseCase
 import com.atherton.upnext.util.base.BaseViewEffect
 import com.atherton.upnext.util.base.UpNextViewModel
 import com.atherton.upnext.util.extensions.preventMultipleClicks
@@ -21,8 +19,6 @@ import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
     initialState: MainState?,
-    private val toggleDiscoverViewModeUseCase: ToggleDiscoverViewModeUseCase,
-    private val getDiscoverViewModeUseCase: GetDiscoverViewModeUseCase,
     private val schedulers: RxSchedulers
 ): UpNextViewModel<MainAction, MainState, MainViewEffect>() {
 
@@ -98,16 +94,12 @@ sealed class MainViewEffect : BaseViewEffect {
 @PerView
 class MainViewModelFactory(
     private val initialState: MainState?,
-    private val toggleDiscoverViewModeUseCase: ToggleDiscoverViewModeUseCase,
-    private val getDiscoverViewModeUseCase: GetDiscoverViewModeUseCase,
     private val schedulers: RxSchedulers
 ) : ViewModelProvider.Factory {
 
     @Suppress("unchecked_cast")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T = MainViewModel(
         initialState,
-        toggleDiscoverViewModeUseCase,
-        getDiscoverViewModeUseCase,
         schedulers) as T
 
     companion object {

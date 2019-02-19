@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Menu -->
+    <!-- Discover menu -->
     <integer name="discover_menu_order_search">0</integer>
     <integer name="discover_menu_order_toggle_view">1</integer>
+
+    <!-- Search menu -->
+    <integer name="search_menu_order_toggle_view">0</integer>
+
+    <!-- Common menu items -->
+    <integer name="common_menu_order_settings">100</integer>
 
     <!-- Common views -->
     <integer name="search_model_list_title_min_lines">1</integer>

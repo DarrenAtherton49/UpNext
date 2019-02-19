@@ -6,9 +6,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.domain.model.Config
 import com.atherton.upnext.domain.model.Response
 import com.atherton.upnext.domain.model.SearchModel
-import com.atherton.upnext.domain.usecase.GetConfigUseCase
-import com.atherton.upnext.domain.usecase.GetPopularMoviesTvUseCase
-import com.atherton.upnext.domain.usecase.SearchMultiUseCase
+import com.atherton.upnext.domain.model.SearchModelViewMode
+import com.atherton.upnext.domain.usecase.*
 import com.atherton.upnext.presentation.common.withDiscoverSearchImageUrls
 import com.atherton.upnext.util.base.BaseViewEffect
 import com.atherton.upnext.util.base.UpNextViewModel
@@ -20,9 +19,10 @@ import com.ww.roxie.BaseState
 import com.ww.roxie.Reducer
 import io.reactivex.Observable
 import io.reactivex.Observable.merge
+import io.reactivex.Single.zip
+import io.reactivex.functions.Function3
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.plusAssign
-import io.reactivex.rxkotlin.zipWith
 import kotlinx.android.parcel.Parcelize
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
@@ -30,6 +30,8 @@ import javax.inject.Inject
 
 class SearchViewModel @Inject constructor(
     initialState: SearchState?,
+    private val toggleDiscoverViewModeUseCase: ToggleDiscoverViewModeUseCase,
+    private val getDiscoverViewModeUseCase: GetDiscoverViewModeUseCase,
     private val searchMultiUseCase: SearchMultiUseCase,
     private val popularMoviesTvUseCase: GetPopularMoviesTvUseCase,
     private val getConfigUseCase: GetConfigUseCase,
@@ -53,7 +55,8 @@ class SearchViewModel @Inject constructor(
                         SearchState.Content(
                             results = change.response.data.withDiscoverSearchImageUrls(change.config),
                             cached = change.response.cached,
-                            query = change.query
+                            query = change.query,
+                            viewMode = change.viewMode
                         )
                     }
                     is Response.Failure -> {
@@ -77,15 +80,33 @@ class SearchViewModel @Inject constructor(
                 } else {
                     searchMultiUseCase.build(query)
                 }
-                dataSourceSingle.zipWith(getConfigUseCase.build())
+                zip(dataSourceSingle,
+                    getConfigUseCase.build(),
+                    getDiscoverViewModeUseCase.build(),
+                    Function3<Response<List<SearchModel>>,
+                        Config,
+                        SearchModelViewMode,
+                        SearchViewData> { searchModels, config, viewMode ->
+                        SearchViewData(searchModels, config, viewMode)
+                    })
                     .subscribeOn(schedulers.io)
                     .toObservable()
-                    .map<SearchChange> { dataAndConfigPair ->
-                        SearchChange.Result(action.query, dataAndConfigPair.first, dataAndConfigPair.second)
+                    .map<SearchChange> { viewData ->
+                        SearchChange.Result(
+                            query = action.query,
+                            response = viewData.searchModels,
+                            config = viewData.config,
+                            viewMode = viewData.viewMode
+                        )
                     }
                     .startWith(SearchChange.Loading)
             }
         }
+
+        val viewModeChange = actions.ofType<SearchAction.ViewModeToggleActionClicked>()
+            .map { SearchAction.SearchTextChanged(it.query) }
+            .preventMultipleClicks()
+            .toResultChange()
 
         val textSearchedChange = actions.ofType<SearchAction.SearchTextChanged>()
             .debounce { action ->
@@ -101,9 +122,36 @@ class SearchViewModel @Inject constructor(
             .preventMultipleClicks()
             .toResultChange()
 
-        val allChanges = merge(textSearchedChange, retryButtonChange)
+        // handles the initial loading of the view mode menu action icon
+        val loadViewModeViewEffect = actions.ofType<SearchAction.LoadViewMode>()
+            .preventMultipleClicks()
+            .switchMap {
+                getDiscoverViewModeUseCase.build()
+                    .subscribeOn(schedulers.io)
+                    .toObservable()
+                    .map { SearchViewEffect.ToggleViewMode(it) }
+            }
 
-        disposables += allChanges
+        // handles the toggling of the view mode setting and updating of the toggle button icon in view
+        val viewModeToggleViewEffect = actions.ofType<SearchAction.ViewModeToggleActionClicked>()
+            .preventMultipleClicks()
+            .switchMap {
+                toggleDiscoverViewModeUseCase.build()
+                    .flatMap { getDiscoverViewModeUseCase.build() }
+                    .subscribeOn(schedulers.io)
+                    .toObservable()
+                    .map { SearchViewEffect.ToggleViewMode(it) }
+            }
+
+        val stateChanges = merge(textSearchedChange, retryButtonChange, viewModeChange)
+
+        val viewEffectChanges = merge(loadViewModeViewEffect, viewModeToggleViewEffect)
+
+        disposables += viewEffectChanges
+            .observeOn(schedulers.main)
+            .subscribe(viewEffects::accept, Timber::e)
+
+        disposables += stateChanges
             .scan(initialState, reducer)
             .filter { it !is SearchState.Idle }
             .distinctUntilChanged()
@@ -117,6 +165,8 @@ class SearchViewModel @Inject constructor(
 //================================================================================
 
 sealed class SearchAction : BaseAction {
+    object LoadViewMode : SearchAction()
+    data class ViewModeToggleActionClicked(val query: String) : SearchAction()
     data class SearchTextChanged(val query: String) : SearchAction()
     data class RetryButtonClicked(val query: String) : SearchAction()
     data class SearchResultClicked(val searchModel: SearchModel) : SearchAction()
@@ -127,7 +177,8 @@ sealed class SearchChange {
     data class Result(
         val query: String,
         val response: Response<List<SearchModel>>,
-        val config: Config
+        val config: Config,
+        val viewMode: SearchModelViewMode
     ) : SearchChange()
 }
 
@@ -146,7 +197,8 @@ sealed class SearchState(open val query: String): BaseState, Parcelable {
     data class Content(
         val results: List<SearchModel> = emptyList(),
         val cached: Boolean = false,
-        override val query: String
+        override val query: String,
+        val viewMode: SearchModelViewMode
     ) : SearchState(query)
 
     @Parcelize
@@ -156,7 +208,20 @@ sealed class SearchState(open val query: String): BaseState, Parcelable {
     ) : SearchState(query)
 }
 
-sealed class SearchViewEffect : BaseViewEffect
+sealed class SearchViewEffect : BaseViewEffect {
+    data class ToggleViewMode(val viewMode: SearchModelViewMode) : SearchViewEffect()
+}
+
+//================================================================================
+// Data model
+//================================================================================
+
+// this class is just used as the result of zipping the necessary Observables together
+private data class SearchViewData(
+    val searchModels: Response<List<SearchModel>>,
+    val config: Config,
+    val viewMode: SearchModelViewMode
+)
 
 //================================================================================
 // Factory
@@ -165,6 +230,8 @@ sealed class SearchViewEffect : BaseViewEffect
 @PerView
 class SearchViewModelFactory(
     private val initialState: SearchState?,
+    private val toggleDiscoverViewModeUseCase: ToggleDiscoverViewModeUseCase,
+    private val getDiscoverViewModeUseCase: GetDiscoverViewModeUseCase,
     private val searchMultiUseCase: SearchMultiUseCase,
     private val popularMoviesTvUseCase: GetPopularMoviesTvUseCase,
     private val getConfigUseCase: GetConfigUseCase,
@@ -175,6 +242,8 @@ class SearchViewModelFactory(
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return SearchViewModel(
             initialState,
+            toggleDiscoverViewModeUseCase,
+            getDiscoverViewModeUseCase,
             searchMultiUseCase,
             popularMoviesTvUseCase,
             getConfigUseCase,

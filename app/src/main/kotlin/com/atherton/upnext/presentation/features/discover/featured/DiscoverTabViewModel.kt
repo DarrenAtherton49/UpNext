@@ -175,7 +175,7 @@ sealed class DiscoverTabViewEffect : BaseViewEffect {
 //================================================================================
 
 // this class is just used as the result of zipping the necessary Observables together
-data class DiscoverTabViewData(
+private data class DiscoverTabViewData(
     val searchModels: Response<List<SearchModel>>,
     val config: Config,
     val viewMode: SearchModelViewMode

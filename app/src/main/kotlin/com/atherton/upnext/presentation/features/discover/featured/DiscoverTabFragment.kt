@@ -113,7 +113,8 @@ class DiscoverTabFragment : BaseFragment<DiscoverTabAction, DiscoverTabState, Di
 
     override fun processSharedViewEffects(viewEffect: MainViewEffect) {
         when (viewEffect) {
-            is MainViewEffect.ToggleViewMode -> { // view mode has been changed elsewhere, reload view with new setting
+            // view mode has been changed elsewhere (i.e. in the fragment containing the tabs), reload view with new setting
+            is MainViewEffect.ToggleViewMode -> {
                 viewModel.dispatch(DiscoverTabAction.ViewModeToggleChanged)
             }
         }
