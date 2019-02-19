@@ -9,6 +9,7 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.R
 import com.atherton.upnext.presentation.main.MainAction
+import com.atherton.upnext.presentation.main.MainViewEffect
 import com.atherton.upnext.presentation.main.MainViewModel
 import com.atherton.upnext.presentation.main.MainViewModelFactory
 import com.atherton.upnext.util.base.BaseFragment
@@ -65,13 +66,9 @@ class MoviesFragment : BaseFragment<MoviesAction, MoviesState, MoviesViewEffect,
         }
     }
 
-    override fun renderState(state: MoviesState) {
-
-    }
-
-    override fun processViewEffects(viewEffect: MoviesViewEffect) {
-
-    }
+    override fun renderState(state: MoviesState) {}
+    override fun processViewEffects(viewEffect: MoviesViewEffect) {}
+    override fun processSharedViewEffects(viewEffect: MainViewEffect) {}
 
     override fun initInjection(initialState: MoviesState?) {
         DaggerMoviesComponent.builder()

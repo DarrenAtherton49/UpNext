@@ -7,6 +7,7 @@ import java.util.*
 
 class FragmentViewPagerAdapter(fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager) {
 
+    private val fragmentIdList: MutableList<Long> = ArrayList()
     private val fragmentTitleList: MutableList<String> = ArrayList()
     private val fragmentList: MutableList<Fragment> = ArrayList()
 
@@ -16,13 +17,22 @@ class FragmentViewPagerAdapter(fragmentManager: FragmentManager) : FragmentPager
 
     override fun getPageTitle(position: Int): CharSequence = fragmentTitleList[position]
 
-    fun addFragment(fragmentTitle: String, fragment: Fragment) {
-        fragmentTitleList.add(fragmentTitle)
+    fun addFragment(id: Long, title: String, fragment: Fragment) {
+        fragmentIdList.add(id)
+        fragmentTitleList.add(title)
         fragmentList.add(fragment)
+    }
+
+    fun addFragmentToStart(id: Long, title: String, fragment: Fragment) {
+        fragmentIdList.add(0, id)
+        fragmentTitleList.add(0, title)
+        fragmentList.add(0, fragment)
     }
 
     fun clear() {
         fragmentTitleList.clear()
         fragmentList.clear()
     }
+
+    override fun getItemId(position: Int): Long = fragmentIdList[position]
 }

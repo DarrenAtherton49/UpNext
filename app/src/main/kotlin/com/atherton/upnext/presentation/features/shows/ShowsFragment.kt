@@ -7,6 +7,7 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.R
 import com.atherton.upnext.presentation.main.MainAction
+import com.atherton.upnext.presentation.main.MainViewEffect
 import com.atherton.upnext.presentation.main.MainViewModel
 import com.atherton.upnext.presentation.main.MainViewModelFactory
 import com.atherton.upnext.util.base.BaseFragment
@@ -64,9 +65,8 @@ class ShowsFragment : BaseFragment<ShowsAction, ShowsState, ShowsViewEffect, Sho
 
     }
 
-    override fun processViewEffects(viewEffect: ShowsViewEffect) {
-
-    }
+    override fun processViewEffects(viewEffect: ShowsViewEffect) {}
+    override fun processSharedViewEffects(viewEffect: MainViewEffect) {}
 
     private fun initViewPager() {
         //todo

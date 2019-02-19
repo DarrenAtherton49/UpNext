@@ -3,6 +3,8 @@ package com.atherton.upnext.presentation.main
 import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.atherton.upnext.domain.usecase.GetDiscoverViewModeUseCase
+import com.atherton.upnext.domain.usecase.ToggleDiscoverViewModeUseCase
 import com.atherton.upnext.util.base.BaseViewEffect
 import com.atherton.upnext.util.base.UpNextViewModel
 import com.atherton.upnext.util.extensions.preventMultipleClicks
@@ -10,7 +12,7 @@ import com.atherton.upnext.util.injection.PerView
 import com.atherton.upnext.util.threading.RxSchedulers
 import com.ww.roxie.BaseAction
 import com.ww.roxie.BaseState
-import io.reactivex.Observable.merge
+import io.reactivex.Observable.mergeArray
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.plusAssign
 import kotlinx.android.parcel.Parcelize
@@ -19,6 +21,8 @@ import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
     initialState: MainState?,
+    private val toggleDiscoverViewModeUseCase: ToggleDiscoverViewModeUseCase,
+    private val getDiscoverViewModeUseCase: GetDiscoverViewModeUseCase,
     private val schedulers: RxSchedulers
 ): UpNextViewModel<MainAction, MainState, MainViewEffect>() {
 
@@ -29,6 +33,13 @@ class MainViewModel @Inject constructor(
     }
 
     private fun bindActions() {
+
+        // used to notify all screens in the application that the view mode has changed and data should be reloaded
+        val viewModeToggleChangedViewEffect = actions.ofType<MainAction.ViewModeToggleChanged>()
+            .preventMultipleClicks()
+            .subscribeOn(schedulers.io)
+            .map { MainViewEffect.ToggleViewMode }
+
         val searchActionClickedViewEffect = actions.ofType<MainAction.SearchActionClicked>()
             .preventMultipleClicks()
             .subscribeOn(schedulers.io)
@@ -44,8 +55,9 @@ class MainViewModel @Inject constructor(
             .subscribeOn(schedulers.io)
             .map { MainViewEffect.ShowSearchScreen }
 
-        val viewEffectChanges = merge(
+        val viewEffectChanges = mergeArray(
             searchActionClickedViewEffect,
+            viewModeToggleChangedViewEffect,
             addTvShowClickedViewEffect,
             addMovieClickedViewEffect
         )
@@ -62,6 +74,7 @@ class MainViewModel @Inject constructor(
 
 sealed class MainAction : BaseAction {
     object SearchActionClicked : MainAction()
+    object ViewModeToggleChanged : MainAction()
     object AddShowButtonClicked : MainAction()
     object AddMovieButtonClicked : MainAction()
 }
@@ -75,6 +88,7 @@ data class MainState(val isIdle: Boolean = true): BaseState, Parcelable
 
 sealed class MainViewEffect : BaseViewEffect {
     object ShowSearchScreen : MainViewEffect()
+    object ToggleViewMode : MainViewEffect()
 }
 
 //================================================================================
@@ -84,11 +98,17 @@ sealed class MainViewEffect : BaseViewEffect {
 @PerView
 class MainViewModelFactory(
     private val initialState: MainState?,
+    private val toggleDiscoverViewModeUseCase: ToggleDiscoverViewModeUseCase,
+    private val getDiscoverViewModeUseCase: GetDiscoverViewModeUseCase,
     private val schedulers: RxSchedulers
 ) : ViewModelProvider.Factory {
 
     @Suppress("unchecked_cast")
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T = MainViewModel(initialState, schedulers) as T
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T = MainViewModel(
+        initialState,
+        toggleDiscoverViewModeUseCase,
+        getDiscoverViewModeUseCase,
+        schedulers) as T
 
     companion object {
         const val NAME = "MainViewModelFactory"

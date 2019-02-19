@@ -9,6 +9,7 @@ import com.atherton.upnext.R
 import com.atherton.upnext.domain.model.Response
 import com.atherton.upnext.domain.model.SearchModelViewMode
 import com.atherton.upnext.presentation.common.SearchModelAdapter
+import com.atherton.upnext.presentation.main.MainViewEffect
 import com.atherton.upnext.presentation.main.MainViewModel
 import com.atherton.upnext.presentation.main.MainViewModelFactory
 import com.atherton.upnext.util.base.BaseFragment
@@ -22,8 +23,7 @@ import kotlinx.android.synthetic.main.search_results_search_field.*
 import javax.inject.Inject
 import javax.inject.Named
 
-class SearchFragment
-    : BaseFragment<SearchAction, SearchState, SearchViewEffect, SearchViewModel>() {
+class SearchFragment : BaseFragment<SearchAction, SearchState, SearchViewEffect, SearchViewModel>() {
 
     override val layoutResId: Int = R.layout.fragment_search
     override val stateBundleKey: String = "bundle_key_search_results_state"
@@ -121,6 +121,10 @@ class SearchFragment
 
     override fun processViewEffects(viewEffect: SearchViewEffect) {
         //todo
+    }
+
+    override fun processSharedViewEffects(viewEffect: MainViewEffect) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     private fun initRecyclerView() {

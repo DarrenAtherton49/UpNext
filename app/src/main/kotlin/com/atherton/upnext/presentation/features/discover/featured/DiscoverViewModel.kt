@@ -20,10 +20,7 @@ import com.atherton.upnext.util.threading.RxSchedulers
 import com.ww.roxie.BaseAction
 import com.ww.roxie.BaseState
 import com.ww.roxie.Reducer
-import io.reactivex.Observable
 import io.reactivex.Observable.merge
-import io.reactivex.Single.zip
-import io.reactivex.functions.Function3
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.plusAssign
 import kotlinx.android.parcel.Parcelize
@@ -73,48 +70,10 @@ class DiscoverViewModel @Inject constructor(
     }
 
     private fun bindActions() {
-        fun Observable<DiscoverAction.Load>.toResultChange(): Observable<DiscoverChange> {
-            return this.switchMap {
-                zip(getDiscoverMoviesTvUseCase.build(),
-                    getConfigUseCase.build(),
-                    getDiscoverViewModeUseCase.build(),
-                    Function3<Response<List<SearchModel>>,
-                        Config,
-                        SearchModelViewMode,
-                        DiscoverViewData> { searchModels, config, viewMode ->
-                        DiscoverViewData(searchModels, config, viewMode)
-                    })
-                    .subscribeOn(schedulers.io)
-                    .toObservable()
-                    .map<DiscoverChange> { viewData ->
-                        DiscoverChange.Result(
-                            response = viewData.searchModels,
-                            config = viewData.config,
-                            viewMode = viewData.viewMode
-                        )
-                    }
-                    .startWith(DiscoverChange.Loading)
-            }
-        }
-
-        // handles user clicking the view mode toggle menu action
-        val viewModeToggleAction = actions.ofType<DiscoverAction.ViewModeToggleActionClicked>()
-            .preventMultipleClicks()
-
-        val loadDataChange = actions.ofType<DiscoverAction.Load>()
-            .distinctUntilChanged()
-            .toResultChange()
-
-        val retryButtonChange = actions.ofType<DiscoverAction.RetryButtonClicked>()
-            .map { DiscoverAction.Load }
-            .toResultChange()
-
-        val viewModeToggleChange = viewModeToggleAction
-            .map { DiscoverAction.Load }
-            .toResultChange()
 
         // handles the initial loading of the view mode menu action icon
-        val loadViewModeViewEffect = actions.ofType<DiscoverAction.Load>()
+        val loadViewModeViewEffect = actions.ofType<DiscoverAction.LoadViewMode>()
+            .preventMultipleClicks()
             .switchMap {
                 getDiscoverViewModeUseCase.build()
                     .subscribeOn(schedulers.io)
@@ -123,7 +82,8 @@ class DiscoverViewModel @Inject constructor(
             }
 
         // handles the toggling of the view mode setting and updating of the toggle button icon in view
-        val viewModeToggleViewEffect = viewModeToggleAction
+        val viewModeToggleViewEffect = actions.ofType<DiscoverAction.ViewModeToggleActionClicked>()
+            .preventMultipleClicks()
             .switchMap {
                 toggleDiscoverViewModeUseCase.build()
                     .flatMap { getDiscoverViewModeUseCase.build() }
@@ -132,25 +92,7 @@ class DiscoverViewModel @Inject constructor(
                     .map { DiscoverViewEffect.ToggleViewMode(it) }
             }
 
-        val searchModelClickedViewEffect = actions.ofType<DiscoverAction.SearchModelClicked>()
-            .preventMultipleClicks()
-            .subscribeOn(schedulers.io)
-            .map { DiscoverViewEffect.ShowSearchModelDetailScreen(it.searchModel) }
-
-        val stateChanges = merge(loadDataChange, retryButtonChange, viewModeToggleChange)
-
-        val viewEffectChanges = merge(
-            loadViewModeViewEffect,
-            viewModeToggleViewEffect,
-            searchModelClickedViewEffect
-        )
-
-        disposables += stateChanges
-            .scan(initialState, reducer)
-            .filter { it !is DiscoverState.Idle }
-            .distinctUntilChanged()
-            .observeOn(schedulers.main)
-            .subscribe(state::setValue, Timber::e)
+        val viewEffectChanges = merge(loadViewModeViewEffect, viewModeToggleViewEffect)
 
         disposables += viewEffectChanges
             .observeOn(schedulers.main)
@@ -164,9 +106,8 @@ class DiscoverViewModel @Inject constructor(
 
 sealed class DiscoverAction : BaseAction {
     object Load : DiscoverAction()
-    object RetryButtonClicked : DiscoverAction()
+    object LoadViewMode : DiscoverAction()
     object ViewModeToggleActionClicked : DiscoverAction()
-    data class SearchModelClicked(val searchModel: SearchModel) : DiscoverAction()
 }
 
 sealed class DiscoverChange {
@@ -178,6 +119,7 @@ sealed class DiscoverChange {
     ) : DiscoverChange()
 }
 
+//todo change this class to fetch filters
 sealed class DiscoverState : BaseState, Parcelable {
 
     @Parcelize
@@ -199,19 +141,7 @@ sealed class DiscoverState : BaseState, Parcelable {
 
 sealed class DiscoverViewEffect : BaseViewEffect {
     data class ToggleViewMode(val viewMode: SearchModelViewMode) : DiscoverViewEffect()
-    data class ShowSearchModelDetailScreen(val searchModel: SearchModel) : DiscoverViewEffect()
 }
-
-//================================================================================
-// Data model
-//================================================================================
-
-// this class is just used as the result of zipping the necessary Observables together
-data class DiscoverViewData(
-    val searchModels: Response<List<SearchModel>>,
-    val config: Config,
-    val viewMode: SearchModelViewMode
-)
 
 //================================================================================
 // Factory

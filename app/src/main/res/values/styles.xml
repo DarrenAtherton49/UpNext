@@ -54,6 +54,11 @@
         <item name="tabGravity">center</item>
     </style>
 
+    <style name="DiscoverTabLayout" parent="Widget.MaterialComponents.TabLayout.Colored">
+        <item name="tabMode">scrollable</item>
+        <item name="tabGravity">fill</item>
+    </style>
+
     <style name="PrimaryActionButton" parent="Widget.MaterialComponents.Button">
         <item name="backgroundTint">@color/colorSecondaryVariant</item>
         <item name="android:textColor">@color/colorOnSecondary</item>

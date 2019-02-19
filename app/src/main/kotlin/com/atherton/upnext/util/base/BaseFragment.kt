@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.ui.setupWithNavController
 import com.atherton.upnext.presentation.main.MainActivity
 import com.atherton.upnext.presentation.main.MainModule
+import com.atherton.upnext.presentation.main.MainViewEffect
 import com.atherton.upnext.presentation.main.MainViewModel
 import com.atherton.upnext.util.extensions.observe
 import com.ww.roxie.BaseAction
@@ -68,6 +69,9 @@ abstract class BaseFragment<Action : BaseAction,
         disposables += viewModel.viewEffects().subscribe {
             processViewEffects(it)
         }
+        disposables += sharedViewModel.viewEffects().subscribe {
+            processSharedViewEffects(it)
+        }
     }
 
     override fun onPause() {
@@ -84,6 +88,8 @@ abstract class BaseFragment<Action : BaseAction,
     protected abstract fun initInjection(initialState: State?)
 
     protected abstract fun renderState(state: State)
+
+    protected abstract fun processSharedViewEffects(viewEffect: MainViewEffect)
 
     protected abstract fun processViewEffects(viewEffect: ViewEffect)
 

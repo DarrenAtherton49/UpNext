@@ -10,39 +10,34 @@
     android:clipToPadding="false"
     tools:context=".presentation.features.discover.featured.DiscoverFragment">
 
-    <include layout="@layout/base_app_bar"/>
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay"/>
+
+        <com.google.android.material.tabs.TabLayout
+            style="@style/DiscoverTabLayout"
+            android:id="@+id/tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewPager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="@dimen/keyline_2x"
-            android:paddingStart="@dimen/keyline_2x"
-            android:paddingEnd="@dimen/keyline_2x"
-            android:paddingBottom="@dimen/keyline_8x"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:scrollbars="none"
-            android:clipToPadding="false"/>
-
-        <include
-            layout="@layout/discover_error_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone"/>
-
-        <ProgressBar
-            style="?android:attr/progressBarStyle"
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:indeterminate="true"
-            android:visibility="gone"/>
+            android:layout_height="match_parent"/>
 
         <com.google.android.material.button.MaterialButton
             style="@style/PrimaryActionButton"
@@ -55,6 +50,5 @@
             android:text="@string/discover_filter"/>
 
     </FrameLayout>
-
 
 </LinearLayout>
