@@ -42,6 +42,11 @@
     <!-- DiscoverTabsFragment -->
     <string name="discover_tabs_filter_button">Filter</string>
 
+    <!-- Discover Filters -->
+    <string name="discover_filter_popular">Popular</string>
+    <string name="discover_filter_now_playing">Now Playing</string>
+    <string name="discover_filter_top_rated">Top Rated</string>
+
     <!-- SearchFragment -->
     <string name="search_textfield_label">Find Movies, Shows or People…</string>
     <string name="search_advanced_search_button">Advanced Search</string>

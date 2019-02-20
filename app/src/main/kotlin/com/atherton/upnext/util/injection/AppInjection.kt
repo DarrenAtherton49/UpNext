@@ -49,6 +49,7 @@ interface AppComponent {
     fun searchRepository(): SearchRepository
     fun configRepository(): ConfigRepository
     fun settingsRepository(): SettingsRepository
+    fun filterRepository(): FilterRepository
 }
 
 
@@ -143,6 +144,9 @@ class RepositoryModule {
     @Singleton internal fun provideSettingsRepository(appSettings: AppSettings): SettingsRepository {
         return CachingSettingsRepository(appSettings)
     }
+
+    @Provides
+    @Singleton internal fun provideFilterRepository(): FilterRepository = CachingFilterRepository()
 }
 
 @Module

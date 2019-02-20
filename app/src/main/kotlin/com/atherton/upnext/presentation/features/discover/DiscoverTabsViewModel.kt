@@ -3,13 +3,12 @@ package com.atherton.upnext.presentation.features.discover
 import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.atherton.upnext.domain.model.Config
+import com.atherton.upnext.domain.model.DiscoverFilter
 import com.atherton.upnext.domain.model.Response
-import com.atherton.upnext.domain.model.SearchModel
 import com.atherton.upnext.domain.model.SearchModelViewMode
+import com.atherton.upnext.domain.usecase.GetDiscoverFiltersUseCase
 import com.atherton.upnext.domain.usecase.GetDiscoverViewModeUseCase
 import com.atherton.upnext.domain.usecase.ToggleDiscoverViewModeUseCase
-import com.atherton.upnext.presentation.common.withDiscoverSearchImageUrls
 import com.atherton.upnext.util.base.BaseViewEffect
 import com.atherton.upnext.util.base.UpNextViewModel
 import com.atherton.upnext.util.extensions.preventMultipleClicks
@@ -29,12 +28,12 @@ class DiscoverTabsViewModel @Inject constructor(
     initialState: DiscoverTabsState?,
     private val toggleDiscoverViewModeUseCase: ToggleDiscoverViewModeUseCase,
     private val getDiscoverViewModeUseCase: GetDiscoverViewModeUseCase,
+    private val getDiscoverFiltersUseCase: GetDiscoverFiltersUseCase,
     private val schedulers: RxSchedulers
 ): UpNextViewModel<DiscoverTabsAction, DiscoverTabsState, DiscoverTabsViewEffect>() {
 
     override val initialState = initialState ?: DiscoverTabsState.Idle
 
-    //todo use reducer to render filters (tabs)
     private val reducer: Reducer<DiscoverTabsState, DiscoverTabsChange> = { oldState, change ->
         when (change) {
             is DiscoverTabsChange.Loading -> {
@@ -51,9 +50,7 @@ class DiscoverTabsViewModel @Inject constructor(
                 when (change.response) {
                     is Response.Success -> {
                         DiscoverTabsState.Content(
-                            results = change.response.data.withDiscoverSearchImageUrls(change.config),
-                            cached = change.response.cached,
-                            viewMode = change.viewMode
+                            results = change.response.data
                         )
                     }
                     is Response.Failure -> DiscoverTabsState.Error(failure = change.response)
@@ -67,6 +64,16 @@ class DiscoverTabsViewModel @Inject constructor(
     }
 
     private fun bindActions() {
+
+        val loadDataChange = actions.ofType<DiscoverTabsAction.Load>()
+            .distinctUntilChanged()
+            .switchMap {
+                getDiscoverFiltersUseCase.build()
+                    .subscribeOn(schedulers.io)
+                    .toObservable()
+                    .map<DiscoverTabsChange> { filtersResponse -> DiscoverTabsChange.Result(filtersResponse) }
+                    .startWith(DiscoverTabsChange.Loading)
+            }
 
         // handles the initial loading of the view mode menu action icon
         val loadViewModeViewEffect = actions.ofType<DiscoverTabsAction.LoadViewMode>()
@@ -89,6 +96,13 @@ class DiscoverTabsViewModel @Inject constructor(
                     .map { DiscoverTabsViewEffect.ToggleViewMode(it) }
             }
 
+        disposables += loadDataChange
+            .scan(initialState, reducer)
+            .filter { it !is DiscoverTabsState.Idle }
+            .distinctUntilChanged()
+            .observeOn(schedulers.main)
+            .subscribe(state::setValue, Timber::e)
+
         val viewEffectChanges = merge(loadViewModeViewEffect, viewModeToggleViewEffect)
 
         disposables += viewEffectChanges
@@ -102,7 +116,7 @@ class DiscoverTabsViewModel @Inject constructor(
 //================================================================================
 
 sealed class DiscoverTabsAction : BaseAction {
-    object Load : DiscoverTabsAction() //todo use this to load filters (tabs)
+    object Load : DiscoverTabsAction()
     object LoadViewMode : DiscoverTabsAction()
     object ViewModeToggleActionClicked : DiscoverTabsAction()
 }
@@ -110,27 +124,20 @@ sealed class DiscoverTabsAction : BaseAction {
 sealed class DiscoverTabsChange {
     object Loading : DiscoverTabsChange()
     data class Result(
-        val response: Response<List<SearchModel>>,
-        val config: Config,
-        val viewMode: SearchModelViewMode
+        val response: Response<List<DiscoverFilter>>
     ) : DiscoverTabsChange()
 }
 
-//todo change this class to fetch filters
 sealed class DiscoverTabsState : BaseState, Parcelable {
 
     @Parcelize
     object Idle : DiscoverTabsState()
 
     @Parcelize
-    data class Loading(val results: List<SearchModel> = emptyList()) : DiscoverTabsState()
+    data class Loading(val results: List<DiscoverFilter> = emptyList()) : DiscoverTabsState()
 
     @Parcelize
-    data class Content(
-        val results: List<SearchModel> = emptyList(),
-        val cached: Boolean = false,
-        val viewMode: SearchModelViewMode
-    ) : DiscoverTabsState()
+    data class Content(val results: List<DiscoverFilter> = emptyList()) : DiscoverTabsState()
 
     @Parcelize
     data class Error(val failure: Response.Failure) : DiscoverTabsState()
@@ -149,6 +156,7 @@ class DiscoverTabsViewModelFactory(
     private val initialState: DiscoverTabsState?,
     private val toggleDiscoverViewModeUseCase: ToggleDiscoverViewModeUseCase,
     private val getDiscoverViewModeUseCase: GetDiscoverViewModeUseCase,
+    private val getDiscoverFiltersUseCase: GetDiscoverFiltersUseCase,
     private val schedulers: RxSchedulers
 ) : ViewModelProvider.Factory {
 
@@ -158,6 +166,7 @@ class DiscoverTabsViewModelFactory(
             initialState,
             toggleDiscoverViewModeUseCase,
             getDiscoverViewModeUseCase,
+            getDiscoverFiltersUseCase,
             schedulers
         ) as T
     }

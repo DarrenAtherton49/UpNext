@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.atherton.upnext.R
+import com.atherton.upnext.domain.model.DiscoverFilter
 import com.atherton.upnext.domain.model.Response
 import com.atherton.upnext.domain.model.SearchModelViewMode
 import com.atherton.upnext.presentation.common.SearchModelAdapter
@@ -29,9 +30,9 @@ import javax.inject.Named
 class DiscoverContentFragment
     : BaseFragment<DiscoverContentAction, DiscoverContentState, DiscoverContentViewEffect, DiscoverContentViewModel>() {
 
-    override val layoutResId: Int = com.atherton.upnext.R.layout.fragment_discover_content
-    override val stateBundleKey: String by lazy { "bundle_key_discover_content_${filter}_state" }
-    private val filter: String by lazy { arguments?.getString(BUNDLE_KEY_FILTER) ?: "unknown" }
+    override val layoutResId: Int = R.layout.fragment_discover_content
+    override val stateBundleKey: String by lazy { "bundle_key_discover_content_${filter.id}_state" }
+    private val filter: DiscoverFilter by lazy { arguments?.getParcelable(BUNDLE_KEY_FILTER) as DiscoverFilter }
 
     @Inject @field:Named(MainViewModelFactory.NAME)
     lateinit var mainVmFactory: ViewModelProvider.Factory
@@ -64,7 +65,11 @@ class DiscoverContentFragment
         super.onViewCreated(view, savedInstanceState)
 
         retryButton.setOnClickListener {
-            viewModel.dispatch(DiscoverContentAction.RetryButtonClicked)
+            viewModel.dispatch(DiscoverContentAction.RetryButtonClicked(filter))
+        }
+
+        if (savedInstanceState == null) {
+            viewModel.dispatch(DiscoverContentAction.Load(filter))
         }
     }
 
@@ -114,7 +119,7 @@ class DiscoverContentFragment
         when (viewEffect) {
             // view mode has been changed elsewhere (i.e. in the fragment containing the tabs), reload view with new setting
             is MainViewEffect.ToggleViewMode -> {
-                viewModel.dispatch(DiscoverContentAction.ViewModeToggleChanged(viewEffect.viewMode))
+                viewModel.dispatch(DiscoverContentAction.ViewModeToggleChanged(viewEffect.viewMode, filter))
             }
         }
     }
@@ -155,11 +160,10 @@ class DiscoverContentFragment
     companion object {
         private const val BUNDLE_KEY_FILTER = "discover_content_bundle_key_filter"
 
-        //todo change filter to a proper type instead of a string (e.g. a sealed class)
-        fun newInstance(filter: String): DiscoverContentFragment {
+        fun newInstance(filter: DiscoverFilter): DiscoverContentFragment {
             return DiscoverContentFragment().apply {
                 arguments = Bundle().apply {
-                    putString(BUNDLE_KEY_FILTER, filter)
+                    putParcelable(BUNDLE_KEY_FILTER, filter)
                 }
             }
         }

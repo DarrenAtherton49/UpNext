@@ -1,6 +1,7 @@
 package com.atherton.upnext.presentation.features.discover
 
 import androidx.lifecycle.ViewModelProvider
+import com.atherton.upnext.domain.usecase.GetDiscoverFiltersUseCase
 import com.atherton.upnext.domain.usecase.GetDiscoverViewModeUseCase
 import com.atherton.upnext.domain.usecase.ToggleDiscoverViewModeUseCase
 import com.atherton.upnext.presentation.main.MainComponent
@@ -32,12 +33,14 @@ class DiscoverTabsModule(private val initialState: DiscoverTabsState?) {
     @PerView internal fun provideViewModelFactory(
         toggleDiscoverViewModeUseCase: ToggleDiscoverViewModeUseCase,
         getDiscoverViewModeUseCase: GetDiscoverViewModeUseCase,
+        getDiscoverFiltersUseCase: GetDiscoverFiltersUseCase,
         schedulers: RxSchedulers
     ): ViewModelProvider.Factory {
         return DiscoverTabsViewModelFactory(
             initialState,
             toggleDiscoverViewModeUseCase,
             getDiscoverViewModeUseCase,
+            getDiscoverFiltersUseCase,
             schedulers
         )
     }

@@ -3,12 +3,9 @@ package com.atherton.upnext.presentation.features.discover.content
 import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.atherton.upnext.domain.model.Config
-import com.atherton.upnext.domain.model.Response
-import com.atherton.upnext.domain.model.SearchModel
-import com.atherton.upnext.domain.model.SearchModelViewMode
+import com.atherton.upnext.domain.model.*
 import com.atherton.upnext.domain.usecase.GetConfigUseCase
-import com.atherton.upnext.domain.usecase.GetDiscoverMoviesTvUseCase
+import com.atherton.upnext.domain.usecase.GetDiscoverItemsForFilterUseCase
 import com.atherton.upnext.domain.usecase.GetDiscoverViewModeUseCase
 import com.atherton.upnext.presentation.common.withDiscoverSearchImageUrls
 import com.atherton.upnext.util.base.BaseViewEffect
@@ -32,7 +29,7 @@ import javax.inject.Inject
 class DiscoverContentViewModel @Inject constructor(
     initialState: DiscoverContentState?,
     private val getDiscoverViewModeUseCase: GetDiscoverViewModeUseCase,
-    private val getDiscoverMoviesTvUseCase: GetDiscoverMoviesTvUseCase,
+    private val getDiscoverItemsForFilterUseCase: GetDiscoverItemsForFilterUseCase,
     private val getConfigUseCase: GetConfigUseCase,
     private val schedulers: RxSchedulers
 ): UpNextViewModel<DiscoverContentAction, DiscoverContentState, DiscoverContentViewEffect>() {
@@ -73,7 +70,7 @@ class DiscoverContentViewModel @Inject constructor(
     private fun bindActions() {
         fun Observable<DiscoverContentAction.Load>.toResultChange(): Observable<DiscoverContentChange> {
             return this.switchMap {
-                zip(getDiscoverMoviesTvUseCase.build(),
+                zip(getDiscoverItemsForFilterUseCase.build(it.filter),
                     getConfigUseCase.build(),
                     getDiscoverViewModeUseCase.build(),
                     Function3<Response<List<SearchModel>>,
@@ -101,11 +98,11 @@ class DiscoverContentViewModel @Inject constructor(
 
         val viewModeToggleChange = actions.ofType<DiscoverContentAction.ViewModeToggleChanged>()
             .distinctUntilChanged()
-            .map { DiscoverContentAction.Load }
+            .map { DiscoverContentAction.Load(it.filter) }
             .toResultChange()
 
         val retryButtonChange = actions.ofType<DiscoverContentAction.RetryButtonClicked>()
-            .map { DiscoverContentAction.Load }
+            .map { DiscoverContentAction.Load(it.filter) }
             .toResultChange()
 
         val searchModelClickedViewEffect = actions.ofType<DiscoverContentAction.SearchModelClicked>()
@@ -133,9 +130,15 @@ class DiscoverContentViewModel @Inject constructor(
 //================================================================================
 
 sealed class DiscoverContentAction : BaseAction {
-    object Load : DiscoverContentAction()
-    data class ViewModeToggleChanged(val viewMode: SearchModelViewMode) : DiscoverContentAction()
-    object RetryButtonClicked : DiscoverContentAction()
+    data class Load(val filter: DiscoverFilter) : DiscoverContentAction()
+
+    data class ViewModeToggleChanged(
+        val viewMode: SearchModelViewMode,
+        val filter: DiscoverFilter
+    ) : DiscoverContentAction()
+
+    data class RetryButtonClicked(val filter: DiscoverFilter) : DiscoverContentAction()
+
     data class SearchModelClicked(val searchModel: SearchModel) : DiscoverContentAction()
 }
 
@@ -190,7 +193,7 @@ private data class DiscoverContentViewData(
 class DiscoverContentViewModelFactory(
     private val initialState: DiscoverContentState?,
     private val getDiscoverViewModeUseCase: GetDiscoverViewModeUseCase,
-    private val getDiscoverMoviesTvUseCase: GetDiscoverMoviesTvUseCase,
+    private val getDiscoverItemsForFilterUseCase: GetDiscoverItemsForFilterUseCase,
     private val getConfigUseCase: GetConfigUseCase,
     private val schedulers: RxSchedulers
 ) : ViewModelProvider.Factory {
@@ -200,7 +203,7 @@ class DiscoverContentViewModelFactory(
         return DiscoverContentViewModel(
             initialState,
             getDiscoverViewModeUseCase,
-            getDiscoverMoviesTvUseCase,
+            getDiscoverItemsForFilterUseCase,
             getConfigUseCase,
             schedulers
         ) as T

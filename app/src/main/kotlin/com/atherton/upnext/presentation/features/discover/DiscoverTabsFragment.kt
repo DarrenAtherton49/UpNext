@@ -5,6 +5,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.R
+import com.atherton.upnext.domain.model.DiscoverFilter
 import com.atherton.upnext.domain.model.SearchModelViewMode
 import com.atherton.upnext.presentation.features.discover.content.DiscoverContentFragment
 import com.atherton.upnext.presentation.main.MainAction
@@ -13,10 +14,7 @@ import com.atherton.upnext.presentation.main.MainViewModel
 import com.atherton.upnext.presentation.main.MainViewModelFactory
 import com.atherton.upnext.util.base.BaseFragment
 import com.atherton.upnext.util.base.ToolbarOptions
-import com.atherton.upnext.util.extensions.getActivityViewModel
-import com.atherton.upnext.util.extensions.getAppComponent
-import com.atherton.upnext.util.extensions.getDrawableCompat
-import com.atherton.upnext.util.extensions.getViewModel
+import com.atherton.upnext.util.extensions.*
 import com.atherton.upnext.util.viewpager.FragmentViewPagerAdapter
 import kotlinx.android.synthetic.main.fragment_discover_tabs.*
 import javax.inject.Inject
@@ -51,6 +49,10 @@ class DiscoverTabsFragment
 
         viewModel.dispatch(DiscoverTabsAction.LoadViewMode)
 
+        if (savedInstanceState == null) {
+            viewModel.dispatch(DiscoverTabsAction.Load)
+        }
+
         initViewPager()
     }
 
@@ -68,33 +70,35 @@ class DiscoverTabsFragment
         }
     }
 
+    //todo uncomment loading/error states?
     override fun renderState(state: DiscoverTabsState) {
         when (state) {
-//            is DiscoverState.Loading -> {
-//                progressBar.isVisible = true
-//                recyclerView.isVisible = false
-//                errorLayout.isVisible = false
-//            }
-//            is DiscoverState.Content -> {
-//                progressBar.isVisible = false
-//                if (state.results.isEmpty()) {
-//                    recyclerView.isVisible = false
-//                    errorLayout.isVisible = true
-//                    errorTextView.text = getString(R.string.search_error_network_try_again)
-//                } else {
-//                    recyclerView.isVisible = true
-//                    errorLayout.isVisible = false
-//                    //todo render tabs
-//                    recyclerViewAdapter.submitList(state.results)
-//                }
-//            }
-//            is DiscoverState.Error -> {
-//                progressBar.isVisible = false
-//                recyclerView.isVisible = false
-//                errorLayout.isVisible = true
-//                errorTextView.text = state.failure.generateErrorMessage(requireContext())
-//                retryButton.isVisible = state.failure is Response.Failure.NetworkError
-//            }
+            is DiscoverTabsState.Loading -> {
+                // progressBar.isVisible = true
+                tabLayout.isVisible = false
+                viewPager.isVisible = false
+                // errorLayout.isVisible = false
+            }
+            is DiscoverTabsState.Content -> {
+                // progressBar.isVisible = false
+                if (state.results.isEmpty()) {
+                    tabLayout.isVisible = false
+                    viewPager.isVisible = false
+                    // errorLayout.isVisible = true
+                    // errorTextView.text = some message
+                } else {
+                    tabLayout.isVisible = true
+                    viewPager.isVisible = true
+                    populateFilterTabs(state.results)
+                }
+            }
+            is DiscoverTabsState.Error -> {
+                // progressBar.isVisible = false
+                // tabLayout.isVisible = false
+                // viewPager.isVisible = false
+                // errorLayout.isVisible = true
+                // errorTextView.text = state.failure.generateErrorMessage(requireContext())
+            }
         }
     }
 
@@ -116,19 +120,20 @@ class DiscoverTabsFragment
     override fun processSharedViewEffects(viewEffect: MainViewEffect) {}
 
     private fun initViewPager() {
-        viewPagerAdapter.addFragment(1L, "", DiscoverContentFragment.newInstance("hello"))
         viewPager.adapter = viewPagerAdapter
         tabLayout.setupWithViewPager(viewPager)
     }
 
-    //todo state param with filters (tabs) in
-    private fun populateViewPager() {
-//        viewPagerAdapter.clear()
-//        state.forEach { filter ->
-//            //todo get title from string resources,
-//            viewPagerAdapter.addFragment(filter.id, filter.title, DiscoverContentFragment.newInstance(filter))
-//        }
-//        viewPagerAdapter.notifyDataSetChanged()
+    private fun populateFilterTabs(filters: List<DiscoverFilter>) {
+        viewPagerAdapter.clear()
+        filters.forEach { filter ->
+            val filterName = when (filter) {
+                is DiscoverFilter.Preset -> getString(filter.nameResId)
+                is DiscoverFilter.Custom -> filter.name
+            }
+            viewPagerAdapter.addFragment(filter.id, filterName, DiscoverContentFragment.newInstance(filter))
+        }
+        viewPagerAdapter.notifyDataSetChanged()
     }
 
     override fun initInjection(initialState: DiscoverTabsState?) {

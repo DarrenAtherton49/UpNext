@@ -2,7 +2,7 @@ package com.atherton.upnext.presentation.features.discover.content
 
 import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.domain.usecase.GetConfigUseCase
-import com.atherton.upnext.domain.usecase.GetDiscoverMoviesTvUseCase
+import com.atherton.upnext.domain.usecase.GetDiscoverItemsForFilterUseCase
 import com.atherton.upnext.domain.usecase.GetDiscoverViewModeUseCase
 import com.atherton.upnext.presentation.main.MainComponent
 import com.atherton.upnext.presentation.main.MainModule
@@ -32,14 +32,14 @@ class DiscoverContentModule(private val initialState: DiscoverContentState?) {
     @Named(DiscoverContentViewModelFactory.NAME)
     @PerView internal fun provideViewModelFactory(
         getDiscoverViewModeUseCase: GetDiscoverViewModeUseCase,
-        getDiscoverMoviesTvUseCase: GetDiscoverMoviesTvUseCase,
+        getDiscoverItemsForFilterUseCase: GetDiscoverItemsForFilterUseCase,
         getConfigUseCase: GetConfigUseCase,
         schedulers: RxSchedulers
     ): ViewModelProvider.Factory {
         return DiscoverContentViewModelFactory(
             initialState,
             getDiscoverViewModeUseCase,
-            getDiscoverMoviesTvUseCase,
+            getDiscoverItemsForFilterUseCase,
             getConfigUseCase,
             schedulers
         )

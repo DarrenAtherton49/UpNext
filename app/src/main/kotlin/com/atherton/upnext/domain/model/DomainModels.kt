@@ -1,6 +1,7 @@
 package com.atherton.upnext.domain.model
 
 import android.os.Parcelable
+import com.atherton.upnext.R
 import kotlinx.android.parcel.Parcelize
 
 /*
@@ -75,8 +76,18 @@ sealed class SearchModelViewMode : Parcelable {
     @Parcelize object List : SearchModelViewMode()
 }
 
-sealed class DiscoverFilter {
-    object PopularTvMovies : DiscoverFilter()
-    object NowPlayingMovies : DiscoverFilter()
-    object TopRatedTvMovies : DiscoverFilter()
+sealed class DiscoverFilter(open val id: Long) : Parcelable {
+
+    sealed class Preset(id: Long, val nameResId: Int) : DiscoverFilter(id) {
+        @Parcelize
+        object PopularTvMovies : Preset(1, R.string.discover_filter_popular)
+
+        @Parcelize
+        object NowPlayingMovies : Preset(2, R.string.discover_filter_now_playing)
+
+        @Parcelize
+        object TopRatedTvMovies : Preset(3, R.string.discover_filter_top_rated)
+    }
+    //todo add custom params below? Like search params used to define filter
+    sealed class Custom(id: Long, val name: String) : DiscoverFilter(id)
 }
