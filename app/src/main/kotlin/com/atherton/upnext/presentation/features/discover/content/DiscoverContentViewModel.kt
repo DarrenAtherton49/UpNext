@@ -100,6 +100,7 @@ class DiscoverContentViewModel @Inject constructor(
             .toResultChange()
 
         val viewModeToggleChange = actions.ofType<DiscoverContentAction.ViewModeToggleChanged>()
+            .distinctUntilChanged()
             .map { DiscoverContentAction.Load }
             .toResultChange()
 
@@ -133,7 +134,7 @@ class DiscoverContentViewModel @Inject constructor(
 
 sealed class DiscoverContentAction : BaseAction {
     object Load : DiscoverContentAction()
-    object ViewModeToggleChanged : DiscoverContentAction()
+    data class ViewModeToggleChanged(val viewMode: SearchModelViewMode) : DiscoverContentAction()
     object RetryButtonClicked : DiscoverContentAction()
     data class SearchModelClicked(val searchModel: SearchModel) : DiscoverContentAction()
 }

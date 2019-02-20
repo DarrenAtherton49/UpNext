@@ -3,6 +3,7 @@ package com.atherton.upnext.presentation.main
 import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.atherton.upnext.domain.model.SearchModelViewMode
 import com.atherton.upnext.util.base.BaseViewEffect
 import com.atherton.upnext.util.base.UpNextViewModel
 import com.atherton.upnext.util.extensions.preventMultipleClicks
@@ -34,7 +35,7 @@ class MainViewModel @Inject constructor(
         val viewModeToggleChangedViewEffect = actions.ofType<MainAction.ViewModeToggleChanged>()
             .preventMultipleClicks()
             .subscribeOn(schedulers.io)
-            .map { MainViewEffect.ToggleViewMode }
+            .map { MainViewEffect.ToggleViewMode(it.viewMode) }
 
         val searchActionClickedViewEffect = actions.ofType<MainAction.SearchActionClicked>()
             .preventMultipleClicks()
@@ -70,7 +71,7 @@ class MainViewModel @Inject constructor(
 
 sealed class MainAction : BaseAction {
     object SearchActionClicked : MainAction()
-    object ViewModeToggleChanged : MainAction()
+    data class ViewModeToggleChanged(val viewMode: SearchModelViewMode) : MainAction()
     object AddShowButtonClicked : MainAction()
     object AddMovieButtonClicked : MainAction()
 }
@@ -84,7 +85,7 @@ data class MainState(val isIdle: Boolean = true): BaseState, Parcelable
 
 sealed class MainViewEffect : BaseViewEffect {
     object ShowSearchScreen : MainViewEffect()
-    object ToggleViewMode : MainViewEffect()
+    data class ToggleViewMode(val viewMode: SearchModelViewMode) : MainViewEffect()
 }
 
 //================================================================================

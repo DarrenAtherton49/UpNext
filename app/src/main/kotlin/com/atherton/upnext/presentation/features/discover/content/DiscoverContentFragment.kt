@@ -63,8 +63,6 @@ class DiscoverContentFragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.dispatch(DiscoverContentAction.Load)
-
         retryButton.setOnClickListener {
             viewModel.dispatch(DiscoverContentAction.RetryButtonClicked)
         }
@@ -116,7 +114,7 @@ class DiscoverContentFragment
         when (viewEffect) {
             // view mode has been changed elsewhere (i.e. in the fragment containing the tabs), reload view with new setting
             is MainViewEffect.ToggleViewMode -> {
-                viewModel.dispatch(DiscoverContentAction.ViewModeToggleChanged)
+                viewModel.dispatch(DiscoverContentAction.ViewModeToggleChanged(viewEffect.viewMode))
             }
         }
     }

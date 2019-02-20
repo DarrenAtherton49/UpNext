@@ -75,8 +75,8 @@ sealed class SearchModelViewMode : Parcelable {
     @Parcelize object List : SearchModelViewMode()
 }
 
-sealed class DiscoverCategory {
-    object PopularTvMovies : DiscoverCategory()
-    object NowPlayingMovies : DiscoverCategory()
-    object TopRatedTvMovies : DiscoverCategory()
+sealed class DiscoverFilter {
+    object PopularTvMovies : DiscoverFilter()
+    object NowPlayingMovies : DiscoverFilter()
+    object TopRatedTvMovies : DiscoverFilter()
 }

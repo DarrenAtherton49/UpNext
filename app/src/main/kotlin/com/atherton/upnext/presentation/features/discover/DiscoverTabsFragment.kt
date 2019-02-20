@@ -108,7 +108,7 @@ class DiscoverTabsFragment
                         is SearchModelViewMode.Grid -> context?.getDrawableCompat(R.drawable.ic_view_list_white_24dp)
                     }
                 }
-                sharedViewModel.dispatch(MainAction.ViewModeToggleChanged)
+                sharedViewModel.dispatch(MainAction.ViewModeToggleChanged(viewEffect.viewMode))
             }
         }
     }
@@ -116,13 +116,19 @@ class DiscoverTabsFragment
     override fun processSharedViewEffects(viewEffect: MainViewEffect) {}
 
     private fun initViewPager() {
-        viewPagerAdapter.clear()
-        val id = Math.random().toLong()
-        val id2 = Math.random().toLong()
-        viewPagerAdapter.addFragment(id, "hello $id", DiscoverContentFragment.newInstance(id.toString()))
-        viewPagerAdapter.addFragment(id2, "hello $id2", DiscoverContentFragment.newInstance(id2.toString()))
+        viewPagerAdapter.addFragment(1L, "", DiscoverContentFragment.newInstance("hello"))
         viewPager.adapter = viewPagerAdapter
         tabLayout.setupWithViewPager(viewPager)
+    }
+
+    //todo state param with filters (tabs) in
+    private fun populateViewPager() {
+//        viewPagerAdapter.clear()
+//        state.forEach { filter ->
+//            //todo get title from string resources,
+//            viewPagerAdapter.addFragment(filter.id, filter.title, DiscoverContentFragment.newInstance(filter))
+//        }
+//        viewPagerAdapter.notifyDataSetChanged()
     }
 
     override fun initInjection(initialState: DiscoverTabsState?) {
