@@ -8,4 +8,6 @@ interface TvShowRepository {
 
     fun getPopular(): Single<Response<List<TvShow>>>
     fun getTopRated(): Single<Response<List<TvShow>>>
+    fun getAiringToday(): Single<Response<List<TvShow>>>
+    fun getOnTheAir(): Single<Response<List<TvShow>>>
 }

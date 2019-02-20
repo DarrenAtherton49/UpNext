@@ -19,4 +19,15 @@ interface TmdbTvShowService {
     fun getTopRated(
         @Query("page") page: Int = 1 //todo implement paging
     ): Single<NetworkResponse<TmdbPagedResponse<TmdbTvShow>, TmdbApiError>>
+
+    //todo implement timezone parameter
+    @GET("tv/airing_today")
+    fun getAiringToday(
+        @Query("page") page: Int = 1 //todo implement paging
+    ): Single<NetworkResponse<TmdbPagedResponse<TmdbTvShow>, TmdbApiError>>
+
+    @GET("tv/on_the_air")
+    fun getOnTheAir(
+        @Query("page") page: Int = 1 //todo implement paging
+    ): Single<NetworkResponse<TmdbPagedResponse<TmdbTvShow>, TmdbApiError>>
 }

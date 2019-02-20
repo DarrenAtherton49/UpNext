@@ -45,7 +45,10 @@
     <!-- Discover Filters -->
     <string name="discover_filter_popular">Popular</string>
     <string name="discover_filter_now_playing">Now Playing</string>
+    <string name="discover_filter_airing_today">On Today</string>
+    <string name="discover_filter_on_the_air_tv">This Week</string>
     <string name="discover_filter_top_rated">Top Rated</string>
+    <string name="discover_filter_upcoming_movies">In Theatres</string>
 
     <!-- SearchFragment -->
     <string name="search_textfield_label">Find Movies, Shows or People…</string>

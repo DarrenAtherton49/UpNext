@@ -86,7 +86,16 @@ sealed class DiscoverFilter(open val id: Long) : Parcelable {
         object NowPlayingMovies : Preset(2, R.string.discover_filter_now_playing)
 
         @Parcelize
-        object TopRatedTvMovies : Preset(3, R.string.discover_filter_top_rated)
+        object AiringTodayTv : Preset(3, R.string.discover_filter_airing_today)
+
+        @Parcelize
+        object OnTheAirTv : Preset(4, R.string.discover_filter_on_the_air_tv)
+
+        @Parcelize
+        object TopRatedTvMovies : Preset(5, R.string.discover_filter_top_rated)
+
+        @Parcelize
+        object UpcomingMovies : Preset(6, R.string.discover_filter_upcoming_movies)
     }
     //todo add custom params below? Like search params used to define filter
     sealed class Custom(id: Long, val name: String) : DiscoverFilter(id)

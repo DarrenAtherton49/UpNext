@@ -29,6 +29,14 @@ class CachingTvShowRepository @Inject constructor(
         return tvShowService.getTopRated().toDomainTvShows()
     }
 
+    override fun getAiringToday(): Single<Response<List<TvShow>>> {
+        return tvShowService.getAiringToday().toDomainTvShows()
+    }
+
+    override fun getOnTheAir(): Single<Response<List<TvShow>>> {
+        return tvShowService.getOnTheAir().toDomainTvShows()
+    }
+
     private fun Single<NetworkResponse<TmdbPagedResponse<TmdbTvShow>, TmdbApiError>>.toDomainTvShows()
         : Single<Response<List<TvShow>>> {
         return this.map {

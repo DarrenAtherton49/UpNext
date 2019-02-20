@@ -17,8 +17,11 @@ class CachingFilterRepository @Inject constructor() : FilterRepository {
     private fun tempFilters(): Response<List<DiscoverFilter>> {
         return Response.Success(listOf(
             DiscoverFilter.Preset.NowPlayingMovies,
+            DiscoverFilter.Preset.AiringTodayTv,
+            DiscoverFilter.Preset.OnTheAirTv,
             DiscoverFilter.Preset.PopularTvMovies,
-            DiscoverFilter.Preset.TopRatedTvMovies
+            DiscoverFilter.Preset.TopRatedTvMovies,
+            DiscoverFilter.Preset.UpcomingMovies
         ), true)
     }
 }

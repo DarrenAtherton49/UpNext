@@ -18,6 +18,9 @@ class GetDiscoverItemsForFilterUseCase @Inject constructor(
             is DiscoverFilter.Preset.TopRatedTvMovies -> getTopRatedTvMovies()
             is DiscoverFilter.Preset.PopularTvMovies -> getPopularTvMovies()
             is DiscoverFilter.Preset.NowPlayingMovies -> getNowPlayingMovies()
+            is DiscoverFilter.Preset.UpcomingMovies -> getUpcomingMovies()
+            is DiscoverFilter.Preset.AiringTodayTv -> getAiringTodayTv()
+            is DiscoverFilter.Preset.OnTheAirTv -> getOnTheAirTv()
         }
     }
 
@@ -72,11 +75,32 @@ class GetDiscoverItemsForFilterUseCase @Inject constructor(
     }
 
     private fun getNowPlayingMovies(): Single<Response<List<SearchModel>>> {
-        return movieRepository.getNowPlaying().map {
-            when (it) {
-                is Response.Success -> Response.Success<List<SearchModel>>(it.data, it.cached)
-                else -> it
-            }
+        return movieRepository.getNowPlaying().map { it.moviesToSearchModelResponse() }
+    }
+
+    private fun getUpcomingMovies(): Single<Response<List<SearchModel>>> {
+        return movieRepository.getUpcoming().map { it.moviesToSearchModelResponse() }
+    }
+
+    private fun getAiringTodayTv(): Single<Response<List<SearchModel>>> {
+        return tvShowRepository.getAiringToday().map { it.tvToSearchModelResponse() }
+    }
+
+    private fun getOnTheAirTv(): Single<Response<List<SearchModel>>> {
+        return tvShowRepository.getOnTheAir().map { it.tvToSearchModelResponse() }
+    }
+
+    private fun Response<List<Movie>>.moviesToSearchModelResponse(): Response<List<SearchModel>> {
+        return when (this) {
+            is Response.Success -> Response.Success<List<SearchModel>>(this.data, this.cached)
+            else -> this
+        }
+    }
+
+    private fun Response<List<TvShow>>.tvToSearchModelResponse(): Response<List<SearchModel>> {
+        return when (this) {
+            is Response.Success -> Response.Success<List<SearchModel>>(this.data, this.cached)
+            else -> this
         }
     }
 }
