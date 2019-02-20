@@ -93,7 +93,6 @@ class DiscoverContentViewModel @Inject constructor(
         }
 
         val loadDataChange = actions.ofType<DiscoverContentAction.Load>()
-            .distinctUntilChanged()
             .toResultChange()
 
         val viewModeToggleChange = actions.ofType<DiscoverContentAction.ViewModeToggleChanged>()
