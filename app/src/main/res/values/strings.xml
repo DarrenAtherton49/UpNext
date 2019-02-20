@@ -40,7 +40,7 @@
     <string name="movies_add_movie">Add a movie</string>
 
     <!-- DiscoverTabsFragment -->
-    <string name="discover_tabs_filter_button">Filter</string>
+    <string name="discover_tabs_filter_button">Advanced</string>
 
     <!-- Discover Filters -->
     <string name="discover_filter_popular">Popular</string>
