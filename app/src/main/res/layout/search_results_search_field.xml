@@ -6,55 +6,31 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/keyline_2x">
 
-    <LinearLayout
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/searchTextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center">
+        android:layout_margin="@dimen/keyline_2x"
+        app:hintEnabled="true"
+        android:hint="@string/search_textfield_label">
 
-        <FrameLayout
+        <com.google.android.material.textfield.TextInputEditText
+            style="@style/SearchEditText"
+            android:id="@+id/searchEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/keyline_2x"
-            android:layout_marginStart="@dimen/keyline_2x"
-            android:layout_marginEnd="@dimen/keyline_2x">
+            android:inputType="text|textCapWords"/>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/searchTextInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hintEnabled="true"
-                android:hint="@string/search_textfield_label">
+    </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    style="@style/SearchEditText"
-                    android:id="@+id/searchEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text|textCapWords"/>
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <ProgressBar
-                style="?android:attr/progressBarStyleSmall"
-                android:id="@+id/progressBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/keyline_2x"
-                android:layout_gravity="end|center_vertical"
-                android:indeterminate="true"
-                android:visibility="gone"/>
-
-        </FrameLayout>
-
-        <com.google.android.material.button.MaterialButton
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:id="@+id/advancedSearchButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:text="@string/search_advanced_search_button"/>
-
-    </LinearLayout>
+    <ProgressBar
+        style="?android:attr/progressBarStyleSmall"
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/keyline_4x"
+        android:layout_gravity="end|center_vertical"
+        android:indeterminate="true"
+        android:visibility="gone"/>
 
 </com.google.android.material.card.MaterialCardView>
