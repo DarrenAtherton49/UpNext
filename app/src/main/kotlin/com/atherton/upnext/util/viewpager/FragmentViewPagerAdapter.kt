@@ -17,6 +17,10 @@ class FragmentViewPagerAdapter(fragmentManager: FragmentManager) : FragmentPager
 
     override fun getPageTitle(position: Int): CharSequence = fragmentTitleList[position]
 
+    override fun getItemId(position: Int): Long = fragmentIdList[position]
+
+    override fun getItemPosition(item: Any): Int = fragmentList.indexOf(item)
+
     fun addFragment(id: Long, title: String, fragment: Fragment) {
         fragmentIdList.add(id)
         fragmentTitleList.add(title)
@@ -33,6 +37,4 @@ class FragmentViewPagerAdapter(fragmentManager: FragmentManager) : FragmentPager
         fragmentTitleList.clear()
         fragmentList.clear()
     }
-
-    override fun getItemId(position: Int): Long = fragmentIdList[position]
 }
