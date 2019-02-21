@@ -21,6 +21,12 @@ class CachingTvShowRepository @Inject constructor(
     private val tvShowService: TmdbTvShowService
 ) : TvShowRepository {
 
+    override fun getTvShow(id: Int): Single<Response<TvShow>> {
+        return tvShowService.getTvDetails(id).map {
+            it.toDomainResponse(false) { tvShow -> tvShow.toDomainTvShow() }
+        }
+    }
+
     override fun getPopular(): Single<Response<List<TvShow>>> {
         return tvShowService.getPopular().toDomainTvShows()
     }

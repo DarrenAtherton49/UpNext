@@ -22,7 +22,7 @@ class CachingMovieRepository @Inject constructor(
 ) : MovieRepository {
 
     override fun getMovie(id: Int): Single<Response<Movie>> {
-        return movieService.getMovie(id).map {
+        return movieService.getMovieDetails(id).map {
             it.toDomainResponse(false) { movie -> movie.toDomainMovie() }
         }
     }

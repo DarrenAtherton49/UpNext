@@ -6,9 +6,15 @@ import com.atherton.upnext.data.model.TmdbPagedResponse
 import com.atherton.upnext.data.model.TmdbTvShow
 import io.reactivex.Single
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface TmdbTvShowService {
+
+    @GET("tv/{tv_id}")
+    fun getTvDetails(
+        @Path("tv_id") id: Int
+    ): Single<NetworkResponse<TmdbTvShow, TmdbApiError>>
 
     @GET("tv/popular")
     fun getPopular(

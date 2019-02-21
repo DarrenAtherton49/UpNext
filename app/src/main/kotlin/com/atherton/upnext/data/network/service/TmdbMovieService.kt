@@ -9,7 +9,7 @@ import retrofit2.http.Query
 interface TmdbMovieService {
 
     @GET("movie/{movie_id}")
-    fun getMovie(
+    fun getMovieDetails(
         @Path("movie_id") id: Int
     ): Single<NetworkResponse<TmdbMovie, TmdbApiError>>
 

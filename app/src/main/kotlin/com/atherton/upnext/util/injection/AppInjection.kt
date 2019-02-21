@@ -11,10 +11,7 @@ import com.atherton.upnext.data.local.LocalConfigStore
 import com.atherton.upnext.data.local.SharedPreferencesStorage
 import com.atherton.upnext.data.network.TmdbApiKeyInterceptor
 import com.atherton.upnext.data.network.TmdbMultiSearchResponseAdapter
-import com.atherton.upnext.data.network.service.TmdbConfigService
-import com.atherton.upnext.data.network.service.TmdbMovieService
-import com.atherton.upnext.data.network.service.TmdbSearchService
-import com.atherton.upnext.data.network.service.TmdbTvShowService
+import com.atherton.upnext.data.network.service.*
 import com.atherton.upnext.data.repository.*
 import com.atherton.upnext.domain.repository.*
 import com.atherton.upnext.util.network.manager.AndroidNetworkManager
@@ -46,6 +43,7 @@ interface AppComponent {
     fun settings(): AppSettings
     fun tvShowRepository(): TvShowRepository
     fun movieRepository(): MovieRepository
+    fun peopleRepository(): PeopleRepository
     fun searchRepository(): SearchRepository
     fun configRepository(): ConfigRepository
     fun settingsRepository(): SettingsRepository
@@ -133,6 +131,10 @@ class RepositoryModule {
         CachingSearchRepository(searchService)
 
     @Provides
+    @Singleton internal fun providePeopleRepository(peopleService: TmdbPeopleService): PeopleRepository =
+        CachingPeopleRepository(peopleService)
+
+    @Provides
     @Singleton internal fun provideConfigRepository(
         configService: TmdbConfigService,
         localConfigStore: LocalConfigStore
@@ -167,4 +169,8 @@ class ServiceModule {
     @Provides
     @Singleton internal fun provideTmdbConfigService(retrofit: Retrofit): TmdbConfigService =
         retrofit.create(TmdbConfigService::class.java)
+
+    @Provides
+    @Singleton internal fun provideTmdbPeopleService(retrofit: Retrofit): TmdbPeopleService =
+        retrofit.create(TmdbPeopleService::class.java)
 }
