@@ -13,7 +13,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include layout="@layout/detail_screen_appbar"/>
+        <include layout="@layout/detail_screen_appbar"
+                 android:id="@+id/detailCollapsingToolbarLayout"/>
+
+        <ImageView
+            android:id="@+id/posterImageView"
+            android:layout_width="@dimen/search_model_poster_width"
+            android:layout_height="@dimen/search_model_poster_height"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/detailCollapsingToolbarLayout"
+            app:layout_constraintBottom_toBottomOf="@id/detailCollapsingToolbarLayout"
+            android:layout_marginStart="@dimen/keyline_2x"
+            tools:layout_editor_absoluteX="33dp"
+            tools:layout_editor_absoluteY="125dp"/>
 
         <include
             layout="@layout/error_retry_layout"

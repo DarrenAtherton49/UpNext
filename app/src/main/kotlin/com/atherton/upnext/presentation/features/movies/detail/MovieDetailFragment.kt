@@ -15,6 +15,9 @@ import com.atherton.upnext.util.base.BaseFragment
 import com.atherton.upnext.util.base.ToolbarOptions
 import com.atherton.upnext.util.extensions.*
 import com.atherton.upnext.util.glide.GlideApp
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.detail_screen_appbar.*
 import kotlinx.android.synthetic.main.error_retry_layout.*
 import kotlinx.android.synthetic.main.fragment_movie_detail.*
@@ -98,6 +101,15 @@ class MovieDetailFragment : BaseFragment<MovieDetailAction, MovieDetailState, Mo
             .load(movie.backdropPath)
             .error(R.drawable.ic_broken_image_white_24dp)
             .into(backdropImageView)
+
+        val posterOptions = RequestOptions()
+            .transforms(CenterCrop(), RoundedCorners(20))
+            .error(R.drawable.ic_broken_image_white_24dp)
+
+        GlideApp.with(this)
+            .load(movie.posterPath)
+            .apply(posterOptions)
+            .into(posterImageView)
     }
 
     override fun processViewEffects(viewEffect: MovieDetailViewEffect) {}
