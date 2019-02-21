@@ -113,7 +113,13 @@ class DiscoverContentFragment
         }
     }
 
-    override fun processViewEffects(viewEffect: DiscoverContentViewEffect) {}
+    override fun processViewEffects(viewEffect: DiscoverContentViewEffect) {
+        when (viewEffect) {
+            is DiscoverContentViewEffect.ShowSearchModelDetailScreen -> {
+                sharedViewModel.dispatch(MainAction.SearchModelClicked(viewEffect.searchModel))
+            }
+        }
+    }
 
     override fun processSharedViewEffects(viewEffect: MainViewEffect) {
         when (viewEffect) {

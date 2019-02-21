@@ -5,6 +5,9 @@
     <integer name="discover_menu_order_search">0</integer>
     <integer name="discover_menu_order_toggle_view">1</integer>
 
+    <!-- Movie detail menu -->
+    <integer name="movie_detail_menu_order_search">0</integer>
+
     <!-- Search menu -->
     <integer name="search_menu_order_toggle_view">0</integer>
 

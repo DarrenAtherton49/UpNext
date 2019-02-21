@@ -1,6 +1,8 @@
-package com.atherton.upnext.presentation.features.movies
+package com.atherton.upnext.presentation.features.movies.detail
 
 import androidx.lifecycle.ViewModelProvider
+import com.atherton.upnext.presentation.features.MovieDetail.detail.MovieDetailState
+import com.atherton.upnext.presentation.features.MovieDetail.detail.MovieDetailViewModelFactory
 import com.atherton.upnext.presentation.main.MainComponent
 import com.atherton.upnext.presentation.main.MainModule
 import com.atherton.upnext.util.injection.AppComponent
@@ -14,20 +16,20 @@ import javax.inject.Named
 @PerView
 @Component(
     dependencies = [AppComponent::class],
-    modules = [MainModule::class, MoviesModule::class]
+    modules = [MainModule::class, MovieDetailModule::class]
 )
-interface MoviesComponent : MainComponent {
+interface MovieDetailComponent : MainComponent {
 
-    fun inject(moviesFragment: MoviesFragment)
+    fun inject(movieDetailFragment: MovieDetailFragment)
 }
 
 
 @Module
-class MoviesModule(private val initialState: MoviesState?) {
+class MovieDetailModule(private val initialState: MovieDetailState?) {
 
     @Provides
-    @Named(MoviesViewModelFactory.NAME)
+    @Named(MovieDetailViewModelFactory.NAME)
     @PerView internal fun provideViewModelFactory(schedulers: RxSchedulers): ViewModelProvider.Factory {
-        return MoviesViewModelFactory(initialState, schedulers)
+        return MovieDetailViewModelFactory(initialState, schedulers)
     }
 }

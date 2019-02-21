@@ -3,7 +3,7 @@ package com.atherton.upnext.presentation.main
 import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.atherton.upnext.domain.model.SearchModelViewMode
+import com.atherton.upnext.domain.model.*
 import com.atherton.upnext.util.base.BaseViewEffect
 import com.atherton.upnext.util.base.UpNextViewModel
 import com.atherton.upnext.util.extensions.preventMultipleClicks
@@ -40,23 +40,34 @@ class MainViewModel @Inject constructor(
         val searchActionClickedViewEffect = actions.ofType<MainAction.SearchActionClicked>()
             .preventMultipleClicks()
             .subscribeOn(schedulers.io)
-            .map { MainViewEffect.ShowSearchScreen }
+            .map { MainViewEffect.Navigation.ShowSearchScreen }
 
         val addTvShowClickedViewEffect = actions.ofType<MainAction.AddShowButtonClicked>()
             .preventMultipleClicks()
             .subscribeOn(schedulers.io)
-            .map { MainViewEffect.ShowSearchScreen }
+            .map { MainViewEffect.Navigation.ShowSearchScreen }
 
         val addMovieClickedViewEffect = actions.ofType<MainAction.AddMovieButtonClicked>()
             .preventMultipleClicks()
             .subscribeOn(schedulers.io)
-            .map { MainViewEffect.ShowSearchScreen }
+            .map { MainViewEffect.Navigation.ShowSearchScreen }
+
+        val searchModelClickedViewEffect = actions.ofType<MainAction.SearchModelClicked>()
+            .subscribeOn(schedulers.io)
+            .map { action ->
+                when (action.searchModel) {
+                    is Movie -> MainViewEffect.Navigation.ShowMovieDetailScreen(action.searchModel)
+                    is TvShow -> MainViewEffect.Navigation.ShowTvDetailScreen(action.searchModel)
+                    is Person -> MainViewEffect.Navigation.ShowPersonDetailScreen(action.searchModel)
+                }
+            }
 
         val viewEffectChanges = mergeArray(
             searchActionClickedViewEffect,
             viewModeToggleChangedViewEffect,
             addTvShowClickedViewEffect,
-            addMovieClickedViewEffect
+            addMovieClickedViewEffect,
+            searchModelClickedViewEffect
         )
 
         disposables += viewEffectChanges
@@ -74,6 +85,7 @@ sealed class MainAction : BaseAction {
     data class ViewModeToggleChanged(val viewMode: SearchModelViewMode) : MainAction()
     object AddShowButtonClicked : MainAction()
     object AddMovieButtonClicked : MainAction()
+    data class SearchModelClicked(val searchModel: SearchModel) : MainAction()
 }
 
 sealed class MainChange {
@@ -84,7 +96,12 @@ sealed class MainChange {
 data class MainState(val isIdle: Boolean = true): BaseState, Parcelable
 
 sealed class MainViewEffect : BaseViewEffect {
-    object ShowSearchScreen : MainViewEffect()
+    sealed class Navigation : MainViewEffect() {
+        object ShowSearchScreen : Navigation()
+        data class ShowMovieDetailScreen(val movie: Movie): Navigation()
+        data class ShowTvDetailScreen(val movie: TvShow): Navigation()
+        data class ShowPersonDetailScreen(val movie: Person): Navigation()
+    }
     data class ToggleViewMode(val viewMode: SearchModelViewMode) : MainViewEffect()
 }
 
