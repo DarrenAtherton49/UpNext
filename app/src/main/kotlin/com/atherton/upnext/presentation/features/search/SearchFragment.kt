@@ -20,7 +20,7 @@ import com.atherton.upnext.util.extensions.*
 import com.atherton.upnext.util.glide.GlideApp
 import com.atherton.upnext.util.recyclerview.GridSpacingItemDecoration
 import com.atherton.upnext.util.recyclerview.LinearSpacingItemDecoration
-import kotlinx.android.synthetic.main.discover_error_layout.*
+import kotlinx.android.synthetic.main.error_retry_layout.*
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.search_results_search_field.*
 import javax.inject.Inject
@@ -119,7 +119,7 @@ class SearchFragment : BaseFragment<SearchAction, SearchState, SearchViewEffect,
                 if (state.results.isEmpty()) {
                     recyclerView.isVisible = false
                     errorLayout.isVisible = true
-                    errorTextView.text = getString(R.string.error_no_internet_try_again)
+                    errorTextView.text = getString(R.string.error_no_results_found)
                 } else {
                     recyclerView.isVisible = true
                     errorLayout.isVisible = false

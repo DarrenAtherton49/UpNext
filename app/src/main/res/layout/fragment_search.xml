@@ -31,7 +31,7 @@
             android:clipToPadding="false"/>
 
         <include
-            layout="@layout/discover_error_layout"
+            layout="@layout/error_retry_layout"
             android:visibility="gone"/>
 
     </LinearLayout>

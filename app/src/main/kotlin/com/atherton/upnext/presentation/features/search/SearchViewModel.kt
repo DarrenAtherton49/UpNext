@@ -8,7 +8,7 @@ import com.atherton.upnext.domain.model.Response
 import com.atherton.upnext.domain.model.SearchModel
 import com.atherton.upnext.domain.model.SearchModelViewMode
 import com.atherton.upnext.domain.usecase.*
-import com.atherton.upnext.presentation.common.withDiscoverSearchImageUrls
+import com.atherton.upnext.presentation.common.withSearchModelListImageUrls
 import com.atherton.upnext.util.base.BaseViewEffect
 import com.atherton.upnext.util.base.UpNextViewModel
 import com.atherton.upnext.util.extensions.preventMultipleClicks
@@ -53,7 +53,7 @@ class SearchViewModel @Inject constructor(
                 when (change.response) {
                     is Response.Success -> {
                         SearchState.Content(
-                            results = change.response.data.withDiscoverSearchImageUrls(change.config),
+                            results = change.response.data.withSearchModelListImageUrls(change.config),
                             cached = change.response.cached,
                             query = change.query,
                             viewMode = change.viewMode

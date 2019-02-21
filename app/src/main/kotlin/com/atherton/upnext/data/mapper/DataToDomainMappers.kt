@@ -68,7 +68,6 @@ fun TmdbTvShow.toDomainTvShow(): TvShow {
             networks?.toDomainNetworks(),
             numberOfEpisodes,
             numberOfSeasons,
-            originCountries,
             productionCompanies?.toDomainProductionCompanies(),
             seasons?.toDomainSeasons(),
             status,

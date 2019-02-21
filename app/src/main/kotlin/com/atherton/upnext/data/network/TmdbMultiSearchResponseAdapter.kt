@@ -91,7 +91,6 @@ class TmdbMultiSearchResponseAdapter {
             null,
             null,
             null,
-            null,
             null
         )
     }

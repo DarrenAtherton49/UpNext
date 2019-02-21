@@ -2,8 +2,9 @@ package com.atherton.upnext.presentation.common
 
 import com.atherton.upnext.domain.model.*
 
-// generate image urls for the discover and search results screens using the base url, size and path
-internal fun List<SearchModel>.withDiscoverSearchImageUrls(config: Config): List<SearchModel> {
+// generate image urls for any screen where the item is a thumbnail - e.g. discover, search, watchlist etc.
+// combines the base url, size and path
+internal fun List<SearchModel>.withSearchModelListImageUrls(config: Config): List<SearchModel> {
 
     //todo write function to generate path based on device screen size?
     fun buildPosterPath(posterPath: String?, config: Config): String? =
@@ -15,7 +16,7 @@ internal fun List<SearchModel>.withDiscoverSearchImageUrls(config: Config): List
 
     //todo write function to generate path based on device screen size?
     fun buildBackdropPath(backdropPath: String?, config: Config): String? =
-        backdropPath?.let { "${config.secureBaseUrl}${config.profileSizes[1]}$backdropPath" }
+        backdropPath?.let { "${config.secureBaseUrl}${config.backdropSizes[1]}$backdropPath" }
 
     return this.map {
         when (it) {

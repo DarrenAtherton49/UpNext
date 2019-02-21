@@ -23,7 +23,7 @@
         android:gravity="center"
         android:textColor="@color/white"
         android:backgroundTint="@color/colorPrimaryVariant"
-        android:text="@string/error_no_internet_try_again"
+        android:text="@string/error_no_internet_try_again_button"
         android:visibility="gone"/>
 
 </LinearLayout>

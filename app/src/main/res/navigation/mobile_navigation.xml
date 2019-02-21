@@ -33,7 +33,6 @@
     <fragment
         android:id="@+id/movieDetailFragment"
         android:name="com.atherton.upnext.presentation.features.movies.detail.MovieDetailFragment"
-        android:label="@string/fragment_label_movie_detail"
         tools:layout="@layout/fragment_movie_detail">
         <argument
             android:name="movieId"

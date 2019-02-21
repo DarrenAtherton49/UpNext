@@ -21,5 +21,4 @@
     <dimen name="search_model_poster_width">104dp</dimen>
     <dimen name="search_model_poster_height">156dp</dimen>
     <!-- Backdrop aspect ratio is 1.77777777777778 or 16:9 -->
-    <dimen name="search_model_backdrop_height">180dp</dimen>
 </resources>

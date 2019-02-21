@@ -132,7 +132,7 @@ private fun Movie.withMovieDetailImageUrls(config: Config): Movie {
     // only perform copy if the image paths actually exist
     return if (backdropPath != null || posterPath != null) {
         this.copy(
-            backdropPath = backdropPath?.let { "${config.secureBaseUrl}${config.profileSizes[1]}$backdropPath" },
+            backdropPath = backdropPath?.let { "${config.secureBaseUrl}${config.backdropSizes[1]}$backdropPath" },
             posterPath = posterPath?.let { "${config.secureBaseUrl}${config.posterSizes[2]}$posterPath" }
         )
     } else this

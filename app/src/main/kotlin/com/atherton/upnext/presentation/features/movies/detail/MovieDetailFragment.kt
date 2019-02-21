@@ -6,15 +6,18 @@ import android.view.MenuItem
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.R
+import com.atherton.upnext.domain.model.Response
 import com.atherton.upnext.presentation.main.MainAction
 import com.atherton.upnext.presentation.main.MainViewEffect
 import com.atherton.upnext.presentation.main.MainViewModel
 import com.atherton.upnext.presentation.main.MainViewModelFactory
 import com.atherton.upnext.util.base.BaseFragment
 import com.atherton.upnext.util.base.ToolbarOptions
-import com.atherton.upnext.util.extensions.getActivityViewModel
-import com.atherton.upnext.util.extensions.getAppComponent
-import com.atherton.upnext.util.extensions.getViewModel
+import com.atherton.upnext.util.extensions.*
+import com.atherton.upnext.util.glide.GlideApp
+import kotlinx.android.synthetic.main.detail_screen_appbar.*
+import kotlinx.android.synthetic.main.error_retry_layout.*
+import kotlinx.android.synthetic.main.fragment_movie_detail.*
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
@@ -35,7 +38,7 @@ class MovieDetailFragment : BaseFragment<MovieDetailAction, MovieDetailState, Mo
 
     override val toolbarOptions: ToolbarOptions? = ToolbarOptions(
         toolbarResId = R.id.toolbar,
-        titleResId = R.string.fragment_label_movie_detail,
+        titleResId = null,
         menuResId = R.menu.menu_movie_detail
     )
 
@@ -66,6 +69,35 @@ class MovieDetailFragment : BaseFragment<MovieDetailAction, MovieDetailState, Mo
 
     override fun renderState(state: MovieDetailState) {
         Timber.tag("darren").d(state.toString())
+        when (state) {
+            is MovieDetailState.Loading -> {
+                //todo content.isVisible = false
+                errorLayout.isVisible = false
+                progressBar.isVisible = true
+            }
+            is MovieDetailState.Content -> {
+                progressBar.isVisible = false
+                errorLayout.isVisible = false
+                //todo content.isVisible = true
+                renderContent(state)
+            }
+            is MovieDetailState.Error -> {
+                progressBar.isVisible = false
+                //todo content.isVisible = false
+                errorLayout.isVisible = true
+                errorTextView.text = state.failure.generateErrorMessage(requireContext())
+                retryButton.isVisible = state.failure is Response.Failure.NetworkError
+            }
+        }
+    }
+
+    private fun renderContent(state: MovieDetailState.Content) {
+        val movie = state.movie
+
+        GlideApp.with(this)
+            .load(movie.backdropPath)
+            .error(R.drawable.ic_broken_image_white_24dp)
+            .into(backdropImageView)
     }
 
     override fun processViewEffects(viewEffect: MovieDetailViewEffect) {}

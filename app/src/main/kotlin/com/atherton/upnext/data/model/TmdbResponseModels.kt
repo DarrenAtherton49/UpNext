@@ -111,7 +111,6 @@ data class TmdbTvShow(
     @Json(name = "networks") val networks: List<TmdbTvNetwork>?,
     @Json(name = "number_of_episodes") val numberOfEpisodes: Int?,
     @Json(name = "number_of_seasons") val numberOfSeasons: Int?,
-    @Json(name = "origin_country") val originCountries: List<String>?,
     @Json(name = "production_companies") val productionCompanies: List<TmdbProductionCompany>?,
     @Json(name = "seasons") val seasons: List<TmdbSeason>?,
     @Json(name = "status") val status: String?,
