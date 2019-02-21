@@ -11,9 +11,6 @@
     <dimen name="keyline_7x">56dp</dimen>
     <dimen name="keyline_8x">64dp</dimen>
 
-    <item name="match_parent" format="integer" type="dimen">-1</item>
-    <item name="wrap_content" format="integer" type="dimen">-2</item>
-
     <!-- Common views -->
     <dimen name="primary_action_button_corner_radius">56dp</dimen>
 
@@ -23,8 +20,5 @@
     <!-- -The two values below should have a ratio of 1:1.5 as they are posters -->
     <dimen name="search_model_poster_width">104dp</dimen>
     <dimen name="search_model_poster_height">156dp</dimen>
-    <dimen name="search_model_backdrop_height"></dimen>
-
     <!-- Backdrop aspect ratio is 1.77777777777778 or 16:9 -->
-
 </resources>
