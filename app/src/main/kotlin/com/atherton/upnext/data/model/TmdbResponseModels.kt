@@ -53,7 +53,7 @@ data class TmdbMultiSearchResult(
     @Json(name = "backdrop_path") val backdropPath: String?,
     @Json(name = "genre_ids") val genreIds: List<Int>?,
     @Json(name = "id") val id: Int?,
-    @Json(name = "media_type") val mediaType: String, // either 'tv', 'movie' or 'person'
+    @Json(name = "media_type") val mediaType: String?, // either 'tv', 'movie' or 'person'
     @Json(name = "name") val name: String?,
     @Json(name = "original_language") val originalLanguage: String?,
     @Json(name = "overview") val overview: String?,
@@ -84,6 +84,7 @@ data class TmdbMultiSearchResult(
 sealed class TmdbMultiSearchModel
 
 data class TmdbTvShow(
+    // base/search fields
     @Json(name = "backdrop_path") val backdropPath: String?,
     @Json(name = "first_air_date") val firstAirDate: String?,
     @Json(name = "genre_ids") val genreIds: List<Int>?,
@@ -96,7 +97,25 @@ data class TmdbTvShow(
     @Json(name = "poster_path") val posterPath: String?,
     @Json(name = "popularity") val popularity: Float?,
     @Json(name = "vote_average") val voteAverage: Float?,
-    @Json(name = "vote_count") val voteCount: Int?
+    @Json(name = "vote_count") val voteCount: Int?,
+
+    // detail fields
+    @Json(name = "created_by") val createdBy: TmdbTvCreatedBy?,
+    @Json(name = "episode_run_time") val runTimes: List<Int>?,
+    @Json(name = "genres") val genres: List<TmdbGenre>?,
+    @Json(name = "homepage") val homepage: String?,
+    @Json(name = "in_production") val inProduction: Boolean?,
+    @Json(name = "languages") val languages: List<String>?,
+    @Json(name = "last_air_date") val lastAirDate: String?,
+    @Json(name = "last_episode_to_air") val lastEpisodeToAir: TmdbTvLastEpisodeToAir?,
+    @Json(name = "networks") val networks: List<TmdbTvNetwork>?,
+    @Json(name = "number_of_episodes") val numberOfEpisodes: Int?,
+    @Json(name = "number_of_seasons") val numberOfSeasons: Int?,
+    @Json(name = "origin_country") val originCountries: List<String>?,
+    @Json(name = "production_companies") val productionCompanies: List<TmdbProductionCompany>?,
+    @Json(name = "seasons") val seasons: List<TmdbSeason>?,
+    @Json(name = "status") val status: String?,
+    @Json(name = "type") val type: String?
 ) : TmdbMultiSearchModel()
 
 data class TmdbMovie(
@@ -132,12 +151,24 @@ data class TmdbMovie(
 ) : TmdbMultiSearchModel()
 
 data class TmdbPerson(
+    // base/search fields
     @Json(name = "adult") val adultContent: Boolean?,
     @Json(name = "id") val id: Int?,
     @Json(name = "known_for") val knownFor: List<TmdbMultiSearchModel>?, // can be tv shows or movies
     @Json(name = "name") val name: String?,
     @Json(name = "popularity") val popularity: Float?,
-    @Json(name = "profile_path") val profilePath: String?
+    @Json(name = "profile_path") val profilePath: String?,
+
+    // detail fields
+    @Json(name = "birthday") val birthday: String?,
+    @Json(name = "known_for_department") val knownForDepartment: String?,
+    @Json(name = "deathday") val deathDay: String?,
+    @Json(name = "also_known_as") val alsoKnownAs: String?,
+    @Json(name = "gender") val gender: Int?, // 1 = female, 2 = male
+    @Json(name = "biography") val biography: String?,
+    @Json(name = "place_of_birth") val placeOfBirth: String?,
+    @Json(name = "imdb_id") val imdbId: String?,
+    @Json(name = "homepage") val homepage: String?
 ) : TmdbMultiSearchModel()
 
 data class TmdbCollection(
@@ -167,4 +198,44 @@ data class TmdbProductionCountry(
 data class TmdbSpokenLanguage(
     @Json(name = "iso_639_1") val iso6391: String?,
     @Json(name = "name") val name: String?
+)
+
+data class TmdbTvCreatedBy(
+    @Json(name = "id") val id: Int?,
+    @Json(name = "credit_id") val creditId: String?,
+    @Json(name = "name") val name: String?,
+    @Json(name = "gender") val gender: Int?, // 1 = female, 2 = male
+    @Json(name = "profile_path") val profilePath: String?
+)
+
+data class TmdbTvLastEpisodeToAir(
+    @Json(name = "air_date") val airDate: String?,
+    @Json(name = "episode_number") val episodeNumber: Int?,
+    @Json(name = "id") val id: Int?,
+    @Json(name = "name") val name: String?,
+    @Json(name = "overview") val overview: String?,
+    @Json(name = "production_code") val productionCode: String?,
+    @Json(name = "season_number") val seasonNumber: Int?,
+    @Json(name = "show_id") val showId: Int?,
+    @Json(name = "still_path") val stillPath: String?,
+    @Json(name = "vote_average") val voteAverage: Float?,
+    @Json(name = "vote_count") val voteCount: Int?
+)
+
+data class TmdbTvNetwork(
+    @Json(name = "headquarters") val headquarters: String?,
+    @Json(name = "homepage") val homepage: String?,
+    @Json(name = "id") val id: Int?,
+    @Json(name = "name") val name: String?,
+    @Json(name = "origin_country") val originCountry: String?
+)
+
+data class TmdbSeason(
+    @Json(name = "air_date") val airDate: String?,
+    @Json(name = "episode_count") val episodeCount: Int?,
+    @Json(name = "id") val id: Int?,
+    @Json(name = "name") val name: String?,
+    @Json(name = "overview") val overview: String?,
+    @Json(name = "poster_path") val posterPath: String?,
+    @Json(name = "season_number") val seasonNumber: Int?
 )

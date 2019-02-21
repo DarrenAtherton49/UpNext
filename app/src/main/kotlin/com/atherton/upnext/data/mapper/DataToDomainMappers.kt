@@ -56,6 +56,24 @@ internal fun List<TmdbMultiSearchModel>?.toDomainSearchModels(): List<SearchMode
 fun TmdbTvShow.toDomainTvShow(): TvShow {
     return TvShow(
         backdropPath,
+        TvShow.Detail(
+            createdBy?.toDomainTvCreatedBy(),
+            runTimes,
+            genres?.toDomainGenres(),
+            homepage,
+            inProduction,
+            languages,
+            lastAirDate,
+            lastEpisodeToAir?.toDomainLastEpisodeToAir(),
+            networks?.toDomainNetworks(),
+            numberOfEpisodes,
+            numberOfSeasons,
+            originCountries,
+            productionCompanies?.toDomainProductionCompanies(),
+            seasons?.toDomainSeasons(),
+            status,
+            type
+        ),
         firstAirDate,
         genreIds,
         id,
@@ -107,6 +125,17 @@ fun TmdbMovie.toDomainMovie(): Movie {
 fun TmdbPerson.toDomainPerson(): Person {
     return Person(
         adultContent,
+        Person.Detail(
+            birthday,
+            knownForDepartment,
+            deathDay,
+            alsoKnownAs,
+            gender.toDomainGender(),
+            biography,
+            placeOfBirth,
+            imdbId,
+            homepage
+        ),
         id,
         knownFor.toDomainSearchModels(),
         name,
@@ -115,20 +144,56 @@ fun TmdbPerson.toDomainPerson(): Person {
     )
 }
 
-fun TmdbCollection.toDomainCollection(): Collection = Collection(backdropPath, id, name, posterPath)
+private fun TmdbCollection.toDomainCollection(): Collection = Collection(backdropPath, id, name, posterPath)
 
-fun List<TmdbGenre>.toDomainGenres(): List<Genre> = this.map { Genre(it.id, it.name) }
+private fun List<TmdbGenre>.toDomainGenres(): List<Genre> = this.map { Genre(it.id, it.name) }
 
-fun List<TmdbProductionCompany>.toDomainProductionCompanies(): List<ProductionCompany> {
+private fun List<TmdbProductionCompany>.toDomainProductionCompanies(): List<ProductionCompany> {
     return this.map { ProductionCompany(it.id, it.logoPath, it.name, it.originCountry) }
 }
 
-fun List<TmdbProductionCountry>.toDomainProductionCountries(): List<ProductionCountry> {
+private fun List<TmdbProductionCountry>.toDomainProductionCountries(): List<ProductionCountry> {
     return this.map { ProductionCountry(it.iso31661, it.name) }
 }
 
-fun List<TmdbSpokenLanguage>.toDomainSpokenLanguages(): List<SpokenLanguage> {
+private fun List<TmdbSpokenLanguage>.toDomainSpokenLanguages(): List<SpokenLanguage> {
     return this.map { SpokenLanguage(it.iso6391, it.name) }
+}
+
+private fun TmdbTvCreatedBy.toDomainTvCreatedBy(): TvCreatedBy {
+    return TvCreatedBy(id, creditId, name, gender.toDomainGender(), profilePath)
+}
+
+private fun Int?.toDomainGender(): Gender {
+    return when (this) {
+        1 -> Gender.Female
+        2 -> Gender.Male
+        else -> Gender.Unknown
+    }
+}
+
+private fun TmdbTvLastEpisodeToAir.toDomainLastEpisodeToAir(): TvLastEpisodeToAir {
+    return TvLastEpisodeToAir(
+        airDate,
+        episodeNumber,
+        id,
+        name,
+        overview,
+        productionCode,
+        seasonNumber,
+        showId,
+        stillPath,
+        voteAverage,
+        voteCount
+    )
+}
+
+private fun List<TmdbTvNetwork>.toDomainNetworks(): List<TvNetwork> {
+    return this.map { TvNetwork(it.headquarters, it.homepage, it.id, it.name, it.originCountry) }
+}
+
+private fun List<TmdbSeason>.toDomainSeasons(): List<Season> {
+    return this.map { Season(it.airDate, it.episodeCount, it.id, it.name, it.overview, it.posterPath, it.seasonNumber) }
 }
 
 fun AppSettings.DiscoverViewToggleSetting.toDomainToggleMode(): SearchModelViewMode {

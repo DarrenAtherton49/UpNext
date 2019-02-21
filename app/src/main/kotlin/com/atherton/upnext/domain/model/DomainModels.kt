@@ -19,6 +19,7 @@ sealed class SearchModel(open val id: Int?, open val popularity: Float?): Parcel
 @Parcelize
 data class TvShow(
     val backdropPath: String?,
+    val detail: TvShow.Detail?,
     val firstAirDate: String?,
     val genreIds: List<Int>?,
     override val id: Int?,
@@ -31,7 +32,28 @@ data class TvShow(
     override val popularity: Float?,
     val voteAverage: Float?,
     val voteCount: Int?
-) : SearchModel(id, popularity)
+) : SearchModel(id, popularity) {
+
+    @Parcelize
+    data class Detail(
+        val createdBy: TvCreatedBy?,
+        val runTimes: List<Int>?,
+        val genres: List<Genre>?,
+        val homepage: String?,
+        val inProduction: Boolean?,
+        val languages: List<String>?,
+        val lastAirDate: String?,
+        val lastEpisodeToAir: TvLastEpisodeToAir?,
+        val networks: List<TvNetwork>?,
+        val numberOfEpisodes: Int?,
+        val numberOfSeasons: Int?,
+        val originCountries: List<String>?,
+        val productionCompanies: List<ProductionCompany>?,
+        val seasons: List<Season>?,
+        val status: String?,
+        val type: String?
+    ) : Parcelable
+}
 
 @Parcelize
 data class Movie(
@@ -72,12 +94,27 @@ data class Movie(
 @Parcelize
 data class Person(
     val adultContent: Boolean?,
+    val detail: Detail,
     override val id: Int?,
     val knownFor: List<SearchModel>?, // can be movies or tv shows
     val name: String?,
     override val popularity: Float?,
     val profilePath: String?
-) : SearchModel(id, popularity)
+) : SearchModel(id, popularity) {
+
+    @Parcelize
+    data class Detail(
+        val birthday: String?,
+        val knownForDepartment: String?,
+        val deathDay: String?,
+        val alsoKnownAs: String?,
+        val gender: Gender,
+        val biography: String?,
+        val placeOfBirth: String?,
+        val imdbId: String?,
+        val homepage: String?
+    ) : Parcelable
+}
 
 @Parcelize
 data class Collection(val backdropPath: String?, val id: Int?, val name: String?, val posterPath: String?) : Parcelable
@@ -93,6 +130,56 @@ data class ProductionCountry(val iso31661: String?, val name: String?) : Parcela
 
 @Parcelize
 data class SpokenLanguage(val iso6391: String?, val name: String?) : Parcelable
+
+@Parcelize
+data class TvCreatedBy(val id: Int?,
+    val creditId: String?,
+    val name: String?,
+    val gender: Gender,
+    val profilePath: String?
+) : Parcelable
+
+//todo refactor this into a proper 'Episode' type when we need a list of episodes?
+@Parcelize
+data class TvLastEpisodeToAir(
+    val airDate: String?,
+    val episodeNumber: Int?,
+    val id: Int?,
+    val name: String?,
+    val overview: String?,
+    val productionCode: String?,
+    val seasonNumber: Int?,
+    val showId: Int?,
+    val stillPath: String?,
+    val voteAverage: Float?,
+    val voteCount: Int?
+) : Parcelable
+
+@Parcelize
+data class TvNetwork(
+    val headquarters: String?,
+    val homepage: String?,
+    val id: Int?,
+    val name: String?,
+    val originCountry: String?
+) : Parcelable
+
+@Parcelize
+data class Season(
+    val airDate: String?,
+    val episodeCount: Int?,
+    val id: Int?,
+    val name: String?,
+    val overview: String?,
+    val posterPath: String?,
+    val seasonNumber: Int?
+) : Parcelable
+
+sealed class Gender : Parcelable {
+    @Parcelize object Female : Gender()
+    @Parcelize object Male : Gender()
+    @Parcelize object Unknown : Gender()
+}
 
 data class Config(
     val baseUrl: String,
