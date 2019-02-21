@@ -7,8 +7,8 @@
 
     <ImageView
         android:id="@+id/searchModelImageView"
-        android:layout_width="@dimen/search_model_image_width"
-        android:layout_height="@dimen/search_model_image_height"
+        android:layout_width="@dimen/search_model_poster_width"
+        android:layout_height="@dimen/search_model_poster_height"
         android:layout_marginTop="@dimen/keyline"
         android:layout_marginBottom="@dimen/keyline"/>
 

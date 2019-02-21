@@ -143,9 +143,14 @@ class SearchViewModel @Inject constructor(
                     .map { SearchViewEffect.ToggleViewMode(it) }
             }
 
+        val searchResultClickedViewEffect = actions.ofType<SearchAction.SearchResultClicked>()
+            .preventMultipleClicks()
+            .subscribeOn(schedulers.io)
+            .map { SearchViewEffect.ShowSearchModelDetailScreen(it.searchModel) }
+
         val stateChanges = merge(textSearchedChange, retryButtonChange, viewModeChange)
 
-        val viewEffectChanges = merge(loadViewModeViewEffect, viewModeToggleViewEffect)
+        val viewEffectChanges = merge(loadViewModeViewEffect, viewModeToggleViewEffect, searchResultClickedViewEffect)
 
         disposables += viewEffectChanges
             .observeOn(schedulers.main)
@@ -210,6 +215,7 @@ sealed class SearchState(open val query: String): BaseState, Parcelable {
 
 sealed class SearchViewEffect : BaseViewEffect {
     data class ToggleViewMode(val viewMode: SearchModelViewMode) : SearchViewEffect()
+    data class ShowSearchModelDetailScreen(val searchModel: SearchModel) : SearchViewEffect()
 }
 
 //================================================================================

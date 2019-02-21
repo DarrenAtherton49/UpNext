@@ -13,7 +13,7 @@ ext {
 
     // dependency versions
     androidXVersion = '1.0.0'
-    constraintLayoutVersion = '1.1.2'
+    constraintLayoutVersion = '2.0.0-alpha3'
     daggerVersion = '2.17'
     espressoVersion = '3.1.1'
     espressoIdlingResourceVersion = '3.0.1'

@@ -10,6 +10,7 @@ import com.atherton.upnext.R
 import com.atherton.upnext.domain.model.Response
 import com.atherton.upnext.domain.model.SearchModelViewMode
 import com.atherton.upnext.presentation.common.SearchModelAdapter
+import com.atherton.upnext.presentation.main.MainAction
 import com.atherton.upnext.presentation.main.MainViewEffect
 import com.atherton.upnext.presentation.main.MainViewModel
 import com.atherton.upnext.presentation.main.MainViewModelFactory
@@ -66,8 +67,6 @@ class SearchFragment : BaseFragment<SearchAction, SearchState, SearchViewEffect,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //todo only show this if we are in search results mode and not advanced search results mode as the search field won't be there
-        //todo check the MVI state to see if it is !detaching
         searchEditText.showSoftKeyboard()
 
         retryButton.setOnClickListener {
@@ -80,8 +79,6 @@ class SearchFragment : BaseFragment<SearchAction, SearchState, SearchViewEffect,
         }
 
         viewModel.dispatch(SearchAction.LoadViewMode)
-
-        //todo when fragment goes away, we need to hide the keyboard (could do this as part of the MVI state or an view effect?)
     }
 
     override fun onResume() {
@@ -89,6 +86,11 @@ class SearchFragment : BaseFragment<SearchAction, SearchState, SearchViewEffect,
         searchEditText.whenTextChanges {
             viewModel.dispatch(SearchAction.SearchTextChanged(it))
         }
+    }
+
+    override fun onDestroyView() {
+        searchEditText.hideSoftKeyboard()
+        super.onDestroyView()
     }
 
     override fun onMenuItemClicked(menuItem: MenuItem): Boolean {
@@ -145,6 +147,9 @@ class SearchFragment : BaseFragment<SearchAction, SearchState, SearchViewEffect,
                         is SearchModelViewMode.Grid -> context?.getDrawableCompat(R.drawable.ic_view_list_white_24dp)
                     }
                 }
+            }
+            is SearchViewEffect.ShowSearchModelDetailScreen -> {
+                sharedViewModel.dispatch(MainAction.SearchModelClicked(viewEffect.searchModel))
             }
         }
     }
