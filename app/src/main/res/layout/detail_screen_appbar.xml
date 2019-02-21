@@ -20,7 +20,7 @@
         <ImageView
             android:id="@+id/backdropImageView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/search_model_backdrop_height"
             android:src="@color/white"
             app:layout_collapseMode="pin" />
 

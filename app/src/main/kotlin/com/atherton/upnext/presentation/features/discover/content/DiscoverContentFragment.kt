@@ -95,7 +95,7 @@ class DiscoverContentFragment
                 if (state.results.isEmpty()) {
                     recyclerView.isVisible = false
                     errorLayout.isVisible = true
-                    errorTextView.text = getString(R.string.search_error_network_try_again)
+                    errorTextView.text = getString(R.string.error_no_internet_try_again)
                 } else {
                     recyclerView.isVisible = true
                     errorLayout.isVisible = false

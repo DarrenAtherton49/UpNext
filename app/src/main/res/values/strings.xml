@@ -53,10 +53,11 @@
 
     <!-- SearchFragment -->
     <string name="search_textfield_label">Find Movies, Shows or People…</string>
-    <string name="search_error_no_results_found">No results found</string>
-    <string name="search_error_server">Server encountered a %d error, please try again later</string>
-    <string name="search_error_server_with_error">Server encountered a %d error, please try again later (status code: %d)</string>
-    <string name="search_error_network">Device is offline - please connect to a network and try again</string>
-    <string name="search_error_network_try_again">Try again</string>
+
+    <!-- Error messages -->
+    <string name="error_message_server">Server encountered a %d error, please try again later</string>
+    <string name="error_message_server_with_error">Server encountered a %d error, please try again later (status code: %d)</string>
+    <string name="error_message_no_internet">Device is offline - please connect to a network and try again</string>
+    <string name="error_no_internet_try_again">Try again</string>
 
 </resources>
