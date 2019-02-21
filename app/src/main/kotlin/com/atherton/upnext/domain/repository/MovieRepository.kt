@@ -6,6 +6,7 @@ import io.reactivex.Single
 
 interface MovieRepository {
 
+    fun getMovie(id: Int): Single<Response<Movie>>
     fun getPopular(): Single<Response<List<Movie>>>
     fun getUpcoming(): Single<Response<List<Movie>>>
     fun getTopRated(): Single<Response<List<Movie>>>

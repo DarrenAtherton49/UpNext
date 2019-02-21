@@ -38,12 +38,12 @@ class DiscoverTabsViewModel @Inject constructor(
         when (change) {
             is DiscoverTabsChange.Loading -> {
                 when (oldState) {
+                    is DiscoverTabsState.Idle -> DiscoverTabsState.Loading()
                     is DiscoverTabsState.Loading -> oldState.copy()
                     is DiscoverTabsState.Content -> {
                         DiscoverTabsState.Loading(results = oldState.results)
                     }
                     is DiscoverTabsState.Error -> DiscoverTabsState.Loading()
-                    else -> DiscoverTabsState.Loading()
                 }
             }
             is DiscoverTabsChange.Result -> {

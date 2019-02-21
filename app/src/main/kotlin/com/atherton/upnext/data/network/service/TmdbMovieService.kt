@@ -3,9 +3,15 @@ package com.atherton.upnext.data.network.service
 import com.atherton.upnext.data.model.*
 import io.reactivex.Single
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface TmdbMovieService {
+
+    @GET("movie/{movie_id}")
+    fun getMovie(
+        @Path("movie_id") id: Int
+    ): Single<NetworkResponse<TmdbMovie, TmdbApiError>>
 
     @GET("movie/popular")
     fun getPopular(

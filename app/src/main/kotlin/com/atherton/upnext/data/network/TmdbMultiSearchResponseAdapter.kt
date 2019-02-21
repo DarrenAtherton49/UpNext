@@ -41,7 +41,19 @@ class TmdbMultiSearchResponseAdapter {
             title,
             video,
             voteAverage,
-            voteCount
+            voteCount,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
         )
     }
 

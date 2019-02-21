@@ -6,7 +6,6 @@ import android.view.MenuItem
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.R
-import com.atherton.upnext.presentation.features.MovieDetail.detail.*
 import com.atherton.upnext.presentation.main.MainAction
 import com.atherton.upnext.presentation.main.MainViewEffect
 import com.atherton.upnext.presentation.main.MainViewModel
@@ -16,6 +15,7 @@ import com.atherton.upnext.util.base.ToolbarOptions
 import com.atherton.upnext.util.extensions.getActivityViewModel
 import com.atherton.upnext.util.extensions.getAppComponent
 import com.atherton.upnext.util.extensions.getViewModel
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -41,6 +41,17 @@ class MovieDetailFragment : BaseFragment<MovieDetailAction, MovieDetailState, Mo
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        arguments?.let {
+            val movieId = MovieDetailFragmentArgs.fromBundle(it).movieId
+            //todo
+//            retryButton.setOnClickListener {
+//                viewModel.dispatch(MovieDetailAction.RetryButtonClicked(id))
+//            }
+            if (savedInstanceState == null) {
+                viewModel.dispatch(MovieDetailAction.Load(movieId))
+            }
+        }
     }
 
     override fun onMenuItemClicked(menuItem: MenuItem): Boolean {
@@ -53,7 +64,10 @@ class MovieDetailFragment : BaseFragment<MovieDetailAction, MovieDetailState, Mo
         }
     }
 
-    override fun renderState(state: MovieDetailState) {}
+    override fun renderState(state: MovieDetailState) {
+        Timber.tag("darren").d(state.toString())
+    }
+
     override fun processViewEffects(viewEffect: MovieDetailViewEffect) {}
     override fun processSharedViewEffects(viewEffect: MainViewEffect) {}
 
@@ -64,10 +78,5 @@ class MovieDetailFragment : BaseFragment<MovieDetailAction, MovieDetailState, Mo
             .appComponent(getAppComponent())
             .build()
             .inject(this)
-    }
-
-
-    companion object {
-        fun newInstance(): MovieDetailFragment = MovieDetailFragment()
     }
 }

@@ -1,8 +1,8 @@
 package com.atherton.upnext.presentation.features.movies.detail
 
 import androidx.lifecycle.ViewModelProvider
-import com.atherton.upnext.presentation.features.MovieDetail.detail.MovieDetailState
-import com.atherton.upnext.presentation.features.MovieDetail.detail.MovieDetailViewModelFactory
+import com.atherton.upnext.domain.usecase.GetConfigUseCase
+import com.atherton.upnext.domain.usecase.GetMovieDetailUseCase
 import com.atherton.upnext.presentation.main.MainComponent
 import com.atherton.upnext.presentation.main.MainModule
 import com.atherton.upnext.util.injection.AppComponent
@@ -29,7 +29,11 @@ class MovieDetailModule(private val initialState: MovieDetailState?) {
 
     @Provides
     @Named(MovieDetailViewModelFactory.NAME)
-    @PerView internal fun provideViewModelFactory(schedulers: RxSchedulers): ViewModelProvider.Factory {
-        return MovieDetailViewModelFactory(initialState, schedulers)
+    @PerView internal fun provideViewModelFactory(
+        getMovieDetailUseCase: GetMovieDetailUseCase,
+        getConfigUseCase: GetConfigUseCase,
+        schedulers: RxSchedulers
+    ): ViewModelProvider.Factory {
+        return MovieDetailViewModelFactory(initialState, getMovieDetailUseCase, getConfigUseCase, schedulers)
     }
 }

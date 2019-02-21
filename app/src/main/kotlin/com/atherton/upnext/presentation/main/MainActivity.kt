@@ -47,9 +47,9 @@ class MainActivity : BaseActivity<MainAction, MainState, MainViewEffect, MainVie
     override fun processViewEffects(viewEffect: MainViewEffect) {
         when (viewEffect) {
             is MainViewEffect.Navigation.ShowSearchScreen -> navigator.showSearchScreen()
-            is MainViewEffect.Navigation.ShowMovieDetailScreen -> navigator.showMovieDetailScreen()
-            is MainViewEffect.Navigation.ShowTvDetailScreen -> navigator.showTvShowDetailScreen()
-            is MainViewEffect.Navigation.ShowPersonDetailScreen -> navigator.showPersonDetailScreen()
+            is MainViewEffect.Navigation.ShowMovieDetailScreen -> navigator.showMovieDetailScreen(viewEffect.movieId)
+            is MainViewEffect.Navigation.ShowTvDetailScreen -> navigator.showTvShowDetailScreen(viewEffect.tvShowId)
+            is MainViewEffect.Navigation.ShowPersonDetailScreen -> navigator.showPersonDetailScreen(viewEffect.personId)
         }
     }
 

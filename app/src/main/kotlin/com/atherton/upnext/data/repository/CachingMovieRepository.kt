@@ -21,6 +21,12 @@ class CachingMovieRepository @Inject constructor(
     private val movieService: TmdbMovieService
 ) : MovieRepository {
 
+    override fun getMovie(id: Int): Single<Response<Movie>> {
+        return movieService.getMovie(id).map {
+            it.toDomainResponse(false) { movie -> movie.toDomainMovie() }
+        }
+    }
+
     override fun getPopular(): Single<Response<List<Movie>>> {
         return movieService.getPopular().toDomainMovies()
     }

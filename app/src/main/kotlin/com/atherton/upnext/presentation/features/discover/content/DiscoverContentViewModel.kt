@@ -40,12 +40,12 @@ class DiscoverContentViewModel @Inject constructor(
         when (change) {
             is DiscoverContentChange.Loading -> {
                 when (oldState) {
+                    is DiscoverContentState.Idle -> DiscoverContentState.Loading()
                     is DiscoverContentState.Loading -> oldState.copy()
                     is DiscoverContentState.Content -> {
                         DiscoverContentState.Loading(results = oldState.results)
                     }
                     is DiscoverContentState.Error -> DiscoverContentState.Loading()
-                    else -> DiscoverContentState.Loading()
                 }
             }
             is DiscoverContentChange.Result -> {

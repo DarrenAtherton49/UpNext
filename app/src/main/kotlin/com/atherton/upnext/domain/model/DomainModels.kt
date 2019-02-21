@@ -37,6 +37,7 @@ data class TvShow(
 data class Movie(
     val adultContent: Boolean?,
     val backdropPath: String?,
+    val detail: Detail?,
     val genreIds: List<Int>?,
     override val id: Int?,
     val originalLanguage: String?,
@@ -49,7 +50,24 @@ data class Movie(
     val video: Boolean?,
     val voteAverage: Float?,
     val voteCount: Int?
-) : SearchModel(id, popularity)
+) : SearchModel(id, popularity) {
+
+    @Parcelize
+    data class Detail(
+        val belongsToCollection: Collection?,
+        val budget: Int?,
+        val genres: List<Genre>?,
+        val homepage: String?,
+        val imdbId: String?,
+        val productionCompanies: List<ProductionCompany>?,
+        val productionCountries: List<ProductionCountry>?,
+        val revenue: Int?,
+        val runtime: Int?,
+        val spokenLanguages: List<SpokenLanguage>?,
+        val status: String?,
+        val tagline: String?
+    ) : Parcelable
+}
 
 @Parcelize
 data class Person(
@@ -60,6 +78,21 @@ data class Person(
     override val popularity: Float?,
     val profilePath: String?
 ) : SearchModel(id, popularity)
+
+@Parcelize
+data class Collection(val backdropPath: String?, val id: Int?, val name: String?, val posterPath: String?) : Parcelable
+
+@Parcelize
+data class Genre(val id: Int?, val name: String?) : Parcelable
+
+@Parcelize
+data class ProductionCompany(val id: Int?, val logoPath: String?, val name: String?, val originCountry: String?) : Parcelable
+
+@Parcelize
+data class ProductionCountry(val iso31661: String?, val name: String?) : Parcelable
+
+@Parcelize
+data class SpokenLanguage(val iso6391: String?, val name: String?) : Parcelable
 
 data class Config(
     val baseUrl: String,

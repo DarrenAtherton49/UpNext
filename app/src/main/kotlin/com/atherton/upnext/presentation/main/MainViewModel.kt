@@ -55,11 +55,13 @@ class MainViewModel @Inject constructor(
         val searchModelClickedViewEffect = actions.ofType<MainAction.SearchModelClicked>()
             .subscribeOn(schedulers.io)
             .map { action ->
-                when (action.searchModel) {
-                    is Movie -> MainViewEffect.Navigation.ShowMovieDetailScreen(action.searchModel)
-                    is TvShow -> MainViewEffect.Navigation.ShowTvDetailScreen(action.searchModel)
-                    is Person -> MainViewEffect.Navigation.ShowPersonDetailScreen(action.searchModel)
-                }
+                action.searchModel.id?.let { modelId ->
+                    when (action.searchModel) {
+                        is Movie -> MainViewEffect.Navigation.ShowMovieDetailScreen(modelId)
+                        is TvShow -> MainViewEffect.Navigation.ShowTvDetailScreen(modelId)
+                        is Person -> MainViewEffect.Navigation.ShowPersonDetailScreen(modelId)
+                    }
+                } ?: throw IllegalStateException("Cannot show detail screen without an id")
             }
 
         val viewEffectChanges = mergeArray(
@@ -98,9 +100,9 @@ data class MainState(val isIdle: Boolean = true): BaseState, Parcelable
 sealed class MainViewEffect : BaseViewEffect {
     sealed class Navigation : MainViewEffect() {
         object ShowSearchScreen : Navigation()
-        data class ShowMovieDetailScreen(val movie: Movie): Navigation()
-        data class ShowTvDetailScreen(val movie: TvShow): Navigation()
-        data class ShowPersonDetailScreen(val movie: Person): Navigation()
+        data class ShowMovieDetailScreen(val movieId: Int): Navigation()
+        data class ShowTvDetailScreen(val tvShowId: Int): Navigation()
+        data class ShowPersonDetailScreen(val personId: Int): Navigation()
     }
     data class ToggleViewMode(val viewMode: SearchModelViewMode) : MainViewEffect()
 }

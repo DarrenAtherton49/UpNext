@@ -34,6 +34,19 @@ open class TmdbPagedResponse<T> (
     @Json(name = "results") val results: List<T>
 )
 
+class TmdbNowPlayingMoviesResponse<T>(
+    @Json(name = "page") page: Int,
+    @Json(name = "total_pages") totalPages: Int,
+    @Json(name = "total_results") totalResults: Int, //todo should we show this in UI?
+    @Json(name = "results") results: List<T>,
+    @Json(name = "dates") val dates: Dates
+) : TmdbPagedResponse<T>(page, totalPages, totalResults, results) {
+    data class Dates(
+        @Json(name = "minimum") val minimum: String,
+        @Json(name = "maximum") val maximum: String
+    )
+}
+
 data class TmdbMultiSearchResult(
     // common fields
     @Json(name = "adult") val adultContent: Boolean?,
@@ -87,6 +100,7 @@ data class TmdbTvShow(
 ) : TmdbMultiSearchModel()
 
 data class TmdbMovie(
+    // base/search fields
     @Json(name = "adult") val adultContent: Boolean?,
     @Json(name = "backdrop_path") val backdropPath: String?,
     @Json(name = "genre_ids") val genreIds: List<Int>?,
@@ -100,7 +114,21 @@ data class TmdbMovie(
     @Json(name = "title") val title: String?,
     @Json(name = "video") val video: Boolean?,
     @Json(name = "vote_average") val voteAverage: Float?,
-    @Json(name = "vote_count") val voteCount: Int?
+    @Json(name = "vote_count") val voteCount: Int?,
+
+    // detail fields
+    @Json(name = "belongs_to_collection") val belongsToCollection: TmdbCollection?,
+    @Json(name = "budget") val budget: Int?,
+    @Json(name = "genres") val genres: List<TmdbGenre>?,
+    @Json(name = "homepage") val homepage: String?,
+    @Json(name = "imdb_id") val imdbId: String?,
+    @Json(name = "production_companies") val productionCompanies: List<TmdbProductionCompany>?,
+    @Json(name = "production_countries") val productionCountries: List<TmdbProductionCountry>?,
+    @Json(name = "revenue") val revenue: Int?,
+    @Json(name = "runtime") val runtime: Int?,
+    @Json(name = "spoken_languages") val spokenLanguages: List<TmdbSpokenLanguage>?,
+    @Json(name = "status") val status: String?,
+    @Json(name = "tagline") val tagline: String?
 ) : TmdbMultiSearchModel()
 
 data class TmdbPerson(
@@ -112,15 +140,31 @@ data class TmdbPerson(
     @Json(name = "profile_path") val profilePath: String?
 ) : TmdbMultiSearchModel()
 
-class TmdbNowPlayingMoviesResponse<T>(
-    @Json(name = "page") page: Int,
-    @Json(name = "total_pages") totalPages: Int,
-    @Json(name = "total_results") totalResults: Int, //todo should we show this in UI?
-    @Json(name = "results") results: List<T>
-) : TmdbPagedResponse<T>(page, totalPages, totalResults, results
-) {
-    data class Dates(
-        @Json(name = "minimum") val minimum: String,
-        @Json(name = "maximum") val maximum: String
-    )
-}
+data class TmdbCollection(
+    @Json(name = "backdrop_path") val backdropPath: String?,
+    @Json(name = "id") val id: Int?,
+    @Json(name = "name") val name: String?,
+    @Json(name = "poster_path") val posterPath: String?
+)
+
+data class TmdbGenre(
+    @Json(name = "id") val id: Int?,
+    @Json(name = "name") val name: String?
+)
+
+data class TmdbProductionCompany(
+    @Json(name = "id") val id: Int?,
+    @Json(name = "logo_path") val logoPath: String?,
+    @Json(name = "name") val name: String?,
+    @Json(name = "origin_country") val originCountry: String?
+)
+
+data class TmdbProductionCountry(
+    @Json(name = "iso_3166_1") val iso31661: String?,
+    @Json(name = "name") val name: String?
+)
+
+data class TmdbSpokenLanguage(
+    @Json(name = "iso_639_1") val iso6391: String?,
+    @Json(name = "name") val name: String?
+)
