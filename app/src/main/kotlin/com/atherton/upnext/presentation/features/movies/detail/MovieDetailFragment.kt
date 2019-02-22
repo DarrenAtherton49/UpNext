@@ -6,6 +6,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.R
+import com.atherton.upnext.domain.model.Movie
 import com.atherton.upnext.domain.model.Response
 import com.atherton.upnext.presentation.main.MainAction
 import com.atherton.upnext.presentation.main.MainViewEffect
@@ -82,7 +83,7 @@ class MovieDetailFragment : BaseFragment<MovieDetailAction, MovieDetailState, Mo
                 progressBar.isVisible = false
                 errorLayout.isVisible = false
                 //todo content.isVisible = true
-                renderContent(state)
+                renderMovie(state.movie)
             }
             is MovieDetailState.Error -> {
                 progressBar.isVisible = false
@@ -94,9 +95,7 @@ class MovieDetailFragment : BaseFragment<MovieDetailAction, MovieDetailState, Mo
         }
     }
 
-    private fun renderContent(state: MovieDetailState.Content) {
-        val movie = state.movie
-
+    private fun renderMovie(movie: Movie) {
         GlideApp.with(this)
             .load(movie.backdropPath)
             .centerCrop()
@@ -113,6 +112,10 @@ class MovieDetailFragment : BaseFragment<MovieDetailAction, MovieDetailState, Mo
             .into(posterImageView)
 
         titleTextView.text = movie.title
+        overviewTextView.text = movie.overview
+
+        //todo set button image based on whether show is already in watchlist or not
+        addToWatchlistButton.show(true)
     }
 
     override fun processViewEffects(viewEffect: MovieDetailViewEffect) {}
