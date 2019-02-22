@@ -133,6 +133,7 @@ private fun Movie.withMovieDetailImageUrls(config: Config): Movie {
     return if (backdropPath != null || posterPath != null) {
         this.copy(
             backdropPath = backdropPath?.let { "${config.secureBaseUrl}${config.backdropSizes[1]}$backdropPath" },
+            detail = detail?.copy(genres = detail.genres?.sortedBy { it.name }),
             posterPath = posterPath?.let { "${config.secureBaseUrl}${config.posterSizes[2]}$posterPath" }
         )
     } else this

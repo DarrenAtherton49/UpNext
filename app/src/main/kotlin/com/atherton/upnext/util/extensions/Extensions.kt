@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
@@ -132,3 +133,12 @@ fun EditText.whenTextChanges(emitInitialValue: Boolean = false, block: (String) 
 }
 
 inline fun <reified T> Moshi.adapt(json: String): T? = this.adapter(T::class.java).fromJson(json)
+
+fun TextView.setTextOrHide(text: String?) {
+    isVisible = if (text != null) {
+        setText(text)
+        true
+    } else {
+        false
+    }
+}

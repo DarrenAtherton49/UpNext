@@ -20,23 +20,9 @@
             android:id="@+id/posterImageView"
             android:layout_width="@dimen/search_model_poster_width"
             android:layout_height="@dimen/search_model_poster_height"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/detailCollapsingToolbarLayout"
+            android:layout_marginStart="@dimen/keyline_2x"
             app:layout_constraintBottom_toBottomOf="@id/detailCollapsingToolbarLayout"
-            android:layout_marginStart="@dimen/keyline_2x"
-            tools:layout_editor_absoluteX="33dp"
-            tools:layout_editor_absoluteY="125dp"/>
-
-        <TextView
-            style="@style/TvMovieDetailTitleText"
-            android:id="@+id/titleTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/keyline_2x"
-            android:layout_marginStart="@dimen/keyline_2x"
-            android:layout_marginEnd="@dimen/keyline_2x"
-            app:layout_constraintStart_toEndOf="@id/posterImageView"
-            app:layout_constraintEnd_toStartOf="@id/addToWatchlistButton"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/detailCollapsingToolbarLayout"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -51,27 +37,83 @@
             android:visibility="gone"/>
 
         <TextView
+            style="@style/TvMovieDetailTitleText"
+            android:id="@+id/titleTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/keyline_2x"
+            android:layout_marginStart="@dimen/keyline_2x"
+            android:layout_marginEnd="@dimen/keyline_2x"
+            app:layout_constraintStart_toEndOf="@id/posterImageView"
+            app:layout_constraintEnd_toStartOf="@id/addToWatchlistButton"
+            app:layout_constraintTop_toBottomOf="@id/detailCollapsingToolbarLayout"/>
+
+        <TextView
+            style="@style/TvMovieDetailReleaseDateRuntimeText"
+            android:id="@+id/releaseDateTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/keyline_2x"
+            android:layout_marginStart="@dimen/keyline_2x"
+            android:layout_marginEnd="@dimen/keyline_2x"
+            app:layout_constraintTop_toBottomOf="@id/posterImageView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/runtimeTextView"/>
+
+        <TextView
+            style="@style/TvMovieDetailReleaseDateRuntimeText"
+            android:id="@+id/runtimeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/keyline_2x"
+            android:layout_marginStart="@dimen/keyline_2x"
+            android:layout_marginEnd="@dimen/keyline"
+            app:layout_constraintTop_toBottomOf="@id/posterImageView"
+            app:layout_constraintStart_toStartOf="@id/releaseDateTextView"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <TextView
             style="@style/TvMovieDetailOverviewText"
             android:id="@+id/overviewTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/posterImageView"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="@dimen/keyline_2x"
             android:layout_marginStart="@dimen/keyline_2x"
-            android:layout_marginEnd="@dimen/keyline_2x"/>
+            android:layout_marginEnd="@dimen/keyline_2x"
+            app:layout_constraintTop_toBottomOf="@id/releaseDateTextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <HorizontalScrollView
+            android:id="@+id/genreChipHorizontalScrollView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/keyline_2x"
+            android:paddingStart="@dimen/keyline_2x"
+            android:paddingEnd="@dimen/keyline_2x"
+            app:layout_constraintTop_toBottomOf="@id/overviewTextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:scrollbars="none">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/genreChipGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:chipSpacingHorizontal="@dimen/keyline_2x"
+                app:singleLine="true"/>
+        </HorizontalScrollView>
 
         <include
             layout="@layout/error_retry_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/keyline_2x"
+            android:layout_marginEnd="@dimen/keyline_2x"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginStart="@dimen/keyline_2x"
-            android:layout_marginEnd="@dimen/keyline_2x"
             android:visibility="gone"/>
 
         <ProgressBar

@@ -54,6 +54,12 @@
     <!-- SearchFragment -->
     <string name="search_textfield_label">Find Movies, Shows or People…</string>
 
+    <!-- Movie/TV Detail Fragment -->
+    <plurals name="movie_tv_detail_minutes_plural">
+        <item quantity="one">%1d min</item>
+        <item quantity="other">%1d mins</item>
+    </plurals>
+
     <!-- Error messages -->
     <string name="error_message_server">Server encountered a %d error, please try again later</string>
     <string name="error_message_server_with_error">Server encountered a %d error, please try again later (status code: %d)</string>

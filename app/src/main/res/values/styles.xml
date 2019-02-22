@@ -42,6 +42,11 @@
         <item name="android:gravity">center_vertical</item>
     </style>
 
+    <style name="TvMovieDetailReleaseDateRuntimeText" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:maxLines">@integer/movie_tv_detail_release_date_runtime_max_lines</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
     <style name="TvMovieDetailOverviewText" parent="TextAppearance.MaterialComponents.Subtitle2">
         <item name="android:maxLines">@integer/movie_tv_detail_overview_max_lines</item>
         <item name="android:ellipsize">end</item>

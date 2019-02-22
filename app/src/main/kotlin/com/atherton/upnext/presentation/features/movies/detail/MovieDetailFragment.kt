@@ -19,6 +19,7 @@ import com.atherton.upnext.util.glide.GlideApp
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.chip.Chip
 import kotlinx.android.synthetic.main.detail_screen_appbar.*
 import kotlinx.android.synthetic.main.error_retry_layout.*
 import kotlinx.android.synthetic.main.fragment_movie_detail.*
@@ -96,6 +97,21 @@ class MovieDetailFragment : BaseFragment<MovieDetailAction, MovieDetailState, Mo
     }
 
     private fun renderMovie(movie: Movie) {
+        renderMovieImages(movie)
+        titleTextView.text = movie.title
+        overviewTextView.setTextOrHide(movie.overview)
+        releaseDateTextView.setTextOrHide(movie.releaseDate)
+        renderMovieRuntime(movie)
+        //todo add age rating
+        renderMovieGenres(movie)
+
+        // vote average in circle
+
+        //todo set button image based on whether show is already in watchlist or not
+        addToWatchlistButton.show(true)
+    }
+
+    private fun renderMovieImages(movie: Movie) {
         GlideApp.with(this)
             .load(movie.backdropPath)
             .centerCrop()
@@ -110,12 +126,36 @@ class MovieDetailFragment : BaseFragment<MovieDetailAction, MovieDetailState, Mo
             .load(movie.posterPath)
             .apply(posterOptions)
             .into(posterImageView)
+    }
 
-        titleTextView.text = movie.title
-        overviewTextView.text = movie.overview
+    private fun renderMovieRuntime(movie: Movie) {
+        if (movie.detail?.runtime != null) {
+            val runtimeText = resources.getQuantityString(
+                R.plurals.movie_tv_detail_minutes_plural,
+                movie.detail.runtime,
+                movie.detail.runtime
+            )
+            runtimeTextView.text = runtimeText
+        } else {
+            runtimeTextView.isVisible = false
+        }
+    }
 
-        //todo set button image based on whether show is already in watchlist or not
-        addToWatchlistButton.show(true)
+    private fun renderMovieGenres(movie: Movie) {
+        if (movie.detail?.genres != null) {
+            movie.detail.genres.forEach { genre ->
+                genre.name?.let { name ->
+                    val chip = Chip(context).apply {
+                        text = name
+                        isClickable = false
+                        isCheckable = false
+                    }
+                    genreChipGroup.addView(chip as View)
+                }
+            }
+        } else {
+            genreChipHorizontalScrollView.isVisible = false
+        }
     }
 
     override fun processViewEffects(viewEffect: MovieDetailViewEffect) {}
