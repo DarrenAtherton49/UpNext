@@ -99,6 +99,7 @@ class MovieDetailFragment : BaseFragment<MovieDetailAction, MovieDetailState, Mo
 
         GlideApp.with(this)
             .load(movie.backdropPath)
+            .centerCrop()
             .error(R.drawable.ic_broken_image_white_24dp)
             .into(backdropImageView)
 
@@ -110,6 +111,8 @@ class MovieDetailFragment : BaseFragment<MovieDetailAction, MovieDetailState, Mo
             .load(movie.posterPath)
             .apply(posterOptions)
             .into(posterImageView)
+
+        titleTextView.text = movie.title
     }
 
     override fun processViewEffects(viewEffect: MovieDetailViewEffect) {}

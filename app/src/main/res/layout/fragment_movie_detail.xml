@@ -27,6 +27,26 @@
             tools:layout_editor_absoluteX="33dp"
             tools:layout_editor_absoluteY="125dp"/>
 
+        <TextView
+            style="@style/TvMovieDetailTitleText"
+            android:id="@+id/titleTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/keyline_2x"
+            app:layout_constraintStart_toEndOf="@id/posterImageView"
+            app:layout_constraintEnd_toStartOf="@id/addToWatchlistButton"
+            app:layout_constraintTop_toBottomOf="@id/detailCollapsingToolbarLayout"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/addToWatchlistButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/detailCollapsingToolbarLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="@dimen/keyline_2x"
+            android:layout_marginEnd="@dimen/keyline_2x"
+            app:srcCompat="@drawable/ic_add_white_24dp"/>
+
         <include
             layout="@layout/error_retry_layout"
             android:layout_width="0dp"

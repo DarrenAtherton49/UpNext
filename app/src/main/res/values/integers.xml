@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Discover menu -->
+    <!-- Discover -->
     <integer name="discover_menu_order_search">0</integer>
     <integer name="discover_menu_order_toggle_view">1</integer>
 
-    <!-- Movie detail menu -->
-    <integer name="movie_detail_menu_order_search">0</integer>
-
-    <!-- Search menu -->
+    <!-- Search -->
     <integer name="search_menu_order_toggle_view">0</integer>
 
     <!-- Common menu items -->
     <integer name="common_menu_order_settings">100</integer>
+
+    <!-- Movie/TV Detail -->
+    <integer name="movie_tv_detail_menu_order_search">0</integer>
+    <integer name="movie_tv_detail_title_min_lines">2</integer>
+    <integer name="movie_tv_detail_title_max_lines">2</integer>
 
     <!-- Common views -->
     <integer name="search_model_list_title_min_lines">1</integer>
@@ -20,4 +22,5 @@
     <integer name="search_model_grid_title_min_lines">2</integer>
     <integer name="search_model_grid_title_max_lines">2</integer>
     <integer name="search_model_grid_num_columns">3</integer>
+
 </resources>

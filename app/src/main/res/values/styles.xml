@@ -35,6 +35,12 @@
         <item name="android:textCursorDrawable">@null</item> <!-- forces cursor to be same color as query -->
     </style>
 
+    <style name="TvMovieDetailTitleText" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:minLines">@integer/movie_tv_detail_title_min_lines</item>
+        <item name="android:maxLines">@integer/movie_tv_detail_title_max_lines</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
     <style name="SearchModelGridTitleText">
         <item name="android:minLines">@integer/search_model_grid_title_min_lines</item>
         <item name="android:maxLines">@integer/search_model_grid_title_max_lines</item>
