@@ -50,6 +50,29 @@
 
         <TextView
             style="@style/TvMovieDetailReleaseDateRuntimeText"
+            android:id="@+id/runtimeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/keyline_2x"
+            android:layout_marginStart="@dimen/keyline_2x"
+            android:layout_marginEnd="@dimen/keyline_2x"
+            app:layout_constraintTop_toBottomOf="@id/posterImageView"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <!--todo do this properly instead of using a TextView-->
+        <TextView
+            android:id="@+id/releaseDateRuntimeDivider"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/keyline_2x"
+            android:layout_marginStart="@dimen/keyline_2x"
+            android:layout_marginEnd="@dimen/keyline_2x"
+            app:layout_constraintTop_toBottomOf="@id/posterImageView"
+            app:layout_constraintStart_toEndOf="@id/runtimeTextView"
+            android:text="@string/movie_tv_detail_divider"/>
+
+        <TextView
+            style="@style/TvMovieDetailReleaseDateRuntimeText"
             android:id="@+id/releaseDateTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -57,20 +80,7 @@
             android:layout_marginStart="@dimen/keyline_2x"
             android:layout_marginEnd="@dimen/keyline_2x"
             app:layout_constraintTop_toBottomOf="@id/posterImageView"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/runtimeTextView"/>
-
-        <TextView
-            style="@style/TvMovieDetailReleaseDateRuntimeText"
-            android:id="@+id/runtimeTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/keyline_2x"
-            android:layout_marginStart="@dimen/keyline_2x"
-            android:layout_marginEnd="@dimen/keyline"
-            app:layout_constraintTop_toBottomOf="@id/posterImageView"
-            app:layout_constraintStart_toStartOf="@id/releaseDateTextView"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintStart_toEndOf="@id/releaseDateRuntimeDivider"/>
 
         <TextView
             style="@style/TvMovieDetailOverviewText"

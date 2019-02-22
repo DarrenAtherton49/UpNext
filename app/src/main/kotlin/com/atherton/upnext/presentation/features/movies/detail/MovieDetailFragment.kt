@@ -99,7 +99,7 @@ class MovieDetailFragment : BaseFragment<MovieDetailAction, MovieDetailState, Mo
     private fun renderMovie(movie: Movie) {
         renderMovieImages(movie)
         titleTextView.text = movie.title
-        overviewTextView.setTextOrHide(movie.overview)
+        overviewTextView.setTextOrHide(movie.overview) //todo add 'show more' button
         releaseDateTextView.setTextOrHide(movie.releaseDate)
         renderMovieRuntime(movie)
         //todo add age rating

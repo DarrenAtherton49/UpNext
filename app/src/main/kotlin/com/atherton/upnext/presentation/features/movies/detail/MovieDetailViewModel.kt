@@ -8,6 +8,7 @@ import com.atherton.upnext.domain.model.Movie
 import com.atherton.upnext.domain.model.Response
 import com.atherton.upnext.domain.usecase.GetConfigUseCase
 import com.atherton.upnext.domain.usecase.GetMovieDetailUseCase
+import com.atherton.upnext.presentation.common.formatDateForDetailScreen
 import com.atherton.upnext.util.base.BaseViewEffect
 import com.atherton.upnext.util.base.UpNextViewModel
 import com.atherton.upnext.util.injection.PerView
@@ -134,7 +135,8 @@ private fun Movie.withMovieDetailImageUrls(config: Config): Movie {
         this.copy(
             backdropPath = backdropPath?.let { "${config.secureBaseUrl}${config.backdropSizes[1]}$backdropPath" },
             detail = detail?.copy(genres = detail.genres?.sortedBy { it.name }),
-            posterPath = posterPath?.let { "${config.secureBaseUrl}${config.posterSizes[2]}$posterPath" }
+            posterPath = posterPath?.let { "${config.secureBaseUrl}${config.posterSizes[2]}$posterPath" },
+            releaseDate = formatDateForDetailScreen(releaseDate)
         )
     } else this
 }

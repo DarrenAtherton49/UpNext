@@ -59,6 +59,7 @@
         <item quantity="one">%1d min</item>
         <item quantity="other">%1d mins</item>
     </plurals>
+    <string name="movie_tv_detail_divider">|</string>
 
     <!-- Error messages -->
     <string name="error_message_server">Server encountered a %d error, please try again later</string>
