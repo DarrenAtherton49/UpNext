@@ -1,4 +1,4 @@
-package com.atherton.upnext.presentation.common
+package com.atherton.upnext.presentation.common.searchmodel
 
 import android.view.View
 import android.view.ViewGroup

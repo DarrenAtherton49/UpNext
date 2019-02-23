@@ -8,7 +8,9 @@ import com.atherton.upnext.domain.model.Movie
 import com.atherton.upnext.domain.model.Response
 import com.atherton.upnext.domain.usecase.GetConfigUseCase
 import com.atherton.upnext.domain.usecase.GetMovieDetailUseCase
-import com.atherton.upnext.presentation.common.formatDateForDetailScreen
+import com.atherton.upnext.presentation.common.detail.ModelDetailSection
+import com.atherton.upnext.presentation.common.detail.buildMovieDetailSections
+import com.atherton.upnext.presentation.util.AppStringProvider
 import com.atherton.upnext.util.base.BaseViewEffect
 import com.atherton.upnext.util.base.UpNextViewModel
 import com.atherton.upnext.util.injection.PerView
@@ -29,6 +31,7 @@ class MovieDetailViewModel @Inject constructor(
     initialState: MovieDetailState?,
     private val getMovieDetailUseCase: GetMovieDetailUseCase,
     private val getConfigUseCase: GetConfigUseCase,
+    private val appStringProvider: AppStringProvider,
     private val schedulers: RxSchedulers
 ): UpNextViewModel<MovieDetailAction, MovieDetailState, MovieDetailViewEffect>() {
 
@@ -41,7 +44,7 @@ class MovieDetailViewModel @Inject constructor(
                     is MovieDetailState.Idle -> MovieDetailState.Loading(null)
                     is MovieDetailState.Loading -> oldState.copy()
                     is MovieDetailState.Content -> {
-                        MovieDetailState.Loading(movie = oldState.movie)
+                        MovieDetailState.Loading(movie = oldState.movie, detailSections = oldState.detailSections)
                     }
                     is MovieDetailState.Error -> MovieDetailState.Loading(null)
                 }
@@ -51,6 +54,7 @@ class MovieDetailViewModel @Inject constructor(
                     is Response.Success -> {
                         MovieDetailState.Content(
                             movie = change.response.data.withMovieDetailImageUrls(change.config),
+                            detailSections = buildMovieDetailSections(change.response.data, appStringProvider),
                             cached = change.response.cached
                         )
                     }
@@ -113,10 +117,14 @@ sealed class MovieDetailState : BaseState, Parcelable {
     object Idle : MovieDetailState()
 
     @Parcelize
-    data class Loading(val movie: Movie?) : MovieDetailState()
+    data class Loading(val movie: Movie?, val detailSections: List<ModelDetailSection> = emptyList()) : MovieDetailState()
 
     @Parcelize
-    data class Content(val movie: Movie, val cached: Boolean = false) : MovieDetailState()
+    data class Content(
+        val movie: Movie,
+        val detailSections: List<ModelDetailSection> = emptyList(),
+        val cached: Boolean = false
+    ) : MovieDetailState()
 
     @Parcelize
     data class Error(val failure: Response.Failure) : MovieDetailState()
@@ -125,7 +133,7 @@ sealed class MovieDetailState : BaseState, Parcelable {
 sealed class MovieDetailViewEffect : BaseViewEffect
 
 //================================================================================
-// Screen-specific view mapper
+// Screen-specific view data/functions
 //================================================================================
 
 //todo write function to generate path based on device screen size?
@@ -134,9 +142,7 @@ private fun Movie.withMovieDetailImageUrls(config: Config): Movie {
     return if (backdropPath != null || posterPath != null) {
         this.copy(
             backdropPath = backdropPath?.let { "${config.secureBaseUrl}${config.backdropSizes[1]}$backdropPath" },
-            detail = detail?.copy(genres = detail.genres?.sortedBy { it.name }),
-            posterPath = posterPath?.let { "${config.secureBaseUrl}${config.posterSizes[2]}$posterPath" },
-            releaseDate = formatDateForDetailScreen(releaseDate)
+            posterPath = posterPath?.let { "${config.secureBaseUrl}${config.posterSizes[2]}$posterPath" }
         )
     } else this
 }
@@ -150,12 +156,18 @@ class MovieDetailViewModelFactory(
     private val initialState: MovieDetailState?,
     private val getMovieDetailUseCase: GetMovieDetailUseCase,
     private val getConfigUseCase: GetConfigUseCase,
+    private val appStringProvider: AppStringProvider,
     private val schedulers: RxSchedulers
 ) : ViewModelProvider.Factory {
 
     @Suppress("unchecked_cast")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T  {
-        return MovieDetailViewModel(initialState, getMovieDetailUseCase, getConfigUseCase, schedulers) as T
+        return MovieDetailViewModel(
+            initialState,
+            getMovieDetailUseCase,
+            getConfigUseCase,
+            appStringProvider,
+            schedulers) as T
     }
 
     companion object {

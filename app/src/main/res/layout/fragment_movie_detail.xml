@@ -9,135 +9,91 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".presentation.features.movies.detail.MovieDetailFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <include layout="@layout/detail_screen_appbar"
-                 android:id="@+id/detailCollapsingToolbarLayout"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/posterImageView"
-            android:layout_width="@dimen/search_model_poster_width"
-            android:layout_height="@dimen/search_model_poster_height"
-            android:layout_marginStart="@dimen/keyline_2x"
-            app:layout_constraintBottom_toBottomOf="@id/detailCollapsingToolbarLayout"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/detailCollapsingToolbarLayout"/>
+            <include layout="@layout/detail_screen_appbar"
+                     android:id="@+id/detailCollapsingToolbarLayout"/>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/addToWatchlistButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/detailCollapsingToolbarLayout"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="@dimen/keyline_2x"
-            android:layout_marginEnd="@dimen/keyline_2x"
-            app:srcCompat="@drawable/ic_add_white_24dp"
-            android:visibility="gone"/>
+            <ImageView
+                android:id="@+id/posterImageView"
+                android:layout_width="@dimen/search_model_poster_width"
+                android:layout_height="@dimen/search_model_poster_height"
+                android:layout_marginStart="@dimen/keyline_2x"
+                app:layout_constraintBottom_toBottomOf="@id/detailCollapsingToolbarLayout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/detailCollapsingToolbarLayout"/>
 
-        <TextView
-            style="@style/TvMovieDetailTitleText"
-            android:id="@+id/titleTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/keyline_2x"
-            android:layout_marginStart="@dimen/keyline_2x"
-            android:layout_marginEnd="@dimen/keyline_2x"
-            app:layout_constraintStart_toEndOf="@id/posterImageView"
-            app:layout_constraintEnd_toStartOf="@id/addToWatchlistButton"
-            app:layout_constraintTop_toBottomOf="@id/detailCollapsingToolbarLayout"/>
-
-        <TextView
-            style="@style/TvMovieDetailReleaseDateRuntimeText"
-            android:id="@+id/runtimeTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/keyline_2x"
-            android:layout_marginStart="@dimen/keyline_2x"
-            android:layout_marginEnd="@dimen/keyline_2x"
-            app:layout_constraintTop_toBottomOf="@id/posterImageView"
-            app:layout_constraintStart_toStartOf="parent"/>
-
-        <!--todo do this properly instead of using a TextView-->
-        <TextView
-            android:id="@+id/releaseDateRuntimeDivider"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/keyline_2x"
-            android:layout_marginStart="@dimen/keyline_2x"
-            android:layout_marginEnd="@dimen/keyline_2x"
-            app:layout_constraintTop_toBottomOf="@id/posterImageView"
-            app:layout_constraintStart_toEndOf="@id/runtimeTextView"
-            android:text="@string/movie_tv_detail_divider"/>
-
-        <TextView
-            style="@style/TvMovieDetailReleaseDateRuntimeText"
-            android:id="@+id/releaseDateTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/keyline_2x"
-            android:layout_marginStart="@dimen/keyline_2x"
-            android:layout_marginEnd="@dimen/keyline_2x"
-            app:layout_constraintTop_toBottomOf="@id/posterImageView"
-            app:layout_constraintStart_toEndOf="@id/releaseDateRuntimeDivider"/>
-
-        <TextView
-            style="@style/TvMovieDetailOverviewText"
-            android:id="@+id/overviewTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/keyline_2x"
-            android:layout_marginStart="@dimen/keyline_2x"
-            android:layout_marginEnd="@dimen/keyline_2x"
-            app:layout_constraintTop_toBottomOf="@id/releaseDateTextView"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-        <HorizontalScrollView
-            android:id="@+id/genreChipHorizontalScrollView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/keyline_2x"
-            android:paddingStart="@dimen/keyline_2x"
-            android:paddingEnd="@dimen/keyline_2x"
-            app:layout_constraintTop_toBottomOf="@id/overviewTextView"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:scrollbars="none">
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/genreChipGroup"
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/addToWatchlistButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:chipSpacingHorizontal="@dimen/keyline_2x"
-                app:singleLine="true"/>
-        </HorizontalScrollView>
+                app:layout_constraintTop_toBottomOf="@id/detailCollapsingToolbarLayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="@dimen/keyline_2x"
+                android:layout_marginEnd="@dimen/keyline_2x"
+                app:srcCompat="@drawable/ic_add_white_24dp"
+                android:visibility="gone"/>
 
-        <include
-            layout="@layout/error_retry_layout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/keyline_2x"
-            android:layout_marginEnd="@dimen/keyline_2x"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:visibility="gone"/>
+            <TextView
+                style="@style/TvMovieDetailTitleText"
+                android:id="@+id/titleTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/keyline_2x"
+                android:layout_marginStart="@dimen/keyline_2x"
+                android:layout_marginEnd="@dimen/keyline_2x"
+                app:layout_constraintStart_toEndOf="@id/posterImageView"
+                app:layout_constraintEnd_toStartOf="@id/addToWatchlistButton"
+                app:layout_constraintTop_toBottomOf="@id/detailCollapsingToolbarLayout"/>
 
-        <ProgressBar
-            style="?android:attr/progressBarStyle"
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:indeterminate="true"
-            android:visibility="gone"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/keyline_2x"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                android:scrollbars="none"
+                android:clipToPadding="false"/>
+
+            <include
+                layout="@layout/error_retry_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/keyline_2x"
+                android:layout_marginEnd="@dimen/keyline_2x"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:visibility="gone"/>
+
+            <ProgressBar
+                style="?android:attr/progressBarStyle"
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:indeterminate="true"
+                android:visibility="gone"/>
+
+        </FrameLayout>
+
+    </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.atherton.upnext.R
 import com.atherton.upnext.domain.model.Response
 import com.atherton.upnext.domain.model.SearchModelViewMode
-import com.atherton.upnext.presentation.common.SearchModelAdapter
+import com.atherton.upnext.presentation.common.searchmodel.SearchModelAdapter
 import com.atherton.upnext.presentation.main.MainAction
 import com.atherton.upnext.presentation.main.MainViewEffect
 import com.atherton.upnext.presentation.main.MainViewModel

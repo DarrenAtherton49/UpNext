@@ -3,6 +3,7 @@ package com.atherton.upnext.util.injection
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.res.Resources
 import android.net.ConnectivityManager
 import com.atherton.upnext.App
 import com.atherton.upnext.BuildConfig
@@ -14,6 +15,8 @@ import com.atherton.upnext.data.network.TmdbMultiSearchResponseAdapter
 import com.atherton.upnext.data.network.service.*
 import com.atherton.upnext.data.repository.*
 import com.atherton.upnext.domain.repository.*
+import com.atherton.upnext.presentation.util.AndroidAppStringProvider
+import com.atherton.upnext.presentation.util.AppStringProvider
 import com.atherton.upnext.util.network.manager.AndroidNetworkManager
 import com.atherton.upnext.util.network.manager.NetworkManager
 import com.atherton.upnext.util.network.retrofit.KotlinRxJava2CallAdapterFactory
@@ -41,6 +44,7 @@ interface AppComponent {
     @ApplicationContext fun context(): Context
     fun schedulers(): RxSchedulers
     fun settings(): AppSettings
+    fun appStringProvider(): AppStringProvider
     fun tvShowRepository(): TvShowRepository
     fun movieRepository(): MovieRepository
     fun peopleRepository(): PeopleRepository
@@ -107,6 +111,14 @@ class AppModule(private val application: Application) {
 
     @Provides
     @Singleton internal fun provideSettings(sharedPreferences: SharedPreferencesStorage): AppSettings = sharedPreferences
+
+    @Provides
+    @Singleton internal fun provideAppStringProvider(
+        androidAppStringProvider: AndroidAppStringProvider
+    ): AppStringProvider = androidAppStringProvider
+
+    @Provides
+    @Singleton internal fun provideResources(): Resources = application.resources
 
     companion object {
         private const val TMDB_API_VERSION = 3

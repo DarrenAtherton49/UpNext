@@ -8,7 +8,7 @@ import com.atherton.upnext.domain.model.Response
 import com.atherton.upnext.domain.model.SearchModel
 import com.atherton.upnext.domain.model.SearchModelViewMode
 import com.atherton.upnext.domain.usecase.*
-import com.atherton.upnext.presentation.common.withSearchModelListImageUrls
+import com.atherton.upnext.presentation.common.searchmodel.withSearchModelListImageUrls
 import com.atherton.upnext.util.base.BaseViewEffect
 import com.atherton.upnext.util.base.UpNextViewModel
 import com.atherton.upnext.util.extensions.preventMultipleClicks

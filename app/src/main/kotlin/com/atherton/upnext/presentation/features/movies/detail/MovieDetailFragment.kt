@@ -5,9 +5,11 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.atherton.upnext.R
 import com.atherton.upnext.domain.model.Movie
 import com.atherton.upnext.domain.model.Response
+import com.atherton.upnext.presentation.common.detail.ModelDetailAdapter
 import com.atherton.upnext.presentation.main.MainAction
 import com.atherton.upnext.presentation.main.MainViewEffect
 import com.atherton.upnext.presentation.main.MainViewModel
@@ -19,7 +21,6 @@ import com.atherton.upnext.util.glide.GlideApp
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
-import com.google.android.material.chip.Chip
 import kotlinx.android.synthetic.main.detail_screen_appbar.*
 import kotlinx.android.synthetic.main.error_retry_layout.*
 import kotlinx.android.synthetic.main.fragment_movie_detail.*
@@ -47,8 +48,14 @@ class MovieDetailFragment : BaseFragment<MovieDetailAction, MovieDetailState, Mo
         menuResId = R.menu.menu_movie_detail
     )
 
+    private val recyclerViewAdapter: ModelDetailAdapter by lazy {
+        ModelDetailAdapter(GlideApp.with(this))
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        initRecyclerView()
 
         arguments?.let {
             val movieId = MovieDetailFragmentArgs.fromBundle(it).movieId
@@ -76,19 +83,22 @@ class MovieDetailFragment : BaseFragment<MovieDetailAction, MovieDetailState, Mo
         Timber.tag("darren").d(state.toString())
         when (state) {
             is MovieDetailState.Loading -> {
-                //todo content.isVisible = false
+                recyclerView.isVisible = false
                 errorLayout.isVisible = false
+                posterImageView.isVisible = false
                 progressBar.isVisible = true
             }
             is MovieDetailState.Content -> {
                 progressBar.isVisible = false
                 errorLayout.isVisible = false
-                //todo content.isVisible = true
-                renderMovie(state.movie)
+                posterImageView.isVisible = true
+                recyclerView.isVisible = true
+                renderMovie(state)
             }
             is MovieDetailState.Error -> {
                 progressBar.isVisible = false
-                //todo content.isVisible = false
+                recyclerView.isVisible = false
+                posterImageView.isVisible = false
                 errorLayout.isVisible = true
                 errorTextView.text = state.failure.generateErrorMessage(requireContext())
                 retryButton.isVisible = state.failure is Response.Failure.NetworkError
@@ -96,17 +106,10 @@ class MovieDetailFragment : BaseFragment<MovieDetailAction, MovieDetailState, Mo
         }
     }
 
-    private fun renderMovie(movie: Movie) {
-        renderMovieImages(movie)
-        titleTextView.text = movie.title
-        releaseDateTextView.setTextOrHide(movie.releaseDate)
-        renderMovieRuntime(movie)
-        //todo add age rating
-        renderMovieGenres(movie)
-
-        //todo create 'info' tab and move overview and ratings into there
-        overviewTextView.setTextOrHide(movie.overview) //todo add 'show more' button
-        //todo add row full of ratings from different providers
+    private fun renderMovie(state: MovieDetailState.Content) {
+        renderMovieImages(state.movie)
+        titleTextView.text = state.movie.title
+        recyclerViewAdapter.submitData(state.detailSections)
 
         //todo set button image based on whether show is already in watchlist or not
         addToWatchlistButton.show(true)
@@ -129,38 +132,17 @@ class MovieDetailFragment : BaseFragment<MovieDetailAction, MovieDetailState, Mo
             .into(posterImageView)
     }
 
-    private fun renderMovieRuntime(movie: Movie) {
-        if (movie.detail?.runtime != null) {
-            val runtimeText = resources.getQuantityString(
-                R.plurals.movie_tv_detail_minutes_plural,
-                movie.detail.runtime,
-                movie.detail.runtime
-            )
-            runtimeTextView.text = runtimeText
-        } else {
-            runtimeTextView.isVisible = false
-        }
-    }
-
-    private fun renderMovieGenres(movie: Movie) {
-        if (movie.detail?.genres != null) {
-            movie.detail.genres.forEach { genre ->
-                genre.name?.let { name ->
-                    val chip = Chip(context).apply {
-                        text = name
-                        isClickable = false
-                        isCheckable = false
-                    }
-                    genreChipGroup.addView(chip as View)
-                }
-            }
-        } else {
-            genreChipHorizontalScrollView.isVisible = false
-        }
-    }
-
     override fun processViewEffects(viewEffect: MovieDetailViewEffect) {}
     override fun processSharedViewEffects(viewEffect: MainViewEffect) {}
+
+    private fun initRecyclerView() {
+        recyclerView.apply {
+            setHasFixedSize(true)
+            //todo item decorations?
+            layoutManager = LinearLayoutManager(context)
+            adapter = recyclerViewAdapter
+        }
+    }
 
     override fun initInjection(initialState: MovieDetailState?) {
         DaggerMovieDetailComponent.builder()

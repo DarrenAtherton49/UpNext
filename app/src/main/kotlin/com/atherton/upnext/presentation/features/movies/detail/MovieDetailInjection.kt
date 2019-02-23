@@ -5,6 +5,7 @@ import com.atherton.upnext.domain.usecase.GetConfigUseCase
 import com.atherton.upnext.domain.usecase.GetMovieDetailUseCase
 import com.atherton.upnext.presentation.main.MainComponent
 import com.atherton.upnext.presentation.main.MainModule
+import com.atherton.upnext.presentation.util.AppStringProvider
 import com.atherton.upnext.util.injection.AppComponent
 import com.atherton.upnext.util.injection.PerView
 import com.atherton.upnext.util.threading.RxSchedulers
@@ -32,8 +33,15 @@ class MovieDetailModule(private val initialState: MovieDetailState?) {
     @PerView internal fun provideViewModelFactory(
         getMovieDetailUseCase: GetMovieDetailUseCase,
         getConfigUseCase: GetConfigUseCase,
+        appStringProvider: AppStringProvider,
         schedulers: RxSchedulers
     ): ViewModelProvider.Factory {
-        return MovieDetailViewModelFactory(initialState, getMovieDetailUseCase, getConfigUseCase, schedulers)
+        return MovieDetailViewModelFactory(
+            initialState,
+            getMovieDetailUseCase,
+            getConfigUseCase,
+            appStringProvider,
+            schedulers
+        )
     }
 }

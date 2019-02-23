@@ -1,6 +1,8 @@
 ### Backlog
 
+- Add genres tab to the discover screen tabs to easily look at genre (as well as in the advanced filter)
 - The 'up next'/'watchlist' should be 'one click' to mark the next episode as 'watched'. So you should see the episode you're currently on, be able to click 'watched' and the next episode should come up. Also add 'undo' snackbar for this action for accidental clicks.
+- Ability to reorder the movie/tv/person details screen sections in the recyclerview from the settings.
 - Add setting for default source of rating (e.g. IMDB, TMDB, Rotten Tomatoes or combined) in places where there is only room to show one score (e.g. in grids).
 - Add ability to follow a person as well as a tv show and movie so you can go through and watch someone's filmography.
 - Light, dark and black themes

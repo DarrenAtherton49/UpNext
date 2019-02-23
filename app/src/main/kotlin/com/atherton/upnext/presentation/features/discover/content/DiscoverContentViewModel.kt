@@ -7,7 +7,7 @@ import com.atherton.upnext.domain.model.*
 import com.atherton.upnext.domain.usecase.GetConfigUseCase
 import com.atherton.upnext.domain.usecase.GetDiscoverItemsForFilterUseCase
 import com.atherton.upnext.domain.usecase.GetDiscoverViewModeUseCase
-import com.atherton.upnext.presentation.common.withSearchModelListImageUrls
+import com.atherton.upnext.presentation.common.searchmodel.withSearchModelListImageUrls
 import com.atherton.upnext.util.base.BaseViewEffect
 import com.atherton.upnext.util.base.UpNextViewModel
 import com.atherton.upnext.util.extensions.preventMultipleClicks

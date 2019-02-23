@@ -1,9 +1,6 @@
-package com.atherton.upnext.presentation.common
+package com.atherton.upnext.presentation.common.searchmodel
 
 import com.atherton.upnext.domain.model.*
-import java.text.ParseException
-import java.text.SimpleDateFormat
-import java.util.*
 
 // generate image urls for any screen where the item is a thumbnail - e.g. discover, search, watchlist etc.
 // combines the base url, size and path
@@ -38,17 +35,4 @@ internal fun List<SearchModel>.withSearchModelListImageUrls(config: Config): Lis
             is Person -> it.copy(profilePath = buildProfilePath(it.profilePath, config))
         }
     }
-}
-
-internal fun formatDateForDetailScreen(dateString: String?): String? {
-    return if (dateString != null) {
-        val oldFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val newFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
-        return try {
-            val date: Date = oldFormat.parse(dateString)
-            newFormat.format(date)
-        } catch (exception: ParseException) {
-            dateString
-        }
-    } else dateString
 }
