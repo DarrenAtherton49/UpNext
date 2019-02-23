@@ -99,13 +99,14 @@ class MovieDetailFragment : BaseFragment<MovieDetailAction, MovieDetailState, Mo
     private fun renderMovie(movie: Movie) {
         renderMovieImages(movie)
         titleTextView.text = movie.title
-        overviewTextView.setTextOrHide(movie.overview) //todo add 'show more' button
         releaseDateTextView.setTextOrHide(movie.releaseDate)
         renderMovieRuntime(movie)
         //todo add age rating
         renderMovieGenres(movie)
 
-        // vote average in circle
+        //todo create 'info' tab and move overview and ratings into there
+        overviewTextView.setTextOrHide(movie.overview) //todo add 'show more' button
+        //todo add row full of ratings from different providers
 
         //todo set button image based on whether show is already in watchlist or not
         addToWatchlistButton.show(true)
