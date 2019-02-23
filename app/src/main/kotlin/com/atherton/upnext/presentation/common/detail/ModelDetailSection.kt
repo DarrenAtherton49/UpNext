@@ -12,12 +12,12 @@ sealed class ModelDetailSection(val viewType: Int, val hasScrollingChildAdapter:
     ) : ModelDetailSection(RUNTIME_RELEASE, false)
     @Parcelize data class Overview(val overview: String) : ModelDetailSection(OVERVIEW, false)
     @Parcelize data class Genres(val genres: List<Genre>) : ModelDetailSection(GENRES, false)
-    @Parcelize data class Ratings(val ratings: List<String>) : ModelDetailSection(RATINGS, true)
+    @Parcelize data class Ratings(val ratings: List<String>) : ModelDetailSection(RATINGS, false)
     @Parcelize data class Seasons(val seasons: List<String>) : ModelDetailSection(SEASONS, false)
+    @Parcelize data class Cast(val cast: List<String>) : ModelDetailSection(CAST, true)
+    @Parcelize data class Crew(val crew: List<String>) : ModelDetailSection(CREW, true)
     @Parcelize data class Trailers(val trailers: List<String>) : ModelDetailSection(TRAILERS, true)
     @Parcelize data class Photos(val photos: List<String>) : ModelDetailSection(PHOTOS, true)
-    @Parcelize data class Cast(val castList: List<String>) : ModelDetailSection(CAST, true)
-    @Parcelize data class Crew(val crewList: List<String>) : ModelDetailSection(CREW, true)
     @Parcelize data class Reviews(val reviews: List<String>) : ModelDetailSection(REVIEWS, false)
     @Parcelize data class Comments(val comments: List<String>) : ModelDetailSection(COMMENTS, false)
     @Parcelize data class SimilarItems(val similarItems: List<String>) : ModelDetailSection(SIMILAR_ITEMS, true)
@@ -29,10 +29,10 @@ sealed class ModelDetailSection(val viewType: Int, val hasScrollingChildAdapter:
         const val GENRES = 2
         const val RATINGS = 3
         const val SEASONS = 4
-        const val TRAILERS = 5
-        const val PHOTOS = 6
-        const val CAST = 7
-        const val CREW = 8
+        const val CAST = 5
+        const val CREW = 6
+        const val TRAILERS = 7
+        const val PHOTOS = 8
         const val REVIEWS = 9
         const val COMMENTS = 10
         const val SIMILAR_ITEMS = 11

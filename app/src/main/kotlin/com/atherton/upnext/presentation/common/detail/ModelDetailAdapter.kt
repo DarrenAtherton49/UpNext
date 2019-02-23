@@ -9,40 +9,113 @@ import androidx.recyclerview.widget.RecyclerView
 import com.atherton.upnext.R
 import com.atherton.upnext.util.extensions.inflateLayout
 import com.atherton.upnext.util.glide.GlideRequests
+import kotlinx.android.synthetic.main.item_detail_child_recyclerview.view.*
 
 //todo preload some images when scrolling https://bumptech.github.io/glide/int/recyclerview.html
 class ModelDetailAdapter(
-    private val imageLoader: GlideRequests
+    private val imageLoader: GlideRequests,
+    private val childRecyclerItemSpacingPx: Int
 ) : ListAdapter<ModelDetailSection, ModelDetailSectionViewHolder>(ModelDetailDiffCallback) {
 
     private val recyclerViewPool: RecyclerView.RecycledViewPool = RecyclerView.RecycledViewPool()
 
     // Maps of child RecyclerView adapters and state to restore
-    //todo private lateinit var childAdapters: SparseArray<ModelDetailChildAdapter?>
+    private lateinit var childAdapters: SparseArray<ScrollingChildAdapter<*,*>>
     private lateinit var childAdapterStates: SparseArray<Parcelable?>
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ModelDetailSectionViewHolder {
-
         return when (viewType) {
             ModelDetailSection.RUNTIME_RELEASE -> ModelDetailRuntimeReleaseDateViewHolder(
                 parent.inflateLayout(R.layout.item_detail_runtime_release_date)
             )
-            ModelDetailSection.OVERVIEW -> ModelDetailOverviewViewHolder(
-                parent.inflateLayout(R.layout.item_detail_overview)
+            ModelDetailSection.OVERVIEW -> ModelDetailOverviewViewHolder(parent.inflateLayout(R.layout.item_detail_overview))
+            ModelDetailSection.GENRES -> ModelDetailGenresViewHolder(parent.inflateLayout(R.layout.item_detail_genres))
+            //todo implement layout
+            ModelDetailSection.RATINGS -> ModelDetailRatingsViewHolder(
+                parent.inflateLayout(R.layout.item_detail_ratings),
+                imageLoader
+            )
+            //todo implement layout
+            ModelDetailSection.SEASONS -> ModelDetailSeasonsViewHolder(parent.inflateLayout(R.layout.item_detail_seasons))
+            //todo implement layout
+            ModelDetailSection.CAST -> ModelDetailCastViewHolder(
+                parent.inflateLayout(R.layout.item_detail_cast),
+                recyclerViewPool,
+                childRecyclerItemSpacingPx
+            )
+            //todo implement layout
+            ModelDetailSection.CREW -> ModelDetailCrewViewHolder(
+                parent.inflateLayout(R.layout.item_detail_crew),
+                recyclerViewPool,
+                childRecyclerItemSpacingPx
+            )
+            //todo implement layout
+            ModelDetailSection.TRAILERS -> ModelDetailTrailersViewHolder(
+                parent.inflateLayout(R.layout.item_detail_trailers),
+                recyclerViewPool,
+                childRecyclerItemSpacingPx
+            )
+            //todo implement layout
+            ModelDetailSection.PHOTOS -> ModelDetailPhotosViewHolder(
+                parent.inflateLayout(R.layout.item_detail_photos),
+                recyclerViewPool,
+                childRecyclerItemSpacingPx
+            )
+            //todo implement layout
+            ModelDetailSection.REVIEWS -> ModelDetailReviewsViewHolder(parent.inflateLayout(R.layout.item_detail_reviews))
+            //todo implement layout
+            ModelDetailSection.COMMENTS -> ModelDetailCommentsViewHolder(parent.inflateLayout(R.layout.item_detail_comments))
+            //todo implement layout
+            ModelDetailSection.SIMILAR_ITEMS -> ModelDetailSimilarItemsViewHolder(
+                parent.inflateLayout(R.layout.item_detail_similar_items),
+                recyclerViewPool,
+                childRecyclerItemSpacingPx
+            )
+            //todo implement layout
+            ModelDetailSection.EXTERNAL_LINKS -> ModelDetailExternalLinksViewHolder(
+                parent.inflateLayout(R.layout.item_detail_external_links),
+                imageLoader
             )
             else -> ModelDetailEmptyViewHolder(parent.inflateLayout(R.layout.item_detail_empty))
         }
     }
 
     override fun onBindViewHolder(holder: ModelDetailSectionViewHolder, position: Int) {
-        //val section = getItem(position)
-        //todo holder.bind(section, childAdapters[section.viewType], childAdapterStates[section.viewType])
-
-
+        val section = getItem(position)
         when (holder) {
-            is ModelDetailRuntimeReleaseDateViewHolder -> holder.bind(getItem(position) as ModelDetailSection.RuntimeRelease)
-            is ModelDetailOverviewViewHolder -> holder.bind(getItem(position) as ModelDetailSection.Overview)
-            is ModelDetailGenresViewHolder -> holder.bind(getItem(position) as ModelDetailSection.Genres)
+            is ModelDetailRuntimeReleaseDateViewHolder -> holder.bind(section as ModelDetailSection.RuntimeRelease)
+            is ModelDetailOverviewViewHolder -> holder.bind(section as ModelDetailSection.Overview)
+            is ModelDetailGenresViewHolder -> holder.bind(section as ModelDetailSection.Genres)
+            is ModelDetailRatingsViewHolder -> holder.bind(section as ModelDetailSection.Ratings)
+            is ModelDetailSeasonsViewHolder -> holder.bind(section as ModelDetailSection.Seasons)
+            is ModelDetailCastViewHolder -> holder.bindHorizontalAdapter(
+                section as ModelDetailSection.Cast,
+                childAdapters[section.viewType] as ModelDetailCastAdapter,
+                childAdapterStates[section.viewType]
+            )
+            is ModelDetailCrewViewHolder -> holder.bindHorizontalAdapter(
+                section as ModelDetailSection.Crew,
+                childAdapters[section.viewType] as ModelDetailCrewAdapter,
+                childAdapterStates[section.viewType]
+            )
+            is ModelDetailTrailersViewHolder -> holder.bindHorizontalAdapter(
+                section as ModelDetailSection.Trailers,
+                childAdapters[section.viewType] as ModelDetailTrailersAdapter,
+                childAdapterStates[section.viewType]
+            )
+            is ModelDetailPhotosViewHolder -> holder.bindHorizontalAdapter(
+                section as ModelDetailSection.Photos,
+                childAdapters[section.viewType] as ModelDetailPhotosAdapter,
+                childAdapterStates[section.viewType]
+            )
+            is ModelDetailReviewsViewHolder -> holder.bind(section as ModelDetailSection.Reviews)
+            is ModelDetailCommentsViewHolder -> holder.bind(section as ModelDetailSection.Comments)
+            is ModelDetailSimilarItemsViewHolder -> holder.bindHorizontalAdapter(
+                section as ModelDetailSection.SimilarItems,
+                childAdapters[section.viewType] as ModelDetailSimilarItemsAdapter,
+                childAdapterStates[section.viewType]
+            )
+            is ModelDetailExternalLinksViewHolder -> holder.bind(section as ModelDetailSection.ExternalLinks)
         }
     }
 
@@ -52,8 +125,11 @@ class ModelDetailAdapter(
     override fun onViewRecycled(holder: ModelDetailSectionViewHolder) {
         val position = holder.adapterPosition
         if (position != RecyclerView.NO_POSITION) {
-            val key = getItem(position).viewType
-            //todo childAdapterStates.setValueAt(key, holder.itemView.childRecyclerView.layoutManager?.onSaveInstanceState())
+            val item = getItem(position)
+            if (item.hasScrollingChildAdapter) {
+                val key = getItem(position).viewType
+                childAdapterStates.setValueAt(key, holder.itemView.childRecyclerView.layoutManager?.onSaveInstanceState())
+            }
         }
         super.onViewRecycled(holder)
     }
@@ -64,20 +140,24 @@ class ModelDetailAdapter(
     }
 
     private fun initChildAdapters(sections: List<ModelDetailSection>) {
-        //todo childAdapters = SparseArray(sections.size)
+        childAdapters = SparseArray(sections.size)
         childAdapterStates = SparseArray(sections.size)
 
         // store an adapter for each section (parent item - each carousel) only if it has
-        // scrolling content and needs and adapter
-        //todo
-//        sections.forEach { section ->
-//            val adapter = if (section.hasScrollingChildAdapter) {
-//                DiscoverChildAdapter(imageLoader, onClickListener)
-//            } else {
-//                null
-//            }
-//            childAdapters.setValueAt(section.viewType, adapter)
-//        }
+        // scrolling content and needs an adapter
+        sections.forEach { section ->
+            val adapter = when (section) {
+                is ModelDetailSection.Cast -> ModelDetailCastAdapter(imageLoader)
+                is ModelDetailSection.Crew -> ModelDetailCrewAdapter(imageLoader)
+                is ModelDetailSection.Trailers -> ModelDetailTrailersAdapter(imageLoader)
+                is ModelDetailSection.Photos -> ModelDetailPhotosAdapter(imageLoader)
+                is ModelDetailSection.SimilarItems -> ModelDetailSimilarItemsAdapter(imageLoader)
+                else -> null
+            }
+            if (adapter != null) {
+                childAdapters.setValueAt(section.viewType, adapter)
+            }
+        }
     }
 
     companion object {
@@ -92,4 +172,7 @@ class ModelDetailAdapter(
             }
         }
     }
+
+    abstract class ScrollingChildAdapter<T, VH : RecyclerView.ViewHolder>(diffCallback: DiffUtil.ItemCallback<T>)
+        : ListAdapter<T, VH>(diffCallback)
 }

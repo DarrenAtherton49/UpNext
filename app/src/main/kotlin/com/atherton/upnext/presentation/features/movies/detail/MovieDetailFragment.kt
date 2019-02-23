@@ -49,7 +49,10 @@ class MovieDetailFragment : BaseFragment<MovieDetailAction, MovieDetailState, Mo
     )
 
     private val recyclerViewAdapter: ModelDetailAdapter by lazy {
-        ModelDetailAdapter(GlideApp.with(this))
+        ModelDetailAdapter(
+            GlideApp.with(this),
+            resources.getDimensionPixelSize(R.dimen.movie_tv_detail_child_items_spacing)
+        )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,10 +62,9 @@ class MovieDetailFragment : BaseFragment<MovieDetailAction, MovieDetailState, Mo
 
         arguments?.let {
             val movieId = MovieDetailFragmentArgs.fromBundle(it).movieId
-            //todo
-//            retryButton.setOnClickListener {
-//                viewModel.dispatch(MovieDetailAction.RetryButtonClicked(id))
-//            }
+            retryButton.setOnClickListener {
+                viewModel.dispatch(MovieDetailAction.RetryButtonClicked(id))
+            }
             if (savedInstanceState == null) {
                 viewModel.dispatch(MovieDetailAction.Load(movieId))
             }

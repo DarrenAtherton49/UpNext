@@ -7,7 +7,7 @@
 
     <HorizontalScrollView
         android:id="@+id/genreChipHorizontalScrollView"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/keyline_2x"
         android:layout_marginBottom="@dimen/keyline_2x"
