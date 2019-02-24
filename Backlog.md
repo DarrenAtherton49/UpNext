@@ -28,4 +28,5 @@
 - Change detail screen overview maxLines to about 3/4 and add a 'show more' button
 - Hide bottom navigation when keyboard is open and show when keyboard is closed. We could do this by sending a view effect to the MainActivity whenever we know the keyboard will be opened and hide the bottom naviation menu from the main activity.
 - Add transitions for fragments, e.g. slide up when entering
+- Cut down all data models I don't use to decrease memory footprint
 
