@@ -17,6 +17,7 @@
 - Add button to mark 'all episodes before this one' as watched
 - TMDB discussions
 - Custom lists based on filters. Could be used for stuff like dvd collection etc.
+- Ability to save searches
 - Gamification/stats/achievements
 - Deep linking and sharing
 - Backup/import - manual and auto with Google Drive
@@ -26,4 +27,5 @@
 - Ability to add missing movies (e.g. random videos that aren't in the database)
 - Change detail screen overview maxLines to about 3/4 and add a 'show more' button
 - Hide bottom navigation when keyboard is open and show when keyboard is closed. We could do this by sending a view effect to the MainActivity whenever we know the keyboard will be opened and hide the bottom naviation menu from the main activity.
+- Add transitions for fragments, e.g. slide up when entering
 

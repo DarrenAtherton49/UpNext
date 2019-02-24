@@ -42,15 +42,15 @@
                 android:visibility="gone"/>
 
             <TextView
-                style="@style/TvMovieDetailTitleText"
                 android:id="@+id/titleTextView"
+                style="@style/TvMovieDetailTitleText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/keyline_2x"
                 android:layout_marginStart="@dimen/keyline_2x"
+                android:layout_marginTop="@dimen/keyline_2x"
                 android:layout_marginEnd="@dimen/keyline_2x"
-                app:layout_constraintStart_toEndOf="@id/posterImageView"
                 app:layout_constraintEnd_toStartOf="@id/addToWatchlistButton"
+                app:layout_constraintStart_toEndOf="@id/posterImageView"
                 app:layout_constraintTop_toBottomOf="@id/detailCollapsingToolbarLayout"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -65,21 +65,20 @@
                 android:layout_height="match_parent"
                 android:paddingTop="@dimen/keyline_2x"
                 android:paddingBottom="@dimen/keyline_2x"
+                android:layout_gravity="center"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 android:overScrollMode="never"
                 android:scrollbars="none"
-                android:clipToPadding="false"/>
+                android:clipToPadding="false"
+                android:visibility="gone"/>
 
             <include
                 layout="@layout/error_retry_layout"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/keyline_2x"
                 android:layout_marginEnd="@dimen/keyline_2x"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_gravity="center"
                 android:visibility="gone"/>
 
             <ProgressBar
@@ -87,10 +86,7 @@
                 android:id="@+id/progressBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_gravity="center"
                 android:indeterminate="true"
                 android:visibility="gone"/>
 

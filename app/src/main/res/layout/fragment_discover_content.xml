@@ -19,7 +19,8 @@
         android:paddingBottom="@dimen/keyline_8x"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:scrollbars="none"
-        android:clipToPadding="false"/>
+        android:clipToPadding="false"
+        android:visibility="gone"/>
 
     <include
         layout="@layout/error_retry_layout"

@@ -18,8 +18,8 @@
         <item name="android:navigationBarColor">@color/colorNavigationBar</item>
         <item name="textInputStyle">@style/AppTextInputLayout</item>
         <item name="editTextStyle">@style/SearchEditText</item>
-        <item name="fontFamily">@font/roboto_mono</item>
-        <item name="android:fontFamily">@font/roboto_mono</item>
+        <item name="fontFamily">@font/open_sans</item>
+        <item name="android:fontFamily">@font/open_sans</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
