@@ -9,17 +9,26 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginTop="@dimen/keyline_2x"
-        android:layout_marginBottom="@dimen/keyline_2x"
-        android:layout_marginStart="@dimen/keyline_2x">
+        android:layout_marginBottom="@dimen/keyline_2x">
 
         <TextView
             style="@style/TvMovieDetailSectionHeaderText"
             android:id="@+id/similarItemSectionHeaderTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/keyline_2x"
             android:layout_marginBottom="@dimen/keyline_2x"/>
 
-        <include layout="@layout/item_detail_child_recyclerview"/>
+        <androidx.recyclerview.widget.RecyclerView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/childRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/keyline_2x"
+            android:paddingEnd="@dimen/keyline_2x"
+            android:orientation="horizontal"
+            android:clipToPadding="false"
+            android:scrollbars="none"/>
 
     </LinearLayout>
     

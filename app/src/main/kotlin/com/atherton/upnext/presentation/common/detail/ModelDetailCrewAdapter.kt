@@ -1,41 +1,47 @@
 package com.atherton.upnext.presentation.common.detail
 
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
+import com.atherton.upnext.R
+import com.atherton.upnext.domain.model.CrewMember
+import com.atherton.upnext.util.extensions.inflateLayout
 import com.atherton.upnext.util.glide.GlideRequests
-import kotlinx.android.extensions.LayoutContainer
+import com.atherton.upnext.util.glide.UpNextAppGlideModule
+import kotlinx.android.synthetic.main.item_detail_scrolling_item.*
 
 class ModelDetailCrewAdapter(
-    private val imageLoader: GlideRequests
-) : ModelDetailAdapter.ScrollingChildAdapter<String, ModelDetailCrewAdapter.ViewHolder>(DiffCallback) {
+    private val imageLoader: GlideRequests,
+    private val onCrewMemberClickListener: (CrewMember) -> Unit
+) : ModelDetailAdapter.ScrollingChildAdapter<CrewMember, ModelDetailScrollingViewHolder>(DiffCallback) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    class ViewHolder(override val containerView: View)
-        : RecyclerView.ViewHolder(containerView),
-        LayoutContainer {
-
-        fun bind(crewMember: String) {
-            //todo bind image, crew name, character etc
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ModelDetailScrollingViewHolder {
+        return ModelDetailScrollingViewHolder(parent.inflateLayout(R.layout.item_detail_scrolling_item), imageLoader).apply {
+            itemView.setOnClickListener {
+                onCrewMemberClickListener.invoke(getItem(adapterPosition))
+            }
         }
     }
 
-    companion object {
-        private object DiffCallback : DiffUtil.ItemCallback<String>() {
+    override fun onBindViewHolder(holder: ModelDetailScrollingViewHolder, position: Int) {
+        val crewMember = getItem(position)
 
-            override fun areItemsTheSame(oldItem: String, newItem: String): Boolean {
-                return oldItem == newItem //todo check id
+        imageLoader
+            .load(crewMember.profilePath)
+            .apply(UpNextAppGlideModule.searchModelPosterRequestOptions)
+            .into(holder.photoImageView)
+
+        holder.firstRowTextView.text = crewMember.name
+        holder.secondRowTextView.text = crewMember.job
+    }
+
+    companion object {
+        private object DiffCallback : DiffUtil.ItemCallback<CrewMember>() {
+
+            override fun areItemsTheSame(oldItem: CrewMember, newItem: CrewMember): Boolean {
+                return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: String, newItem: String): Boolean {
+            override fun areContentsTheSame(oldItem: CrewMember, newItem: CrewMember): Boolean {
                 return oldItem == newItem
             }
         }

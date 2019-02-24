@@ -57,6 +57,18 @@
         <item name="android:ellipsize">end</item>
     </style>
 
+    <style name="TvMovieDetailScrollingItemFirstRowText" parent="TextAppearance.MaterialComponents.Subtitle2">
+        <item name="android:maxLines">@integer/movie_tv_detail_section_scrollable_item_text_max_lines</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="TvMovieDetailScrollingItemSecondRowText" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:maxLines">@integer/movie_tv_detail_section_scrollable_item_text_max_lines</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
     <style name="SearchModelGridTitleText">
         <item name="android:minLines">@integer/search_model_grid_title_min_lines</item>
         <item name="android:maxLines">@integer/search_model_grid_title_max_lines</item>

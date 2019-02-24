@@ -5,18 +5,19 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.atherton.upnext.domain.model.CastMember
+import com.atherton.upnext.domain.model.CrewMember
 import com.atherton.upnext.domain.model.Movie
 import com.atherton.upnext.util.extensions.isVisible
 import com.atherton.upnext.util.glide.GlideRequests
 import com.atherton.upnext.util.recyclerview.LinearSpacingItemDecoration
 import com.google.android.material.chip.Chip
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_detail_child_recyclerview.*
-import kotlinx.android.synthetic.main.item_detail_child_recyclerview.view.*
 import kotlinx.android.synthetic.main.item_detail_genres.*
 import kotlinx.android.synthetic.main.item_detail_overview.*
 import kotlinx.android.synthetic.main.item_detail_runtime_release_date.*
-import kotlinx.android.synthetic.main.item_detail_section_similar_items.*
+import kotlinx.android.synthetic.main.item_detail_scrolling_section.*
+import kotlinx.android.synthetic.main.item_detail_scrolling_section.view.*
 
 sealed class ModelDetailSectionViewHolder(override val containerView: View)
     : RecyclerView.ViewHolder(containerView),
@@ -78,13 +79,14 @@ class ModelDetailCastViewHolder(
     override val containerView: View,
     recycledViewPool: RecyclerView.RecycledViewPool,
     itemSpacingPx: Int
-) : ModelDetailScrollableViewHolder<ModelDetailSection.Cast, String, ModelDetailCastAdapter>( //todo change String to Cast
+) : ModelDetailScrollableViewHolder<ModelDetailSection.Cast, CastMember, ModelDetailCastAdapter>(
     containerView,
     recycledViewPool,
     itemSpacingPx
 ) {
     override fun bind(section: ModelDetailSection.Cast, childAdapter: ModelDetailCastAdapter) {
-        //childAdapter.submitList(section.cast)
+        similarItemSectionHeaderTextView.text = section.sectionTitle
+        childAdapter.submitList(section.cast)
     }
 }
 
@@ -92,19 +94,20 @@ class ModelDetailCrewViewHolder(
     override val containerView: View,
     recycledViewPool: RecyclerView.RecycledViewPool,
     itemSpacingPx: Int
-) : ModelDetailScrollableViewHolder<ModelDetailSection.Crew, String, ModelDetailCrewAdapter>( //todo change String to Crew
+) : ModelDetailScrollableViewHolder<ModelDetailSection.Crew, CrewMember, ModelDetailCrewAdapter>(
     containerView,
     recycledViewPool,
     itemSpacingPx
 ) {
     override fun bind(section: ModelDetailSection.Crew, childAdapter: ModelDetailCrewAdapter) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        similarItemSectionHeaderTextView.text = section.sectionTitle
+        childAdapter.submitList(section.crew)
     }
 }
 
 class ModelDetailTrailersViewHolder(
     override val containerView: View,
-    recycledViewPool: RecyclerView.RecycledViewPool,
+    recycledViewPool: RecyclerView.RecycledViewPool?,
     itemSpacingPx: Int
 ) : ModelDetailScrollableViewHolder<ModelDetailSection.Trailers, String, ModelDetailTrailersAdapter>( //todo change String to Trailer
     containerView,
@@ -118,7 +121,7 @@ class ModelDetailTrailersViewHolder(
 
 class ModelDetailPhotosViewHolder(
     override val containerView: View,
-    recycledViewPool: RecyclerView.RecycledViewPool,
+    recycledViewPool: RecyclerView.RecycledViewPool?,
     itemSpacingPx: Int
 ) : ModelDetailScrollableViewHolder<ModelDetailSection.Photos, String, ModelDetailPhotosAdapter>( //todo change String to Photo
     containerView,
@@ -173,13 +176,20 @@ class ModelDetailExternalLinksViewHolder(
     }
 }
 
+// used as am empty default when view type is not known
 class ModelDetailEmptyViewHolder(
     override val containerView: View
 ) : ModelDetailSectionViewHolder(containerView)
 
+// used for all scrolling CHILD ViewHolders - i.e. cast, crew and similar movie items as using this common type
+// allows for us to use a RecyclerViewPool to reuse views
+class ModelDetailScrollingViewHolder(override val containerView: View, private val imageLoader: GlideRequests)
+    : RecyclerView.ViewHolder(containerView),
+    LayoutContainer
+
 abstract class ModelDetailScrollableViewHolder<SECTION : ModelDetailSection, DATA: Any, ADAPTER: ListAdapter<DATA, *>>(
     override val containerView: View,
-    recycledViewPool: RecyclerView.RecycledViewPool,
+    recycledViewPool: RecyclerView.RecycledViewPool?,
     itemSpacingPx: Int
 ) : ModelDetailSectionViewHolder(containerView) {
 
@@ -195,7 +205,11 @@ abstract class ModelDetailScrollableViewHolder<SECTION : ModelDetailSection, DAT
             LinearSpacingItemDecoration(itemSpacingPx, LinearSpacingItemDecoration.Orientation.Horizontal)
         )
         itemView.childRecyclerView.layoutManager = layoutManager
-        itemView.childRecyclerView.setRecycledViewPool(recycledViewPool)
+
+        // if we pass in a RecycledViewPool it means we want to share scrap views between multiple RecyclerViews
+        recycledViewPool?.let {
+            itemView.childRecyclerView.setRecycledViewPool(it)
+        }
     }
 
     fun bindHorizontalAdapter(section: SECTION, childAdapter: ADAPTER, childAdapterState: Parcelable?) {

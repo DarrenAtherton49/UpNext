@@ -13,31 +13,41 @@ internal fun buildMovieDetailSections(movie: Movie, appStringProvider: AppString
 
     val runtime: String? = movie.detail?.runtime?.let { appStringProvider.getRuntimeString(it) }
     val releaseDate: String? = formatDateForDetailScreen(movie.releaseDate)
-    sectionList.add(ModelDetailSection.RuntimeRelease(runtime, releaseDate, showDivider = runtime != null && releaseDate != null))
+    sectionList.add(
+        ModelDetailSection.RuntimeRelease(
+            runtime = runtime,
+            releaseDate = releaseDate,
+            showDivider = runtime != null && releaseDate != null
+        )
+    )
 
     movie.overview?.let { sectionList.add(ModelDetailSection.Overview(it)) }
-    movie.detail?.genres?.let { genres ->
-        if (genres.isNotEmpty()) {
-            sectionList.add(ModelDetailSection.Genres(genres.sortedBy { it.name }))
+    movie.detail?.let {
+
+        //todo add ratings
+        //todo add seasons
+        //todo add trailers
+        //todo add photos
+
+
+
+        if (it.genres != null && it.genres.isNotEmpty()) {
+            sectionList.add(ModelDetailSection.Genres(it.genres.sortedBy { genre -> genre.name }))
         }
-    }
-    //todo add ratings
-    //todo add seasons
-    //todo add trailers
-    //todo add photos
-    //todo add cast
-    //todo add crew
-    //todo add reviews
-    //todo add comments
-
-    movie.detail?.similar?.let { similarMovies ->
-        if (similarMovies.isNotEmpty()) {
-            sectionList.add(ModelDetailSection.SimilarItems(appStringProvider.getSimilarMoviesHeader(), similarMovies))
+        if (it.cast != null && it.cast.isNotEmpty()) {
+            sectionList.add(ModelDetailSection.Cast(appStringProvider.getCastHeader(), it.cast))
         }
+        if (it.crew != null && it.crew.isNotEmpty()) {
+            sectionList.add(ModelDetailSection.Crew(appStringProvider.getCrewHeader(), it.crew))
+        }
+        if (it.similar != null && it.similar.isNotEmpty()) {
+            sectionList.add(ModelDetailSection.SimilarItems(appStringProvider.getSimilarMoviesHeader(), it.similar))
+        }
+
+        //todo add reviews
+        //todo add comments
+        //todo add external links
     }
-
-    //todo add external links
-
     return sectionList
 }
 

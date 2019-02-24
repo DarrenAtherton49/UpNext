@@ -114,8 +114,18 @@ data class TmdbTvShow(
     @Json(name = "production_companies") val productionCompanies: List<TmdbProductionCompany>?,
     @Json(name = "seasons") val seasons: List<TmdbSeason>?,
     @Json(name = "status") val status: String?,
-    @Json(name = "type") val type: String?
-) : TmdbMultiSearchModel()
+    @Json(name = "type") val type: String?,
+
+    // appendable fields
+    @Json(name = "similar") val similar: TmdbPagedResponse<TmdbMovie>?,
+    @Json(name = "credits") val credits: TmdbMovie.Credits?
+) : TmdbMultiSearchModel() {
+
+    data class Credits(
+        @Json(name = "cast") val cast: List<TmdbCastMember>?,
+        @Json(name = "crew") val crew: List<TmdbCrewMember>?
+    )
+}
 
 data class TmdbMovie(
     // base/search fields
@@ -149,8 +159,15 @@ data class TmdbMovie(
     @Json(name = "tagline") val tagline: String?,
 
     // appendable fields
-    @Json(name = "similar") val similar: TmdbPagedResponse<TmdbMovie>?
-) : TmdbMultiSearchModel()
+    @Json(name = "similar") val similar: TmdbPagedResponse<TmdbMovie>?,
+    @Json(name = "credits") val credits: Credits?
+) : TmdbMultiSearchModel() {
+
+    data class Credits(
+        @Json(name = "cast") val cast: List<TmdbCastMember>?,
+        @Json(name = "crew") val crew: List<TmdbCrewMember>?
+    )
+}
 
 data class TmdbPerson(
     // base/search fields
@@ -240,4 +257,25 @@ data class TmdbSeason(
     @Json(name = "overview") val overview: String?,
     @Json(name = "poster_path") val posterPath: String?,
     @Json(name = "season_number") val seasonNumber: Int?
+)
+
+data class TmdbCastMember(
+    @Json(name = "cast_id") val castId: Int?,
+    @Json(name = "character") val character: String?,
+    @Json(name = "credit_id") val creditId: String?,
+    @Json(name = "gender") val gender: Int?, // 1 = female, 2 = male
+    @Json(name = "id") val id: Int?,
+    @Json(name = "name") val name: String?,
+    @Json(name = "order") val order: Int?,
+    @Json(name = "profile_path") val profilePath: String?
+)
+
+data class TmdbCrewMember(
+    @Json(name = "credit_id") val creditId: String?,
+    @Json(name = "department") val department: String?,
+    @Json(name = "gender") val gender: Int?, // 1 = female, 2 = male
+    @Json(name = "id") val id: Int?,
+    @Json(name = "job") val job: String?,
+    @Json(name = "name") val name: String?,
+    @Json(name = "profile_path") val profilePath: String?
 )

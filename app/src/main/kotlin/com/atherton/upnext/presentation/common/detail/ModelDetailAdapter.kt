@@ -7,19 +7,24 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.atherton.upnext.R
+import com.atherton.upnext.domain.model.CastMember
+import com.atherton.upnext.domain.model.CrewMember
 import com.atherton.upnext.domain.model.Movie
 import com.atherton.upnext.util.extensions.inflateLayout
 import com.atherton.upnext.util.glide.GlideRequests
-import kotlinx.android.synthetic.main.item_detail_child_recyclerview.view.*
+import kotlinx.android.synthetic.main.item_detail_scrolling_section.view.*
 
 //todo preload some images when scrolling https://bumptech.github.io/glide/int/recyclerview.html
 class ModelDetailAdapter(
     private val imageLoader: GlideRequests,
     private val childRecyclerItemSpacingPx: Int,
+    private val onCastMemberClickListener: (CastMember) -> Unit,
+    private val onCrewMemberClickListener: (CrewMember) -> Unit,
     private val onSimilarItemClickListener: (Movie) -> Unit //todo change to SearchModel so we can reuse adapter
 ) : ListAdapter<ModelDetailSection, ModelDetailSectionViewHolder>(ModelDetailDiffCallback) {
 
-    private val recyclerViewPool: RecyclerView.RecycledViewPool = RecyclerView.RecycledViewPool()
+    private val recycledViewPool: RecyclerView.RecycledViewPool = RecyclerView.RecycledViewPool()
+    //todo create a second recycledViewPool to share photos and trailers views?
 
     // Maps of child RecyclerView adapters and state to restore
     private lateinit var childAdapters: SparseArray<ScrollingChildAdapter<*,*>>
@@ -39,28 +44,26 @@ class ModelDetailAdapter(
             )
             //todo implement layout
             ModelDetailSection.SEASONS -> ModelDetailSeasonsViewHolder(parent.inflateLayout(R.layout.item_detail_seasons))
-            //todo implement layout
             ModelDetailSection.CAST -> ModelDetailCastViewHolder(
-                parent.inflateLayout(R.layout.item_detail_cast),
-                recyclerViewPool,
+                parent.inflateLayout(R.layout.item_detail_scrolling_section),
+                recycledViewPool,
                 childRecyclerItemSpacingPx
             )
-            //todo implement layout
             ModelDetailSection.CREW -> ModelDetailCrewViewHolder(
-                parent.inflateLayout(R.layout.item_detail_crew),
-                recyclerViewPool,
+                parent.inflateLayout(R.layout.item_detail_scrolling_section),
+                recycledViewPool,
                 childRecyclerItemSpacingPx
             )
             //todo implement layout
             ModelDetailSection.TRAILERS -> ModelDetailTrailersViewHolder(
                 parent.inflateLayout(R.layout.item_detail_trailers),
-                recyclerViewPool,
+                null,
                 childRecyclerItemSpacingPx
             )
             //todo implement layout
             ModelDetailSection.PHOTOS -> ModelDetailPhotosViewHolder(
                 parent.inflateLayout(R.layout.item_detail_photos),
-                recyclerViewPool,
+                null,
                 childRecyclerItemSpacingPx
             )
             //todo implement layout
@@ -68,8 +71,8 @@ class ModelDetailAdapter(
             //todo implement layout
             ModelDetailSection.COMMENTS -> ModelDetailCommentsViewHolder(parent.inflateLayout(R.layout.item_detail_comments))
             ModelDetailSection.SIMILAR_ITEMS -> ModelDetailSimilarItemsViewHolder(
-                parent.inflateLayout(R.layout.item_detail_section_similar_items),
-                recyclerViewPool,
+                parent.inflateLayout(R.layout.item_detail_scrolling_section),
+                recycledViewPool,
                 childRecyclerItemSpacingPx
             )
             //todo implement layout
@@ -148,8 +151,8 @@ class ModelDetailAdapter(
         // scrolling content and needs an adapter
         sections.forEach { section ->
             val adapter = when (section) {
-                is ModelDetailSection.Cast -> ModelDetailCastAdapter(imageLoader)
-                is ModelDetailSection.Crew -> ModelDetailCrewAdapter(imageLoader)
+                is ModelDetailSection.Cast -> ModelDetailCastAdapter(imageLoader, onCastMemberClickListener)
+                is ModelDetailSection.Crew -> ModelDetailCrewAdapter(imageLoader, onCrewMemberClickListener)
                 is ModelDetailSection.Trailers -> ModelDetailTrailersAdapter(imageLoader)
                 is ModelDetailSection.Photos -> ModelDetailPhotosAdapter(imageLoader)
                 is ModelDetailSection.SimilarItems -> ModelDetailSimilarItemsAdapter(imageLoader, onSimilarItemClickListener)

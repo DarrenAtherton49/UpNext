@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/keyline_2x"
-        android:layout_marginBottom="@dimen/keyline_2x"
         android:paddingStart="@dimen/keyline_2x"
         android:paddingEnd="@dimen/keyline_2x"
         android:scrollbars="none">

@@ -3,13 +3,14 @@ package com.atherton.upnext.presentation.features.movies.detail
 import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.atherton.upnext.domain.model.Config
-import com.atherton.upnext.domain.model.Movie
-import com.atherton.upnext.domain.model.Response
+import com.atherton.upnext.domain.model.*
 import com.atherton.upnext.domain.usecase.GetConfigUseCase
 import com.atherton.upnext.domain.usecase.GetMovieDetailUseCase
 import com.atherton.upnext.presentation.common.detail.ModelDetailSection
 import com.atherton.upnext.presentation.common.detail.buildMovieDetailSections
+import com.atherton.upnext.presentation.common.searchmodel.buildBackdropPath
+import com.atherton.upnext.presentation.common.searchmodel.buildPosterPath
+import com.atherton.upnext.presentation.common.searchmodel.buildProfilePath
 import com.atherton.upnext.presentation.util.AppStringProvider
 import com.atherton.upnext.util.base.BaseViewEffect
 import com.atherton.upnext.util.base.UpNextViewModel
@@ -94,9 +95,33 @@ class MovieDetailViewModel @Inject constructor(
             .subscribeOn(schedulers.io)
             .map { MovieDetailViewEffect.ShowAnotherMovieDetailScreen(it.movie) }
 
+        val castMemberClickedViewEffect = actions.ofType<MovieDetailAction.CastMemberClicked>()
+            .preventMultipleClicks()
+            .subscribeOn(schedulers.io)
+            .map {
+                it.castMember.id?.let { id ->
+                    MovieDetailViewEffect.ShowPersonDetailScreen(id)
+                }
+            }
+
+        val crewMemberClickedViewEffect = actions.ofType<MovieDetailAction.CrewMemberClicked>()
+            .preventMultipleClicks()
+            .subscribeOn(schedulers.io)
+            .map {
+                it.crewMember.id?.let { id ->
+                    MovieDetailViewEffect.ShowPersonDetailScreen(id)
+                }
+            }
+
         val stateChanges = merge(loadDataChange, retryButtonChange)
 
-        disposables += similarMovieClickedViewEffect
+        val viewEffectChanges = merge(
+            similarMovieClickedViewEffect,
+            castMemberClickedViewEffect,
+            crewMemberClickedViewEffect
+        )
+
+        disposables += viewEffectChanges
             .observeOn(schedulers.main)
             .subscribe(viewEffects::accept, Timber::e)
 
@@ -117,6 +142,8 @@ sealed class MovieDetailAction : BaseAction {
     data class Load(val id: Int) : MovieDetailAction()
     data class RetryButtonClicked(val id: Int) : MovieDetailAction()
     data class SimilarMovieClicked(val movie: Movie) : MovieDetailAction()
+    data class CastMemberClicked(val castMember: CastMember) : MovieDetailAction()
+    data class CrewMemberClicked(val crewMember: CrewMember) : MovieDetailAction()
 }
 
 sealed class MovieDetailChange {
@@ -145,6 +172,7 @@ sealed class MovieDetailState : BaseState, Parcelable {
 
 sealed class MovieDetailViewEffect : BaseViewEffect {
     data class ShowAnotherMovieDetailScreen(val movie: Movie) : MovieDetailViewEffect()
+    data class ShowPersonDetailScreen(val personId: Int) : MovieDetailViewEffect()
 }
 
 //================================================================================
@@ -153,22 +181,22 @@ sealed class MovieDetailViewEffect : BaseViewEffect {
 
 private fun Movie.withMovieDetailImageUrls(config: Config): Movie {
 
-    //todo write function to generate path based on device screen size?
-    fun buildBackdropPath(backdropPath: String?, config: Config): String? =
-        backdropPath?.let { "${config.secureBaseUrl}${config.backdropSizes[1]}$backdropPath" }
-
-    //todo write function to generate path based on device screen size?
-    fun buildPosterPath(posterPath: String?, config: Config): String? =
-        posterPath?.let { "${config.secureBaseUrl}${config.posterSizes[2]}$posterPath" }
-
     // only perform copy if the image paths actually exist
     return if (backdropPath != null || posterPath != null) {
         this.copy(
             backdropPath = buildBackdropPath(backdropPath, config),
             posterPath = buildPosterPath(posterPath, config),
-            detail = detail?.copy(similar = detail.similar?.map { similarMovie ->
-                similarMovie.copy(posterPath = buildPosterPath(similarMovie.posterPath, config))
-            })
+            detail = detail?.copy(
+                cast = detail.cast?.map { castMember ->
+                    castMember.copy(profilePath = buildProfilePath(castMember.profilePath, config))
+                },
+                crew = detail.crew?.map { crewMember ->
+                    crewMember.copy(profilePath = buildProfilePath(crewMember.profilePath, config))
+                },
+                similar = detail.similar?.map { similarMovie ->
+                    similarMovie.copy(posterPath = buildPosterPath(similarMovie.posterPath, config))
+                }
+            )
         )
     } else this
 }

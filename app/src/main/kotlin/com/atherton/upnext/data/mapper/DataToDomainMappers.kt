@@ -57,6 +57,8 @@ fun TmdbTvShow.toDomainTvShow(): TvShow {
     return TvShow(
         backdropPath,
         TvShow.Detail(
+            credits?.cast?.toDomainCast(),
+            credits?.crew?.toDomainCrew(),
             createdBy?.toDomainTvCreatedBy(),
             runTimes,
             genres?.toDomainGenres(),
@@ -95,6 +97,8 @@ fun TmdbMovie.toDomainMovie(): Movie {
         Movie.Detail(
             belongsToCollection?.toDomainCollection(),
             budget,
+            credits?.cast?.toDomainCast(),
+            credits?.crew?.toDomainCrew(),
             genres?.toDomainGenres(),
             homepage,
             imdbId,
@@ -142,6 +146,18 @@ fun TmdbPerson.toDomainPerson(): Person {
         popularity,
         profilePath
     )
+}
+
+private fun List<TmdbCastMember>.toDomainCast(): List<CastMember> {
+    return this.map {
+        CastMember(it.castId, it.character, it.creditId, it.gender.toDomainGender(), it.id, it.name, it.order, it.profilePath)
+    }
+}
+
+private fun List<TmdbCrewMember>.toDomainCrew(): List<CrewMember> {
+    return this.map {
+        CrewMember(it.creditId, it.department, it.gender.toDomainGender(), it.id, it.job, it.name, it.profilePath)
+    }
 }
 
 private fun TmdbCollection.toDomainCollection(): Collection = Collection(backdropPath, id, name, posterPath)

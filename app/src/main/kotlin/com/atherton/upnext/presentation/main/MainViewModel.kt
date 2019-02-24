@@ -61,7 +61,7 @@ class MainViewModel @Inject constructor(
                         is TvShow -> MainViewEffect.Navigation.ShowTvDetailScreen(modelId)
                         is Person -> MainViewEffect.Navigation.ShowPersonDetailScreen(modelId)
                     }
-                } ?: throw IllegalStateException("Cannot show detail screen without an id")
+                } ?: throw IllegalStateException("Cannot show movie detail screen without an id")
             }
 
         //todo merge this with searchModelClickedViewEffect above instead of having both
@@ -69,8 +69,12 @@ class MainViewModel @Inject constructor(
             .subscribeOn(schedulers.io)
             .map { action ->
                 action.movie.id?.let { MainViewEffect.Navigation.ShowMovieDetailScreen(it) }
-            } ?: throw IllegalStateException("Cannot show detail screen without an id")
+            } ?: throw IllegalStateException("Cannot show movie detail screen without an id")
 
+        //todo merge this with searchModelClickedViewEffect above instead of having both
+        val personClickedViewEffect = actions.ofType<MainAction.PersonClicked>()
+            .subscribeOn(schedulers.io)
+            .map { action -> MainViewEffect.Navigation.ShowPersonDetailScreen(action.personId) }
 
         val viewEffectChanges = mergeArray(
             searchActionClickedViewEffect,
@@ -78,7 +82,8 @@ class MainViewModel @Inject constructor(
             addTvShowClickedViewEffect,
             addMovieClickedViewEffect,
             searchModelClickedViewEffect,
-            movieClickedViewEffect
+            movieClickedViewEffect,
+            personClickedViewEffect
         )
 
         disposables += viewEffectChanges
@@ -98,6 +103,7 @@ sealed class MainAction : BaseAction {
     object AddMovieButtonClicked : MainAction()
     data class SearchModelClicked(val searchModel: SearchModel) : MainAction()
     data class MovieClicked(val movie: Movie) : MainAction() //todo merge this with SearchModelClicked?
+    data class PersonClicked(val personId: Int) : MainAction() //todo merge this with SearchModelClicked?
 }
 
 sealed class MainChange {

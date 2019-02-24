@@ -36,6 +36,8 @@ data class TvShow(
 
     @Parcelize
     data class Detail(
+        val cast: List<CastMember>?,
+        val crew: List<CrewMember>?,
         val createdBy: TvCreatedBy?,
         val runTimes: List<Int>?,
         val genres: List<Genre>?,
@@ -77,6 +79,8 @@ data class Movie(
     data class Detail(
         val belongsToCollection: Collection?,
         val budget: Int?,
+        val cast: List<CastMember>?,
+        val crew: List<CrewMember>?,
         val genres: List<Genre>?,
         val homepage: String?,
         val imdbId: String?,
@@ -115,6 +119,29 @@ data class Person(
         val homepage: String?
     ) : Parcelable
 }
+
+@Parcelize
+data class CastMember(
+    val castId: Int?,
+    val character: String?,
+    val creditId: String?,
+    val gender: Gender,
+    val id: Int?,
+    val name: String?,
+    val order: Int?,
+    val profilePath: String?
+) : Parcelable
+
+@Parcelize
+data class CrewMember(
+    val creditId: String?,
+    val department: String?,
+    val gender: Gender,
+    val id: Int?,
+    val job: String?,
+    val name: String?,
+    val profilePath: String?
+) : Parcelable
 
 @Parcelize
 data class Collection(val backdropPath: String?, val id: Int?, val name: String?, val posterPath: String?) : Parcelable

@@ -6,15 +6,22 @@
     android:orientation="vertical">
 
     <ImageView
-        android:id="@+id/similarItemImageView"
+        android:id="@+id/photoImageView"
         android:layout_width="@dimen/search_model_poster_width"
         android:layout_height="@dimen/search_model_poster_height"
         android:layout_marginBottom="@dimen/keyline"
         android:layout_gravity="center_horizontal"/>
 
     <TextView
-        style="@style/SearchModelGridTitleText"
-        android:id="@+id/similarItemTitleTextView"
+        style="@style/TvMovieDetailScrollingItemFirstRowText"
+        android:id="@+id/firstRowTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/keyline"/>
+
+    <TextView
+        style="@style/TvMovieDetailScrollingItemSecondRowText"
+        android:id="@+id/secondRowTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
