@@ -18,13 +18,10 @@ import com.atherton.upnext.util.base.BaseFragment
 import com.atherton.upnext.util.base.ToolbarOptions
 import com.atherton.upnext.util.extensions.*
 import com.atherton.upnext.util.glide.GlideApp
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestOptions
+import com.atherton.upnext.util.glide.UpNextAppGlideModule
 import kotlinx.android.synthetic.main.detail_screen_appbar.*
 import kotlinx.android.synthetic.main.error_retry_layout.*
 import kotlinx.android.synthetic.main.fragment_movie_detail.*
-import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -50,8 +47,9 @@ class MovieDetailFragment : BaseFragment<MovieDetailAction, MovieDetailState, Mo
 
     private val recyclerViewAdapter: ModelDetailAdapter by lazy {
         ModelDetailAdapter(
-            GlideApp.with(this),
-            resources.getDimensionPixelSize(R.dimen.movie_tv_detail_child_items_spacing)
+            imageLoader = GlideApp.with(this),
+            childRecyclerItemSpacingPx = resources.getDimensionPixelSize(R.dimen.movie_tv_detail_child_items_spacing),
+            onSimilarItemClickListener = { movie -> viewModel.dispatch(MovieDetailAction.SimilarMovieClicked(movie)) }
         )
     }
 
@@ -82,7 +80,6 @@ class MovieDetailFragment : BaseFragment<MovieDetailAction, MovieDetailState, Mo
     }
 
     override fun renderState(state: MovieDetailState) {
-        Timber.tag("darren").d(state.toString())
         when (state) {
             is MovieDetailState.Loading -> {
                 recyclerView.isVisible = false
@@ -124,17 +121,20 @@ class MovieDetailFragment : BaseFragment<MovieDetailAction, MovieDetailState, Mo
             .error(R.drawable.ic_broken_image_white_24dp)
             .into(backdropImageView)
 
-        val posterOptions = RequestOptions()
-            .transforms(CenterCrop(), RoundedCorners(20))
-            .error(R.drawable.ic_broken_image_white_24dp)
-
         GlideApp.with(this)
             .load(movie.posterPath)
-            .apply(posterOptions)
+            .apply(UpNextAppGlideModule.searchModelPosterRequestOptions)
             .into(posterImageView)
     }
 
-    override fun processViewEffects(viewEffect: MovieDetailViewEffect) {}
+    override fun processViewEffects(viewEffect: MovieDetailViewEffect) {
+        when (viewEffect) {
+            is MovieDetailViewEffect.ShowAnotherMovieDetailScreen -> {
+                sharedViewModel.dispatch(MainAction.MovieClicked(viewEffect.movie))
+            }
+        }
+    }
+
     override fun processSharedViewEffects(viewEffect: MainViewEffect) {}
 
     private fun initRecyclerView() {

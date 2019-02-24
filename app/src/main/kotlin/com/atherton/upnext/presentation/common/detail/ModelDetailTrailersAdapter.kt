@@ -9,7 +9,7 @@ import kotlinx.android.extensions.LayoutContainer
 
 class ModelDetailTrailersAdapter(
     private val imageLoader: GlideRequests
-) : ModelDetailAdapter.ScrollingChildAdapter<ModelDetailSection.Trailers, ModelDetailTrailersAdapter.ViewHolder>(DiffCallback) {
+) : ModelDetailAdapter.ScrollingChildAdapter<String, ModelDetailTrailersAdapter.ViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -23,19 +23,19 @@ class ModelDetailTrailersAdapter(
         : RecyclerView.ViewHolder(containerView),
         LayoutContainer {
 
-        fun bind(trailer: ModelDetailSection.Trailers) {
+        fun bind(trailer: String) {
             //todo bind image, Trailer name etc.
         }
     }
 
     companion object {
-        private object DiffCallback : DiffUtil.ItemCallback<ModelDetailSection.Trailers>() {
+        private object DiffCallback : DiffUtil.ItemCallback<String>() {
 
-            override fun areItemsTheSame(oldItem: ModelDetailSection.Trailers, newItem: ModelDetailSection.Trailers): Boolean {
-                return oldItem.viewType == newItem.viewType
+            override fun areItemsTheSame(oldItem: String, newItem: String): Boolean {
+                return oldItem == newItem //todo check id
             }
 
-            override fun areContentsTheSame(oldItem: ModelDetailSection.Trailers, newItem: ModelDetailSection.Trailers): Boolean {
+            override fun areContentsTheSame(oldItem: String, newItem: String): Boolean {
                 return oldItem == newItem
             }
         }

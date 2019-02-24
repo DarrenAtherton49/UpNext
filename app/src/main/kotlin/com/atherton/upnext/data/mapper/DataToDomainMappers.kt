@@ -102,6 +102,7 @@ fun TmdbMovie.toDomainMovie(): Movie {
             productionCountries?.toDomainProductionCountries(),
             revenue,
             runtime,
+            similar?.results?.map { it.toDomainMovie() },
             spokenLanguages?.toDomainSpokenLanguages(),
             status,
             tagline

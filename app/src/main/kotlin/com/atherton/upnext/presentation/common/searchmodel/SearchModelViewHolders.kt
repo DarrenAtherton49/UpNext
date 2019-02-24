@@ -2,14 +2,11 @@ package com.atherton.upnext.presentation.common.searchmodel
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.atherton.upnext.R
 import com.atherton.upnext.domain.model.Movie
 import com.atherton.upnext.domain.model.Person
 import com.atherton.upnext.domain.model.TvShow
 import com.atherton.upnext.util.glide.GlideRequests
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestOptions
+import com.atherton.upnext.util.glide.UpNextAppGlideModule
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_search_model_grid.*
 
@@ -19,15 +16,9 @@ sealed class SearchModelViewHolder(
 ) : RecyclerView.ViewHolder(containerView),
     LayoutContainer {
 
-    private val requestOptions: RequestOptions by lazy {
-        RequestOptions()
-            .transforms(CenterCrop(), RoundedCorners(20))
-            .error(R.drawable.ic_broken_image_white_24dp)
-    }
-
     fun bind(title: String?, imageUrl: String?) {
         searchModelTitleTextView.text = title
-        imageLoader.load(imageUrl).apply(requestOptions).into(searchModelImageView)
+        imageLoader.load(imageUrl).apply(UpNextAppGlideModule.searchModelGridRequestOptions).into(searchModelImageView)
     }
 
     fun clear() {

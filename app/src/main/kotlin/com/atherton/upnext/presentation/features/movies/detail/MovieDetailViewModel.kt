@@ -13,6 +13,7 @@ import com.atherton.upnext.presentation.common.detail.buildMovieDetailSections
 import com.atherton.upnext.presentation.util.AppStringProvider
 import com.atherton.upnext.util.base.BaseViewEffect
 import com.atherton.upnext.util.base.UpNextViewModel
+import com.atherton.upnext.util.extensions.preventMultipleClicks
 import com.atherton.upnext.util.injection.PerView
 import com.atherton.upnext.util.threading.RxSchedulers
 import com.ww.roxie.BaseAction
@@ -52,9 +53,10 @@ class MovieDetailViewModel @Inject constructor(
             is MovieDetailChange.Result -> {
                 when (change.response) {
                     is Response.Success -> {
+                        val movieWithImageUrls = change.response.data.withMovieDetailImageUrls(change.config)
                         MovieDetailState.Content(
-                            movie = change.response.data.withMovieDetailImageUrls(change.config),
-                            detailSections = buildMovieDetailSections(change.response.data, appStringProvider),
+                            movie = movieWithImageUrls,
+                            detailSections = buildMovieDetailSections(movieWithImageUrls, appStringProvider),
                             cached = change.response.cached
                         )
                     }
@@ -84,9 +86,19 @@ class MovieDetailViewModel @Inject constructor(
 
         val retryButtonChange = actions.ofType<MovieDetailAction.RetryButtonClicked>()
             .map { MovieDetailAction.Load(it.id) }
+            .preventMultipleClicks()
             .toResultChange()
 
+        val similarMovieClickedViewEffect = actions.ofType<MovieDetailAction.SimilarMovieClicked>()
+            .preventMultipleClicks()
+            .subscribeOn(schedulers.io)
+            .map { MovieDetailViewEffect.ShowAnotherMovieDetailScreen(it.movie) }
+
         val stateChanges = merge(loadDataChange, retryButtonChange)
+
+        disposables += similarMovieClickedViewEffect
+            .observeOn(schedulers.main)
+            .subscribe(viewEffects::accept, Timber::e)
 
         disposables += stateChanges
             .scan(initialState, reducer)
@@ -104,6 +116,7 @@ class MovieDetailViewModel @Inject constructor(
 sealed class MovieDetailAction : BaseAction {
     data class Load(val id: Int) : MovieDetailAction()
     data class RetryButtonClicked(val id: Int) : MovieDetailAction()
+    data class SimilarMovieClicked(val movie: Movie) : MovieDetailAction()
 }
 
 sealed class MovieDetailChange {
@@ -130,19 +143,32 @@ sealed class MovieDetailState : BaseState, Parcelable {
     data class Error(val failure: Response.Failure) : MovieDetailState()
 }
 
-sealed class MovieDetailViewEffect : BaseViewEffect
+sealed class MovieDetailViewEffect : BaseViewEffect {
+    data class ShowAnotherMovieDetailScreen(val movie: Movie) : MovieDetailViewEffect()
+}
 
 //================================================================================
 // Screen-specific view data/functions
 //================================================================================
 
-//todo write function to generate path based on device screen size?
 private fun Movie.withMovieDetailImageUrls(config: Config): Movie {
+
+    //todo write function to generate path based on device screen size?
+    fun buildBackdropPath(backdropPath: String?, config: Config): String? =
+        backdropPath?.let { "${config.secureBaseUrl}${config.backdropSizes[1]}$backdropPath" }
+
+    //todo write function to generate path based on device screen size?
+    fun buildPosterPath(posterPath: String?, config: Config): String? =
+        posterPath?.let { "${config.secureBaseUrl}${config.posterSizes[2]}$posterPath" }
+
     // only perform copy if the image paths actually exist
     return if (backdropPath != null || posterPath != null) {
         this.copy(
-            backdropPath = backdropPath?.let { "${config.secureBaseUrl}${config.backdropSizes[1]}$backdropPath" },
-            posterPath = posterPath?.let { "${config.secureBaseUrl}${config.posterSizes[2]}$posterPath" }
+            backdropPath = buildBackdropPath(backdropPath, config),
+            posterPath = buildPosterPath(posterPath, config),
+            detail = detail?.copy(similar = detail.similar?.map { similarMovie ->
+                similarMovie.copy(posterPath = buildPosterPath(similarMovie.posterPath, config))
+            })
         )
     } else this
 }

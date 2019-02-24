@@ -29,9 +29,9 @@ data class TmdbConfiguration(
 
 open class TmdbPagedResponse<T> (
     @Json(name = "page") val page: Int,
+    @Json(name = "results") val results: List<T>,
     @Json(name = "total_pages") val totalPages: Int,
-    @Json(name = "total_results") val totalResults: Int, //todo should we show this in UI?
-    @Json(name = "results") val results: List<T>
+    @Json(name = "total_results") val totalResults: Int //todo should we show this in UI?
 )
 
 class TmdbNowPlayingMoviesResponse<T>(
@@ -40,7 +40,7 @@ class TmdbNowPlayingMoviesResponse<T>(
     @Json(name = "total_results") totalResults: Int, //todo should we show this in UI?
     @Json(name = "results") results: List<T>,
     @Json(name = "dates") val dates: Dates
-) : TmdbPagedResponse<T>(page, totalPages, totalResults, results) {
+) : TmdbPagedResponse<T>(page, results, totalPages, totalResults) {
     data class Dates(
         @Json(name = "minimum") val minimum: String,
         @Json(name = "maximum") val maximum: String
@@ -146,7 +146,10 @@ data class TmdbMovie(
     @Json(name = "runtime") val runtime: Int?,
     @Json(name = "spoken_languages") val spokenLanguages: List<TmdbSpokenLanguage>?,
     @Json(name = "status") val status: String?,
-    @Json(name = "tagline") val tagline: String?
+    @Json(name = "tagline") val tagline: String?,
+
+    // appendable fields
+    @Json(name = "similar") val similar: TmdbPagedResponse<TmdbMovie>?
 ) : TmdbMultiSearchModel()
 
 data class TmdbPerson(

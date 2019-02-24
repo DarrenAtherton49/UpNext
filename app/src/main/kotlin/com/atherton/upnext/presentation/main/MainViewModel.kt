@@ -64,12 +64,21 @@ class MainViewModel @Inject constructor(
                 } ?: throw IllegalStateException("Cannot show detail screen without an id")
             }
 
+        //todo merge this with searchModelClickedViewEffect above instead of having both
+        val movieClickedViewEffect = actions.ofType<MainAction.MovieClicked>()
+            .subscribeOn(schedulers.io)
+            .map { action ->
+                action.movie.id?.let { MainViewEffect.Navigation.ShowMovieDetailScreen(it) }
+            } ?: throw IllegalStateException("Cannot show detail screen without an id")
+
+
         val viewEffectChanges = mergeArray(
             searchActionClickedViewEffect,
             viewModeToggleChangedViewEffect,
             addTvShowClickedViewEffect,
             addMovieClickedViewEffect,
-            searchModelClickedViewEffect
+            searchModelClickedViewEffect,
+            movieClickedViewEffect
         )
 
         disposables += viewEffectChanges
@@ -88,6 +97,7 @@ sealed class MainAction : BaseAction {
     object AddShowButtonClicked : MainAction()
     object AddMovieButtonClicked : MainAction()
     data class SearchModelClicked(val searchModel: SearchModel) : MainAction()
+    data class MovieClicked(val movie: Movie) : MainAction() //todo merge this with SearchModelClicked?
 }
 
 sealed class MainChange {

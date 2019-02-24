@@ -2,6 +2,7 @@ package com.atherton.upnext.presentation.common.detail
 
 import android.os.Parcelable
 import com.atherton.upnext.domain.model.Genre
+import com.atherton.upnext.domain.model.Movie
 import kotlinx.android.parcel.Parcelize
 
 sealed class ModelDetailSection(val viewType: Int, val hasScrollingChildAdapter: Boolean) : Parcelable {
@@ -20,7 +21,10 @@ sealed class ModelDetailSection(val viewType: Int, val hasScrollingChildAdapter:
     @Parcelize data class Photos(val photos: List<String>) : ModelDetailSection(PHOTOS, true)
     @Parcelize data class Reviews(val reviews: List<String>) : ModelDetailSection(REVIEWS, false)
     @Parcelize data class Comments(val comments: List<String>) : ModelDetailSection(COMMENTS, false)
-    @Parcelize data class SimilarItems(val similarItems: List<String>) : ModelDetailSection(SIMILAR_ITEMS, true)
+    @Parcelize data class SimilarItems(
+        val sectionTitle: String,
+        val similarItems: List<Movie>
+    ) : ModelDetailSection(SIMILAR_ITEMS, true)
     @Parcelize data class ExternalLinks(val links: List<String>) : ModelDetailSection(EXTERNAL_LINKS, false)
 
     companion object ViewType {

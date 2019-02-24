@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.atherton.upnext.R
+import com.atherton.upnext.domain.model.Movie
 import com.atherton.upnext.util.extensions.inflateLayout
 import com.atherton.upnext.util.glide.GlideRequests
 import kotlinx.android.synthetic.main.item_detail_child_recyclerview.view.*
@@ -14,7 +15,8 @@ import kotlinx.android.synthetic.main.item_detail_child_recyclerview.view.*
 //todo preload some images when scrolling https://bumptech.github.io/glide/int/recyclerview.html
 class ModelDetailAdapter(
     private val imageLoader: GlideRequests,
-    private val childRecyclerItemSpacingPx: Int
+    private val childRecyclerItemSpacingPx: Int,
+    private val onSimilarItemClickListener: (Movie) -> Unit //todo change to SearchModel so we can reuse adapter
 ) : ListAdapter<ModelDetailSection, ModelDetailSectionViewHolder>(ModelDetailDiffCallback) {
 
     private val recyclerViewPool: RecyclerView.RecycledViewPool = RecyclerView.RecycledViewPool()
@@ -65,9 +67,8 @@ class ModelDetailAdapter(
             ModelDetailSection.REVIEWS -> ModelDetailReviewsViewHolder(parent.inflateLayout(R.layout.item_detail_reviews))
             //todo implement layout
             ModelDetailSection.COMMENTS -> ModelDetailCommentsViewHolder(parent.inflateLayout(R.layout.item_detail_comments))
-            //todo implement layout
             ModelDetailSection.SIMILAR_ITEMS -> ModelDetailSimilarItemsViewHolder(
-                parent.inflateLayout(R.layout.item_detail_similar_items),
+                parent.inflateLayout(R.layout.item_detail_section_similar_items),
                 recyclerViewPool,
                 childRecyclerItemSpacingPx
             )
@@ -128,7 +129,7 @@ class ModelDetailAdapter(
             val item = getItem(position)
             if (item.hasScrollingChildAdapter) {
                 val key = getItem(position).viewType
-                childAdapterStates.setValueAt(key, holder.itemView.childRecyclerView.layoutManager?.onSaveInstanceState())
+                childAdapterStates.put(key, holder.itemView.childRecyclerView.layoutManager?.onSaveInstanceState())
             }
         }
         super.onViewRecycled(holder)
@@ -140,8 +141,8 @@ class ModelDetailAdapter(
     }
 
     private fun initChildAdapters(sections: List<ModelDetailSection>) {
-        childAdapters = SparseArray(sections.size)
-        childAdapterStates = SparseArray(sections.size)
+        childAdapters = SparseArray()
+        childAdapterStates = SparseArray()
 
         // store an adapter for each section (parent item - each carousel) only if it has
         // scrolling content and needs an adapter
@@ -151,11 +152,11 @@ class ModelDetailAdapter(
                 is ModelDetailSection.Crew -> ModelDetailCrewAdapter(imageLoader)
                 is ModelDetailSection.Trailers -> ModelDetailTrailersAdapter(imageLoader)
                 is ModelDetailSection.Photos -> ModelDetailPhotosAdapter(imageLoader)
-                is ModelDetailSection.SimilarItems -> ModelDetailSimilarItemsAdapter(imageLoader)
+                is ModelDetailSection.SimilarItems -> ModelDetailSimilarItemsAdapter(imageLoader, onSimilarItemClickListener)
                 else -> null
             }
             if (adapter != null) {
-                childAdapters.setValueAt(section.viewType, adapter)
+                childAdapters.put(section.viewType, adapter)
             }
         }
     }

@@ -5,6 +5,7 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.atherton.upnext.domain.model.Movie
 import com.atherton.upnext.util.extensions.isVisible
 import com.atherton.upnext.util.glide.GlideRequests
 import com.atherton.upnext.util.recyclerview.LinearSpacingItemDecoration
@@ -15,6 +16,7 @@ import kotlinx.android.synthetic.main.item_detail_child_recyclerview.view.*
 import kotlinx.android.synthetic.main.item_detail_genres.*
 import kotlinx.android.synthetic.main.item_detail_overview.*
 import kotlinx.android.synthetic.main.item_detail_runtime_release_date.*
+import kotlinx.android.synthetic.main.item_detail_section_similar_items.*
 
 sealed class ModelDetailSectionViewHolder(override val containerView: View)
     : RecyclerView.ViewHolder(containerView),
@@ -76,7 +78,7 @@ class ModelDetailCastViewHolder(
     override val containerView: View,
     recycledViewPool: RecyclerView.RecycledViewPool,
     itemSpacingPx: Int
-) : ModelDetailScrollableViewHolder<ModelDetailSection.Cast, ModelDetailCastAdapter>(
+) : ModelDetailScrollableViewHolder<ModelDetailSection.Cast, String, ModelDetailCastAdapter>( //todo change String to Cast
     containerView,
     recycledViewPool,
     itemSpacingPx
@@ -90,7 +92,7 @@ class ModelDetailCrewViewHolder(
     override val containerView: View,
     recycledViewPool: RecyclerView.RecycledViewPool,
     itemSpacingPx: Int
-) : ModelDetailScrollableViewHolder<ModelDetailSection.Crew, ModelDetailCrewAdapter>(
+) : ModelDetailScrollableViewHolder<ModelDetailSection.Crew, String, ModelDetailCrewAdapter>( //todo change String to Crew
     containerView,
     recycledViewPool,
     itemSpacingPx
@@ -104,7 +106,7 @@ class ModelDetailTrailersViewHolder(
     override val containerView: View,
     recycledViewPool: RecyclerView.RecycledViewPool,
     itemSpacingPx: Int
-) : ModelDetailScrollableViewHolder<ModelDetailSection.Trailers, ModelDetailTrailersAdapter>(
+) : ModelDetailScrollableViewHolder<ModelDetailSection.Trailers, String, ModelDetailTrailersAdapter>( //todo change String to Trailer
     containerView,
     recycledViewPool,
     itemSpacingPx
@@ -118,7 +120,7 @@ class ModelDetailPhotosViewHolder(
     override val containerView: View,
     recycledViewPool: RecyclerView.RecycledViewPool,
     itemSpacingPx: Int
-) : ModelDetailScrollableViewHolder<ModelDetailSection.Photos, ModelDetailPhotosAdapter>(
+) : ModelDetailScrollableViewHolder<ModelDetailSection.Photos, String, ModelDetailPhotosAdapter>( //todo change String to Photo
     containerView,
     recycledViewPool,
     itemSpacingPx
@@ -150,13 +152,14 @@ class ModelDetailSimilarItemsViewHolder(
     containerView: View,
     recycledViewPool: RecyclerView.RecycledViewPool,
     itemSpacingPx: Int
-) : ModelDetailScrollableViewHolder<ModelDetailSection.SimilarItems, ModelDetailSimilarItemsAdapter>(
+) : ModelDetailScrollableViewHolder<ModelDetailSection.SimilarItems, Movie, ModelDetailSimilarItemsAdapter>(
     containerView,
     recycledViewPool,
     itemSpacingPx
 ) {
     override fun bind(section: ModelDetailSection.SimilarItems, childAdapter: ModelDetailSimilarItemsAdapter) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        similarItemSectionHeaderTextView.text = section.sectionTitle
+        childAdapter.submitList(section.similarItems)
     }
 }
 
@@ -174,7 +177,7 @@ class ModelDetailEmptyViewHolder(
     override val containerView: View
 ) : ModelDetailSectionViewHolder(containerView)
 
-abstract class ModelDetailScrollableViewHolder<SECTION : ModelDetailSection, ADAPTER: ListAdapter<SECTION, *>>(
+abstract class ModelDetailScrollableViewHolder<SECTION : ModelDetailSection, DATA: Any, ADAPTER: ListAdapter<DATA, *>>(
     override val containerView: View,
     recycledViewPool: RecyclerView.RecycledViewPool,
     itemSpacingPx: Int

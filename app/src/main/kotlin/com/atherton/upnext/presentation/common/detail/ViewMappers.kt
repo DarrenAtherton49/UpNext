@@ -29,7 +29,13 @@ internal fun buildMovieDetailSections(movie: Movie, appStringProvider: AppString
     //todo add crew
     //todo add reviews
     //todo add comments
-    //todo add similar items
+
+    movie.detail?.similar?.let { similarMovies ->
+        if (similarMovies.isNotEmpty()) {
+            sectionList.add(ModelDetailSection.SimilarItems(appStringProvider.getSimilarMoviesHeader(), similarMovies))
+        }
+    }
+
     //todo add external links
 
     return sectionList

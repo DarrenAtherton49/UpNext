@@ -9,7 +9,7 @@ import kotlinx.android.extensions.LayoutContainer
 
 class ModelDetailCastAdapter(
     private val imageLoader: GlideRequests
-) : ModelDetailAdapter.ScrollingChildAdapter<ModelDetailSection.Cast, ModelDetailCastAdapter.ViewHolder>(DiffCallback) {
+) : ModelDetailAdapter.ScrollingChildAdapter<String, ModelDetailCastAdapter.ViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -23,19 +23,19 @@ class ModelDetailCastAdapter(
         : RecyclerView.ViewHolder(containerView),
         LayoutContainer {
 
-        fun bind(castMember: ModelDetailSection.Cast) {
+        fun bind(castMember: String) {
             //todo bind image, cast name, character etc
         }
     }
 
     companion object {
-        private object DiffCallback : DiffUtil.ItemCallback<ModelDetailSection.Cast>() {
+        private object DiffCallback : DiffUtil.ItemCallback<String>() {
 
-            override fun areItemsTheSame(oldItem: ModelDetailSection.Cast, newItem: ModelDetailSection.Cast): Boolean {
-                return oldItem.viewType == newItem.viewType
+            override fun areItemsTheSame(oldItem: String, newItem: String): Boolean {
+                return oldItem == newItem //todo check id
             }
 
-            override fun areContentsTheSame(oldItem: ModelDetailSection.Cast, newItem: ModelDetailSection.Cast): Boolean {
+            override fun areContentsTheSame(oldItem: String, newItem: String): Boolean {
                 return oldItem == newItem
             }
         }

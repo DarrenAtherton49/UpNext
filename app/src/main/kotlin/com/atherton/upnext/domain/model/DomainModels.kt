@@ -84,6 +84,7 @@ data class Movie(
         val productionCountries: List<ProductionCountry>?,
         val revenue: Int?,
         val runtime: Int?,
+        val similar: List<Movie>?,
         val spokenLanguages: List<SpokenLanguage>?,
         val status: String?,
         val tagline: String?
