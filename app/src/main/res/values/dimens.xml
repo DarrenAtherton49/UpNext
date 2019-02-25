@@ -24,5 +24,7 @@
 
     <!-- Movie/TV Detail -->
     <dimen name="movie_tv_detail_backdrop_height">232dp</dimen>
+    <dimen name="movie_tv_detail_video_width">180dp</dimen>
+    <dimen name="movie_tv_detail_video_play_button_size">48dp</dimen>
     <dimen name="movie_tv_detail_child_items_spacing">16dp</dimen>
 </resources>

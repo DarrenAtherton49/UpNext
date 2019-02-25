@@ -57,6 +57,11 @@
         <item name="android:ellipsize">end</item>
     </style>
 
+    <style name="TvMovieDetailVideoFirstRowText" parent="TvMovieDetailScrollingItemFirstRowText">
+        <item name="android:minLines">@integer/movie_tv_detail_video_item_first_row_lines</item>
+        <item name="android:maxLines">@integer/movie_tv_detail_video_item_first_row_lines</item>
+    </style>
+
     <style name="TvMovieDetailScrollingItemFirstRowText" parent="TextAppearance.MaterialComponents.Subtitle2">
         <item name="android:maxLines">@integer/movie_tv_detail_section_scrollable_item_text_max_lines</item>
         <item name="android:ellipsize">end</item>

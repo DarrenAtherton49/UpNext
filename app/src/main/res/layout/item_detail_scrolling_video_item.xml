@@ -11,25 +11,26 @@
 
         <ImageView
             android:id="@+id/thumbnailImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/movie_tv_detail_backdrop_height"
+            android:layout_width="@dimen/movie_tv_detail_video_width"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/keyline"
             android:layout_gravity="center_horizontal"/>
 
         <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="@dimen/movie_tv_detail_video_play_button_size"
+            android:layout_height="@dimen/movie_tv_detail_video_play_button_size"
             android:layout_gravity="center"
-            android:src="@drawable/ic_play_circle_filled_black_24dp"/>
+            android:src="@drawable/ic_play_circle_filled_white_24dp"/>
 
     </FrameLayout>
 
-
     <TextView
-        style="@style/TvMovieDetailScrollingItemFirstRowText"
+        style="@style/TvMovieDetailVideoFirstRowText"
         android:id="@+id/videoTitleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minLines="2"
+        android:maxLines="2"
         android:layout_marginBottom="@dimen/keyline"/>
 
     <TextView
