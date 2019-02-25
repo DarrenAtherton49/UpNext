@@ -39,7 +39,7 @@ internal fun Context.getAppComponent(): AppComponent {
     }
 }
 
-internal fun Fragment.getAppComponent(): AppComponent = (this.context!!.getAppComponent())
+internal fun Fragment.getAppComponent(): AppComponent = (this.requireContext().getAppComponent())
 
 internal fun View.getAppComponent(): AppComponent = (this.context.getAppComponent())
 
