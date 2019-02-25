@@ -113,12 +113,18 @@ class MovieDetailViewModel @Inject constructor(
                 }
             }
 
+        val videoClickedViewEffect = actions.ofType<MovieDetailAction.VideoClicked>()
+            .preventMultipleClicks()
+            .subscribeOn(schedulers.io)
+            .map { MovieDetailViewEffect.PlayVideo(it.video) }
+
         val stateChanges = merge(loadDataChange, retryButtonChange)
 
         val viewEffectChanges = merge(
             similarMovieClickedViewEffect,
             castMemberClickedViewEffect,
-            crewMemberClickedViewEffect
+            crewMemberClickedViewEffect,
+            videoClickedViewEffect
         )
 
         disposables += viewEffectChanges
@@ -144,6 +150,7 @@ sealed class MovieDetailAction : BaseAction {
     data class SimilarMovieClicked(val movie: Movie) : MovieDetailAction()
     data class CastMemberClicked(val castMember: CastMember) : MovieDetailAction()
     data class CrewMemberClicked(val crewMember: CrewMember) : MovieDetailAction()
+    data class VideoClicked(val video: Video) : MovieDetailAction()
 }
 
 sealed class MovieDetailChange {
@@ -173,6 +180,7 @@ sealed class MovieDetailState : BaseState, Parcelable {
 sealed class MovieDetailViewEffect : BaseViewEffect {
     data class ShowAnotherMovieDetailScreen(val movie: Movie) : MovieDetailViewEffect()
     data class ShowPersonDetailScreen(val personId: Int) : MovieDetailViewEffect()
+    data class PlayVideo(val video: Video) : MovieDetailViewEffect()
 }
 
 //================================================================================
@@ -180,11 +188,11 @@ sealed class MovieDetailViewEffect : BaseViewEffect {
 //================================================================================
 
 private fun Movie.withMovieDetailImageUrls(config: Config): Movie {
-
     // only perform copy if the image paths actually exist
     return if (backdropPath != null || posterPath != null) {
+        val backdropPath = buildBackdropPath(backdropPath, config)
         this.copy(
-            backdropPath = buildBackdropPath(backdropPath, config),
+            backdropPath = backdropPath,
             posterPath = buildPosterPath(posterPath, config),
             detail = detail?.copy(
                 cast = detail.cast?.map { castMember ->
@@ -195,7 +203,8 @@ private fun Movie.withMovieDetailImageUrls(config: Config): Movie {
                 },
                 similar = detail.similar?.map { similarMovie ->
                     similarMovie.copy(posterPath = buildPosterPath(similarMovie.posterPath, config))
-                }
+                },
+                videos = detail.videos?.map { video -> video.copy(thumbnail = backdropPath) }
             )
         )
     } else this

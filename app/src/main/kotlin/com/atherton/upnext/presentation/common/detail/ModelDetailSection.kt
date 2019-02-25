@@ -1,10 +1,7 @@
 package com.atherton.upnext.presentation.common.detail
 
 import android.os.Parcelable
-import com.atherton.upnext.domain.model.CastMember
-import com.atherton.upnext.domain.model.CrewMember
-import com.atherton.upnext.domain.model.Genre
-import com.atherton.upnext.domain.model.Movie
+import com.atherton.upnext.domain.model.*
 import kotlinx.android.parcel.Parcelize
 
 sealed class ModelDetailSection(val viewType: Int, val hasScrollingChildAdapter: Boolean) : Parcelable {
@@ -30,7 +27,11 @@ sealed class ModelDetailSection(val viewType: Int, val hasScrollingChildAdapter:
         val crew: List<CrewMember>
     ) : ModelDetailSection(CREW, true)
 
-    @Parcelize data class Trailers(val trailers: List<String>) : ModelDetailSection(TRAILERS, true)
+    @Parcelize data class Videos(
+        val sectionTitle: String,
+        val videos: List<Video>
+    ) : ModelDetailSection(VIDEOS, true)
+
     @Parcelize data class Photos(val photos: List<String>) : ModelDetailSection(PHOTOS, true)
     @Parcelize data class Reviews(val reviews: List<String>) : ModelDetailSection(REVIEWS, false)
     @Parcelize data class Comments(val comments: List<String>) : ModelDetailSection(COMMENTS, false)
@@ -50,7 +51,7 @@ sealed class ModelDetailSection(val viewType: Int, val hasScrollingChildAdapter:
         const val SEASONS = 4
         const val CAST = 5
         const val CREW = 6
-        const val TRAILERS = 7
+        const val VIDEOS = 7
         const val PHOTOS = 8
         const val REVIEWS = 9
         const val COMMENTS = 10

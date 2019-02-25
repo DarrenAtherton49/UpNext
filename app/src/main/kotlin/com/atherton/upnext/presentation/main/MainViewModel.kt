@@ -76,6 +76,14 @@ class MainViewModel @Inject constructor(
             .subscribeOn(schedulers.io)
             .map { action -> MainViewEffect.Navigation.ShowPersonDetailScreen(action.personId) }
 
+        val videoClickedViewEffect = actions.ofType<MainAction.VideoClicked>()
+            .subscribeOn(schedulers.io)
+            .map { action ->
+                action.video.key?.let { key ->
+                    MainViewEffect.Navigation.PlayYoutubeVideo(key)
+                }
+            } ?: throw IllegalStateException("Cannot play YouTube video without an id")
+
         val viewEffectChanges = mergeArray(
             searchActionClickedViewEffect,
             viewModeToggleChangedViewEffect,
@@ -83,7 +91,8 @@ class MainViewModel @Inject constructor(
             addMovieClickedViewEffect,
             searchModelClickedViewEffect,
             movieClickedViewEffect,
-            personClickedViewEffect
+            personClickedViewEffect,
+            videoClickedViewEffect
         )
 
         disposables += viewEffectChanges
@@ -104,6 +113,7 @@ sealed class MainAction : BaseAction {
     data class SearchModelClicked(val searchModel: SearchModel) : MainAction()
     data class MovieClicked(val movie: Movie) : MainAction() //todo merge this with SearchModelClicked?
     data class PersonClicked(val personId: Int) : MainAction() //todo merge this with SearchModelClicked?
+    data class VideoClicked(val video: Video) : MainAction()
 }
 
 sealed class MainChange {
@@ -119,6 +129,7 @@ sealed class MainViewEffect : BaseViewEffect {
         data class ShowMovieDetailScreen(val movieId: Int): Navigation()
         data class ShowTvDetailScreen(val tvShowId: Int): Navigation()
         data class ShowPersonDetailScreen(val personId: Int): Navigation()
+        data class PlayYoutubeVideo(val videoKey: String) : Navigation()
     }
     data class ToggleViewMode(val viewMode: SearchModelViewMode) : MainViewEffect()
 }

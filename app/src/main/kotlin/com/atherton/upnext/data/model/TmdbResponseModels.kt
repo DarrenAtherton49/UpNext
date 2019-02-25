@@ -117,14 +117,17 @@ data class TmdbTvShow(
     @Json(name = "type") val type: String?,
 
     // appendable fields
+    @Json(name = "credits") val credits: TmdbMovie.Credits?,
     @Json(name = "similar") val similar: TmdbPagedResponse<TmdbMovie>?,
-    @Json(name = "credits") val credits: TmdbMovie.Credits?
+    @Json(name = "videos") val videos: Videos?
 ) : TmdbMultiSearchModel() {
 
     data class Credits(
         @Json(name = "cast") val cast: List<TmdbCastMember>?,
         @Json(name = "crew") val crew: List<TmdbCrewMember>?
     )
+
+    data class Videos(@Json(name = "results") val results: List<TmdbVideo>?)
 }
 
 data class TmdbMovie(
@@ -159,14 +162,17 @@ data class TmdbMovie(
     @Json(name = "tagline") val tagline: String?,
 
     // appendable fields
+    @Json(name = "credits") val credits: TmdbTvShow.Credits?,
     @Json(name = "similar") val similar: TmdbPagedResponse<TmdbMovie>?,
-    @Json(name = "credits") val credits: Credits?
+    @Json(name = "videos") val videos: Videos?
 ) : TmdbMultiSearchModel() {
 
     data class Credits(
         @Json(name = "cast") val cast: List<TmdbCastMember>?,
         @Json(name = "crew") val crew: List<TmdbCrewMember>?
     )
+
+    data class Videos(@Json(name = "results") val results: List<TmdbVideo>?)
 }
 
 data class TmdbPerson(
@@ -278,4 +284,13 @@ data class TmdbCrewMember(
     @Json(name = "job") val job: String?,
     @Json(name = "name") val name: String?,
     @Json(name = "profile_path") val profilePath: String?
+)
+
+data class TmdbVideo(
+    @Json(name = "id") val id: String?,
+    @Json(name = "key") val key: String?,
+    @Json(name = "name") val name: String?,
+    @Json(name = "site") val site: String?,
+    @Json(name = "size") val size: Int?, // 360, 480, 720 or 1080
+    @Json(name = "type") val type: String? // Trailer, Teaser, Clip, Featurette
 )

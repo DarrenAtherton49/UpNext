@@ -26,14 +26,16 @@ internal fun buildMovieDetailSections(movie: Movie, appStringProvider: AppString
 
         //todo add ratings
         //todo add seasons
-        //todo add trailers
-        //todo add photos
-
-
 
         if (it.genres != null && it.genres.isNotEmpty()) {
             sectionList.add(ModelDetailSection.Genres(it.genres.sortedBy { genre -> genre.name }))
         }
+        if (it.videos != null && it.videos.isNotEmpty()) {
+            sectionList.add(ModelDetailSection.Videos(appStringProvider.getVideosHeader(), it.videos))
+        }
+
+        //todo add photos
+
         if (it.cast != null && it.cast.isNotEmpty()) {
             sectionList.add(ModelDetailSection.Cast(appStringProvider.getCastHeader(), it.cast))
         }

@@ -52,7 +52,8 @@ data class TvShow(
         val productionCompanies: List<ProductionCompany>?,
         val seasons: List<Season>?,
         val status: String?,
-        val type: String?
+        val type: String?,
+        val videos: List<Video>?
     ) : Parcelable
 }
 
@@ -91,7 +92,8 @@ data class Movie(
         val similar: List<Movie>?,
         val spokenLanguages: List<SpokenLanguage>?,
         val status: String?,
-        val tagline: String?
+        val tagline: String?,
+        val videos: List<Video>?
     ) : Parcelable
 }
 
@@ -202,10 +204,29 @@ data class Season(
     val seasonNumber: Int?
 ) : Parcelable
 
+@Parcelize
+data class Video(
+    val id: String?,
+    val key: String?,
+    val name: String?,
+    val site: String?,
+    val size: VideoSize,
+    val thumbnail: String?,
+    val type: String?
+) : Parcelable
+
 sealed class Gender : Parcelable {
     @Parcelize object Female : Gender()
     @Parcelize object Male : Gender()
     @Parcelize object Unknown : Gender()
+}
+
+sealed class VideoSize : Parcelable {
+    @Parcelize object V360 : VideoSize()
+    @Parcelize object V480 : VideoSize()
+    @Parcelize object V720 : VideoSize()
+    @Parcelize object V1080 : VideoSize()
+    @Parcelize object Unknown : VideoSize()
 }
 
 data class Config(

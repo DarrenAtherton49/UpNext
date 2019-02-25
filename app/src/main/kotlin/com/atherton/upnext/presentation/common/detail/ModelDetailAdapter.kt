@@ -10,6 +10,7 @@ import com.atherton.upnext.R
 import com.atherton.upnext.domain.model.CastMember
 import com.atherton.upnext.domain.model.CrewMember
 import com.atherton.upnext.domain.model.Movie
+import com.atherton.upnext.domain.model.Video
 import com.atherton.upnext.util.extensions.inflateLayout
 import com.atherton.upnext.util.glide.GlideRequests
 import kotlinx.android.synthetic.main.item_detail_scrolling_section.view.*
@@ -20,11 +21,12 @@ class ModelDetailAdapter(
     private val childRecyclerItemSpacingPx: Int,
     private val onCastMemberClickListener: (CastMember) -> Unit,
     private val onCrewMemberClickListener: (CrewMember) -> Unit,
+    private val onVideoClickListener: (Video) -> Unit,
     private val onSimilarItemClickListener: (Movie) -> Unit //todo change to SearchModel so we can reuse adapter
 ) : ListAdapter<ModelDetailSection, ModelDetailSectionViewHolder>(ModelDetailDiffCallback) {
 
     private val recycledViewPool: RecyclerView.RecycledViewPool = RecyclerView.RecycledViewPool()
-    //todo create a second recycledViewPool to share photos and trailers views?
+    //todo create a second recycledViewPool to share photos and videos views?
 
     // Maps of child RecyclerView adapters and state to restore
     private lateinit var childAdapters: SparseArray<ScrollingChildAdapter<*,*>>
@@ -54,9 +56,8 @@ class ModelDetailAdapter(
                 recycledViewPool,
                 childRecyclerItemSpacingPx
             )
-            //todo implement layout
-            ModelDetailSection.TRAILERS -> ModelDetailTrailersViewHolder(
-                parent.inflateLayout(R.layout.item_detail_trailers),
+            ModelDetailSection.VIDEOS -> ModelDetailVideosViewHolder(
+                parent.inflateLayout(R.layout.item_detail_scrolling_section),
                 null,
                 childRecyclerItemSpacingPx
             )
@@ -102,9 +103,9 @@ class ModelDetailAdapter(
                 childAdapters[section.viewType] as ModelDetailCrewAdapter,
                 childAdapterStates[section.viewType]
             )
-            is ModelDetailTrailersViewHolder -> holder.bindHorizontalAdapter(
-                section as ModelDetailSection.Trailers,
-                childAdapters[section.viewType] as ModelDetailTrailersAdapter,
+            is ModelDetailVideosViewHolder -> holder.bindHorizontalAdapter(
+                section as ModelDetailSection.Videos,
+                childAdapters[section.viewType] as ModelDetailVideosAdapter,
                 childAdapterStates[section.viewType]
             )
             is ModelDetailPhotosViewHolder -> holder.bindHorizontalAdapter(
@@ -153,7 +154,7 @@ class ModelDetailAdapter(
             val adapter = when (section) {
                 is ModelDetailSection.Cast -> ModelDetailCastAdapter(imageLoader, onCastMemberClickListener)
                 is ModelDetailSection.Crew -> ModelDetailCrewAdapter(imageLoader, onCrewMemberClickListener)
-                is ModelDetailSection.Trailers -> ModelDetailTrailersAdapter(imageLoader)
+                is ModelDetailSection.Videos -> ModelDetailVideosAdapter(imageLoader, onVideoClickListener)
                 is ModelDetailSection.Photos -> ModelDetailPhotosAdapter(imageLoader)
                 is ModelDetailSection.SimilarItems -> ModelDetailSimilarItemsAdapter(imageLoader, onSimilarItemClickListener)
                 else -> null

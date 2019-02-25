@@ -60,6 +60,7 @@ class TmdbMultiSearchResponseAdapter {
             null,
             null,
             null,
+            null,
             null
         )
     }
@@ -79,6 +80,7 @@ class TmdbMultiSearchResponseAdapter {
             popularity,
             voteAverage,
             voteCount,
+            null,
             null,
             null,
             null,

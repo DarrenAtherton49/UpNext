@@ -51,6 +51,7 @@ class MovieDetailFragment : BaseFragment<MovieDetailAction, MovieDetailState, Mo
             childRecyclerItemSpacingPx = resources.getDimensionPixelSize(R.dimen.movie_tv_detail_child_items_spacing),
             onCastMemberClickListener = { castMember -> viewModel.dispatch(MovieDetailAction.CastMemberClicked(castMember)) },
             onCrewMemberClickListener = { crewMember -> viewModel.dispatch(MovieDetailAction.CrewMemberClicked(crewMember)) },
+            onVideoClickListener = { video -> viewModel.dispatch(MovieDetailAction.VideoClicked(video)) },
             onSimilarItemClickListener = { movie -> viewModel.dispatch(MovieDetailAction.SimilarMovieClicked(movie)) }
         )
     }
@@ -119,8 +120,7 @@ class MovieDetailFragment : BaseFragment<MovieDetailAction, MovieDetailState, Mo
     private fun renderMovieImages(movie: Movie) {
         GlideApp.with(this)
             .load(movie.backdropPath)
-            .centerCrop()
-            .error(R.drawable.ic_broken_image_white_24dp)
+            .apply(UpNextAppGlideModule.itemBackdropRequestOptions)
             .into(backdropImageView)
 
         GlideApp.with(this)
@@ -136,6 +136,9 @@ class MovieDetailFragment : BaseFragment<MovieDetailAction, MovieDetailState, Mo
             }
             is MovieDetailViewEffect.ShowPersonDetailScreen -> {
                 sharedViewModel.dispatch(MainAction.PersonClicked(viewEffect.personId))
+            }
+            is MovieDetailViewEffect.PlayVideo -> {
+                sharedViewModel.dispatch(MainAction.VideoClicked(viewEffect.video))
             }
         }
     }

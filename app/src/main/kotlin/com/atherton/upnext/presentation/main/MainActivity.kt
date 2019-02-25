@@ -27,7 +27,7 @@ class MainActivity : BaseActivity<MainAction, MainState, MainViewEffect, MainVie
 
     override val sharedViewModel: MainViewModel by lazy { getViewModel<MainViewModel>(vmFactory) }
     val navController: NavController by lazy { findNavController(R.id.navHostFragment) }
-    private val navigator: Navigator by lazy { AndroidNavigator(navController) }
+    private val navigator: Navigator by lazy { AndroidNavigator(navController, this) }
 
     private val topLevelDestinationIds = setOf(R.id.moviesFragment, R.id.showsFragment, R.id.discoverFragment)
     val appBarConfiguration: AppBarConfiguration by lazy {
@@ -40,9 +40,7 @@ class MainActivity : BaseActivity<MainAction, MainState, MainViewEffect, MainVie
         setupNavigation()
     }
 
-    override fun renderState(state: MainState) {
-
-    }
+    override fun renderState(state: MainState) {}
 
     override fun processViewEffects(viewEffect: MainViewEffect) {
         when (viewEffect) {
@@ -50,6 +48,7 @@ class MainActivity : BaseActivity<MainAction, MainState, MainViewEffect, MainVie
             is MainViewEffect.Navigation.ShowMovieDetailScreen -> navigator.showMovieDetailScreen(viewEffect.movieId)
             is MainViewEffect.Navigation.ShowTvDetailScreen -> navigator.showTvShowDetailScreen(viewEffect.tvShowId)
             is MainViewEffect.Navigation.ShowPersonDetailScreen -> navigator.showPersonDetailScreen(viewEffect.personId)
+            is MainViewEffect.Navigation.PlayYoutubeVideo -> navigator.playYoutubeVideo(viewEffect.videoKey)
         }
     }
 

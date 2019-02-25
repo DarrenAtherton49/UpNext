@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/thumbnailImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/movie_tv_detail_backdrop_height"
+        android:layout_marginBottom="@dimen/keyline"
+        android:layout_gravity="center_horizontal"/>
+
+    <TextView
+        style="@style/TvMovieDetailScrollingItemFirstRowText"
+        android:id="@+id/videoTitleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/keyline"/>
+
+    <TextView
+        style="@style/TvMovieDetailScrollingItemSecondRowText"
+        android:id="@+id/videoTypeTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

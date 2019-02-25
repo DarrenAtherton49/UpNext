@@ -59,6 +59,8 @@
         <item quantity="one">%1d min</item>
         <item quantity="other">%1d mins</item>
     </plurals>
+    <string name="movie_detail_videos_header">Videos</string>
+    <string name="movie_detail_photos_header">Photos</string>
     <string name="movie_detail_cast_header">Cast</string>
     <string name="movie_detail_crew_header">Crew</string>
     <string name="movie_detail_similar_movies_header">Similar Movies</string>

@@ -73,7 +73,8 @@ fun TmdbTvShow.toDomainTvShow(): TvShow {
             productionCompanies?.toDomainProductionCompanies(),
             seasons?.toDomainSeasons(),
             status,
-            type
+            type,
+            videos?.results?.toDomainVideos()
         ),
         firstAirDate,
         genreIds,
@@ -109,7 +110,8 @@ fun TmdbMovie.toDomainMovie(): Movie {
             similar?.results?.map { it.toDomainMovie() },
             spokenLanguages?.toDomainSpokenLanguages(),
             status,
-            tagline
+            tagline,
+            videos?.results?.toDomainVideos()
         ),
         genreIds,
         id,
@@ -176,6 +178,13 @@ private fun List<TmdbSpokenLanguage>.toDomainSpokenLanguages(): List<SpokenLangu
     return this.map { SpokenLanguage(it.iso6391, it.name) }
 }
 
+private fun List<TmdbVideo>.toDomainVideos(): List<Video> {
+    return this
+        .filter { it.site == "YouTube" }
+        .sortedByDescending { it.type == "Trailer" }
+        .map { Video(it.id, it.key, it.name, it.site, it.size.toVideoSize(), null, it.type) }
+}
+
 private fun TmdbTvCreatedBy.toDomainTvCreatedBy(): TvCreatedBy {
     return TvCreatedBy(id, creditId, name, gender.toDomainGender(), profilePath)
 }
@@ -185,6 +194,16 @@ private fun Int?.toDomainGender(): Gender {
         1 -> Gender.Female
         2 -> Gender.Male
         else -> Gender.Unknown
+    }
+}
+
+private fun Int?.toVideoSize(): VideoSize {
+    return when (this) {
+        360 -> VideoSize.V360
+        480 -> VideoSize.V480
+        720 -> VideoSize.V720
+        1080 -> VideoSize.V1080
+        else -> VideoSize.Unknown
     }
 }
 

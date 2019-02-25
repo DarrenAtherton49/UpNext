@@ -23,7 +23,7 @@ class ModelDetailPhotosAdapter(
         : RecyclerView.ViewHolder(containerView),
         LayoutContainer {
 
-        fun bind(trailer: String) {
+        fun bind(photo: String) {
             //todo bind image, photo name etc.
         }
     }

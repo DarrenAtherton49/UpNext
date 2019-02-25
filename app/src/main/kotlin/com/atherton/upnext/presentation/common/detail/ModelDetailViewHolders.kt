@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.atherton.upnext.domain.model.CastMember
 import com.atherton.upnext.domain.model.CrewMember
 import com.atherton.upnext.domain.model.Movie
+import com.atherton.upnext.domain.model.Video
 import com.atherton.upnext.util.extensions.isVisible
 import com.atherton.upnext.util.glide.GlideRequests
 import com.atherton.upnext.util.recyclerview.LinearSpacingItemDecoration
@@ -85,7 +86,7 @@ class ModelDetailCastViewHolder(
     itemSpacingPx
 ) {
     override fun bind(section: ModelDetailSection.Cast, childAdapter: ModelDetailCastAdapter) {
-        similarItemSectionHeaderTextView.text = section.sectionTitle
+        sectionHeaderTextView.text = section.sectionTitle
         childAdapter.submitList(section.cast)
     }
 }
@@ -100,22 +101,23 @@ class ModelDetailCrewViewHolder(
     itemSpacingPx
 ) {
     override fun bind(section: ModelDetailSection.Crew, childAdapter: ModelDetailCrewAdapter) {
-        similarItemSectionHeaderTextView.text = section.sectionTitle
+        sectionHeaderTextView.text = section.sectionTitle
         childAdapter.submitList(section.crew)
     }
 }
 
-class ModelDetailTrailersViewHolder(
+class ModelDetailVideosViewHolder(
     override val containerView: View,
     recycledViewPool: RecyclerView.RecycledViewPool?,
     itemSpacingPx: Int
-) : ModelDetailScrollableViewHolder<ModelDetailSection.Trailers, String, ModelDetailTrailersAdapter>( //todo change String to Trailer
+) : ModelDetailScrollableViewHolder<ModelDetailSection.Videos, Video, ModelDetailVideosAdapter>(
     containerView,
     recycledViewPool,
     itemSpacingPx
 ) {
-    override fun bind(section: ModelDetailSection.Trailers, childAdapter: ModelDetailTrailersAdapter) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun bind(section: ModelDetailSection.Videos, childAdapter: ModelDetailVideosAdapter) {
+        sectionHeaderTextView.text = section.sectionTitle
+        childAdapter.submitList(section.videos)
     }
 }
 
@@ -161,7 +163,7 @@ class ModelDetailSimilarItemsViewHolder(
     itemSpacingPx
 ) {
     override fun bind(section: ModelDetailSection.SimilarItems, childAdapter: ModelDetailSimilarItemsAdapter) {
-        similarItemSectionHeaderTextView.text = section.sectionTitle
+        sectionHeaderTextView.text = section.sectionTitle
         childAdapter.submitList(section.similarItems)
     }
 }

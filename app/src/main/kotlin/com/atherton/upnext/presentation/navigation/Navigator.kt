@@ -6,4 +6,5 @@ interface Navigator {
     fun showMovieDetailScreen(movieId: Int)
     fun showTvShowDetailScreen(tvShowId: Int)
     fun showPersonDetailScreen(personId: Int)
+    fun playYoutubeVideo(videoKey: String)
 }

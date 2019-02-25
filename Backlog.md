@@ -9,7 +9,6 @@
 - Link to TMDB, IMDB, Trakt, Amazon etc.
 - Trakt syncing
 - TMDB list syncing
-- Trailers
 - Access a gallery of posters and backdrops (these are on TMDB as a separate request)
 - Recommendations
 - Update the grid/list pages to show which content you have already watched without clicking into the detail screen
