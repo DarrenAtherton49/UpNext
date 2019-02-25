@@ -24,7 +24,7 @@ class UpNextAppGlideModule : AppGlideModule() {
                 .error(R.drawable.ic_broken_image_white_24dp)
         }
 
-        val itemBackdropRequestOptions by lazy {
+        val modelDetailBackdropRequestOptions by lazy {
             RequestOptions()
                 .centerCrop()
                 .error(R.drawable.ic_broken_image_white_24dp)

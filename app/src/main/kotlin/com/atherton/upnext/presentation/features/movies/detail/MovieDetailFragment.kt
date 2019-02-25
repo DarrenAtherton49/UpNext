@@ -120,7 +120,7 @@ class MovieDetailFragment : BaseFragment<MovieDetailAction, MovieDetailState, Mo
     private fun renderMovieImages(movie: Movie) {
         GlideApp.with(this)
             .load(movie.backdropPath)
-            .apply(UpNextAppGlideModule.itemBackdropRequestOptions)
+            .apply(UpNextAppGlideModule.modelDetailBackdropRequestOptions)
             .into(backdropImageView)
 
         GlideApp.with(this)
