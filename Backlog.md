@@ -12,13 +12,13 @@
 - Access a gallery of posters and backdrops (these are on TMDB as a separate request)
 - Recommendations
 - Update the grid/list pages to show which content you have already watched without clicking into the detail screen
-- Accessibility
+- Accessibility, content descriptions etc.
 - Add button to mark 'all episodes before this one' as watched
 - TMDB discussions
 - Custom lists based on filters. Could be used for stuff like dvd collection etc.
 - Ability to save searches
 - Gamification/stats/achievements
-- Deep linking and sharing
+- Deep linking and sharing tv shows, movies and people
 - Backup/import - manual and auto with Google Drive
 - Display TMDB attribution
 - Advanced filters. E.g. by genre
@@ -31,5 +31,6 @@
 - Watch videos on app performance and tune everything
 - Look at GrowthJournal backlog for release checklists etc
 - Proguard
+- Look at TMDB 'changes' api calls - could incorporate this into caching
 
 

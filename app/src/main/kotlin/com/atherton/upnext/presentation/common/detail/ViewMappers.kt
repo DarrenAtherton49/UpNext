@@ -12,6 +12,7 @@ internal fun buildMovieDetailSections(movie: Movie, appStringProvider: AppString
     val sectionList: MutableList<ModelDetailSection> = ArrayList()
 
     val runtime: String? = movie.detail?.runtime?.let { appStringProvider.getRuntimeString(it) }
+    //todo maybe only show year. Also factor in user region when calling API - think there are different 'releases' for each region
     val releaseDate: String? = formatDateForDetailScreen(movie.releaseDate)
     sectionList.add(
         ModelDetailSection.RuntimeRelease(
