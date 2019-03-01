@@ -98,12 +98,11 @@
         <item name="tabGravity">fill</item>
     </style>
 
-    <style name="PrimaryActionButton" parent="Widget.MaterialComponents.Button">
+    <style name="PrimaryActionButton" parent="Widget.MaterialComponents.ExtendedFloatingActionButton.Icon">
         <item name="backgroundTint">@color/colorSecondaryVariant</item>
         <item name="android:textColor">@color/colorOnSecondary</item>
         <item name="rippleColor">@color/colorSecondary</item>
         <item name="iconTint">@color/colorOnSecondary</item>
-        <item name="cornerRadius">@dimen/primary_action_button_corner_radius</item>
     </style>
 
 </resources>

@@ -22,7 +22,7 @@ ext {
     junitVersion = '4.12'
     leakCanaryVersion = '1.6.3'
     lifecycleVersion = '2.0.0'
-    materialVersion = '1.1.0-alpha02'
+    materialVersion = '1.1.0-alpha04'
     mockitoVersion = '1.10.19'
     moshiVersion = '1.8.0'
     navigationVersion = '1.0.0-rc02'

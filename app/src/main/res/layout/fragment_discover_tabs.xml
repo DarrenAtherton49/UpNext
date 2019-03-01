@@ -39,13 +39,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
-        <com.google.android.material.button.MaterialButton
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             style="@style/PrimaryActionButton"
             android:id="@+id/filterButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
+            android:layout_gravity="bottom|end"
             android:layout_marginBottom="@dimen/keyline_2x"
+            android:layout_marginEnd="@dimen/keyline_2x"
             app:icon="@drawable/ic_filter_list_white_24dp"
             android:text="@string/discover_tabs_filter_button"/>
 
