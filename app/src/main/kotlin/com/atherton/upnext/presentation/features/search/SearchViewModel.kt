@@ -3,10 +3,7 @@ package com.atherton.upnext.presentation.features.search
 import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.atherton.upnext.domain.model.Config
-import com.atherton.upnext.domain.model.Response
-import com.atherton.upnext.domain.model.SearchModel
-import com.atherton.upnext.domain.model.SearchModelViewMode
+import com.atherton.upnext.domain.model.*
 import com.atherton.upnext.domain.usecase.*
 import com.atherton.upnext.presentation.common.searchmodel.withSearchModelListImageUrls
 import com.atherton.upnext.util.base.BaseViewEffect
@@ -83,7 +80,7 @@ class SearchViewModel @Inject constructor(
                 zip(dataSourceSingle,
                     getConfigUseCase.build(),
                     getDiscoverViewModeUseCase.build(),
-                    Function3<Response<List<SearchModel>>,
+                    Function3<Response<List<Searchable>>,
                         Config,
                         SearchModelViewMode,
                         SearchViewData> { searchModels, config, viewMode ->
@@ -146,7 +143,14 @@ class SearchViewModel @Inject constructor(
         val searchResultClickedViewEffect = actions.ofType<SearchAction.SearchResultClicked>()
             .preventMultipleClicks()
             .subscribeOn(schedulers.io)
-            .map { SearchViewEffect.ShowSearchModelDetailScreen(it.searchModel) }
+            .map { action ->
+                when (action.searchModel) {
+                    is TvShow -> SearchViewEffect.ShowTvShowDetailScreen(action.searchModel.id)
+                    is Movie -> SearchViewEffect.ShowMovieDetailScreen(action.searchModel.id)
+                    is Person -> SearchViewEffect.ShowPersonDetailScreen(action.searchModel.id)
+                    else -> throw IllegalStateException("Search model must be either a tv show, movie or person")
+                }
+            }
 
         val stateChanges = merge(textSearchedChange, retryButtonChange, viewModeChange)
 
@@ -174,14 +178,14 @@ sealed class SearchAction : BaseAction {
     data class ViewModeToggleActionClicked(val query: String) : SearchAction()
     data class SearchTextChanged(val query: String) : SearchAction()
     data class RetryButtonClicked(val query: String) : SearchAction()
-    data class SearchResultClicked(val searchModel: SearchModel) : SearchAction()
+    data class SearchResultClicked(val searchModel: Searchable) : SearchAction()
 }
 
 sealed class SearchChange {
     object Loading : SearchChange()
     data class Result(
         val query: String,
-        val response: Response<List<SearchModel>>,
+        val response: Response<List<Searchable>>,
         val config: Config,
         val viewMode: SearchModelViewMode
     ) : SearchChange()
@@ -194,13 +198,13 @@ sealed class SearchState(open val query: String): BaseState, Parcelable {
 
     @Parcelize
     data class Loading(
-        val results: List<SearchModel> = emptyList(),
+        val results: List<Searchable> = emptyList(),
         override val query: String
     ) : SearchState(query)
 
     @Parcelize
     data class Content(
-        val results: List<SearchModel> = emptyList(),
+        val results: List<Searchable> = emptyList(),
         val cached: Boolean = false,
         override val query: String,
         val viewMode: SearchModelViewMode
@@ -215,7 +219,9 @@ sealed class SearchState(open val query: String): BaseState, Parcelable {
 
 sealed class SearchViewEffect : BaseViewEffect {
     data class ToggleViewMode(val viewMode: SearchModelViewMode) : SearchViewEffect()
-    data class ShowSearchModelDetailScreen(val searchModel: SearchModel) : SearchViewEffect()
+    data class ShowTvShowDetailScreen(val tvShowId: Int) : SearchViewEffect()
+    data class ShowMovieDetailScreen(val movieId: Int) : SearchViewEffect()
+    data class ShowPersonDetailScreen(val personId: Int) : SearchViewEffect()
 }
 
 //================================================================================
@@ -224,7 +230,7 @@ sealed class SearchViewEffect : BaseViewEffect {
 
 // this class is just used as the result of zipping the necessary Observables together
 private data class SearchViewData(
-    val searchModels: Response<List<SearchModel>>,
+    val searchModels: Response<List<Searchable>>,
     val config: Config,
     val viewMode: SearchModelViewMode
 )

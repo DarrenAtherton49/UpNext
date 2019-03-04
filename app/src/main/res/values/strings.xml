@@ -16,7 +16,6 @@
     <string name="fragment_label_movies">Movies</string>
     <string name="fragment_label_discover">Discover</string>
     <string name="fragment_label_search">Search</string>
-    <string name="fragment_label_movie_detail">Movie Detail</string>
 
     <!-- MainActivity - startup error dialog -->
     <string name="main_dialog_startup_error_title">Something went wrong!</string>
@@ -54,17 +53,14 @@
     <!-- SearchFragment -->
     <string name="search_textfield_label">Find Movies, Shows or People…</string>
 
-    <!-- Movie/TV Detail Fragment -->
-    <plurals name="movie_tv_detail_minutes_plural">
-        <item quantity="one">%1d min</item>
-        <item quantity="other">%1d mins</item>
-    </plurals>
-    <string name="movie_detail_videos_header">Videos</string>
-    <string name="movie_detail_photos_header">Photos</string>
-    <string name="movie_detail_cast_header">Cast</string>
-    <string name="movie_detail_crew_header">Crew</string>
-    <string name="movie_detail_similar_movies_header">Similar Movies</string>
-    <string name="movie_tv_detail_divider">|</string>
+    <!--Content (movie/tv) Detail Fragment -->
+    <string name="content_detail_runtime_mins">%1s mins</string>
+    <string name="content_detail_videos_header">Videos</string>
+    <string name="content_detail_photos_header">Photos</string>
+    <string name="content_detail_cast_header">Cast</string>
+    <string name="content_detail_crew_header">Crew</string>
+    <string name="content_detail_recommended_content_header">You may also like</string>
+    <string name="content_detail_divider">|</string>
 
     <!-- Error messages -->
     <string name="error_message_server">Server encountered a %d error, please try again later</string>

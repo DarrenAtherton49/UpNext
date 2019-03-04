@@ -11,7 +11,7 @@ interface TmdbMovieService {
     @GET("movie/{movie_id}")
     fun getMovieDetails(
         @Path("movie_id") id: Int,
-        @Query("append_to_response") appendToResponse: String = "credits,reviews,similar,videos"
+        @Query("append_to_response") appendToResponse: String = "credits,reviews,recommendations,videos"
     ): Single<NetworkResponse<TmdbMovie, TmdbApiError>>
 
     @GET("movie/popular")

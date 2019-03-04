@@ -88,7 +88,7 @@ data class TmdbTvShow(
     @Json(name = "backdrop_path") val backdropPath: String?,
     @Json(name = "first_air_date") val firstAirDate: String?,
     @Json(name = "genre_ids") val genreIds: List<Int>?,
-    @Json(name = "id") val id: Int?,
+    @Json(name = "id") val id: Int,
     @Json(name = "name") val name: String?,
     @Json(name = "origin_country") val originCountry: List<String>?,
     @Json(name = "original_language") val originalLanguage: String?,
@@ -100,7 +100,7 @@ data class TmdbTvShow(
     @Json(name = "vote_count") val voteCount: Int?,
 
     // detail fields
-    @Json(name = "created_by") val createdBy: TmdbTvCreatedBy?,
+    @Json(name = "created_by") val createdBy: List<TmdbTvCreatedBy>?,
     @Json(name = "episode_run_time") val runTimes: List<Int>?,
     @Json(name = "genres") val genres: List<TmdbGenre>?,
     @Json(name = "homepage") val homepage: String?,
@@ -118,7 +118,7 @@ data class TmdbTvShow(
 
     // appendable fields
     @Json(name = "credits") val credits: TmdbMovie.Credits?,
-    @Json(name = "similar") val similar: TmdbPagedResponse<TmdbMovie>?,
+    @Json(name = "recommendations") val recommendations: TmdbPagedResponse<TmdbTvShow>?,
     @Json(name = "videos") val videos: Videos?
 ) : TmdbMultiSearchModel() {
 
@@ -135,7 +135,7 @@ data class TmdbMovie(
     @Json(name = "adult") val adultContent: Boolean?,
     @Json(name = "backdrop_path") val backdropPath: String?,
     @Json(name = "genre_ids") val genreIds: List<Int>?,
-    @Json(name = "id") val id: Int?,
+    @Json(name = "id") val id: Int,
     @Json(name = "original_language") val originalLanguage: String?,
     @Json(name = "original_title") val originalTitle: String?,
     @Json(name = "overview") val overview: String?,
@@ -163,7 +163,7 @@ data class TmdbMovie(
 
     // appendable fields
     @Json(name = "credits") val credits: TmdbTvShow.Credits?,
-    @Json(name = "similar") val similar: TmdbPagedResponse<TmdbMovie>?,
+    @Json(name = "recommendations") val recommendations: TmdbPagedResponse<TmdbMovie>?,
     @Json(name = "videos") val videos: Videos?
 ) : TmdbMultiSearchModel() {
 
@@ -178,7 +178,7 @@ data class TmdbMovie(
 data class TmdbPerson(
     // base/search fields
     @Json(name = "adult") val adultContent: Boolean?,
-    @Json(name = "id") val id: Int?,
+    @Json(name = "id") val id: Int,
     @Json(name = "known_for") val knownFor: List<TmdbMultiSearchModel>?, // can be tv shows or movies
     @Json(name = "name") val name: String?,
     @Json(name = "popularity") val popularity: Float?,

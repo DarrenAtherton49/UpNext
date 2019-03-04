@@ -1,8 +1,9 @@
-package com.atherton.upnext.presentation.features.movies.detail
+package com.atherton.upnext.presentation.features.content
 
 import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.domain.usecase.GetConfigUseCase
 import com.atherton.upnext.domain.usecase.GetMovieDetailUseCase
+import com.atherton.upnext.domain.usecase.GetTvShowDetailUseCase
 import com.atherton.upnext.presentation.main.MainComponent
 import com.atherton.upnext.presentation.main.MainModule
 import com.atherton.upnext.presentation.util.AppStringProvider
@@ -17,27 +18,29 @@ import javax.inject.Named
 @PerView
 @Component(
     dependencies = [AppComponent::class],
-    modules = [MainModule::class, MovieDetailModule::class]
+    modules = [MainModule::class, ContentDetailModule::class]
 )
-interface MovieDetailComponent : MainComponent {
+interface ContentDetailComponent : MainComponent {
 
-    fun inject(movieDetailFragment: MovieDetailFragment)
+    fun inject(contentDetailFragment: ContentDetailFragment)
 }
 
 
 @Module
-class MovieDetailModule(private val initialState: MovieDetailState?) {
+class ContentDetailModule(private val initialState: ContentDetailState?) {
 
     @Provides
-    @Named(MovieDetailViewModelFactory.NAME)
+    @Named(ContentDetailViewModelFactory.NAME)
     @PerView internal fun provideViewModelFactory(
+        getTvShowDetailUseCase: GetTvShowDetailUseCase,
         getMovieDetailUseCase: GetMovieDetailUseCase,
         getConfigUseCase: GetConfigUseCase,
         appStringProvider: AppStringProvider,
         schedulers: RxSchedulers
     ): ViewModelProvider.Factory {
-        return MovieDetailViewModelFactory(
+        return ContentDetailViewModelFactory(
             initialState,
+            getTvShowDetailUseCase,
             getMovieDetailUseCase,
             getConfigUseCase,
             appStringProvider,

@@ -36,10 +36,10 @@ sealed class ModelDetailSection(val viewType: Int, val hasScrollingChildAdapter:
     @Parcelize data class Reviews(val reviews: List<String>) : ModelDetailSection(REVIEWS, false)
     @Parcelize data class Comments(val comments: List<String>) : ModelDetailSection(COMMENTS, false)
 
-    @Parcelize data class SimilarItems(
+    @Parcelize data class RecommendedItems(
         val sectionTitle: String,
-        val similarItems: List<Movie>
-    ) : ModelDetailSection(SIMILAR_ITEMS, true)
+        val recommendedItems: List<Watchable>
+    ) : ModelDetailSection(RECOMMENDED_ITEMS, true)
 
     @Parcelize data class ExternalLinks(val links: List<String>) : ModelDetailSection(EXTERNAL_LINKS, false)
 
@@ -55,7 +55,7 @@ sealed class ModelDetailSection(val viewType: Int, val hasScrollingChildAdapter:
         const val PHOTOS = 8
         const val REVIEWS = 9
         const val COMMENTS = 10
-        const val SIMILAR_ITEMS = 11
+        const val RECOMMENDED_ITEMS = 11
         const val EXTERNAL_LINKS = 12
     }
 }

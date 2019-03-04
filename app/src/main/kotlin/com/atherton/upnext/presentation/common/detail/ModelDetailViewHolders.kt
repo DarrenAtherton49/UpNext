@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.atherton.upnext.domain.model.CastMember
 import com.atherton.upnext.domain.model.CrewMember
-import com.atherton.upnext.domain.model.Movie
 import com.atherton.upnext.domain.model.Video
+import com.atherton.upnext.domain.model.Watchable
 import com.atherton.upnext.util.extensions.isVisible
 import com.atherton.upnext.util.glide.GlideRequests
 import com.atherton.upnext.util.recyclerview.LinearSpacingItemDecoration
@@ -153,18 +153,18 @@ class ModelDetailCommentsViewHolder(
     }
 }
 
-class ModelDetailSimilarItemsViewHolder(
+class ModelDetailRecommendedItemsViewHolder(
     containerView: View,
     recycledViewPool: RecyclerView.RecycledViewPool,
     itemSpacingPx: Int
-) : ModelDetailScrollableViewHolder<ModelDetailSection.SimilarItems, Movie, ModelDetailSimilarItemsAdapter>(
+) : ModelDetailScrollableViewHolder<ModelDetailSection.RecommendedItems, Watchable, ModelDetailRecommendedItemsAdapter>(
     containerView,
     recycledViewPool,
     itemSpacingPx
 ) {
-    override fun bind(section: ModelDetailSection.SimilarItems, childAdapter: ModelDetailSimilarItemsAdapter) {
+    override fun bind(section: ModelDetailSection.RecommendedItems, childAdapter: ModelDetailRecommendedItemsAdapter) {
         sectionHeaderTextView.text = section.sectionTitle
-        childAdapter.submitList(section.similarItems)
+        childAdapter.submitList(section.recommendedItems)
     }
 }
 
@@ -183,7 +183,7 @@ class ModelDetailEmptyViewHolder(
     override val containerView: View
 ) : ModelDetailSectionViewHolder(containerView)
 
-// used for all scrolling CHILD ViewHolders - i.e. cast, crew and similar movie items as using this common type
+// used for all scrolling CHILD ViewHolders - i.e. cast, crew and recommended movie/tv items as using this common type
 // allows for us to use a RecyclerViewPool to reuse views
 class ModelDetailScrollingViewHolder(override val containerView: View, private val imageLoader: GlideRequests)
     : RecyclerView.ViewHolder(containerView),

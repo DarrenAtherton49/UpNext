@@ -8,15 +8,15 @@ import javax.inject.Singleton
 @Singleton
 class AndroidAppStringProvider @Inject constructor(private val resources: Resources) : AppStringProvider {
 
-    override fun getVideosHeader(): String = resources.getString(R.string.movie_detail_videos_header)
+    override fun getVideosHeader(): String = resources.getString(R.string.content_detail_videos_header)
 
-    override fun getCastHeader(): String = resources.getString(R.string.movie_detail_cast_header)
+    override fun getCastHeader(): String = resources.getString(R.string.content_detail_cast_header)
 
-    override fun getCrewHeader(): String = resources.getString(R.string.movie_detail_crew_header)
+    override fun getCrewHeader(): String = resources.getString(R.string.content_detail_crew_header)
 
-    override fun getSimilarMoviesHeader(): String = resources.getString(R.string.movie_detail_similar_movies_header)
+    override fun getRecommendedContentHeader(): String = resources.getString(R.string.content_detail_recommended_content_header)
 
-    override fun getRuntimeString(runtime: Int): String {
-        return resources.getQuantityString(R.plurals.movie_tv_detail_minutes_plural, runtime, runtime)
+    override fun getRuntimeString(runtime: String): String {
+        return resources.getString(R.string.content_detail_runtime_mins).format(runtime)
     }
 }

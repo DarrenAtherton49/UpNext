@@ -144,8 +144,14 @@ class SearchFragment : BaseFragment<SearchAction, SearchState, SearchViewEffect,
                     }
                 }
             }
-            is SearchViewEffect.ShowSearchModelDetailScreen -> {
-                sharedViewModel.dispatch(MainAction.SearchModelClicked(viewEffect.searchModel))
+            is SearchViewEffect.ShowTvShowDetailScreen -> {
+                sharedViewModel.dispatch(MainAction.TvShowClicked(viewEffect.tvShowId))
+            }
+            is SearchViewEffect.ShowMovieDetailScreen -> {
+                sharedViewModel.dispatch(MainAction.MovieClicked(viewEffect.movieId))
+            }
+            is SearchViewEffect.ShowPersonDetailScreen -> {
+                sharedViewModel.dispatch(MainAction.PersonClicked(viewEffect.personId))
             }
         }
     }

@@ -43,14 +43,24 @@ internal fun TmdbConfiguration.toDomainConfig(): Config {
     }
 }
 
-internal fun List<TmdbMultiSearchModel>?.toDomainSearchModels(): List<SearchModel> {
-    return this?.map { searchResult ->
+internal fun List<TmdbMultiSearchModel>?.toDomainSearchables(): List<Searchable> {
+    return this?.map { searchResult: TmdbMultiSearchModel ->
         when (searchResult) {
             is TmdbTvShow -> searchResult.toDomainTvShow()
             is TmdbMovie -> searchResult.toDomainMovie()
             is TmdbPerson -> searchResult.toDomainPerson()
         }
     } ?: emptyList()
+}
+
+internal fun List<TmdbMultiSearchModel>?.toDomainWatchables(): List<Watchable> {
+    return this?.mapNotNull { searchResult ->
+        when (searchResult) {
+            is TmdbTvShow -> searchResult.toDomainTvShow()
+            is TmdbMovie -> searchResult.toDomainMovie()
+            is TmdbPerson -> null
+        }
+    }?.filterIsInstance(Watchable::class.java) ?: emptyList()
 }
 
 fun TmdbTvShow.toDomainTvShow(): TvShow {
@@ -71,6 +81,7 @@ fun TmdbTvShow.toDomainTvShow(): TvShow {
             numberOfEpisodes,
             numberOfSeasons,
             productionCompanies?.toDomainProductionCompanies(),
+            recommendations?.results?.map { it.toDomainTvShow() },
             seasons?.toDomainSeasons(),
             status,
             type,
@@ -107,7 +118,7 @@ fun TmdbMovie.toDomainMovie(): Movie {
             productionCountries?.toDomainProductionCountries(),
             revenue,
             runtime,
-            similar?.results?.map { it.toDomainMovie() },
+            recommendations?.results?.map { it.toDomainMovie() },
             spokenLanguages?.toDomainSpokenLanguages(),
             status,
             tagline,
@@ -143,7 +154,7 @@ fun TmdbPerson.toDomainPerson(): Person {
             homepage
         ),
         id,
-        knownFor.toDomainSearchModels(),
+        knownFor.toDomainWatchables(),
         name,
         popularity,
         profilePath
@@ -178,15 +189,28 @@ private fun List<TmdbSpokenLanguage>.toDomainSpokenLanguages(): List<SpokenLangu
     return this.map { SpokenLanguage(it.iso6391, it.name) }
 }
 
+// filter out any videos that don't have an id and a key as we won't be able to play them anyway
 private fun List<TmdbVideo>.toDomainVideos(): List<Video> {
     return this
-        .filter { it.site == "YouTube" }
+        .filter { it.site == "YouTube"}
         .sortedByDescending { it.type == "Trailer" }
-        .map { Video(it.id, it.key, it.name, it.site, it.size.toVideoSize(), null, it.type) }
+        .mapNotNull {
+            if (it.id != null && it.key != null) {
+                Video(it.id, it.key, it.name, it.site, it.size.toVideoSize(), null, it.type)
+            } else null
+        }
 }
 
-private fun TmdbTvCreatedBy.toDomainTvCreatedBy(): TvCreatedBy {
-    return TvCreatedBy(id, creditId, name, gender.toDomainGender(), profilePath)
+private fun List<TmdbTvCreatedBy>.toDomainTvCreatedBy(): List<TvCreatedBy> {
+    return this.map {
+        TvCreatedBy(
+            it.id,
+            it.creditId,
+            it.name,
+            it.gender.toDomainGender(),
+            it.profilePath
+        )
+    }
 }
 
 private fun Int?.toDomainGender(): Gender {

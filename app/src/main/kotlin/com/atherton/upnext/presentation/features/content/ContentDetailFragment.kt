@@ -1,4 +1,4 @@
-package com.atherton.upnext.presentation.features.movies.detail
+package com.atherton.upnext.presentation.features.content
 
 
 import android.os.Bundle
@@ -7,7 +7,6 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.atherton.upnext.R
-import com.atherton.upnext.domain.model.Movie
 import com.atherton.upnext.domain.model.Response
 import com.atherton.upnext.presentation.common.detail.ModelDetailAdapter
 import com.atherton.upnext.presentation.main.MainAction
@@ -21,38 +20,38 @@ import com.atherton.upnext.util.glide.GlideApp
 import com.atherton.upnext.util.glide.UpNextAppGlideModule
 import kotlinx.android.synthetic.main.detail_screen_appbar.*
 import kotlinx.android.synthetic.main.error_retry_layout.*
-import kotlinx.android.synthetic.main.fragment_movie_detail.*
+import kotlinx.android.synthetic.main.fragment_content_detail.*
 import javax.inject.Inject
 import javax.inject.Named
 
-class MovieDetailFragment : BaseFragment<MovieDetailAction, MovieDetailState, MovieDetailViewEffect, MovieDetailViewModel>() {
+class ContentDetailFragment : BaseFragment<ContentDetailAction, ContentDetailState, ContentDetailViewEffect, ContentDetailViewModel>() {
 
-    override val layoutResId: Int = R.layout.fragment_movie_detail
-    override val stateBundleKey: String = "bundle_key_movie_detail_state"
+    override val layoutResId: Int = R.layout.fragment_content_detail
+    override val stateBundleKey: String = "bundle_key_content_detail_state"
 
     @Inject @field:Named(MainViewModelFactory.NAME)
     lateinit var mainVmFactory: ViewModelProvider.Factory
 
-    @Inject @field:Named(MovieDetailViewModelFactory.NAME)
+    @Inject @field:Named(ContentDetailViewModelFactory.NAME)
     lateinit var vmFactory: ViewModelProvider.Factory
 
     override val sharedViewModel: MainViewModel by lazy { getActivityViewModel<MainViewModel>(mainVmFactory) }
-    override val viewModel: MovieDetailViewModel by lazy { getViewModel<MovieDetailViewModel>(vmFactory) }
+    override val viewModel: ContentDetailViewModel by lazy { getViewModel<ContentDetailViewModel>(vmFactory) }
 
     override val toolbarOptions: ToolbarOptions? = ToolbarOptions(
         toolbarResId = R.id.toolbar,
         titleResId = null,
-        menuResId = R.menu.menu_movie_detail
+        menuResId = R.menu.menu_content_detail
     )
 
     private val recyclerViewAdapter: ModelDetailAdapter by lazy {
         ModelDetailAdapter(
             imageLoader = GlideApp.with(this),
-            childRecyclerItemSpacingPx = resources.getDimensionPixelSize(R.dimen.movie_tv_detail_child_items_spacing),
-            onCastMemberClickListener = { castMember -> viewModel.dispatch(MovieDetailAction.CastMemberClicked(castMember)) },
-            onCrewMemberClickListener = { crewMember -> viewModel.dispatch(MovieDetailAction.CrewMemberClicked(crewMember)) },
-            onVideoClickListener = { video -> viewModel.dispatch(MovieDetailAction.VideoClicked(video)) },
-            onSimilarItemClickListener = { movie -> viewModel.dispatch(MovieDetailAction.SimilarMovieClicked(movie)) }
+            childRecyclerItemSpacingPx = resources.getDimensionPixelSize(R.dimen.content_detail_child_items_spacing),
+            onCastMemberClickListener = { castMember -> viewModel.dispatch(ContentDetailAction.CastMemberClicked(castMember)) },
+            onCrewMemberClickListener = { crewMember -> viewModel.dispatch(ContentDetailAction.CrewMemberClicked(crewMember)) },
+            onVideoClickListener = { video -> viewModel.dispatch(ContentDetailAction.YouTubeVideoClicked(video)) },
+            onRecommendedItemClickListener = { movie -> viewModel.dispatch(ContentDetailAction.RecommendedContentClicked(movie)) }
         )
     }
 
@@ -62,12 +61,14 @@ class MovieDetailFragment : BaseFragment<MovieDetailAction, MovieDetailState, Mo
         initRecyclerView()
 
         arguments?.let {
-            val movieId = MovieDetailFragmentArgs.fromBundle(it).movieId
+            val args = ContentDetailFragmentArgs.fromBundle(it)
+            val contentId: Int = args.contentId
+            val contentType: ContentType = args.contentType
             retryButton.setOnClickListener {
-                viewModel.dispatch(MovieDetailAction.RetryButtonClicked(id))
+                viewModel.dispatch(ContentDetailAction.RetryButtonClicked(contentId, contentType))
             }
             if (savedInstanceState == null) {
-                viewModel.dispatch(MovieDetailAction.Load(movieId))
+                viewModel.dispatch(ContentDetailAction.Load(contentId, contentType))
             }
         }
     }
@@ -82,22 +83,22 @@ class MovieDetailFragment : BaseFragment<MovieDetailAction, MovieDetailState, Mo
         }
     }
 
-    override fun renderState(state: MovieDetailState) {
+    override fun renderState(state: ContentDetailState) {
         when (state) {
-            is MovieDetailState.Loading -> {
+            is ContentDetailState.Loading -> {
                 recyclerView.isVisible = false
                 errorLayout.isVisible = false
                 posterImageView.isVisible = false
                 progressBar.isVisible = true
             }
-            is MovieDetailState.Content -> {
+            is ContentDetailState.Content -> {
                 progressBar.isVisible = false
                 errorLayout.isVisible = false
                 posterImageView.isVisible = true
                 recyclerView.isVisible = true
-                renderMovie(state)
+                renderContent(state)
             }
-            is MovieDetailState.Error -> {
+            is ContentDetailState.Error -> {
                 progressBar.isVisible = false
                 recyclerView.isVisible = false
                 posterImageView.isVisible = false
@@ -108,37 +109,41 @@ class MovieDetailFragment : BaseFragment<MovieDetailAction, MovieDetailState, Mo
         }
     }
 
-    private fun renderMovie(state: MovieDetailState.Content) {
-        renderMovieImages(state.movie)
-        titleTextView.text = state.movie.title
+    private fun renderContent(state: ContentDetailState.Content) {
+        val watchable = state.watchable
+        renderContentImages(watchable.backdropPath, watchable.posterPath)
+        titleTextView.text = watchable.title
         recyclerViewAdapter.submitData(state.detailSections)
 
-        //todo set button image based on whether show is already in watchlist or not
+        //todo set button image based on whether show is already in watchlist (contentData.isInWatchlist) or not
         addToWatchlistButton.show(true)
     }
 
-    private fun renderMovieImages(movie: Movie) {
+    private fun renderContentImages(backdropPath: String?, posterPath: String?) {
         GlideApp.with(this)
-            .load(movie.backdropPath)
+            .load(backdropPath)
             .apply(UpNextAppGlideModule.modelDetailBackdropRequestOptions)
             .into(backdropImageView)
 
         GlideApp.with(this)
-            .load(movie.posterPath)
+            .load(posterPath)
             .apply(UpNextAppGlideModule.searchModelPosterRequestOptions)
             .into(posterImageView)
     }
 
-    override fun processViewEffects(viewEffect: MovieDetailViewEffect) {
+    override fun processViewEffects(viewEffect: ContentDetailViewEffect) {
         when (viewEffect) {
-            is MovieDetailViewEffect.ShowAnotherMovieDetailScreen -> {
-                sharedViewModel.dispatch(MainAction.MovieClicked(viewEffect.movie))
+            is ContentDetailViewEffect.ShowTvShowDetailScreen -> {
+                sharedViewModel.dispatch(MainAction.TvShowClicked(viewEffect.tvShowId))
             }
-            is MovieDetailViewEffect.ShowPersonDetailScreen -> {
+            is ContentDetailViewEffect.ShowMovieDetailScreen -> {
+                sharedViewModel.dispatch(MainAction.MovieClicked(viewEffect.movieID))
+            }
+            is ContentDetailViewEffect.ShowPersonDetailScreen -> {
                 sharedViewModel.dispatch(MainAction.PersonClicked(viewEffect.personId))
             }
-            is MovieDetailViewEffect.PlayVideo -> {
-                sharedViewModel.dispatch(MainAction.VideoClicked(viewEffect.video))
+            is ContentDetailViewEffect.PlayYoutubeVideo -> {
+                sharedViewModel.dispatch(MainAction.YouTubeVideoClicked(viewEffect.videoKey))
             }
         }
     }
@@ -154,9 +159,9 @@ class MovieDetailFragment : BaseFragment<MovieDetailAction, MovieDetailState, Mo
         }
     }
 
-    override fun initInjection(initialState: MovieDetailState?) {
-        DaggerMovieDetailComponent.builder()
-            .movieDetailModule(MovieDetailModule(initialState))
+    override fun initInjection(initialState: ContentDetailState?) {
+        DaggerContentDetailComponent.builder()
+            .contentDetailModule(ContentDetailModule(initialState))
             .mainModule(mainModule)
             .appComponent(getAppComponent())
             .build()

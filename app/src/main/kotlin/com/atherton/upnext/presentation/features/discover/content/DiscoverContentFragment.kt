@@ -115,8 +115,14 @@ class DiscoverContentFragment
 
     override fun processViewEffects(viewEffect: DiscoverContentViewEffect) {
         when (viewEffect) {
-            is DiscoverContentViewEffect.ShowSearchModelDetailScreen -> {
-                sharedViewModel.dispatch(MainAction.SearchModelClicked(viewEffect.searchModel))
+            is DiscoverContentViewEffect.ShowTvShowDetailScreen -> {
+                sharedViewModel.dispatch(MainAction.TvShowClicked(viewEffect.tvShowId))
+            }
+            is DiscoverContentViewEffect.ShowMovieDetailScreen -> {
+                sharedViewModel.dispatch(MainAction.MovieClicked(viewEffect.movieId))
+            }
+            is DiscoverContentViewEffect.ShowPersonDetailScreen -> {
+                sharedViewModel.dispatch(MainAction.PersonClicked(viewEffect.personId))
             }
         }
     }

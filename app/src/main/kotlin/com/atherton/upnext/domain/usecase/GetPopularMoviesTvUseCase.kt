@@ -1,7 +1,7 @@
 package com.atherton.upnext.domain.usecase
 
 import com.atherton.upnext.domain.model.Response
-import com.atherton.upnext.domain.model.SearchModel
+import com.atherton.upnext.domain.model.Searchable
 import com.atherton.upnext.domain.repository.MovieRepository
 import com.atherton.upnext.domain.repository.TvShowRepository
 import io.reactivex.Single
@@ -20,16 +20,17 @@ class GetPopularMoviesTvUseCase @Inject constructor(
      * If neither of the responses are successful, we propagate the error inside the tv shows response
      * as the movies response will likely have the same error reason.
      */
-    fun build(): Single<Response<List<SearchModel>>> {
+    fun build(): Single<Response<List<Searchable>>> {
         return Single.zip(
             tvShowRepository.getPopular(),
             movieRepository.getPopular(),
             BiFunction { tvResponse, moviesResponse ->
                 when {
                     tvResponse is Response.Success && moviesResponse is Response.Success -> {
-                        val mostPopular = (tvResponse.data + moviesResponse.data).sortedByDescending { it.popularity }
+                        val mostPopular: List<Searchable> = (tvResponse.data + moviesResponse.data)
+                        val sorted = mostPopular.sortedByDescending { it.popularity }
                         val cached = tvResponse.cached && moviesResponse.cached
-                        Response.Success(mostPopular, cached)
+                        Response.Success(sorted, cached)
                     }
                     tvResponse is Response.Success -> tvResponse
                     moviesResponse is Response.Success -> moviesResponse

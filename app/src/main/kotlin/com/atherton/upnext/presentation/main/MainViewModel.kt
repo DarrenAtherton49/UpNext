@@ -3,7 +3,7 @@ package com.atherton.upnext.presentation.main
 import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.atherton.upnext.domain.model.*
+import com.atherton.upnext.domain.model.SearchModelViewMode
 import com.atherton.upnext.util.base.BaseViewEffect
 import com.atherton.upnext.util.base.UpNextViewModel
 import com.atherton.upnext.util.extensions.preventMultipleClicks
@@ -52,47 +52,31 @@ class MainViewModel @Inject constructor(
             .subscribeOn(schedulers.io)
             .map { MainViewEffect.Navigation.ShowSearchScreen }
 
-        val searchModelClickedViewEffect = actions.ofType<MainAction.SearchModelClicked>()
+        val tvShowClickedViewEffect = actions.ofType<MainAction.TvShowClicked>()
             .subscribeOn(schedulers.io)
-            .map { action ->
-                action.searchModel.id?.let { modelId ->
-                    when (action.searchModel) {
-                        is Movie -> MainViewEffect.Navigation.ShowMovieDetailScreen(modelId)
-                        is TvShow -> MainViewEffect.Navigation.ShowTvDetailScreen(modelId)
-                        is Person -> MainViewEffect.Navigation.ShowPersonDetailScreen(modelId)
-                    }
-                } ?: throw IllegalStateException("Cannot show movie detail screen without an id")
-            }
+            .map { action -> MainViewEffect.Navigation.ShowTvDetailScreen(action.tvShowId) }
 
-        //todo merge this with searchModelClickedViewEffect above instead of having both
         val movieClickedViewEffect = actions.ofType<MainAction.MovieClicked>()
             .subscribeOn(schedulers.io)
-            .map { action ->
-                action.movie.id?.let { MainViewEffect.Navigation.ShowMovieDetailScreen(it) }
-            } ?: throw IllegalStateException("Cannot show movie detail screen without an id")
+            .map { action -> MainViewEffect.Navigation.ShowMovieDetailScreen(action.movieId) }
 
-        //todo merge this with searchModelClickedViewEffect above instead of having both
         val personClickedViewEffect = actions.ofType<MainAction.PersonClicked>()
             .subscribeOn(schedulers.io)
             .map { action -> MainViewEffect.Navigation.ShowPersonDetailScreen(action.personId) }
 
-        val videoClickedViewEffect = actions.ofType<MainAction.VideoClicked>()
+        val youtubeVideoClickedViewEffect = actions.ofType<MainAction.YouTubeVideoClicked>()
             .subscribeOn(schedulers.io)
-            .map { action ->
-                action.video.key?.let { key ->
-                    MainViewEffect.Navigation.PlayYoutubeVideo(key)
-                }
-            } ?: throw IllegalStateException("Cannot play YouTube video without an id")
+            .map { action -> MainViewEffect.Navigation.PlayYoutubeVideo(action.videoKey) }
 
         val viewEffectChanges = mergeArray(
             searchActionClickedViewEffect,
             viewModeToggleChangedViewEffect,
             addTvShowClickedViewEffect,
             addMovieClickedViewEffect,
-            searchModelClickedViewEffect,
+            tvShowClickedViewEffect,
             movieClickedViewEffect,
             personClickedViewEffect,
-            videoClickedViewEffect
+            youtubeVideoClickedViewEffect
         )
 
         disposables += viewEffectChanges
@@ -110,10 +94,10 @@ sealed class MainAction : BaseAction {
     data class ViewModeToggleChanged(val viewMode: SearchModelViewMode) : MainAction()
     object AddShowButtonClicked : MainAction()
     object AddMovieButtonClicked : MainAction()
-    data class SearchModelClicked(val searchModel: SearchModel) : MainAction()
-    data class MovieClicked(val movie: Movie) : MainAction() //todo merge this with SearchModelClicked?
-    data class PersonClicked(val personId: Int) : MainAction() //todo merge this with SearchModelClicked?
-    data class VideoClicked(val video: Video) : MainAction()
+    data class TvShowClicked(val tvShowId: Int) : MainAction()
+    data class MovieClicked(val movieId: Int) : MainAction()
+    data class PersonClicked(val personId: Int) : MainAction()
+    data class YouTubeVideoClicked(val videoKey: String) : MainAction()
 }
 
 sealed class MainChange {

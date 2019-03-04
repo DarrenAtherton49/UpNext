@@ -73,7 +73,7 @@ class DiscoverContentViewModel @Inject constructor(
                 zip(getDiscoverItemsForFilterUseCase.build(it.filter),
                     getConfigUseCase.build(),
                     getDiscoverViewModeUseCase.build(),
-                    Function3<Response<List<SearchModel>>,
+                    Function3<Response<List<Searchable>>,
                         Config,
                         SearchModelViewMode,
                         DiscoverContentViewData> { searchModels, config, viewMode ->
@@ -107,7 +107,14 @@ class DiscoverContentViewModel @Inject constructor(
         val searchModelClickedViewEffect = actions.ofType<DiscoverContentAction.SearchModelClicked>()
             .preventMultipleClicks()
             .subscribeOn(schedulers.io)
-            .map { DiscoverContentViewEffect.ShowSearchModelDetailScreen(it.searchModel) }
+            .map { action ->
+                when (action.searchModel) {
+                    is TvShow -> DiscoverContentViewEffect.ShowTvShowDetailScreen(action.searchModel.id)
+                    is Movie -> DiscoverContentViewEffect.ShowMovieDetailScreen(action.searchModel.id)
+                    is Person -> DiscoverContentViewEffect.ShowPersonDetailScreen(action.searchModel.id)
+                    else -> throw IllegalStateException("Search model must be either a tv show, movie or person")
+                }
+            }
 
         val stateChanges = merge(loadDataChange, viewModeToggleChange, retryButtonChange)
 
@@ -138,13 +145,13 @@ sealed class DiscoverContentAction : BaseAction {
 
     data class RetryButtonClicked(val filter: DiscoverFilter) : DiscoverContentAction()
 
-    data class SearchModelClicked(val searchModel: SearchModel) : DiscoverContentAction()
+    data class SearchModelClicked(val searchModel: Searchable) : DiscoverContentAction()
 }
 
 sealed class DiscoverContentChange {
     object Loading : DiscoverContentChange()
     data class Result(
-        val response: Response<List<SearchModel>>,
+        val response: Response<List<Searchable>>,
         val config: Config,
         val viewMode: SearchModelViewMode
     ) : DiscoverContentChange()
@@ -156,11 +163,11 @@ sealed class DiscoverContentState : BaseState, Parcelable {
     object Idle : DiscoverContentState()
 
     @Parcelize
-    data class Loading(val results: List<SearchModel> = emptyList()) : DiscoverContentState()
+    data class Loading(val results: List<Searchable> = emptyList()) : DiscoverContentState()
 
     @Parcelize
     data class Content(
-        val results: List<SearchModel> = emptyList(),
+        val results: List<Searchable> = emptyList(),
         val cached: Boolean = false,
         val viewMode: SearchModelViewMode
     ) : DiscoverContentState()
@@ -170,7 +177,9 @@ sealed class DiscoverContentState : BaseState, Parcelable {
 }
 
 sealed class DiscoverContentViewEffect : BaseViewEffect {
-    data class ShowSearchModelDetailScreen(val searchModel: SearchModel) : DiscoverContentViewEffect()
+    data class ShowTvShowDetailScreen(val tvShowId: Int) : DiscoverContentViewEffect()
+    data class ShowMovieDetailScreen(val movieId: Int) : DiscoverContentViewEffect()
+    data class ShowPersonDetailScreen(val personId: Int) : DiscoverContentViewEffect()
 }
 
 //================================================================================
@@ -179,7 +188,7 @@ sealed class DiscoverContentViewEffect : BaseViewEffect {
 
 // this class is just used as the result of zipping the necessary Observables together
 private data class DiscoverContentViewData(
-    val searchModels: Response<List<SearchModel>>,
+    val searchModels: Response<List<Searchable>>,
     val config: Config,
     val viewMode: SearchModelViewMode
 )

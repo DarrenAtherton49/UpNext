@@ -16,8 +16,7 @@ fun buildProfilePath(profilePath: String?, config: Config): String? =
 
 // generate image urls for any screen where the item is a thumbnail - e.g. discover, search, watchlist etc.
 // combines the base url, size and path
-internal fun List<SearchModel>.withSearchModelListImageUrls(config: Config): List<SearchModel> {
-
+internal fun List<Searchable>.withSearchModelListImageUrls(config: Config): List<Searchable> {
     return this.map {
         when (it) {
             is TvShow -> {
@@ -33,6 +32,7 @@ internal fun List<SearchModel>.withSearchModelListImageUrls(config: Config): Lis
                 )
             }
             is Person -> it.copy(profilePath = buildProfilePath(it.profilePath, config))
+            else -> null
         }
-    }
+    }.filterIsInstance(Searchable::class.java)
 }

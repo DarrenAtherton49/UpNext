@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.atherton.upnext.R
 import com.atherton.upnext.domain.model.CastMember
 import com.atherton.upnext.domain.model.CrewMember
-import com.atherton.upnext.domain.model.Movie
 import com.atherton.upnext.domain.model.Video
+import com.atherton.upnext.domain.model.Watchable
 import com.atherton.upnext.util.extensions.inflateLayout
 import com.atherton.upnext.util.glide.GlideRequests
 import kotlinx.android.synthetic.main.item_detail_scrolling_section.view.*
@@ -22,7 +22,7 @@ class ModelDetailAdapter(
     private val onCastMemberClickListener: (CastMember) -> Unit,
     private val onCrewMemberClickListener: (CrewMember) -> Unit,
     private val onVideoClickListener: (Video) -> Unit,
-    private val onSimilarItemClickListener: (Movie) -> Unit //todo change to SearchModel so we can reuse adapter
+    private val onRecommendedItemClickListener: (Watchable) -> Unit
 ) : ListAdapter<ModelDetailSection, ModelDetailSectionViewHolder>(ModelDetailDiffCallback) {
 
     private val recycledViewPool: RecyclerView.RecycledViewPool = RecyclerView.RecycledViewPool()
@@ -71,7 +71,7 @@ class ModelDetailAdapter(
             ModelDetailSection.REVIEWS -> ModelDetailReviewsViewHolder(parent.inflateLayout(R.layout.item_detail_reviews))
             //todo implement layout
             ModelDetailSection.COMMENTS -> ModelDetailCommentsViewHolder(parent.inflateLayout(R.layout.item_detail_comments))
-            ModelDetailSection.SIMILAR_ITEMS -> ModelDetailSimilarItemsViewHolder(
+            ModelDetailSection.RECOMMENDED_ITEMS -> ModelDetailRecommendedItemsViewHolder(
                 parent.inflateLayout(R.layout.item_detail_scrolling_section),
                 recycledViewPool,
                 childRecyclerItemSpacingPx
@@ -115,9 +115,9 @@ class ModelDetailAdapter(
             )
             is ModelDetailReviewsViewHolder -> holder.bind(section as ModelDetailSection.Reviews)
             is ModelDetailCommentsViewHolder -> holder.bind(section as ModelDetailSection.Comments)
-            is ModelDetailSimilarItemsViewHolder -> holder.bindHorizontalAdapter(
-                section as ModelDetailSection.SimilarItems,
-                childAdapters[section.viewType] as ModelDetailSimilarItemsAdapter,
+            is ModelDetailRecommendedItemsViewHolder -> holder.bindHorizontalAdapter(
+                section as ModelDetailSection.RecommendedItems,
+                childAdapters[section.viewType] as ModelDetailRecommendedItemsAdapter,
                 childAdapterStates[section.viewType]
             )
             is ModelDetailExternalLinksViewHolder -> holder.bind(section as ModelDetailSection.ExternalLinks)
@@ -156,7 +156,7 @@ class ModelDetailAdapter(
                 is ModelDetailSection.Crew -> ModelDetailCrewAdapter(imageLoader, onCrewMemberClickListener)
                 is ModelDetailSection.Videos -> ModelDetailVideosAdapter(imageLoader, onVideoClickListener)
                 is ModelDetailSection.Photos -> ModelDetailPhotosAdapter(imageLoader)
-                is ModelDetailSection.SimilarItems -> ModelDetailSimilarItemsAdapter(imageLoader, onSimilarItemClickListener)
+                is ModelDetailSection.RecommendedItems -> ModelDetailRecommendedItemsAdapter(imageLoader, onRecommendedItemClickListener)
                 else -> null
             }
             if (adapter != null) {

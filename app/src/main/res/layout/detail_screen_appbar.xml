@@ -21,7 +21,7 @@
         <ImageView
             android:id="@+id/backdropImageView"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/movie_tv_detail_backdrop_height"
+            android:layout_height="@dimen/content_detail_backdrop_height"
             android:adjustViewBounds="true"
             app:layout_collapseMode="parallax" />
 

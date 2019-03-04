@@ -11,15 +11,15 @@
     <!-- Common menu items -->
     <integer name="common_menu_order_settings">100</integer>
 
-    <!-- Movie/TV Detail -->
-    <integer name="movie_tv_detail_menu_order_search">0</integer>
-    <integer name="movie_tv_detail_title_min_lines">2</integer>
-    <integer name="movie_tv_detail_title_max_lines">2</integer>
-    <integer name="movie_tv_detail_release_date_runtime_max_lines">1</integer>
-    <integer name="movie_tv_detail_overview_max_lines">8</integer>
-    <integer name="movie_tv_detail_section_header_max_lines">1</integer>
-    <integer name="movie_tv_detail_section_scrollable_item_text_max_lines">1</integer>
-    <integer name="movie_tv_detail_video_item_first_row_lines">2</integer>
+    <!-- Content (movie/tv) Detail -->
+    <integer name="content_detail_menu_order_search">0</integer>
+    <integer name="content_detail_title_min_lines">2</integer>
+    <integer name="content_detail_title_max_lines">2</integer>
+    <integer name="content_detail_release_date_runtime_max_lines">1</integer>
+    <integer name="content_detail_overview_max_lines">8</integer>
+    <integer name="content_detail_section_header_max_lines">1</integer>
+    <integer name="content_detail_section_scrollable_item_text_max_lines">1</integer>
+    <integer name="content_detail_video_item_first_row_lines">2</integer>
 
     <!-- Common views -->
     <integer name="search_model_list_title_min_lines">1</integer>

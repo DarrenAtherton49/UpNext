@@ -13,14 +13,14 @@
         android:layout_gravity="center_horizontal"/>
 
     <TextView
-        style="@style/TvMovieDetailScrollingItemFirstRowText"
+        style="@style/ContentDetailScrollingItemFirstRowText"
         android:id="@+id/firstRowTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/keyline"/>
 
     <TextView
-        style="@style/TvMovieDetailScrollingItemSecondRowText"
+        style="@style/ContentDetailScrollingItemSecondRowText"
         android:id="@+id/secondRowTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

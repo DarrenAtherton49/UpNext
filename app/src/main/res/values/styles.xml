@@ -35,41 +35,41 @@
         <item name="android:textCursorDrawable">@null</item> <!-- forces cursor to be same color as query -->
     </style>
 
-    <style name="TvMovieDetailTitleText" parent="TextAppearance.MaterialComponents.Headline6">
-        <item name="android:minLines">@integer/movie_tv_detail_title_min_lines</item>
-        <item name="android:maxLines">@integer/movie_tv_detail_title_max_lines</item>
+    <style name="ContentDetailTitleText" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:minLines">@integer/content_detail_title_min_lines</item>
+        <item name="android:maxLines">@integer/content_detail_title_max_lines</item>
         <item name="android:ellipsize">end</item>
         <item name="android:gravity">center_vertical</item>
     </style>
 
-    <style name="TvMovieDetailReleaseDateRuntimeText" parent="TextAppearance.MaterialComponents.Subtitle1">
-        <item name="android:maxLines">@integer/movie_tv_detail_release_date_runtime_max_lines</item>
+    <style name="ContentDetailReleaseDateRuntimeText" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:maxLines">@integer/content_detail_release_date_runtime_max_lines</item>
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="TvMovieDetailOverviewText" parent="TextAppearance.MaterialComponents.Subtitle2">
-        <item name="android:maxLines">@integer/movie_tv_detail_overview_max_lines</item>
+    <style name="ContentDetailOverviewText" parent="TextAppearance.MaterialComponents.Subtitle2">
+        <item name="android:maxLines">@integer/content_detail_overview_max_lines</item>
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="TvMovieDetailSectionHeaderText" parent="TextAppearance.MaterialComponents.Subtitle1">
-        <item name="android:maxLines">@integer/movie_tv_detail_section_header_max_lines</item>
+    <style name="ContentDetailSectionHeaderText" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:maxLines">@integer/content_detail_section_header_max_lines</item>
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="TvMovieDetailVideoFirstRowText" parent="TvMovieDetailScrollingItemFirstRowText">
-        <item name="android:minLines">@integer/movie_tv_detail_video_item_first_row_lines</item>
-        <item name="android:maxLines">@integer/movie_tv_detail_video_item_first_row_lines</item>
+    <style name="ContentDetailVideoFirstRowText" parent="ContentDetailScrollingItemFirstRowText">
+        <item name="android:minLines">@integer/content_detail_video_item_first_row_lines</item>
+        <item name="android:maxLines">@integer/content_detail_video_item_first_row_lines</item>
     </style>
 
-    <style name="TvMovieDetailScrollingItemFirstRowText" parent="TextAppearance.MaterialComponents.Subtitle2">
-        <item name="android:maxLines">@integer/movie_tv_detail_section_scrollable_item_text_max_lines</item>
+    <style name="ContentDetailScrollingItemFirstRowText" parent="TextAppearance.MaterialComponents.Subtitle2">
+        <item name="android:maxLines">@integer/content_detail_section_scrollable_item_text_max_lines</item>
         <item name="android:ellipsize">end</item>
         <item name="android:gravity">center_horizontal</item>
     </style>
 
-    <style name="TvMovieDetailScrollingItemSecondRowText" parent="TextAppearance.MaterialComponents.Caption">
-        <item name="android:maxLines">@integer/movie_tv_detail_section_scrollable_item_text_max_lines</item>
+    <style name="ContentDetailScrollingItemSecondRowText" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:maxLines">@integer/content_detail_section_scrollable_item_text_max_lines</item>
         <item name="android:ellipsize">end</item>
         <item name="android:gravity">center_horizontal</item>
     </style>

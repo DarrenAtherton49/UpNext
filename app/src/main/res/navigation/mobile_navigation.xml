@@ -31,13 +31,16 @@
         tools:layout="@layout/fragment_search"/>
 
     <fragment
-        android:id="@+id/movieDetailFragment"
-        android:name="com.atherton.upnext.presentation.features.movies.detail.MovieDetailFragment"
-        tools:layout="@layout/fragment_movie_detail">
+        android:id="@+id/contentDetailFragment"
+        android:name="com.atherton.upnext.presentation.features.content.ContentDetailFragment"
+        tools:layout="@layout/fragment_content_detail">
         <argument
-            android:name="movieId"
+            android:name="contentId"
             app:argType="integer"
             android:defaultValue="-1"/>
+        <argument
+            android:name="contentType"
+            app:argType="com.atherton.upnext.presentation.features.content.ContentType"/>
     </fragment>
 
     <action
@@ -49,8 +52,8 @@
         app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
 
     <action
-        android:id="@+id/actionSharedGoToMovieDetail"
-        app:destination="@+id/movieDetailFragment"
+        android:id="@+id/actionSharedGoToContentDetail"
+        app:destination="@+id/contentDetailFragment"
         app:enterAnim="@anim/nav_default_enter_anim"
         app:exitAnim="@anim/nav_default_exit_anim"
         app:popEnterAnim="@anim/nav_default_pop_enter_anim"

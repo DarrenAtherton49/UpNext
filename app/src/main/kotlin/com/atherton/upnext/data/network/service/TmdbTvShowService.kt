@@ -13,7 +13,8 @@ interface TmdbTvShowService {
 
     @GET("tv/{tv_id}")
     fun getTvDetails(
-        @Path("tv_id") id: Int
+        @Path("tv_id") id: Int,
+        @Query("append_to_response") appendToResponse: String = "recommendations"
     ): Single<NetworkResponse<TmdbTvShow, TmdbApiError>>
 
     @GET("tv/popular")

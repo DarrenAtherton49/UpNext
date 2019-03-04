@@ -11,7 +11,7 @@
         android:orientation="horizontal">
 
         <TextView
-            style="@style/TvMovieDetailReleaseDateRuntimeText"
+            style="@style/ContentDetailReleaseDateRuntimeText"
             android:id="@+id/releaseDateTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -23,10 +23,10 @@
             android:id="@+id/releaseDateRuntimeDivider"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/movie_tv_detail_divider"/>
+            android:text="@string/content_detail_divider"/>
 
         <TextView
-            style="@style/TvMovieDetailReleaseDateRuntimeText"
+            style="@style/ContentDetailReleaseDateRuntimeText"
             android:id="@+id/runtimeTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
