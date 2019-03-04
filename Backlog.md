@@ -3,13 +3,26 @@
 - Add genres tab to the discover screen tabs to easily look at genre (as well as in the advanced filter)
 - The 'up next'/'watchlist' should be 'one click' to mark the next episode as 'watched'. So you should see the episode you're currently on, be able to click 'watched' and the next episode should come up. Also add 'undo' snackbar for this action for accidental clicks.
 - Ability to reorder the movie/tv/person details screen sections in the recyclerview from the settings.
+- Add rating to the detail screen
 - Add setting for default source of rating (e.g. IMDB, TMDB, Rotten Tomatoes or combined) in places where there is only room to show one score (e.g. in grids).
+- Figure out the best tabs to show in discover
+- Caching
+- Pre-load and cache the data needed for discover and search to work instantly
+- Make sure animateLayoutChanges is working in the RecyclerViews
+- Shared element transitions
+- Touch surface ripple animations
+- Polish
+- Consistent loading and error visuals
+- Update iconography, e.g. in the bottom navigation
+- Launch icon
+- New name and package - UpNext is already taken
 - Add ability to follow a person as well as a tv show and movie so you can go through and watch someone's filmography.
 - Light, dark and black themes
 - Link to TMDB, IMDB, Trakt, Amazon etc.
 - Trakt syncing
 - TMDB list syncing
 - Access a gallery of posters and backdrops (these are on TMDB as a separate request)
+- Ability to add own rating (is this stored on the app, TMDB or Trakt?)
 - Recommendations
 - Update the grid/list pages to show which content you have already watched without clicking into the detail screen
 - Accessibility, content descriptions etc.
@@ -21,6 +34,8 @@
 - Deep linking and sharing tv shows, movies and people
 - Backup/import - manual and auto with Google Drive
 - Display TMDB attribution
+- Ability to disable movies or tv shows if you only watch one content type. This would remove the bottom tab and also filter any search results
+- Ability to reorder the bottom tabs and/or set the default tab when app opens
 - Advanced filters. E.g. by genre
 - 'top/featured' result on the search screen - different viewholder (full width) for the first item
 - Ability to add missing movies (e.g. random videos that aren't in the database)

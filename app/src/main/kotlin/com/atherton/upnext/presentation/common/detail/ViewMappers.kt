@@ -12,8 +12,9 @@ internal fun buildMovieDetailSections(movie: Movie, appStringProvider: AppString
     val sectionList: MutableList<ModelDetailSection> = ArrayList()
 
     val runtime: String? = movie.detail?.runtime?.let { appStringProvider.getRuntimeString(it) }
-    //todo maybe only show year. Also factor in user region when calling API - think there are different 'releases' for each region
-    val releaseDate: String? = formatDateForDetailScreen(movie.releaseDate)
+    //todo Also factor in user region when calling API - think there are different 'releases' for each region
+    //val releaseDate: String? = formatFullDateForDetailScreen(movie.releaseDate)
+    val releaseDate: String? = formatYearForDetailScreen(movie.releaseDate)
     sectionList.add(
         ModelDetailSection.RuntimeRelease(
             runtime = runtime,
@@ -54,15 +55,21 @@ internal fun buildMovieDetailSections(movie: Movie, appStringProvider: AppString
     return sectionList
 }
 
-private fun formatDateForDetailScreen(dateString: String?): String? {
+private fun formatFullDateForDetailScreen(dateString: String?): String? {
     return if (dateString != null) {
         val oldFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val newFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
-        return try {
+        try {
             val date: Date = oldFormat.parse(dateString)
             newFormat.format(date)
         } catch (exception: ParseException) {
             dateString
         }
+    } else dateString
+}
+
+private fun formatYearForDetailScreen(dateString: String?): String? {
+    return if (dateString != null && dateString.length > 4) {
+        dateString.take(4)
     } else dateString
 }
