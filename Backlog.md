@@ -14,6 +14,7 @@
 - Touch surface ripple animations
 - Polish
 - Consistent loading and error visuals
+- Only show the first runtime for episodes instead of all of them?
 - Update iconography, e.g. in the bottom navigation
 - Launch icon
 - New name and package - UpNext is already taken
