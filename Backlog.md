@@ -5,10 +5,11 @@
 - Ability to reorder the movie/tv/person details screen sections in the recyclerview from the settings.
 - Add rating to the detail screen
 - Add setting for default source of rating (e.g. IMDB, TMDB, Rotten Tomatoes or combined) in places where there is only room to show one score (e.g. in grids).
+- Add setting to hide rating on grid view so it doesn't take up space over thumbnail
 - Figure out the best tabs to show in discover
 - Caching
 - Pre-load and cache the data needed for discover and search to work instantly
-- Make sure animateLayoutChanges is working in the RecyclerViews
+- Make sure animateLayoutChanges is working in the RecyclerViews (also check it animates when we change toggle view modes in all layouts)
 - Shared element transitions
 - Touch surface ripple animations
 - Polish
@@ -21,6 +22,7 @@
 - Link to TMDB, IMDB, Trakt, Amazon etc.
 - Trakt syncing
 - TMDB list syncing
+- Implement the list toggle mode layout
 - Access a gallery of posters and backdrops (these are on TMDB as a separate request)
 - Ability to add own rating (is this stored on the app, TMDB or Trakt?)
 - Recommendations

@@ -14,30 +14,43 @@ class SearchModelAdapter(
     private val imageLoader: GlideRequests,
     private val viewMode: SearchModelViewMode,
     private val onClickListener: (Searchable) -> Unit
-) : ListAdapter<Searchable, SearchModelViewHolder>(SearchDiffCallback) {
+) : ListAdapter<Searchable, SearchModelGridViewHolder>(SearchDiffCallback) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchModelViewHolder {
-        val view: View = when (viewMode) {
-            is SearchModelViewMode.Grid -> parent.inflateLayout(R.layout.item_search_model_grid)
-            is SearchModelViewMode.List -> parent.inflateLayout(R.layout.item_search_model_list)
-        }
-        return when (viewType) {
-            TV_VIEW_TYPE -> TvShowModelViewHolder(view, imageLoader).withClickListener()
-            MOVIE_VIEW_TYPE -> MovieModelViewHolder(view, imageLoader).withClickListener()
-            PERSON_VIEW_TYPE -> PersonModelViewHolder(view, imageLoader).withClickListener()
-            else -> MovieModelViewHolder(view, imageLoader).withClickListener()
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchModelGridViewHolder {
+        return when (viewMode) {
+            is SearchModelViewMode.Grid -> {
+                val view: View = parent.inflateLayout(R.layout.item_search_model_grid)
+                when (viewType) {
+                    TV_VIEW_TYPE -> TvShowModelGridViewHolder(view, imageLoader).withClickListener()
+                    MOVIE_VIEW_TYPE -> MovieModelGridViewHolder(view, imageLoader).withClickListener()
+                    PERSON_VIEW_TYPE -> PersonModelGridViewHolder(view, imageLoader).withClickListener()
+                    else -> MovieModelGridViewHolder(view, imageLoader).withClickListener()
+                }
+            }
+            is SearchModelViewMode.List -> {
+                val view: View = parent.inflateLayout(R.layout.item_search_model_list)
+                when (viewType) {
+                    TV_VIEW_TYPE -> TvShowModelListViewHolder(view, imageLoader).withClickListener()
+                    MOVIE_VIEW_TYPE -> MovieModelListViewHolder(view, imageLoader).withClickListener()
+                    PERSON_VIEW_TYPE -> PersonModelListViewHolder(view, imageLoader).withClickListener()
+                    else -> MovieModelListViewHolder(view, imageLoader).withClickListener()
+                }
+            }
         }
     }
 
-    override fun onBindViewHolder(holder: SearchModelViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: SearchModelGridViewHolder, position: Int) {
         when (holder) {
-            is TvShowModelViewHolder -> holder.bind(getItem(position) as TvShow)
-            is MovieModelViewHolder -> holder.bind(getItem(position) as Movie)
-            is PersonModelViewHolder -> holder.bind(getItem(position) as Person)
+            is TvShowModelGridViewHolder -> holder.bind(getItem(position) as TvShow)
+            is TvShowModelListViewHolder -> holder.bind(getItem(position) as TvShow)
+            is MovieModelGridViewHolder -> holder.bind(getItem(position) as Movie)
+            is MovieModelListViewHolder -> holder.bind(getItem(position) as Movie)
+            is PersonModelGridViewHolder -> holder.bind(getItem(position) as Person)
+            is PersonModelListViewHolder -> holder.bind(getItem(position) as Person)
         }
     }
 
-    private fun SearchModelViewHolder.withClickListener(): SearchModelViewHolder = this.apply {
+    private fun SearchModelGridViewHolder.withClickListener(): SearchModelGridViewHolder = this.apply {
         itemView.setOnClickListener { onClickListener.invoke(getItem(adapterPosition)) }
     }
 
@@ -50,7 +63,7 @@ class SearchModelAdapter(
         }
     }
 
-    override fun onViewRecycled(holder: SearchModelViewHolder) {
+    override fun onViewRecycled(holder: SearchModelGridViewHolder) {
         super.onViewRecycled(holder)
         holder.clear()
     }
