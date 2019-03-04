@@ -15,14 +15,14 @@ class GetDiscoverItemsForFilterUseCase @Inject constructor(
 
     fun build(filter: DiscoverFilter): Single<Response<List<Searchable>>> {
         return when (filter) {
+            //todo add trending
+            //is DiscoverFilter.Preset.TrendingAll -> getTrendingAll()
             is DiscoverFilter.Preset.TopRatedTvMovies -> getTopRatedTvMovies()
             is DiscoverFilter.Preset.PopularTvMovies -> getPopularTvMovies()
             is DiscoverFilter.Preset.NowPlayingMovies -> getNowPlayingMovies()
             is DiscoverFilter.Preset.UpcomingMovies -> getUpcomingMovies()
             is DiscoverFilter.Preset.AiringTodayTv -> getAiringTodayTv()
             is DiscoverFilter.Preset.OnTheAirTv -> getOnTheAirTv()
-            //todo add popular people
-            //todo add trending
         }
     }
 

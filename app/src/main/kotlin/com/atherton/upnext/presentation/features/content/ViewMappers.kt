@@ -71,7 +71,7 @@ private fun buildContentDetailSections(
 
     //todo add ratings
 
-    //todo add seasons if not null
+    //todo add seasons if not null - pass null into this function for movies
 
     if (genres != null && genres.isNotEmpty()) {
         sectionList.add(ModelDetailSection.Genres(genres.sortedBy { genre -> genre.name }))
@@ -94,6 +94,8 @@ private fun buildContentDetailSections(
     if (recommendations != null && recommendations.isNotEmpty()) {
         sectionList.add(ModelDetailSection.RecommendedItems(appStringProvider.getRecommendedContentHeader(), recommendations))
     }
+
+    //todo add creator for tv shows? - pass null into this function for movies
 
     //todo add reviews
     //todo add comments

@@ -14,9 +14,8 @@
         android:id="@+id/addMovieButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
+        android:layout_gravity="bottom|center_horizontal"
         android:layout_marginBottom="@dimen/keyline_2x"
-        android:layout_marginEnd="@dimen/keyline_2x"
         android:text="@string/movies_add_movie"
         app:icon="@drawable/ic_add_white_24dp"/>
 

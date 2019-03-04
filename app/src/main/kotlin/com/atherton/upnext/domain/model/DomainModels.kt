@@ -274,6 +274,10 @@ sealed class SearchModelViewMode : Parcelable {
 sealed class DiscoverFilter(open val id: Long) : Parcelable {
 
     sealed class Preset(id: Long, val nameResId: Int) : DiscoverFilter(id) {
+        //todo add trending
+//        @Parcelize
+//        object TrendingAll : Preset(0, R.string.discover_filter_trending)
+
         @Parcelize
         object PopularTvMovies : Preset(1, R.string.discover_filter_popular)
 

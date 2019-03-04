@@ -43,6 +43,7 @@
     <string name="discover_tabs_filter_button">Advanced</string>
 
     <!-- Discover Filters -->
+    <string name="discover_filter_trending">Trending</string>
     <string name="discover_filter_popular">Popular</string>
     <string name="discover_filter_now_playing">Now Playing</string>
     <string name="discover_filter_airing_today">On Today</string>
