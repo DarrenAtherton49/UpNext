@@ -73,17 +73,12 @@ class SearchFragment : BaseFragment<SearchAction, SearchState, SearchViewEffect,
             viewModel.dispatch(SearchAction.RetryButtonClicked(searchEditText.text.toString()))
         }
 
-        // load popular on first launch
-        if (savedInstanceState == null) {
-            viewModel.dispatch(SearchAction.SearchTextChanged(""))
-        }
-
         viewModel.dispatch(SearchAction.LoadViewMode)
     }
 
     override fun onResume() {
         super.onResume()
-        searchEditText.whenTextChanges {
+        searchEditText.whenTextChanges(emitInitialValue = true) {
             viewModel.dispatch(SearchAction.SearchTextChanged(it))
         }
     }
@@ -111,6 +106,7 @@ class SearchFragment : BaseFragment<SearchAction, SearchState, SearchViewEffect,
         when (state) {
             is SearchState.Loading -> {
                 progressBar.isVisible = true
+                //todo add a progress bar to the search results section as well as the search field?
                 recyclerView.isVisible = false
                 errorLayout.isVisible = false
             }
