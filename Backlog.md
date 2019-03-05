@@ -8,6 +8,7 @@
 - Add setting to hide rating on grid view so it doesn't take up space over thumbnail
 - Figure out the best tabs to show in discover
 - Caching
+- Get rid of all nullable id's in the application and then go through and make sure we aren't doing any ?.let{} etc.
 - Pre-load and cache the data needed for discover and search to work instantly
 - Make sure animateLayoutChanges is working in the RecyclerViews (also check it animates when we change toggle view modes in all layouts)
 - Shared element transitions

@@ -68,11 +68,28 @@ class ModelDetailRatingsViewHolder(
 }
 
 class ModelDetailSeasonsViewHolder(
-    override val containerView: View
+    override val containerView: View,
+    itemSpacingPx: Int
 ) : ModelDetailSectionViewHolder(containerView) {
 
-    fun bind(section: ModelDetailSection.Seasons) {
-        //todo
+    init {
+        val layoutManager = LinearLayoutManager(itemView.context, RecyclerView.VERTICAL, false)
+
+        // The line below ensures that child RecyclerView does not capture vertical scrolls,
+        // as we want the outer RecyclerView to handle those instead.
+        itemView.childRecyclerView.isNestedScrollingEnabled = false
+        itemView.childRecyclerView.setHasFixedSize(false)
+        itemView.childRecyclerView.addItemDecoration(
+            LinearSpacingItemDecoration(itemSpacingPx, LinearSpacingItemDecoration.Orientation.Vertical)
+        )
+        itemView.childRecyclerView.layoutManager = layoutManager
+    }
+
+    fun bind(section: ModelDetailSection.Seasons, childAdapter: ModelDetailSeasonAdapter, childAdapterState: Parcelable?) {
+        childRecyclerView.adapter = childAdapter
+        sectionHeaderTextView.text = section.sectionTitle
+        childAdapter.submitList(section.seasons)
+        childRecyclerView.layoutManager?.onRestoreInstanceState(childAdapterState)
     }
 }
 

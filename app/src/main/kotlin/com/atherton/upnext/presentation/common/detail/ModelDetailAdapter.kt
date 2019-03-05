@@ -7,10 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.atherton.upnext.R
-import com.atherton.upnext.domain.model.CastMember
-import com.atherton.upnext.domain.model.CrewMember
-import com.atherton.upnext.domain.model.Video
-import com.atherton.upnext.domain.model.Watchable
+import com.atherton.upnext.domain.model.*
 import com.atherton.upnext.util.extensions.inflateLayout
 import com.atherton.upnext.util.glide.GlideRequests
 import kotlinx.android.synthetic.main.item_detail_scrolling_section.view.*
@@ -19,6 +16,7 @@ import kotlinx.android.synthetic.main.item_detail_scrolling_section.view.*
 class ModelDetailAdapter(
     private val imageLoader: GlideRequests,
     private val childRecyclerItemSpacingPx: Int,
+    private val onSeasonClickListener: (Season) -> Unit,
     private val onCastMemberClickListener: (CastMember) -> Unit,
     private val onCrewMemberClickListener: (CrewMember) -> Unit,
     private val onVideoClickListener: (Video) -> Unit,
@@ -44,8 +42,10 @@ class ModelDetailAdapter(
                 parent.inflateLayout(R.layout.item_detail_ratings),
                 imageLoader
             )
-            //todo implement layout
-            ModelDetailSection.SEASONS -> ModelDetailSeasonsViewHolder(parent.inflateLayout(R.layout.item_detail_seasons))
+            ModelDetailSection.SEASONS -> ModelDetailSeasonsViewHolder(
+                parent.inflateLayout(R.layout.item_detail_scrolling_season_section),
+                childRecyclerItemSpacingPx
+            )
             ModelDetailSection.CAST -> ModelDetailCastViewHolder(
                 parent.inflateLayout(R.layout.item_detail_scrolling_section),
                 recycledViewPool,
@@ -92,7 +92,11 @@ class ModelDetailAdapter(
             is ModelDetailOverviewViewHolder -> holder.bind(section as ModelDetailSection.Overview)
             is ModelDetailGenresViewHolder -> holder.bind(section as ModelDetailSection.Genres)
             is ModelDetailRatingsViewHolder -> holder.bind(section as ModelDetailSection.Ratings)
-            is ModelDetailSeasonsViewHolder -> holder.bind(section as ModelDetailSection.Seasons)
+            is ModelDetailSeasonsViewHolder -> holder.bind(
+                section as ModelDetailSection.Seasons,
+                childAdapters[section.viewType] as ModelDetailSeasonAdapter,
+                childAdapterStates[section.viewType]
+            )
             is ModelDetailCastViewHolder -> holder.bindHorizontalAdapter(
                 section as ModelDetailSection.Cast,
                 childAdapters[section.viewType] as ModelDetailCastAdapter,
@@ -152,6 +156,7 @@ class ModelDetailAdapter(
         // scrolling content and needs an adapter
         sections.forEach { section ->
             val adapter = when (section) {
+                is ModelDetailSection.Seasons -> ModelDetailSeasonAdapter(imageLoader, onSeasonClickListener)
                 is ModelDetailSection.Cast -> ModelDetailCastAdapter(imageLoader, onCastMemberClickListener)
                 is ModelDetailSection.Crew -> ModelDetailCrewAdapter(imageLoader, onCrewMemberClickListener)
                 is ModelDetailSection.Videos -> ModelDetailVideosAdapter(imageLoader, onVideoClickListener)

@@ -8,6 +8,8 @@ import javax.inject.Singleton
 @Singleton
 class AndroidAppStringProvider @Inject constructor(private val resources: Resources) : AppStringProvider {
 
+    override fun getSeasonsHeader(): String = resources.getString(R.string.content_detail_seasons_header)
+
     override fun getVideosHeader(): String = resources.getString(R.string.content_detail_videos_header)
 
     override fun getCastHeader(): String = resources.getString(R.string.content_detail_cast_header)

@@ -22,6 +22,7 @@ internal fun buildContentDetailSections(watchable: Watchable, appStringProvider:
                 recommendations = watchable.detail?.recommendations,
                 releaseDate = watchable.firstAirDate,
                 runtime = watchable.detail?.runTimes?.formatRunTimes(),
+                seasons = watchable?.detail?.seasons,
                 videos = watchable.detail?.videos
             )
         }
@@ -35,6 +36,7 @@ internal fun buildContentDetailSections(watchable: Watchable, appStringProvider:
                 recommendations = watchable.detail?.recommendations,
                 releaseDate = watchable.releaseDate,
                 runtime = watchable.detail?.runtime.toString(),
+                seasons = null,
                 videos = watchable.detail?.videos
             )
         }
@@ -50,6 +52,7 @@ private fun buildContentDetailSections(
     recommendations: List<Watchable>?,
     releaseDate: String?,
     runtime: String?,
+    seasons: List<Season>?,
     videos: List<Video>?
 ): List<ModelDetailSection> {
     val sectionList = mutableListOf<ModelDetailSection>()
@@ -71,32 +74,27 @@ private fun buildContentDetailSections(
 
     //todo add ratings
 
-    //todo add seasons if not null - pass null into this function for movies
-
+    if (seasons != null && seasons.isNotEmpty()) {
+        sectionList.add(ModelDetailSection.Seasons(appStringProvider.getSeasonsHeader(), seasons))
+    }
     if (genres != null && genres.isNotEmpty()) {
         sectionList.add(ModelDetailSection.Genres(genres.sortedBy { genre -> genre.name }))
     }
-
     if (videos != null && videos.isNotEmpty()) {
         sectionList.add(ModelDetailSection.Videos(appStringProvider.getVideosHeader(), videos))
     }
-
     //todo add photos
 
     if (cast != null && cast.isNotEmpty()) {
         sectionList.add(ModelDetailSection.Cast(appStringProvider.getCastHeader(), cast))
     }
-
     if (crew != null && crew.isNotEmpty()) {
         sectionList.add(ModelDetailSection.Crew(appStringProvider.getCrewHeader(), crew))
     }
-
     if (recommendations != null && recommendations.isNotEmpty()) {
         sectionList.add(ModelDetailSection.RecommendedItems(appStringProvider.getRecommendedContentHeader(), recommendations))
     }
-
     //todo add creator for tv shows? - pass null into this function for movies
-
     //todo add reviews
     //todo add comments
     //todo add external links

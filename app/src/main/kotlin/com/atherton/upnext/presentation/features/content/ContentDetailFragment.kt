@@ -48,6 +48,7 @@ class ContentDetailFragment : BaseFragment<ContentDetailAction, ContentDetailSta
         ModelDetailAdapter(
             imageLoader = GlideApp.with(this),
             childRecyclerItemSpacingPx = resources.getDimensionPixelSize(R.dimen.content_detail_child_items_spacing),
+            onSeasonClickListener = { season -> viewModel.dispatch(ContentDetailAction.SeasonClicked(season)) },
             onCastMemberClickListener = { castMember -> viewModel.dispatch(ContentDetailAction.CastMemberClicked(castMember)) },
             onCrewMemberClickListener = { crewMember -> viewModel.dispatch(ContentDetailAction.CrewMemberClicked(crewMember)) },
             onVideoClickListener = { video -> viewModel.dispatch(ContentDetailAction.YouTubeVideoClicked(video)) },

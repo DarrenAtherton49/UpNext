@@ -19,6 +19,7 @@ import com.ww.roxie.BaseState
 import com.ww.roxie.Reducer
 import io.reactivex.Observable
 import io.reactivex.Observable.merge
+import io.reactivex.Observable.mergeArray
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.zipWith
@@ -92,13 +93,12 @@ class ContentDetailViewModel @Inject constructor(
             .preventMultipleClicks()
             .toResultChange()
 
-        val recommendedContentClickedViewEffect = actions.ofType<ContentDetailAction.RecommendedContentClicked>()
+        val seasonClickedViewEffect = actions.ofType<ContentDetailAction.SeasonClicked>()
             .preventMultipleClicks()
             .subscribeOn(schedulers.io)
             .map {
-                when (it.watchable) {
-                    is TvShow -> ContentDetailViewEffect.ShowTvShowDetailScreen(it.watchable.id)
-                    is Movie -> ContentDetailViewEffect.ShowMovieDetailScreen(it.watchable.id)
+                it.season.id?.let { id ->
+                    ContentDetailViewEffect.ShowSeasonDetailScreen(id)
                 }
             }
 
@@ -125,13 +125,24 @@ class ContentDetailViewModel @Inject constructor(
             .subscribeOn(schedulers.io)
             .map { ContentDetailViewEffect.PlayYoutubeVideo(it.video.key) }
 
+        val recommendedContentClickedViewEffect = actions.ofType<ContentDetailAction.RecommendedContentClicked>()
+            .preventMultipleClicks()
+            .subscribeOn(schedulers.io)
+            .map {
+                when (it.watchable) {
+                    is TvShow -> ContentDetailViewEffect.ShowTvShowDetailScreen(it.watchable.id)
+                    is Movie -> ContentDetailViewEffect.ShowMovieDetailScreen(it.watchable.id)
+                }
+            }
+
         val stateChanges = merge(loadDataChange, retryButtonChange)
 
-        val viewEffectChanges = merge(
-            recommendedContentClickedViewEffect,
+        val viewEffectChanges = mergeArray(
+            seasonClickedViewEffect,
             castMemberClickedViewEffect,
             crewMemberClickedViewEffect,
-            videoClickedViewEffect
+            videoClickedViewEffect,
+            recommendedContentClickedViewEffect
         )
 
         disposables += viewEffectChanges
@@ -154,10 +165,11 @@ class ContentDetailViewModel @Inject constructor(
 sealed class ContentDetailAction : BaseAction {
     data class Load(val contentId: Int, val contentType: ContentType) : ContentDetailAction()
     data class RetryButtonClicked(val contentId: Int, val contentType: ContentType) : ContentDetailAction()
-    data class RecommendedContentClicked(val watchable: Watchable) : ContentDetailAction()
+    data class SeasonClicked(val season: Season) : ContentDetailAction()
     data class CastMemberClicked(val castMember: CastMember) : ContentDetailAction()
     data class CrewMemberClicked(val crewMember: CrewMember) : ContentDetailAction()
     data class YouTubeVideoClicked(val video: Video) : ContentDetailAction()
+    data class RecommendedContentClicked(val watchable: Watchable) : ContentDetailAction()
 }
 
 sealed class ContentDetailChange {
@@ -192,6 +204,7 @@ sealed class ContentDetailViewEffect : BaseViewEffect {
     data class ShowMovieDetailScreen(val movieID: Int) : ContentDetailViewEffect()
     data class ShowPersonDetailScreen(val personId: Int) : ContentDetailViewEffect()
     data class PlayYoutubeVideo(val videoKey: String) : ContentDetailViewEffect()
+    data class ShowSeasonDetailScreen(val seasonId: Int) : ContentDetailViewEffect()
 }
 
 //================================================================================
