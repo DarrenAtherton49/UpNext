@@ -43,8 +43,7 @@ class ModelDetailAdapter(
                 imageLoader
             )
             ModelDetailSection.SEASONS -> ModelDetailSeasonsViewHolder(
-                parent.inflateLayout(R.layout.item_detail_scrolling_season_section),
-                childRecyclerItemSpacingPx
+                parent.inflateLayout(R.layout.item_detail_scrolling_season_section)
             )
             ModelDetailSection.CAST -> ModelDetailCastViewHolder(
                 parent.inflateLayout(R.layout.item_detail_scrolling_section),

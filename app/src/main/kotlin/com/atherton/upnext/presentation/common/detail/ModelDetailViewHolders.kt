@@ -67,10 +67,7 @@ class ModelDetailRatingsViewHolder(
     }
 }
 
-class ModelDetailSeasonsViewHolder(
-    override val containerView: View,
-    itemSpacingPx: Int
-) : ModelDetailSectionViewHolder(containerView) {
+class ModelDetailSeasonsViewHolder(override val containerView: View) : ModelDetailSectionViewHolder(containerView) {
 
     init {
         val layoutManager = LinearLayoutManager(itemView.context, RecyclerView.VERTICAL, false)
@@ -79,9 +76,6 @@ class ModelDetailSeasonsViewHolder(
         // as we want the outer RecyclerView to handle those instead.
         itemView.childRecyclerView.isNestedScrollingEnabled = false
         itemView.childRecyclerView.setHasFixedSize(false)
-        itemView.childRecyclerView.addItemDecoration(
-            LinearSpacingItemDecoration(itemSpacingPx, LinearSpacingItemDecoration.Orientation.Vertical)
-        )
         itemView.childRecyclerView.layoutManager = layoutManager
     }
 
