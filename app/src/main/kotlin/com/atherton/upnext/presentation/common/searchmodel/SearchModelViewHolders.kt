@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.atherton.upnext.domain.model.Movie
 import com.atherton.upnext.domain.model.Person
 import com.atherton.upnext.domain.model.TvShow
+import com.atherton.upnext.util.extensions.isVisible
 import com.atherton.upnext.util.glide.GlideRequests
 import com.atherton.upnext.util.glide.UpNextAppGlideModule
 import kotlinx.android.extensions.LayoutContainer
@@ -33,7 +34,14 @@ class TvShowModelGridViewHolder(
 
     fun bind(tvShow: TvShow) {
         super.bind(tvShow.name, tvShow.posterPath)
-        searchModelRatingTextView.text = tvShow.voteAverage.toString()
+
+        val voteAverage = formatVoteAverage(tvShow.voteAverage)
+        if (voteAverage != null) {
+            searchModelRatingTextView.text = voteAverage
+            searchModelRatingTextView.isVisible = true
+        } else {
+            searchModelRatingTextView.isVisible = false
+        }
     }
 }
 
@@ -44,7 +52,14 @@ class MovieModelGridViewHolder(
 
     fun bind(movie: Movie) {
         super.bind(movie.title, movie.posterPath)
-        searchModelRatingTextView.text = movie.voteAverage.toString()
+
+        val voteAverage = formatVoteAverage(movie.voteAverage)
+        if (voteAverage != null) {
+            searchModelRatingTextView.text = voteAverage
+            searchModelRatingTextView.isVisible = true
+        } else {
+            searchModelRatingTextView.isVisible = false
+        }
     }
 }
 
@@ -103,3 +118,5 @@ class PersonModelListViewHolder(
         super.bind(person.name, person.profilePath)
     }
 }
+
+private fun formatVoteAverage(voteAverage: Float?): String? = voteAverage?.let { String.format("%.1f", it) }
