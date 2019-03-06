@@ -14,6 +14,7 @@ class CachingFilterRepository @Inject constructor() : FilterRepository {
         return Single.fromCallable(this::tempFilters)
     }
 
+    //todo replace this with user filters from database combined with presets
     private fun tempFilters(): Response<List<DiscoverFilter>> {
         return Response.Success(listOf(
             DiscoverFilter.Preset.NowPlayingMovies,

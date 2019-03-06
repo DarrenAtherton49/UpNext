@@ -10,11 +10,13 @@
 - Caching
 - Get rid of all nullable id's in the application and then go through and make sure we aren't doing any ?.let{} etc.
 - Pre-load and cache the data needed for discover and search to work instantly
+- Add setting to show all runtimes instead of just one (show one by default).
 - Make sure animateLayoutChanges is working in the RecyclerViews (also check it animates when we change toggle view modes in all layouts)
 - Shared element transitions
 - Touch surface ripple animations
 - Polish
 - Consistent loading and error visuals
+- Go through TODOs
 - Only show the first runtime for episodes instead of all of them?
 - Update iconography, e.g. in the bottom navigation
 - Launch icon
