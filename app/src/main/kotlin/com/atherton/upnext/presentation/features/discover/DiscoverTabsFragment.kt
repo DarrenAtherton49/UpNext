@@ -106,7 +106,7 @@ class DiscoverTabsFragment
         when (viewEffect) {
             is DiscoverTabsViewEffect.ViewModeToggled -> {
                 updateViewModeIcon(viewEffect.viewMode)
-                sharedViewModel.dispatch(MainAction.ViewModeToggleChanged(viewEffect.viewMode))
+                sharedViewModel.dispatch(MainAction.ViewModeToggled(viewEffect.viewMode))
             }
             is DiscoverTabsViewEffect.ViewModeLoaded -> updateViewModeIcon(viewEffect.viewMode)
         }

@@ -32,7 +32,7 @@ class MainViewModel @Inject constructor(
     private fun bindActions() {
 
         // used to notify all screens in the application that the view mode has changed and data should be reloaded
-        val viewModeToggleChangedViewEffect = actions.ofType<MainAction.ViewModeToggleChanged>()
+        val viewModeToggleChangedViewEffect = actions.ofType<MainAction.ViewModeToggled>()
             .preventMultipleClicks()
             .subscribeOn(schedulers.io)
             .map { MainViewEffect.ToggleViewMode(it.viewMode) }
@@ -91,7 +91,7 @@ class MainViewModel @Inject constructor(
 
 sealed class MainAction : BaseAction {
     object SearchActionClicked : MainAction()
-    data class ViewModeToggleChanged(val viewMode: SearchModelViewMode) : MainAction()
+    data class ViewModeToggled(val viewMode: SearchModelViewMode) : MainAction()
     object AddShowButtonClicked : MainAction()
     object AddMovieButtonClicked : MainAction()
     data class TvShowClicked(val tvShowId: Int) : MainAction()
