@@ -69,27 +69,12 @@ class DiscoverContentViewModel @Inject constructor(
     private fun bindActions() {
         fun Observable<DiscoverContentAction.Load>.toResultChange(): Observable<DiscoverContentChange> {
             return this.switchMap { action ->
-
-                if (action.filter is DiscoverFilter.Preset.NowPlayingMovies) {
-                    Timber.tag("darren").d(action.toString())
-                }
-
                 zip(
                     getDiscoverItemsForFilterUseCase.invoke(action.filter),
                     getConfigUseCase.invoke(),
                     getDiscoverViewModeUseCase.invoke()) { searchModels, config, viewMode ->
                         DiscoverContentViewData(searchModels, config, viewMode) }
-                    .doOnNext {
-                        if (action.filter is DiscoverFilter.Preset.NowPlayingMovies) {
-                            Timber.tag("darren").d("we made it")
-                        }
-                    }
                     .map<DiscoverContentChange> { viewData ->
-
-                        if (action.filter is DiscoverFilter.Preset.NowPlayingMovies) {
-                            Timber.tag("darren").d("mapping")
-                        }
-
                         DiscoverContentChange.Result(
                             response = viewData.searchModels,
                             config = viewData.config,

@@ -23,7 +23,6 @@ import com.atherton.upnext.util.recyclerview.GridSpacingItemDecoration
 import com.atherton.upnext.util.recyclerview.LinearSpacingItemDecoration
 import kotlinx.android.synthetic.main.error_retry_layout.*
 import kotlinx.android.synthetic.main.fragment_discover_content.*
-import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -85,11 +84,6 @@ class DiscoverContentFragment
     }
 
     override fun renderState(state: DiscoverContentState) {
-
-        if (filter is DiscoverFilter.Preset.NowPlayingMovies) {
-            Timber.tag("darren").d("state: ${state::class.java}")
-        }
-
         when (state) {
             is DiscoverContentState.Loading -> {
                 progressBar.isVisible = true
