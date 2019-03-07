@@ -2,13 +2,13 @@ package com.atherton.upnext.domain.repository
 
 import com.atherton.upnext.domain.model.Movie
 import com.atherton.upnext.domain.model.Response
-import io.reactivex.Single
+import io.reactivex.Observable
 
 interface MovieRepository {
 
-    fun getMovie(id: Int): Single<Response<Movie>>
-    fun getPopular(): Single<Response<List<Movie>>>
-    fun getUpcoming(): Single<Response<List<Movie>>>
-    fun getTopRated(): Single<Response<List<Movie>>>
-    fun getNowPlaying(): Single<Response<List<Movie>>>
+    fun getMovie(id: Int): Observable<Response<Movie>>
+    fun getPopular(): Observable<Response<List<Movie>>>
+    fun getUpcoming(): Observable<Response<List<Movie>>>
+    fun getTopRated(): Observable<Response<List<Movie>>>
+    fun getNowPlaying(): Observable<Response<List<Movie>>>
 }

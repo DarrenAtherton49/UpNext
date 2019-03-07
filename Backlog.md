@@ -20,6 +20,7 @@
 - Only show the first runtime for episodes instead of all of them?
 - Update iconography, e.g. in the bottom navigation
 - Launch icon
+- Ability to download or share posters and backdrops
 - New name and package - UpNext is already taken
 - Add ability to follow a person as well as a tv show and movie so you can go through and watch someone's filmography.
 - Light, dark and black themes
@@ -34,7 +35,9 @@
 - Accessibility, content descriptions etc.
 - Add button to mark 'all episodes before this one' as watched
 - TMDB discussions
-- Custom lists based on filters. Could be used for stuff like dvd collection etc.
+- Custom lists and lists based on filters. Could be used for stuff like dvd collection etc.
+- Reminders/notifications
+- Watch history
 - Ability to save searches
 - Gamification/stats/achievements
 - Deep linking and sharing tv shows, movies and people
@@ -44,14 +47,17 @@
 - Ability to reorder the bottom tabs and/or set the default tab when app opens
 - Advanced filters. E.g. by genre
 - 'top/featured' result on the search screen - different viewholder (full width) for the first item
-- Ability to add missing movies (e.g. random videos that aren't in the database)
+- Ability to add missing movies (e.g. random videos that aren't in the database) or add links to youtube videos etc to watch later.
+- Ability to submit your own rating for the tv show or movie.
 - Change detail screen overview maxLines to about 3/4 and add a 'show more' button
-- Hide bottom navigation when keyboard is open and show when keyboard is closed. We could do this by sending a view effect to the MainActivity whenever we know the keyboard will be opened and hide the bottom naviation menu from the main activity.
+- Rotten Tomatoes, IMDB, Metacritic and Trakt.tv ratings
+- Links/plugins to external websites to watch etc.
 - Add transitions for fragments, e.g. slide up when entering
 - Cut down all data models I don't use to decrease memory footprint
 - Watch videos on app performance and tune everything
 - Look at GrowthJournal backlog for release checklists etc
 - Proguard
 - Look at TMDB 'changes' api calls - could incorporate this into caching
-
+- Modularise the codebase
+- Check that error messages look good
 

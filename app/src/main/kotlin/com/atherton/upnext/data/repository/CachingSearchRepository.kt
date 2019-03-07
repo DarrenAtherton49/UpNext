@@ -6,7 +6,7 @@ import com.atherton.upnext.data.network.service.TmdbSearchService
 import com.atherton.upnext.domain.model.Response
 import com.atherton.upnext.domain.model.Searchable
 import com.atherton.upnext.domain.repository.SearchRepository
-import io.reactivex.Single
+import io.reactivex.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -16,8 +16,9 @@ class CachingSearchRepository @Inject constructor(
     private val searchService: TmdbSearchService
 ) : SearchRepository {
 
-    override fun searchMulti(query: String): Single<Response<List<Searchable>>> {
+    override fun searchMulti(query: String): Observable<Response<List<Searchable>>> {
         return searchService.searchMulti(query)
+            .toObservable()
             .map {
                 it.toDomainResponse(false) { response -> response.results.toDomainSearchables() }
             }

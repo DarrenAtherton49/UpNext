@@ -23,6 +23,7 @@ import com.atherton.upnext.util.recyclerview.GridSpacingItemDecoration
 import com.atherton.upnext.util.recyclerview.LinearSpacingItemDecoration
 import kotlinx.android.synthetic.main.error_retry_layout.*
 import kotlinx.android.synthetic.main.fragment_discover_content.*
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -69,7 +70,7 @@ class DiscoverContentFragment
         }
 
         if (savedInstanceState == null) {
-            viewModel.dispatch(DiscoverContentAction.Load(filter))
+            viewModel.dispatch(DiscoverContentAction.Load(null, filter))
         }
     }
 
@@ -84,6 +85,11 @@ class DiscoverContentFragment
     }
 
     override fun renderState(state: DiscoverContentState) {
+
+        if (filter is DiscoverFilter.Preset.NowPlayingMovies) {
+            Timber.tag("darren").d("state: ${state::class.java}")
+        }
+
         when (state) {
             is DiscoverContentState.Loading -> {
                 progressBar.isVisible = true
@@ -131,7 +137,7 @@ class DiscoverContentFragment
         when (viewEffect) {
             // view mode has been changed elsewhere (i.e. in the fragment containing the tabs), reload view with new setting
             is MainViewEffect.ToggleViewMode -> {
-                viewModel.dispatch(DiscoverContentAction.ViewModeToggleChanged(viewEffect.viewMode, filter))
+                viewModel.dispatch(DiscoverContentAction.Load(viewEffect.viewMode, filter))
             }
         }
     }

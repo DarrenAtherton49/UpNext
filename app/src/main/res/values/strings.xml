@@ -66,7 +66,7 @@
 
     <!-- Error messages -->
     <string name="error_message_server">Server encountered a %d error, please try again later</string>
-    <string name="error_message_server_with_error">Server encountered a %d error, please try again later (status code: %d)</string>
+    <string name="error_message_server_with_error">Server encountered a %1d error, please try again later (status code: %2d)</string>
     <string name="error_message_no_internet">Device is offline - please connect to a network and try again</string>
     <string name="error_no_internet_try_again_button">Try again</string>
     <string name="error_no_results_found">No results found</string>

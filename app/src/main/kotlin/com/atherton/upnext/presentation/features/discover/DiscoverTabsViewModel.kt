@@ -68,7 +68,7 @@ class DiscoverTabsViewModel @Inject constructor(
         val loadDataChange = actions.ofType<DiscoverTabsAction.Load>()
             .distinctUntilChanged()
             .switchMap {
-                getDiscoverFiltersUseCase.build()
+                getDiscoverFiltersUseCase.invoke()
                     .subscribeOn(schedulers.io)
                     .toObservable()
                     .map<DiscoverTabsChange> { filtersResponse -> DiscoverTabsChange.Result(filtersResponse) }
@@ -79,21 +79,19 @@ class DiscoverTabsViewModel @Inject constructor(
         val loadViewModeViewEffect = actions.ofType<DiscoverTabsAction.LoadViewMode>()
             .preventMultipleClicks()
             .switchMap {
-                getDiscoverViewModeUseCase.build()
+                getDiscoverViewModeUseCase.invoke()
                     .subscribeOn(schedulers.io)
-                    .toObservable()
-                    .map { DiscoverTabsViewEffect.ToggleViewMode(it) }
+                    .map { DiscoverTabsViewEffect.ViewModeLoaded(it) }
             }
 
         // handles the toggling of the view mode setting and updating of the toggle button icon in view
         val viewModeToggleViewEffect = actions.ofType<DiscoverTabsAction.ViewModeToggleActionClicked>()
             .preventMultipleClicks()
             .switchMap {
-                toggleDiscoverViewModeUseCase.build()
-                    .flatMap { getDiscoverViewModeUseCase.build() }
+                toggleDiscoverViewModeUseCase.invoke()
+                    .flatMap { getDiscoverViewModeUseCase.invoke() }
                     .subscribeOn(schedulers.io)
-                    .toObservable()
-                    .map { DiscoverTabsViewEffect.ToggleViewMode(it) }
+                    .map { DiscoverTabsViewEffect.ViewModeToggled(it) }
             }
 
         disposables += loadDataChange
@@ -144,7 +142,8 @@ sealed class DiscoverTabsState : BaseState, Parcelable {
 }
 
 sealed class DiscoverTabsViewEffect : BaseViewEffect {
-    data class ToggleViewMode(val viewMode: SearchModelViewMode) : DiscoverTabsViewEffect()
+    data class ViewModeToggled(val viewMode: SearchModelViewMode) : DiscoverTabsViewEffect()
+    data class ViewModeLoaded(val viewMode: SearchModelViewMode) : DiscoverTabsViewEffect()
 }
 
 //================================================================================

@@ -1,8 +1,8 @@
 package com.atherton.upnext.domain.repository
 
-import com.atherton.upnext.domain.model.Searchable
 import com.atherton.upnext.domain.model.Response
-import io.reactivex.Single
+import com.atherton.upnext.domain.model.Searchable
+import io.reactivex.Observable
 
 interface SearchRepository {
 
@@ -11,5 +11,5 @@ interface SearchRepository {
      *
      * @param query the query to search for
      */
-    fun searchMulti(query: String): Single<Response<List<Searchable>>>
+    fun searchMulti(query: String): Observable<Response<List<Searchable>>>
 }

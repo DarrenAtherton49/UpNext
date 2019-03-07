@@ -1,9 +1,9 @@
 package com.atherton.upnext.domain.repository
 
 import com.atherton.upnext.domain.model.Config
-import io.reactivex.Single
+import io.reactivex.Observable
 
 interface ConfigRepository {
 
-    fun getConfig(): Single<Config>
+    fun getConfig(): Observable<Config>
 }

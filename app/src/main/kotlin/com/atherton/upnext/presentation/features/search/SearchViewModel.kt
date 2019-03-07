@@ -16,8 +16,7 @@ import com.ww.roxie.BaseState
 import com.ww.roxie.Reducer
 import io.reactivex.Observable
 import io.reactivex.Observable.merge
-import io.reactivex.Single.zip
-import io.reactivex.functions.Function3
+import io.reactivex.rxkotlin.Observables.zip
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.plusAssign
 import kotlinx.android.parcel.Parcelize
@@ -72,22 +71,17 @@ class SearchViewModel @Inject constructor(
         fun Observable<SearchAction.SearchTextChanged>.toResultChange(): Observable<SearchChange> {
             return this.switchMap { action ->
                 val query = action.query
-                val dataSourceSingle = if (query.isBlank()) {
-                    popularMoviesTvUseCase.build()
+                val dataSourceObservable = if (query.isBlank()) {
+                    popularMoviesTvUseCase.invoke()
                 } else {
-                    searchMultiUseCase.build(query)
+                    searchMultiUseCase.invoke(query)
                 }
-                zip(dataSourceSingle,
-                    getConfigUseCase.build(),
-                    getDiscoverViewModeUseCase.build(),
-                    Function3<Response<List<Searchable>>,
-                        Config,
-                        SearchModelViewMode,
-                        SearchViewData> { searchModels, config, viewMode ->
-                        SearchViewData(searchModels, config, viewMode)
-                    })
+                zip(
+                    dataSourceObservable,
+                    getConfigUseCase.invoke(),
+                    getDiscoverViewModeUseCase.invoke()) { searchModels, config, viewMode ->
+                        SearchViewData(searchModels, config, viewMode) }
                     .subscribeOn(schedulers.io)
-                    .toObservable()
                     .map<SearchChange> { viewData ->
                         SearchChange.Result(
                             query = action.query,
@@ -123,9 +117,8 @@ class SearchViewModel @Inject constructor(
         val loadViewModeViewEffect = actions.ofType<SearchAction.LoadViewMode>()
             .preventMultipleClicks()
             .switchMap {
-                getDiscoverViewModeUseCase.build()
+                getDiscoverViewModeUseCase.invoke()
                     .subscribeOn(schedulers.io)
-                    .toObservable()
                     .map { SearchViewEffect.ToggleViewMode(it) }
             }
 
@@ -133,10 +126,9 @@ class SearchViewModel @Inject constructor(
         val viewModeToggleViewEffect = actions.ofType<SearchAction.ViewModeToggleActionClicked>()
             .preventMultipleClicks()
             .switchMap {
-                toggleDiscoverViewModeUseCase.build()
-                    .flatMap { getDiscoverViewModeUseCase.build() }
+                toggleDiscoverViewModeUseCase.invoke()
+                    .flatMap { getDiscoverViewModeUseCase.invoke() }
                     .subscribeOn(schedulers.io)
-                    .toObservable()
                     .map { SearchViewEffect.ToggleViewMode(it) }
             }
 

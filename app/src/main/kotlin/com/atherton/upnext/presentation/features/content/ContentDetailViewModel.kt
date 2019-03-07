@@ -73,13 +73,12 @@ class ContentDetailViewModel @Inject constructor(
     private fun bindActions() {
         fun Observable<ContentDetailAction.Load>.toResultChange(): Observable<ContentDetailChange> {
             return this.switchMap { action ->
-                val contentSingle = when (action.contentType) {
-                    is ContentType.TvShow -> getTvShowDetailUseCase.build(action.contentId)
-                    is ContentType.Movie -> getMovieDetailUseCase.build(action.contentId)
+                val contentObservable = when (action.contentType) {
+                    is ContentType.TvShow -> getTvShowDetailUseCase.invoke(action.contentId)
+                    is ContentType.Movie -> getMovieDetailUseCase.invoke(action.contentId)
                 }
-                contentSingle.zipWith(getConfigUseCase.build())
+                contentObservable.zipWith(getConfigUseCase.invoke())
                     .subscribeOn(schedulers.io)
-                    .toObservable()
                     .map<ContentDetailChange> { ContentDetailChange.Result(it.first, it.second) }
                     .startWith(ContentDetailChange.Loading)
             }

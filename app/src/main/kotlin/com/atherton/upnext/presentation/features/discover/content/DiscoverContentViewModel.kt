@@ -18,8 +18,7 @@ import com.ww.roxie.BaseState
 import com.ww.roxie.Reducer
 import io.reactivex.Observable
 import io.reactivex.Observable.merge
-import io.reactivex.Single.zip
-import io.reactivex.functions.Function3
+import io.reactivex.rxkotlin.Observables.zip
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.plusAssign
 import kotlinx.android.parcel.Parcelize
@@ -69,39 +68,45 @@ class DiscoverContentViewModel @Inject constructor(
 
     private fun bindActions() {
         fun Observable<DiscoverContentAction.Load>.toResultChange(): Observable<DiscoverContentChange> {
-            return this.switchMap {
-                zip(getDiscoverItemsForFilterUseCase.build(it.filter),
-                    getConfigUseCase.build(),
-                    getDiscoverViewModeUseCase.build(),
-                    Function3<Response<List<Searchable>>,
-                        Config,
-                        SearchModelViewMode,
-                        DiscoverContentViewData> { searchModels, config, viewMode ->
-                        DiscoverContentViewData(searchModels, config, viewMode)
-                    })
-                    .subscribeOn(schedulers.io)
-                    .toObservable()
+            return this.switchMap { action ->
+
+                if (action.filter is DiscoverFilter.Preset.NowPlayingMovies) {
+                    Timber.tag("darren").d(action.toString())
+                }
+
+                zip(
+                    getDiscoverItemsForFilterUseCase.invoke(action.filter),
+                    getConfigUseCase.invoke(),
+                    getDiscoverViewModeUseCase.invoke()) { searchModels, config, viewMode ->
+                        DiscoverContentViewData(searchModels, config, viewMode) }
+                    .doOnNext {
+                        if (action.filter is DiscoverFilter.Preset.NowPlayingMovies) {
+                            Timber.tag("darren").d("we made it")
+                        }
+                    }
                     .map<DiscoverContentChange> { viewData ->
+
+                        if (action.filter is DiscoverFilter.Preset.NowPlayingMovies) {
+                            Timber.tag("darren").d("mapping")
+                        }
+
                         DiscoverContentChange.Result(
                             response = viewData.searchModels,
                             config = viewData.config,
                             viewMode = viewData.viewMode
                         )
                     }
+                    .subscribeOn(schedulers.io)
                     .startWith(DiscoverContentChange.Loading)
             }
         }
 
         val loadDataChange = actions.ofType<DiscoverContentAction.Load>()
-            .toResultChange()
-
-        val viewModeToggleChange = actions.ofType<DiscoverContentAction.ViewModeToggleChanged>()
             .distinctUntilChanged()
-            .map { DiscoverContentAction.Load(it.filter) }
             .toResultChange()
 
         val retryButtonChange = actions.ofType<DiscoverContentAction.RetryButtonClicked>()
-            .map { DiscoverContentAction.Load(it.filter) }
+            .map { DiscoverContentAction.Load(null, it.filter) }
             .toResultChange()
 
         val searchModelClickedViewEffect = actions.ofType<DiscoverContentAction.SearchModelClicked>()
@@ -116,7 +121,7 @@ class DiscoverContentViewModel @Inject constructor(
                 }
             }
 
-        val stateChanges = merge(loadDataChange, viewModeToggleChange, retryButtonChange)
+        val stateChanges = merge(loadDataChange, retryButtonChange)
 
         disposables += stateChanges
             .scan(initialState, reducer)
@@ -136,15 +141,8 @@ class DiscoverContentViewModel @Inject constructor(
 //================================================================================
 
 sealed class DiscoverContentAction : BaseAction {
-    data class Load(val filter: DiscoverFilter) : DiscoverContentAction()
-
-    data class ViewModeToggleChanged(
-        val viewMode: SearchModelViewMode,
-        val filter: DiscoverFilter
-    ) : DiscoverContentAction()
-
+    data class Load(val viewMode: SearchModelViewMode?, val filter: DiscoverFilter) : DiscoverContentAction()
     data class RetryButtonClicked(val filter: DiscoverFilter) : DiscoverContentAction()
-
     data class SearchModelClicked(val searchModel: Searchable) : DiscoverContentAction()
 }
 

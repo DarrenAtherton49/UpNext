@@ -4,8 +4,8 @@ import com.atherton.upnext.domain.model.Response
 import com.atherton.upnext.domain.model.Searchable
 import com.atherton.upnext.domain.repository.MovieRepository
 import com.atherton.upnext.domain.repository.TvShowRepository
-import io.reactivex.Single
-import io.reactivex.functions.BiFunction
+import io.reactivex.Observable
+import io.reactivex.rxkotlin.Observables.zip
 import javax.inject.Inject
 
 class GetPopularMoviesTvUseCase @Inject constructor(
@@ -20,22 +20,19 @@ class GetPopularMoviesTvUseCase @Inject constructor(
      * If neither of the responses are successful, we propagate the error inside the tv shows response
      * as the movies response will likely have the same error reason.
      */
-    fun build(): Single<Response<List<Searchable>>> {
-        return Single.zip(
-            tvShowRepository.getPopular(),
-            movieRepository.getPopular(),
-            BiFunction { tvResponse, moviesResponse ->
-                when {
-                    tvResponse is Response.Success && moviesResponse is Response.Success -> {
-                        val mostPopular: List<Searchable> = (tvResponse.data + moviesResponse.data)
-                        val sorted = mostPopular.sortedByDescending { it.popularity }
-                        val cached = tvResponse.cached && moviesResponse.cached
-                        Response.Success(sorted, cached)
-                    }
-                    tvResponse is Response.Success -> tvResponse
-                    moviesResponse is Response.Success -> moviesResponse
-                    else -> tvResponse
+    operator fun invoke(): Observable<Response<List<Searchable>>> {
+        return zip(tvShowRepository.getPopular(), movieRepository.getPopular()) { tvResponse, moviesResponse ->
+            when {
+                tvResponse is Response.Success && moviesResponse is Response.Success -> {
+                    val mostPopular: List<Searchable> = (tvResponse.data + moviesResponse.data)
+                    val sorted = mostPopular.sortedByDescending { it.popularity }
+                    val cached = tvResponse.cached && moviesResponse.cached
+                    Response.Success(sorted, cached)
                 }
-            })
+                tvResponse is Response.Success -> tvResponse
+                moviesResponse is Response.Success -> moviesResponse
+                else -> tvResponse
+            }
+        }
     }
 }

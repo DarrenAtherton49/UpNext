@@ -8,5 +8,5 @@ import javax.inject.Inject
 
 class GetDiscoverFiltersUseCase @Inject constructor(private val filterRepository: FilterRepository) {
 
-    fun build(): Single<Response<List<DiscoverFilter>>> = filterRepository.getFilters()
+    operator fun invoke(): Single<Response<List<DiscoverFilter>>> = filterRepository.getFilters()
 }

@@ -6,7 +6,7 @@ import com.atherton.upnext.data.model.NetworkResponse
 import com.atherton.upnext.data.network.service.TmdbConfigService
 import com.atherton.upnext.domain.model.Config
 import com.atherton.upnext.domain.repository.ConfigRepository
-import io.reactivex.Single
+import io.reactivex.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,18 +21,19 @@ class CachingConfigRepository @Inject constructor(
     private var cachedConfig: Config? = null
 
     //todo check for config from network every 3 days. Pass an 'isStale' function into the cacher to check.
-    override fun getConfig(): Single<Config> {
+    override fun getConfig(): Observable<Config> {
         return if (cachedConfig != null) {
-            Single.just(cachedConfig)
+            Observable.fromCallable { cachedConfig }
         } else {
             configService.getConfig()
+                .toObservable()
                 .map { response ->
                     when (response) {
                         is NetworkResponse.Success -> response.body.toDomainConfig()
                         else -> localConfigStore.getConfig().toDomainConfig()
                     }
                 }
-                .doAfterSuccess { cachedConfig = it }
+                .doOnNext { cachedConfig = it }
         }
     }
 

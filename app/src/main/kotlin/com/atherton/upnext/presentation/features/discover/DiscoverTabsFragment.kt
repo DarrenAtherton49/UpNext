@@ -104,20 +104,25 @@ class DiscoverTabsFragment
 
     override fun processViewEffects(viewEffect: DiscoverTabsViewEffect) {
         when (viewEffect) {
-            is DiscoverTabsViewEffect.ToggleViewMode -> {
-                editMenuItem(R.id.action_toggle_view) {
-                    isVisible = true
-                    icon = when (viewEffect.viewMode) {
-                        is SearchModelViewMode.List -> context?.getDrawableCompat(R.drawable.ic_view_grid_white_24dp)
-                        is SearchModelViewMode.Grid -> context?.getDrawableCompat(R.drawable.ic_view_list_white_24dp)
-                    }
-                }
+            is DiscoverTabsViewEffect.ViewModeToggled -> {
+                updateViewModeIcon(viewEffect.viewMode)
                 sharedViewModel.dispatch(MainAction.ViewModeToggleChanged(viewEffect.viewMode))
             }
+            is DiscoverTabsViewEffect.ViewModeLoaded -> updateViewModeIcon(viewEffect.viewMode)
         }
     }
 
     override fun processSharedViewEffects(viewEffect: MainViewEffect) {}
+
+    private fun updateViewModeIcon(viewMode: SearchModelViewMode) {
+        editMenuItem(R.id.action_toggle_view) {
+            isVisible = true
+            icon = when (viewMode) {
+                is SearchModelViewMode.List -> context?.getDrawableCompat(R.drawable.ic_view_grid_white_24dp)
+                is SearchModelViewMode.Grid -> context?.getDrawableCompat(R.drawable.ic_view_list_white_24dp)
+            }
+        }
+    }
 
     private fun initViewPager() {
         viewPager.adapter = viewPagerAdapter

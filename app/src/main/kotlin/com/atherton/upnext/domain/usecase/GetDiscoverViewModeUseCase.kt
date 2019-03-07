@@ -2,12 +2,12 @@ package com.atherton.upnext.domain.usecase
 
 import com.atherton.upnext.domain.model.SearchModelViewMode
 import com.atherton.upnext.domain.repository.SettingsRepository
-import io.reactivex.Single
+import io.reactivex.Observable
 import javax.inject.Inject
 
 class GetDiscoverViewModeUseCase @Inject constructor(private val settingsRepository: SettingsRepository) {
 
-    fun build(): Single<SearchModelViewMode> = Single.fromCallable(this::execute)
+    operator fun invoke(): Observable<SearchModelViewMode> = Observable.fromCallable(this::execute)
 
-    fun execute(): SearchModelViewMode = settingsRepository.getDiscoverViewMode()
+    private fun execute(): SearchModelViewMode = settingsRepository.getDiscoverViewMode()
 }

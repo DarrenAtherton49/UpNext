@@ -1,10 +1,10 @@
 package com.atherton.upnext.domain.usecase
 
 import com.atherton.upnext.domain.repository.SettingsRepository
-import io.reactivex.Single
+import io.reactivex.Observable
 import javax.inject.Inject
 
 class ToggleDiscoverViewModeUseCase @Inject constructor(private val settingsRepository: SettingsRepository) {
 
-    fun build(): Single<Unit> = Single.fromCallable(settingsRepository::toggleDiscoverViewMode)
+    operator fun invoke(): Observable<Unit> = Observable.fromCallable(settingsRepository::toggleDiscoverViewMode)
 }

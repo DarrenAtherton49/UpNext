@@ -10,6 +10,8 @@
         android:id="@+id/errorTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/keyline"
+        android:layout_marginEnd="@dimen/keyline"
         android:layout_marginBottom="@dimen/keyline"
         android:layout_gravity="center_horizontal"
         android:gravity="center"/>
