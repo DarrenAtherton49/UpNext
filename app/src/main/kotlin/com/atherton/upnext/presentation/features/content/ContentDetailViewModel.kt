@@ -79,7 +79,10 @@ class ContentDetailViewModel @Inject constructor(
                 }
                 contentObservable.zipWith(getConfigUseCase.invoke())
                     .subscribeOn(schedulers.io)
-                    .map<ContentDetailChange> { ContentDetailChange.Result(it.first, it.second) }
+                    .map<ContentDetailChange> {
+                        val (watchable, config) = it
+                        ContentDetailChange.Result(watchable, config)
+                    }
                     .startWith(ContentDetailChange.Loading)
             }
         }

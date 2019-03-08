@@ -79,15 +79,16 @@ class SearchViewModel @Inject constructor(
                 zip(
                     dataSourceObservable,
                     getConfigUseCase.invoke(),
-                    getDiscoverViewModeUseCase.invoke()) { searchModels, config, viewMode ->
-                        SearchViewData(searchModels, config, viewMode) }
+                    getDiscoverViewModeUseCase.invoke()
+                ) { searchModels, config, viewMode -> Triple(searchModels, config, viewMode) }
                     .subscribeOn(schedulers.io)
                     .map<SearchChange> { viewData ->
+                        val (searchModels, config, viewMode) = viewData
                         SearchChange.Result(
                             query = action.query,
-                            response = viewData.searchModels,
-                            config = viewData.config,
-                            viewMode = viewData.viewMode
+                            response = searchModels,
+                            config = config,
+                            viewMode = viewMode
                         )
                     }
                     .startWith(SearchChange.Loading)
@@ -215,17 +216,6 @@ sealed class SearchViewEffect : BaseViewEffect {
     data class ShowMovieDetailScreen(val movieId: Int) : SearchViewEffect()
     data class ShowPersonDetailScreen(val personId: Int) : SearchViewEffect()
 }
-
-//================================================================================
-// Data model
-//================================================================================
-
-// this class is just used as the result of zipping the necessary Observables together
-private data class SearchViewData(
-    val searchModels: Response<List<Searchable>>,
-    val config: Config,
-    val viewMode: SearchModelViewMode
-)
 
 //================================================================================
 // Factory
