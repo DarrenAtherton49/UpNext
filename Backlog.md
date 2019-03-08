@@ -5,6 +5,7 @@
 - Ability to reorder the movie/tv/person details screen sections in the recyclerview from the settings.
 - Add rating to the detail screen
 - Add setting for default source of rating (e.g. IMDB, TMDB, Rotten Tomatoes or combined) in places where there is only room to show one score (e.g. in grids).
+- Add pagination to all calls
 - Add setting to hide rating on grid view so it doesn't take up space over thumbnail
 - Figure out the best tabs to show in discover
 - Caching
