@@ -74,18 +74,13 @@ class DiscoverTabsFragment
     override fun renderState(state: DiscoverTabsState) {
         when (state) {
             is DiscoverTabsState.Loading -> {
-                // progressBar.isVisible = true
                 tabLayout.isVisible = false
                 viewPager.isVisible = false
-                // errorLayout.isVisible = false
             }
             is DiscoverTabsState.Content -> {
-                // progressBar.isVisible = false
                 if (state.results.isEmpty()) {
                     tabLayout.isVisible = false
                     viewPager.isVisible = false
-                    // errorLayout.isVisible = true
-                    // errorTextView.text = some message
                 } else {
                     tabLayout.isVisible = true
                     viewPager.isVisible = true

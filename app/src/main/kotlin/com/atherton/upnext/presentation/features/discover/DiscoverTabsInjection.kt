@@ -6,6 +6,7 @@ import com.atherton.upnext.domain.usecase.GetDiscoverViewModeUseCase
 import com.atherton.upnext.domain.usecase.ToggleDiscoverViewModeUseCase
 import com.atherton.upnext.presentation.main.MainComponent
 import com.atherton.upnext.presentation.main.MainModule
+import com.atherton.upnext.presentation.util.AppStringProvider
 import com.atherton.upnext.util.injection.AppComponent
 import com.atherton.upnext.util.injection.PerView
 import com.atherton.upnext.util.threading.RxSchedulers
@@ -34,6 +35,7 @@ class DiscoverTabsModule(private val initialState: DiscoverTabsState?) {
         toggleDiscoverViewModeUseCase: ToggleDiscoverViewModeUseCase,
         getDiscoverViewModeUseCase: GetDiscoverViewModeUseCase,
         getDiscoverFiltersUseCase: GetDiscoverFiltersUseCase,
+        appStringProvider: AppStringProvider,
         schedulers: RxSchedulers
     ): ViewModelProvider.Factory {
         return DiscoverTabsViewModelFactory(
@@ -41,6 +43,7 @@ class DiscoverTabsModule(private val initialState: DiscoverTabsState?) {
             toggleDiscoverViewModeUseCase,
             getDiscoverViewModeUseCase,
             getDiscoverFiltersUseCase,
+            appStringProvider,
             schedulers
         )
     }

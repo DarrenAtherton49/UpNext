@@ -6,6 +6,7 @@ import com.atherton.upnext.domain.usecase.GetDiscoverItemsForFilterUseCase
 import com.atherton.upnext.domain.usecase.GetDiscoverViewModeUseCase
 import com.atherton.upnext.presentation.main.MainComponent
 import com.atherton.upnext.presentation.main.MainModule
+import com.atherton.upnext.presentation.util.AppStringProvider
 import com.atherton.upnext.util.injection.AppComponent
 import com.atherton.upnext.util.injection.PerView
 import com.atherton.upnext.util.threading.RxSchedulers
@@ -34,6 +35,7 @@ class DiscoverContentModule(private val initialState: DiscoverContentState?) {
         getDiscoverViewModeUseCase: GetDiscoverViewModeUseCase,
         getDiscoverItemsForFilterUseCase: GetDiscoverItemsForFilterUseCase,
         getConfigUseCase: GetConfigUseCase,
+        appStringProvider: AppStringProvider,
         schedulers: RxSchedulers
     ): ViewModelProvider.Factory {
         return DiscoverContentViewModelFactory(
@@ -41,6 +43,7 @@ class DiscoverContentModule(private val initialState: DiscoverContentState?) {
             getDiscoverViewModeUseCase,
             getDiscoverItemsForFilterUseCase,
             getConfigUseCase,
+            appStringProvider,
             schedulers
         )
     }

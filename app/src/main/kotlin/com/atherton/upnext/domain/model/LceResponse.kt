@@ -1,13 +1,18 @@
 package com.atherton.upnext.domain.model
 
-import android.os.Parcelable
-import com.atherton.upnext.util.parcel.IOExceptionParceler
-import kotlinx.android.parcel.Parcelize
-import kotlinx.android.parcel.TypeParceler
 import java.io.IOException
 
 /**
- * Represents the result of making a repository request.
+ * Represents the result of making a repository request which can emit data while loading.
+ *
+ * The 'Loading' state is used when we want to emit the fact that we are loading data, but in the meantime
+ * we have some data to show already (e.g. from database).
+ *
+ * The 'Content' state is used to emit our intended/fresh data.
+ *
+ * The 'Error' state is used to emit an error in fetching data, but can also contain some fallback data (e.g.
+ * from database).
+ *
  */
 sealed class LceResponse<out T : Any> {
 
@@ -16,21 +21,20 @@ sealed class LceResponse<out T : Any> {
 
     data class Content<T : Any>(val data: T, val cached: Boolean) : LceResponse<T>()
 
-    sealed class Error : LceResponse<Nothing>(), Parcelable {
+    // can assume that any data used in the Error state is cached
+    sealed class Error<T : Any>(open val fallbackData: T?) : LceResponse<T>() {
 
         // A non-2XX response that may have an ApiError as its error data.
-        @Parcelize
-        data class ServerError(val error: ApiError?, val code: Int) : Error()
+        data class ServerError<T : Any>(
+            val error: ApiError?,
+            val code: Int,
+            override val fallbackData: T?
+        ) : Error<T>(fallbackData)
 
         // A request that didn't result in a response from the server.
-        @Parcelize
-        @TypeParceler<IOException, IOExceptionParceler>()
-        data class NetworkError(val error: IOException) : Error()
-    }
-
-    fun dataOrNull(): T? {
-        return if (this is LceResponse.Content) {
-            this.data
-        } else null
+        data class NetworkError<T : Any>(
+            val error: IOException,
+            override val fallbackData: T?
+        ) : Error<T>(fallbackData)
     }
 }

@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.atherton.upnext.R
-import com.atherton.upnext.domain.model.Response
 import com.atherton.upnext.domain.model.SearchModelViewMode
 import com.atherton.upnext.presentation.common.searchmodel.SearchModelAdapter
 import com.atherton.upnext.presentation.main.MainAction
@@ -105,10 +104,18 @@ class SearchFragment : BaseFragment<SearchAction, SearchState, SearchViewEffect,
     override fun renderState(state: SearchState) {
         when (state) {
             is SearchState.Loading -> {
+                errorLayout.isVisible = false
                 progressBar.isVisible = true
                 //todo add a progress bar to the search results section as well as the search field?
-                recyclerView.isVisible = false
-                errorLayout.isVisible = false
+
+                if (state.results != null && state.results.isNotEmpty() && state.viewMode != null) {
+                    // show a loading state with cached data
+                    recyclerView.isVisible = true
+                    initRecyclerView(state.viewMode)
+                    recyclerViewAdapter.submitList(state.results)
+                } else {
+                    recyclerView.isVisible = false
+                }
             }
             is SearchState.Content -> {
                 progressBar.isVisible = false
@@ -127,8 +134,8 @@ class SearchFragment : BaseFragment<SearchAction, SearchState, SearchViewEffect,
                 progressBar.isVisible = false
                 recyclerView.isVisible = false
                 errorLayout.isVisible = true
-                errorTextView.text = state.failure.generateErrorMessage(requireContext())
-                retryButton.isVisible = state.failure is Response.Failure.NetworkError
+                errorTextView.text = state.message
+                retryButton.isVisible = state.canRetry
             }
         }
     }

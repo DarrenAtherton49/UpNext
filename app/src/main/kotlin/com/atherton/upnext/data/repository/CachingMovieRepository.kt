@@ -1,14 +1,14 @@
 package com.atherton.upnext.data.repository
 
+import com.atherton.upnext.data.mapper.toDomainLceResponse
 import com.atherton.upnext.data.mapper.toDomainMovie
-import com.atherton.upnext.data.mapper.toDomainResponse
 import com.atherton.upnext.data.model.NetworkResponse
 import com.atherton.upnext.data.model.TmdbApiError
 import com.atherton.upnext.data.model.TmdbMovie
 import com.atherton.upnext.data.model.TmdbPagedResponse
 import com.atherton.upnext.data.network.service.TmdbMovieService
+import com.atherton.upnext.domain.model.LceResponse
 import com.atherton.upnext.domain.model.Movie
-import com.atherton.upnext.domain.model.Response
 import com.atherton.upnext.domain.repository.MovieRepository
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -22,42 +22,41 @@ class CachingMovieRepository @Inject constructor(
     private val movieService: TmdbMovieService
 ) : MovieRepository {
 
-    override fun getMovie(id: Int): Observable<Response<Movie>> {
+    override fun getMovie(id: Int): Observable<LceResponse<Movie>> {
         return movieService.getMovieDetails(id)
             .toObservable()
-            .map { it.toDomainResponse(false) { movie -> movie.toDomainMovie() }
+            .map { it.toDomainLceResponse(false) { movie -> movie.toDomainMovie() }
         }
     }
 
-    override fun getPopular(): Observable<Response<List<Movie>>> {
+    override fun getPopular(): Observable<LceResponse<List<Movie>>> {
         return movieService.getPopular().toDomainMovies()
     }
 
-    override fun getUpcoming(): Observable<Response<List<Movie>>> {
+    override fun getUpcoming(): Observable<LceResponse<List<Movie>>> {
         return movieService.getUpcoming().toDomainMovies()
     }
 
-    override fun getTopRated(): Observable<Response<List<Movie>>> {
+    override fun getTopRated(): Observable<LceResponse<List<Movie>>> {
         return movieService.getTopRated().toDomainMovies()
     }
 
-    override fun getNowPlaying(): Observable<Response<List<Movie>>> {
+    override fun getNowPlaying(): Observable<LceResponse<List<Movie>>> {
         return Observable.concat(
             Observable.fromCallable {
-                Response.Success(
+                LceResponse.Loading(
                     listOf(
                         Movie(false, "",
                             null, null, 1,
                             null, null, "",
                             24.4f, "", "", "FAKE MOVIE",
                             false, 24.4f, 4)
-                    ),
-                    true
+                    )
                 )
             },
             movieService.getNowPlaying()
                 .map {
-                    it.toDomainResponse(false) { response ->
+                    it.toDomainLceResponse(false) { response ->
                         response.results.map { movie -> movie.toDomainMovie() }
                     }
                 }
@@ -66,9 +65,9 @@ class CachingMovieRepository @Inject constructor(
     }
 
     private fun Single<NetworkResponse<TmdbPagedResponse<TmdbMovie>, TmdbApiError>>.toDomainMovies()
-        : Observable<Response<List<Movie>>> {
+        : Observable<LceResponse<List<Movie>>> {
         return this.map {
-            it.toDomainResponse(false) { response ->
+            it.toDomainLceResponse(false) { response ->
                 response.results.map { movie -> movie.toDomainMovie() }
             }
         }.toObservable()

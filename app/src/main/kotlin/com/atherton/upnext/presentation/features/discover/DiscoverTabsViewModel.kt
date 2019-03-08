@@ -4,11 +4,12 @@ import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.domain.model.DiscoverFilter
-import com.atherton.upnext.domain.model.Response
+import com.atherton.upnext.domain.model.LceResponse
 import com.atherton.upnext.domain.model.SearchModelViewMode
 import com.atherton.upnext.domain.usecase.GetDiscoverFiltersUseCase
 import com.atherton.upnext.domain.usecase.GetDiscoverViewModeUseCase
 import com.atherton.upnext.domain.usecase.ToggleDiscoverViewModeUseCase
+import com.atherton.upnext.presentation.util.AppStringProvider
 import com.atherton.upnext.util.base.BaseViewEffect
 import com.atherton.upnext.util.base.UpNextViewModel
 import com.atherton.upnext.util.extensions.preventMultipleClicks
@@ -29,6 +30,7 @@ class DiscoverTabsViewModel @Inject constructor(
     private val toggleDiscoverViewModeUseCase: ToggleDiscoverViewModeUseCase,
     private val getDiscoverViewModeUseCase: GetDiscoverViewModeUseCase,
     private val getDiscoverFiltersUseCase: GetDiscoverFiltersUseCase,
+    private val appStringProvider: AppStringProvider,
     private val schedulers: RxSchedulers
 ): UpNextViewModel<DiscoverTabsAction, DiscoverTabsState, DiscoverTabsViewEffect>() {
 
@@ -38,22 +40,24 @@ class DiscoverTabsViewModel @Inject constructor(
         when (change) {
             is DiscoverTabsChange.Loading -> {
                 when (oldState) {
-                    is DiscoverTabsState.Idle -> DiscoverTabsState.Loading()
+                    is DiscoverTabsState.Idle -> DiscoverTabsState.Loading(results = null)
                     is DiscoverTabsState.Loading -> oldState.copy()
                     is DiscoverTabsState.Content -> {
                         DiscoverTabsState.Loading(results = oldState.results)
                     }
-                    is DiscoverTabsState.Error -> DiscoverTabsState.Loading()
+                    is DiscoverTabsState.Error -> DiscoverTabsState.Loading(results = null)
                 }
             }
             is DiscoverTabsChange.Result -> {
                 when (change.response) {
-                    is Response.Success -> {
-                        DiscoverTabsState.Content(
-                            results = change.response.data
+                    is LceResponse.Loading -> DiscoverTabsState.Loading(results = change.response.data)
+                    is LceResponse.Content -> DiscoverTabsState.Content(results = change.response.data)
+                    is LceResponse.Error -> {
+                        DiscoverTabsState.Error(
+                            message = appStringProvider.generateErrorMessage(change.response),
+                            canRetry = change.response is LceResponse.Error.NetworkError
                         )
                     }
-                    is Response.Failure -> DiscoverTabsState.Error(failure = change.response)
                 }
             }
         }
@@ -122,7 +126,7 @@ sealed class DiscoverTabsAction : BaseAction {
 sealed class DiscoverTabsChange {
     object Loading : DiscoverTabsChange()
     data class Result(
-        val response: Response<List<DiscoverFilter>>
+        val response: LceResponse<List<DiscoverFilter>>
     ) : DiscoverTabsChange()
 }
 
@@ -132,13 +136,13 @@ sealed class DiscoverTabsState : BaseState, Parcelable {
     object Idle : DiscoverTabsState()
 
     @Parcelize
-    data class Loading(val results: List<DiscoverFilter> = emptyList()) : DiscoverTabsState()
+    data class Loading(val results: List<DiscoverFilter>?) : DiscoverTabsState()
 
     @Parcelize
-    data class Content(val results: List<DiscoverFilter> = emptyList()) : DiscoverTabsState()
+    data class Content(val results: List<DiscoverFilter>) : DiscoverTabsState()
 
     @Parcelize
-    data class Error(val failure: Response.Failure) : DiscoverTabsState()
+    data class Error(val message: String, val canRetry: Boolean) : DiscoverTabsState()
 }
 
 sealed class DiscoverTabsViewEffect : BaseViewEffect {
@@ -156,6 +160,7 @@ class DiscoverTabsViewModelFactory(
     private val toggleDiscoverViewModeUseCase: ToggleDiscoverViewModeUseCase,
     private val getDiscoverViewModeUseCase: GetDiscoverViewModeUseCase,
     private val getDiscoverFiltersUseCase: GetDiscoverFiltersUseCase,
+    private val appStringProvider: AppStringProvider,
     private val schedulers: RxSchedulers
 ) : ViewModelProvider.Factory {
 
@@ -166,6 +171,7 @@ class DiscoverTabsViewModelFactory(
             toggleDiscoverViewModeUseCase,
             getDiscoverViewModeUseCase,
             getDiscoverFiltersUseCase,
+            appStringProvider,
             schedulers
         ) as T
     }

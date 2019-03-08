@@ -7,8 +7,9 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.atherton.upnext.R
-import com.atherton.upnext.domain.model.Response
+import com.atherton.upnext.domain.model.Watchable
 import com.atherton.upnext.presentation.common.detail.ModelDetailAdapter
+import com.atherton.upnext.presentation.common.detail.ModelDetailSection
 import com.atherton.upnext.presentation.main.MainAction
 import com.atherton.upnext.presentation.main.MainViewEffect
 import com.atherton.upnext.presentation.main.MainViewModel
@@ -87,36 +88,42 @@ class ContentDetailFragment : BaseFragment<ContentDetailAction, ContentDetailSta
     override fun renderState(state: ContentDetailState) {
         when (state) {
             is ContentDetailState.Loading -> {
-                recyclerView.isVisible = false
                 errorLayout.isVisible = false
                 posterImageView.isVisible = false
                 progressBar.isVisible = true
+
+                if (state.watchable != null && state.detailSections != null) {
+                    // show a loading state with cached data
+                    recyclerView.isVisible = true
+                    renderContent(state.watchable, state.detailSections)
+                } else {
+                    recyclerView.isVisible = false
+                }
             }
             is ContentDetailState.Content -> {
                 progressBar.isVisible = false
                 errorLayout.isVisible = false
                 posterImageView.isVisible = true
                 recyclerView.isVisible = true
-                renderContent(state)
+                renderContent(state.watchable, state.detailSections)
             }
             is ContentDetailState.Error -> {
                 progressBar.isVisible = false
                 recyclerView.isVisible = false
                 posterImageView.isVisible = false
                 errorLayout.isVisible = true
-                errorTextView.text = state.failure.generateErrorMessage(requireContext())
-                retryButton.isVisible = state.failure is Response.Failure.NetworkError
+                errorTextView.text = state.message
+                retryButton.isVisible = state.canRetry
             }
         }
     }
 
-    private fun renderContent(state: ContentDetailState.Content) {
-        val watchable = state.watchable
+    private fun renderContent(watchable: Watchable, detailSections: List<ModelDetailSection>) {
         renderContentImages(watchable.backdropPath, watchable.posterPath)
         titleTextView.text = watchable.title
-        recyclerViewAdapter.submitData(state.detailSections)
+        recyclerViewAdapter.submitData(detailSections)
 
-        //todo set button image based on whether show is already in watchlist (contentData.isInWatchlist) or not
+        //todo set button image based on whether show is already in watchlist or not
         addToWatchlistButton.show(true)
     }
 

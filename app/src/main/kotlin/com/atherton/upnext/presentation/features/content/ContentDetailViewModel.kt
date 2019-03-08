@@ -42,17 +42,24 @@ class ContentDetailViewModel @Inject constructor(
         when (change) {
             is ContentDetailChange.Loading -> {
                 when (oldState) {
-                    is ContentDetailState.Idle -> ContentDetailState.Loading(null)
+                    is ContentDetailState.Idle -> ContentDetailState.Loading(null, null)
                     is ContentDetailState.Loading -> oldState.copy()
                     is ContentDetailState.Content -> {
                         ContentDetailState.Loading(watchable = oldState.watchable, detailSections = oldState.detailSections)
                     }
-                    is ContentDetailState.Error -> ContentDetailState.Loading(null)
+                    is ContentDetailState.Error -> ContentDetailState.Loading(null, null)
                 }
             }
             is ContentDetailChange.Result -> {
                 when (change.response) {
-                    is Response.Success -> {
+                    is LceResponse.Loading -> {
+                        val watchableWithImageUrls = change.response.data.withContentDetailImageUrls(change.config)
+                        ContentDetailState.Loading(
+                            watchable = watchableWithImageUrls,
+                            detailSections = buildContentDetailSections(watchableWithImageUrls, appStringProvider)
+                        )
+                    }
+                    is LceResponse.Content -> {
                         val watchableWithImageUrls = change.response.data.withContentDetailImageUrls(change.config)
                         ContentDetailState.Content(
                             watchable = watchableWithImageUrls,
@@ -60,7 +67,12 @@ class ContentDetailViewModel @Inject constructor(
                             cached = change.response.cached
                         )
                     }
-                    is Response.Failure -> ContentDetailState.Error(failure = change.response)
+                    is LceResponse.Error -> {
+                        ContentDetailState.Error(
+                            message = appStringProvider.generateErrorMessage(change.response),
+                            canRetry = change.response is LceResponse.Error.NetworkError
+                        )
+                    }
                 }
             }
         }
@@ -176,7 +188,7 @@ sealed class ContentDetailAction : BaseAction {
 
 sealed class ContentDetailChange {
     object Loading : ContentDetailChange()
-    data class Result(val response: Response<Watchable>, val config: Config) : ContentDetailChange()
+    data class Result(val response: LceResponse<Watchable>, val config: Config) : ContentDetailChange()
 }
 
 sealed class ContentDetailState : BaseState, Parcelable {
@@ -187,18 +199,18 @@ sealed class ContentDetailState : BaseState, Parcelable {
     @Parcelize
     data class Loading(
         val watchable: Watchable?,
-        val detailSections: List<ModelDetailSection> = emptyList()
+        val detailSections: List<ModelDetailSection>?
     ) : ContentDetailState()
 
     @Parcelize
     data class Content(
         val watchable: Watchable,
-        val detailSections: List<ModelDetailSection> = emptyList(),
+        val detailSections: List<ModelDetailSection>,
         val cached: Boolean = false
     ) : ContentDetailState()
 
     @Parcelize
-    data class Error(val failure: Response.Failure) : ContentDetailState()
+    data class Error(val message: String, val canRetry: Boolean) : ContentDetailState()
 }
 
 sealed class ContentDetailViewEffect : BaseViewEffect {

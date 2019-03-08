@@ -1,7 +1,9 @@
 package com.atherton.upnext.domain.usecase
 
-import com.atherton.upnext.domain.model.Response
+import com.atherton.upnext.domain.model.LceResponse
+import com.atherton.upnext.domain.model.Movie
 import com.atherton.upnext.domain.model.Searchable
+import com.atherton.upnext.domain.model.TvShow
 import com.atherton.upnext.domain.repository.MovieRepository
 import com.atherton.upnext.domain.repository.TvShowRepository
 import io.reactivex.Observable
@@ -20,19 +22,37 @@ class GetPopularMoviesTvUseCase @Inject constructor(
      * If neither of the responses are successful, we propagate the error inside the tv shows response
      * as the movies response will likely have the same error reason.
      */
-    operator fun invoke(): Observable<Response<List<Searchable>>> {
+    operator fun invoke(): Observable<LceResponse<List<Searchable>>> {
         return zip(tvShowRepository.getPopular(), movieRepository.getPopular()) { tvResponse, moviesResponse ->
             when {
-                tvResponse is Response.Success && moviesResponse is Response.Success -> {
-                    val mostPopular: List<Searchable> = (tvResponse.data + moviesResponse.data)
-                    val sorted = mostPopular.sortedByDescending { it.popularity }
+                tvResponse is LceResponse.Content && moviesResponse is LceResponse.Content -> {
+                    val sorted = sortByPopularity(tvResponse.data, moviesResponse.data)
                     val cached = tvResponse.cached && moviesResponse.cached
-                    Response.Success(sorted, cached)
+                    LceResponse.Content(sorted, cached)
                 }
-                tvResponse is Response.Success -> tvResponse
-                moviesResponse is Response.Success -> moviesResponse
+                // when one response has final content and other is loading, surface it as loading
+                tvResponse is LceResponse.Content && moviesResponse is LceResponse.Loading -> {
+                    val sorted = sortByPopularity(tvResponse.data, moviesResponse.data)
+                    LceResponse.Loading(sorted)
+                }
+                tvResponse is LceResponse.Loading && moviesResponse is LceResponse.Content -> {
+                    val sorted = sortByPopularity(tvResponse.data, moviesResponse.data)
+                    LceResponse.Loading(sorted)
+                }
+                // when both responses are still loading, surface it as loading
+                tvResponse is LceResponse.Loading && moviesResponse is LceResponse.Loading -> {
+                    val sorted = sortByPopularity(tvResponse.data, moviesResponse.data)
+                    LceResponse.Loading(sorted)
+                }
+                tvResponse is LceResponse.Content -> tvResponse
+                moviesResponse is LceResponse.Content -> moviesResponse
                 else -> tvResponse
             }
         }
+    }
+
+    private fun sortByPopularity(tvShows: List<TvShow>, movies: List<Movie>): List<Searchable> {
+        val mostPopular: List<Searchable> = tvShows + movies
+        return mostPopular.sortedByDescending { it.popularity }
     }
 }

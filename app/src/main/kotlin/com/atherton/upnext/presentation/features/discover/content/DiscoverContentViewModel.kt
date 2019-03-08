@@ -8,6 +8,7 @@ import com.atherton.upnext.domain.usecase.GetConfigUseCase
 import com.atherton.upnext.domain.usecase.GetDiscoverItemsForFilterUseCase
 import com.atherton.upnext.domain.usecase.GetDiscoverViewModeUseCase
 import com.atherton.upnext.presentation.common.searchmodel.withSearchModelListImageUrls
+import com.atherton.upnext.presentation.util.AppStringProvider
 import com.atherton.upnext.util.base.BaseViewEffect
 import com.atherton.upnext.util.base.UpNextViewModel
 import com.atherton.upnext.util.extensions.preventMultipleClicks
@@ -30,6 +31,7 @@ class DiscoverContentViewModel @Inject constructor(
     private val getDiscoverViewModeUseCase: GetDiscoverViewModeUseCase,
     private val getDiscoverItemsForFilterUseCase: GetDiscoverItemsForFilterUseCase,
     private val getConfigUseCase: GetConfigUseCase,
+    private val appStringProvider: AppStringProvider,
     private val schedulers: RxSchedulers
 ): UpNextViewModel<DiscoverContentAction, DiscoverContentState, DiscoverContentViewEffect>() {
 
@@ -39,24 +41,35 @@ class DiscoverContentViewModel @Inject constructor(
         when (change) {
             is DiscoverContentChange.Loading -> {
                 when (oldState) {
-                    is DiscoverContentState.Idle -> DiscoverContentState.Loading()
+                    is DiscoverContentState.Idle -> DiscoverContentState.Loading(results = null, viewMode = null)
                     is DiscoverContentState.Loading -> oldState.copy()
                     is DiscoverContentState.Content -> {
-                        DiscoverContentState.Loading(results = oldState.results)
+                        DiscoverContentState.Loading(results = oldState.results, viewMode = null)
                     }
-                    is DiscoverContentState.Error -> DiscoverContentState.Loading()
+                    is DiscoverContentState.Error -> DiscoverContentState.Loading(results = null, viewMode = null)
                 }
             }
             is DiscoverContentChange.Result -> {
                 when (change.response) {
-                    is Response.Success -> {
+                    is LceResponse.Loading -> {
+                        DiscoverContentState.Loading(
+                            results = change.response.data.withSearchModelListImageUrls(change.config),
+                            viewMode = change.viewMode
+                        )
+                    }
+                    is LceResponse.Content -> {
                         DiscoverContentState.Content(
                             results = change.response.data.withSearchModelListImageUrls(change.config),
                             cached = change.response.cached,
                             viewMode = change.viewMode
                         )
                     }
-                    is Response.Failure -> DiscoverContentState.Error(failure = change.response)
+                    is LceResponse.Error -> {
+                        DiscoverContentState.Error(
+                            message = appStringProvider.generateErrorMessage(change.response),
+                            canRetry = change.response is LceResponse.Error.NetworkError
+                        )
+                    }
                 }
             }
         }
@@ -135,7 +148,7 @@ sealed class DiscoverContentAction : BaseAction {
 sealed class DiscoverContentChange {
     object Loading : DiscoverContentChange()
     data class Result(
-        val response: Response<List<Searchable>>,
+        val response: LceResponse<List<Searchable>>,
         val config: Config,
         val viewMode: SearchModelViewMode
     ) : DiscoverContentChange()
@@ -147,17 +160,17 @@ sealed class DiscoverContentState : BaseState, Parcelable {
     object Idle : DiscoverContentState()
 
     @Parcelize
-    data class Loading(val results: List<Searchable> = emptyList()) : DiscoverContentState()
+    data class Loading(val results: List<Searchable>?, val viewMode: SearchModelViewMode?) : DiscoverContentState()
 
     @Parcelize
     data class Content(
-        val results: List<Searchable> = emptyList(),
+        val results: List<Searchable>,
         val cached: Boolean = false,
         val viewMode: SearchModelViewMode
     ) : DiscoverContentState()
 
     @Parcelize
-    data class Error(val failure: Response.Failure) : DiscoverContentState()
+    data class Error(val message: String, val canRetry: Boolean) : DiscoverContentState()
 }
 
 sealed class DiscoverContentViewEffect : BaseViewEffect {
@@ -176,6 +189,7 @@ class DiscoverContentViewModelFactory(
     private val getDiscoverViewModeUseCase: GetDiscoverViewModeUseCase,
     private val getDiscoverItemsForFilterUseCase: GetDiscoverItemsForFilterUseCase,
     private val getConfigUseCase: GetConfigUseCase,
+    private val appStringProvider: AppStringProvider,
     private val schedulers: RxSchedulers
 ) : ViewModelProvider.Factory {
 
@@ -186,6 +200,7 @@ class DiscoverContentViewModelFactory(
             getDiscoverViewModeUseCase,
             getDiscoverItemsForFilterUseCase,
             getConfigUseCase,
+            appStringProvider,
             schedulers
         ) as T
     }

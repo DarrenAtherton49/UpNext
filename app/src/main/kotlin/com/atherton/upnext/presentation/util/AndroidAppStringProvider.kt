@@ -2,6 +2,7 @@ package com.atherton.upnext.presentation.util
 
 import android.content.res.Resources
 import com.atherton.upnext.R
+import com.atherton.upnext.domain.model.LceResponse
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -20,5 +21,22 @@ class AndroidAppStringProvider @Inject constructor(private val resources: Resour
 
     override fun getRuntimeString(runtime: String): String {
         return resources.getString(R.string.content_detail_runtime_mins).format(runtime)
+    }
+
+    override fun <T : Any> generateErrorMessage(error: LceResponse.Error<T>): String {
+        return when (error) {
+            is LceResponse.Error.ServerError -> {
+                val apiError = error.error
+                if (apiError != null) {
+                    resources.getString(R.string.error_message_server_with_error).format(
+                        error.code,
+                        apiError.statusCode
+                    )
+                } else {
+                    resources.getString(R.string.error_message_server).format(error.code)
+                }
+            }
+            is LceResponse.Error.NetworkError -> resources.getString(R.string.error_message_no_internet)
+        }
     }
 }

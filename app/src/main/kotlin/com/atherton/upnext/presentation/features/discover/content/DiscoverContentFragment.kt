@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.atherton.upnext.R
 import com.atherton.upnext.domain.model.DiscoverFilter
-import com.atherton.upnext.domain.model.Response
 import com.atherton.upnext.domain.model.SearchModelViewMode
 import com.atherton.upnext.presentation.common.searchmodel.SearchModelAdapter
 import com.atherton.upnext.presentation.main.MainAction
@@ -17,7 +16,10 @@ import com.atherton.upnext.presentation.main.MainViewModel
 import com.atherton.upnext.presentation.main.MainViewModelFactory
 import com.atherton.upnext.util.base.BaseFragment
 import com.atherton.upnext.util.base.ToolbarOptions
-import com.atherton.upnext.util.extensions.*
+import com.atherton.upnext.util.extensions.getActivityViewModel
+import com.atherton.upnext.util.extensions.getAppComponent
+import com.atherton.upnext.util.extensions.getViewModel
+import com.atherton.upnext.util.extensions.isVisible
 import com.atherton.upnext.util.glide.GlideApp
 import com.atherton.upnext.util.recyclerview.GridSpacingItemDecoration
 import com.atherton.upnext.util.recyclerview.LinearSpacingItemDecoration
@@ -86,9 +88,17 @@ class DiscoverContentFragment
     override fun renderState(state: DiscoverContentState) {
         when (state) {
             is DiscoverContentState.Loading -> {
-                progressBar.isVisible = true
-                recyclerView.isVisible = false
                 errorLayout.isVisible = false
+                progressBar.isVisible = true
+
+                if (state.results != null && state.results.isNotEmpty() && state.viewMode != null) {
+                    // show a loading state with cached data
+                    recyclerView.isVisible = true
+                    initRecyclerView(state.viewMode)
+                    recyclerViewAdapter.submitList(state.results)
+                } else {
+                    recyclerView.isVisible = false
+                }
             }
             is DiscoverContentState.Content -> {
                 progressBar.isVisible = false
@@ -107,8 +117,8 @@ class DiscoverContentFragment
                 progressBar.isVisible = false
                 recyclerView.isVisible = false
                 errorLayout.isVisible = true
-                errorTextView.text = state.failure.generateErrorMessage(requireContext())
-                retryButton.isVisible = state.failure is Response.Failure.NetworkError
+                errorTextView.text = state.message
+                retryButton.isVisible = state.canRetry
             }
         }
     }

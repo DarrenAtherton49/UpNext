@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.domain.model.*
 import com.atherton.upnext.domain.usecase.*
 import com.atherton.upnext.presentation.common.searchmodel.withSearchModelListImageUrls
+import com.atherton.upnext.presentation.util.AppStringProvider
 import com.atherton.upnext.util.base.BaseViewEffect
 import com.atherton.upnext.util.base.UpNextViewModel
 import com.atherton.upnext.util.extensions.preventMultipleClicks
@@ -31,6 +32,7 @@ class SearchViewModel @Inject constructor(
     private val searchMultiUseCase: SearchMultiUseCase,
     private val popularMoviesTvUseCase: GetPopularMoviesTvUseCase,
     private val getConfigUseCase: GetConfigUseCase,
+    private val appStringProvider: AppStringProvider,
     private val schedulers: RxSchedulers
 ): UpNextViewModel<SearchAction, SearchState, SearchViewEffect>() {
 
@@ -42,12 +44,19 @@ class SearchViewModel @Inject constructor(
                 when (oldState) {
                     is SearchState.Loading -> oldState.copy(results = oldState.results, query = oldState.query)
                     is SearchState.Content -> oldState.copy(results = oldState.results, query = oldState.query)
-                    else -> SearchState.Loading(results = emptyList(), query = oldState.query)
+                    else -> SearchState.Loading(results = null, viewMode = null, query = oldState.query)
                 }
             }
             is SearchChange.Result -> {
                 when (change.response) {
-                    is Response.Success -> {
+                    is LceResponse.Loading -> {
+                        SearchState.Loading(
+                            results = change.response.data.withSearchModelListImageUrls(change.config),
+                            viewMode = change.viewMode,
+                            query = change.query
+                        )
+                    }
+                    is LceResponse.Content -> {
                         SearchState.Content(
                             results = change.response.data.withSearchModelListImageUrls(change.config),
                             cached = change.response.cached,
@@ -55,8 +64,12 @@ class SearchViewModel @Inject constructor(
                             viewMode = change.viewMode
                         )
                     }
-                    is Response.Failure -> {
-                        SearchState.Error(failure = change.response, query = change.query)
+                    is LceResponse.Error -> {
+                        SearchState.Error(
+                            message = appStringProvider.generateErrorMessage(change.response),
+                            canRetry = change.response is LceResponse.Error.NetworkError,
+                            query = change.query
+                        )
                     }
                 }
             }
@@ -178,7 +191,7 @@ sealed class SearchChange {
     object Loading : SearchChange()
     data class Result(
         val query: String,
-        val response: Response<List<Searchable>>,
+        val response: LceResponse<List<Searchable>>,
         val config: Config,
         val viewMode: SearchModelViewMode
     ) : SearchChange()
@@ -191,23 +204,21 @@ sealed class SearchState(open val query: String): BaseState, Parcelable {
 
     @Parcelize
     data class Loading(
-        val results: List<Searchable> = emptyList(),
+        val results: List<Searchable>?,
+        val viewMode: SearchModelViewMode?,
         override val query: String
     ) : SearchState(query)
 
     @Parcelize
     data class Content(
-        val results: List<Searchable> = emptyList(),
+        val results: List<Searchable>,
         val cached: Boolean = false,
         override val query: String,
         val viewMode: SearchModelViewMode
     ) : SearchState(query)
 
     @Parcelize
-    data class Error(
-        val failure: Response.Failure,
-        override val query: String
-    ) : SearchState(query)
+    data class Error(val message: String, val canRetry: Boolean, override val query: String) : SearchState(query)
 }
 
 sealed class SearchViewEffect : BaseViewEffect {
@@ -229,6 +240,7 @@ class SearchViewModelFactory(
     private val searchMultiUseCase: SearchMultiUseCase,
     private val popularMoviesTvUseCase: GetPopularMoviesTvUseCase,
     private val getConfigUseCase: GetConfigUseCase,
+    private val appStringProvider: AppStringProvider,
     private val schedulers: RxSchedulers
 ) : ViewModelProvider.Factory {
 
@@ -241,6 +253,7 @@ class SearchViewModelFactory(
             searchMultiUseCase,
             popularMoviesTvUseCase,
             getConfigUseCase,
+            appStringProvider,
             schedulers
         ) as T
     }

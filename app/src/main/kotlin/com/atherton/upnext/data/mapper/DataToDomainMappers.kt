@@ -10,20 +10,22 @@ import com.atherton.upnext.domain.model.Collection
  */
 
 /**
- * Maps a NetworkResponse to a domain Result.
+ * Maps a NetworkResponse to a domain LceResponse.
  *
  * @param cachedData whether or not the data is old/cached
+ * @param fallbackData fallback data to be emitted in the event of an error
  * @param dataMapper provides a way to map from data layer models to app-level/domain models
  *
  */
-internal fun <DATA : Any, DOMAIN : Any> NetworkResponse<DATA, TmdbApiError>.toDomainResponse(
+internal fun <DATA : Any, DOMAIN : Any> NetworkResponse<DATA, TmdbApiError>.toDomainLceResponse(
     cachedData: Boolean,
+    fallbackData: DOMAIN? = null,
     dataMapper: (DATA) -> DOMAIN
-): Response<DOMAIN> {
+): LceResponse<DOMAIN> {
     return when (this) {
-        is NetworkResponse.Success -> Response.Success(dataMapper(body), cachedData)
-        is NetworkResponse.ServerError<TmdbApiError> -> Response.Failure.ServerError(error?.toDomainApiError(), code)
-        is NetworkResponse.NetworkError -> Response.Failure.NetworkError(error)
+        is NetworkResponse.Success -> LceResponse.Content(dataMapper(body), cachedData)
+        is NetworkResponse.ServerError<TmdbApiError> -> LceResponse.Error.ServerError(error?.toDomainApiError(), code, fallbackData)
+        is NetworkResponse.NetworkError -> LceResponse.Error.NetworkError(error, fallbackData)
     }
 }
 

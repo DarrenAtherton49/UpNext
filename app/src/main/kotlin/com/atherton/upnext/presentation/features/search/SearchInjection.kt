@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.domain.usecase.*
 import com.atherton.upnext.presentation.main.MainComponent
 import com.atherton.upnext.presentation.main.MainModule
+import com.atherton.upnext.presentation.util.AppStringProvider
 import com.atherton.upnext.util.injection.AppComponent
 import com.atherton.upnext.util.injection.PerView
 import com.atherton.upnext.util.threading.RxSchedulers
@@ -34,6 +35,7 @@ class SearchModule(private val initialState: SearchState?) {
         searchMultiUseCase: SearchMultiUseCase,
         getConfigUseCase: GetConfigUseCase,
         popularMoviesTvUseCase: GetPopularMoviesTvUseCase,
+        appStringProvider: AppStringProvider,
         schedulers: RxSchedulers
     ): ViewModelProvider.Factory {
         return SearchViewModelFactory(
@@ -43,6 +45,7 @@ class SearchModule(private val initialState: SearchState?) {
             searchMultiUseCase,
             popularMoviesTvUseCase,
             getConfigUseCase,
+            appStringProvider,
             schedulers)
     }
 }
