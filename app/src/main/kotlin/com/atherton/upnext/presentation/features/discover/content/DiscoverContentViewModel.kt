@@ -73,13 +73,13 @@ class DiscoverContentViewModel @Inject constructor(
                     getDiscoverViewModeUseCase.invoke(),
                     getConfigUseCase.invoke(),
                     getDiscoverItemsForFilterUseCase.invoke(action.filter)
-                ) { viewMode, config, searchModels ->
-                    DiscoverContentViewData(searchModels, config, viewMode) }
+                ) { viewMode, config, searchModels -> Triple(searchModels, config, viewMode) }
                     .map<DiscoverContentChange> { viewData ->
+                        val (searchModels, config, viewMode) = viewData
                         DiscoverContentChange.Result(
-                            response = viewData.searchModels,
-                            config = viewData.config,
-                            viewMode = viewData.viewMode
+                            response = searchModels,
+                            config = config,
+                            viewMode = viewMode
                         )
                     }
                     .subscribeOn(schedulers.io)
@@ -165,17 +165,6 @@ sealed class DiscoverContentViewEffect : BaseViewEffect {
     data class ShowMovieDetailScreen(val movieId: Int) : DiscoverContentViewEffect()
     data class ShowPersonDetailScreen(val personId: Int) : DiscoverContentViewEffect()
 }
-
-//================================================================================
-// Data model
-//================================================================================
-
-// this class is just used as the result of zipping the necessary Observables together
-private data class DiscoverContentViewData(
-    val searchModels: Response<List<Searchable>>,
-    val config: Config,
-    val viewMode: SearchModelViewMode
-)
 
 //================================================================================
 // Factory
