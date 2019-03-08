@@ -76,11 +76,6 @@ class DiscoverContentViewModel @Inject constructor(
                 ) { viewMode, config, searchModels ->
                     DiscoverContentViewData(searchModels, config, viewMode) }
                     .map<DiscoverContentChange> { viewData ->
-
-                        if (action.filter is DiscoverFilter.Preset.NowPlayingMovies) {
-                            Timber.tag("darren").d("viewData - ${viewData.searchModels}")
-                        }
-
                         DiscoverContentChange.Result(
                             response = viewData.searchModels,
                             config = viewData.config,
