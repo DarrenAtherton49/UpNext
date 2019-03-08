@@ -37,6 +37,7 @@
 - Add button to mark 'all episodes before this one' as watched
 - TMDB discussions
 - Custom lists and lists based on filters. Could be used for stuff like dvd collection etc.
+- Unit tests
 - Reminders/notifications
 - Watch history
 - Ability to save searches
