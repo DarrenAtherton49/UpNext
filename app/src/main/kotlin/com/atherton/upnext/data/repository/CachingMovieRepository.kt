@@ -42,37 +42,26 @@ class CachingMovieRepository @Inject constructor(
     }
 
     override fun getNowPlaying(): Observable<Response<List<Movie>>> {
-        return movieService.getNowPlaying()
-            .map {
-                it.toDomainResponse(false) { response ->
-                    response.results.map { movie -> movie.toDomainMovie() }
+        return Observable.concat(
+            Observable.fromCallable {
+                Response.Success(
+                    listOf(
+                        Movie(false, "",
+                            null, null, 1,
+                            null, null, "",
+                            24.4f, "", "", "FAKE MOVIE",
+                            false, 24.4f, 4)
+                    ),
+                    true
+                )
+            },
+            movieService.getNowPlaying()
+                .map {
+                    it.toDomainResponse(false) { response ->
+                        response.results.map { movie -> movie.toDomainMovie() }
+                    }
                 }
-            }
-            .toObservable()
-//            .startWith(Response.Success(
-//                listOf(
-//                    Movie(false, "",
-//                        null, null, 1,
-//                        null, null, "",
-//                        24.4f, "", "", "FAKE MOVIE",
-//                        false, 24.4f, 4)
-//                ),
-//                true
-//            ))
-    }
-
-    private fun nowPlayingFake(): Observable<Response<List<Movie>>> {
-        return Observable.just(
-            Response.Success(
-                listOf(
-                    Movie(false, "",
-                        null, null, 1,
-                        null, null, "",
-                        24.4f, "", "", "FAKE MOVIE",
-                        false, 24.4f, 4)
-                ),
-                true
-            )
+                .toObservable()
         )
     }
 

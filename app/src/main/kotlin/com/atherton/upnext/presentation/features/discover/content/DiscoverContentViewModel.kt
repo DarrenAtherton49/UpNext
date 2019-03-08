@@ -18,7 +18,7 @@ import com.ww.roxie.BaseState
 import com.ww.roxie.Reducer
 import io.reactivex.Observable
 import io.reactivex.Observable.merge
-import io.reactivex.rxkotlin.Observables.zip
+import io.reactivex.rxkotlin.Observables.combineLatest
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.plusAssign
 import kotlinx.android.parcel.Parcelize
@@ -69,12 +69,18 @@ class DiscoverContentViewModel @Inject constructor(
     private fun bindActions() {
         fun Observable<DiscoverContentAction.Load>.toResultChange(): Observable<DiscoverContentChange> {
             return this.switchMap { action ->
-                zip(
-                    getDiscoverItemsForFilterUseCase.invoke(action.filter),
+                combineLatest(
+                    getDiscoverViewModeUseCase.invoke(),
                     getConfigUseCase.invoke(),
-                    getDiscoverViewModeUseCase.invoke()) { searchModels, config, viewMode ->
-                        DiscoverContentViewData(searchModels, config, viewMode) }
+                    getDiscoverItemsForFilterUseCase.invoke(action.filter)
+                ) { viewMode, config, searchModels ->
+                    DiscoverContentViewData(searchModels, config, viewMode) }
                     .map<DiscoverContentChange> { viewData ->
+
+                        if (action.filter is DiscoverFilter.Preset.NowPlayingMovies) {
+                            Timber.tag("darren").d("viewData - ${viewData.searchModels}")
+                        }
+
                         DiscoverContentChange.Result(
                             response = viewData.searchModels,
                             config = viewData.config,
