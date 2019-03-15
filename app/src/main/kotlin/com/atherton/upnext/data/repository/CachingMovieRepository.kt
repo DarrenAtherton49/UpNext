@@ -42,6 +42,7 @@ class CachingMovieRepository @Inject constructor(
     }
 
     override fun getNowPlaying(): Observable<LceResponse<List<Movie>>> {
+        //todo remove this temp object and replace with cached list
         return Observable.concat(
             Observable.fromCallable {
                 LceResponse.Loading(
