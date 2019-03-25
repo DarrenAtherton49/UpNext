@@ -12,15 +12,19 @@ import com.bumptech.glide.request.RequestOptions
 class UpNextAppGlideModule : AppGlideModule() {
 
     companion object {
+
+        private const val searchModelGridItemRadius = 12
+        private const val itemDetailVideoRadius = 20
+
         val searchModelGridRequestOptions: RequestOptions by lazy {
             RequestOptions()
-                .transforms(CenterCrop(), RoundedCorners(20))
+                .transforms(CenterCrop(), RoundedCorners(searchModelGridItemRadius))
                 .error(R.drawable.ic_broken_image_white_24dp)
         }
 
         val searchModelPosterRequestOptions by lazy {
             RequestOptions()
-                .transforms(CenterCrop(), RoundedCorners(20))
+                .transforms(CenterCrop(), RoundedCorners(searchModelGridItemRadius))
                 .error(R.drawable.ic_broken_image_white_24dp)
         }
 
@@ -32,7 +36,7 @@ class UpNextAppGlideModule : AppGlideModule() {
 
         val modelDetailVideoRequestOptions by lazy {
             RequestOptions()
-                .transforms(CenterInside(), RoundedCorners(20))
+                .transforms(CenterInside(), RoundedCorners(itemDetailVideoRadius))
                 .error(R.drawable.ic_broken_image_white_24dp)
         }
     }
