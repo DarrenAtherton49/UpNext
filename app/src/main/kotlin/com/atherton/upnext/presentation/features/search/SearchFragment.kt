@@ -66,6 +66,11 @@ class SearchFragment : BaseFragment<SearchAction, SearchState, SearchViewEffect,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        recyclerViewAdapter = SearchModelAdapter(GlideApp.with(this)) { searchModel ->
+            viewModel.dispatch(SearchAction.SearchResultClicked(searchModel))
+        }
+        recyclerView.adapter = recyclerViewAdapter
+
         searchEditText.showSoftKeyboard()
 
         retryButton.setOnClickListener {
@@ -182,9 +187,7 @@ class SearchFragment : BaseFragment<SearchAction, SearchState, SearchViewEffect,
                     layoutManager = LinearLayoutManager(context)
                 }
             }
-            recyclerViewAdapter = SearchModelAdapter(GlideApp.with(this), viewMode) { searchModel ->
-                viewModel.dispatch(SearchAction.SearchResultClicked(searchModel))
-            }
+            recyclerViewAdapter.viewMode = viewMode
             adapter = recyclerViewAdapter
         }
     }

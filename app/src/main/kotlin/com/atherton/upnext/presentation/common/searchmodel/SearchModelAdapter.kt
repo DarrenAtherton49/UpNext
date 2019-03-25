@@ -12,9 +12,10 @@ import com.atherton.upnext.util.glide.GlideRequests
 //todo preload some images when scrolling https://bumptech.github.io/glide/int/recyclerview.html
 class SearchModelAdapter(
     private val imageLoader: GlideRequests,
-    private val viewMode: SearchModelViewMode,
     private val onClickListener: (Searchable) -> Unit
 ) : ListAdapter<Searchable, SearchModelGridViewHolder>(SearchDiffCallback) {
+
+    lateinit var viewMode: SearchModelViewMode
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchModelGridViewHolder {
         return when (viewMode) {
@@ -50,10 +51,6 @@ class SearchModelAdapter(
         }
     }
 
-    private fun SearchModelGridViewHolder.withClickListener(): SearchModelGridViewHolder = this.apply {
-        itemView.setOnClickListener { onClickListener.invoke(getItem(adapterPosition)) }
-    }
-
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
             is TvShow -> TV_VIEW_TYPE
@@ -61,6 +58,10 @@ class SearchModelAdapter(
             is Person -> PERSON_VIEW_TYPE
             else -> TV_VIEW_TYPE
         }
+    }
+
+    private fun SearchModelGridViewHolder.withClickListener(): SearchModelGridViewHolder = this.apply {
+        itemView.setOnClickListener { onClickListener.invoke(getItem(adapterPosition)) }
     }
 
     override fun onViewRecycled(holder: SearchModelGridViewHolder) {

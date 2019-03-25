@@ -66,6 +66,11 @@ class DiscoverContentFragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        recyclerViewAdapter = SearchModelAdapter(GlideApp.with(this)) { searchModel ->
+            viewModel.dispatch(DiscoverContentAction.SearchModelClicked(searchModel))
+        }
+        recyclerView.adapter = recyclerViewAdapter
+
         retryButton.setOnClickListener {
             viewModel.dispatch(DiscoverContentAction.RetryButtonClicked(filter))
         }
@@ -163,9 +168,7 @@ class DiscoverContentFragment
                     layoutManager = LinearLayoutManager(context)
                 }
             }
-            recyclerViewAdapter = SearchModelAdapter(GlideApp.with(this), viewMode) { searchModel ->
-                viewModel.dispatch(DiscoverContentAction.SearchModelClicked(searchModel))
-            }
+            recyclerViewAdapter.viewMode = viewMode
             adapter = recyclerViewAdapter
         }
     }
