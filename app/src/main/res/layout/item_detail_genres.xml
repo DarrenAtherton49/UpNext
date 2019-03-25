@@ -12,6 +12,7 @@
         android:layout_marginTop="@dimen/keyline_2x"
         android:paddingStart="@dimen/keyline_2x"
         android:paddingEnd="@dimen/keyline_2x"
+        android:clipToPadding="false"
         android:scrollbars="none">
 
         <com.google.android.material.chip.ChipGroup

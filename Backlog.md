@@ -1,6 +1,5 @@
 ### Backlog
 
-- Genres chip group - use padding instead of margin
 - Release/runtime section should be a 'panel' of sections like YouTube
     + TV
         * Age rating
