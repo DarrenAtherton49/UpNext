@@ -48,7 +48,7 @@
     </style>
 
     <style name="ContentDetailOverviewText" parent="TextAppearance.MaterialComponents.Subtitle2">
-        <item name="android:maxLines">@integer/content_detail_overview_max_lines</item>
+        <!--<item name="android:maxLines">@integer/content_detail_overview_max_lines</item>-->
         <item name="android:ellipsize">end</item>
     </style>
 

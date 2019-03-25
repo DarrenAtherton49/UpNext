@@ -1,8 +1,5 @@
 ### Backlog
 
-- Target java 8
-- Check if each re-render initialises a new adapter - we don't want this
-- Take maxLines off synopsis
 - Genres chip group - use padding instead of margin
 - Release/runtime section should be a 'panel' of sections like YouTube
     + TV
