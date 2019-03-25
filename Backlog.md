@@ -1,19 +1,44 @@
 ### Backlog
 
+- Target java 8
+- Check if each re-render initialises a new adapter - we don't want this
+- Take maxLines off synopsis
+- Genres chip group - use padding instead of margin
+- Release/runtime section should be a 'panel' of sections like YouTube
+    + TV
+        * Age rating
+        * Release year
+        * Vote average
+        * Number of seasons
+        * 'Add to list' drop-down
+    + Movie
+        * Age rating
+        * Release year
+        * Vote average
+        * Runtime
+        * 'Add to list' drop-down
+- Shortcut to add to watchlist on grid screens like a long or double tap?
+- Make genre chips clickable - goes to discover filter
 - Add genres tab to the discover screen tabs to easily look at genre (as well as in the advanced filter)
 - The 'up next'/'watchlist' should be 'one click' to mark the next episode as 'watched'. So you should see the episode you're currently on, be able to click 'watched' and the next episode should come up. Also add 'undo' snackbar for this action for accidental clicks.
 - Ability to reorder the movie/tv/person details screen sections in the recyclerview from the settings.
+- Fonts and capitalisation
 - Add rating to the detail screen
 - Add setting for default source of rating (e.g. IMDB, TMDB, Rotten Tomatoes or combined) in places where there is only room to show one score (e.g. in grids).
 - Add pagination to all calls
 - Add setting to hide rating on grid view so it doesn't take up space over thumbnail
+- Less radius on grid item corners
 - Figure out the best tabs to show in discover
 - Caching
+- Setting to change region and release times
 - Get rid of all nullable id's in the application and then go through and make sure we aren't doing any ?.let{} etc.
 - Pre-load and cache the data needed for discover and search to work instantly
 - Add setting to show all runtimes instead of just one (show one by default).
 - Make sure animateLayoutChanges is working in the RecyclerViews (also check it animates when we change toggle view modes in all layouts)
 - Shared element transitions
+- Palette API?
+- Check for Google play policy compliance
+- Add privacy policy to app and play store
 - Touch surface ripple animations
 - Polish
 - Consistent loading and error visuals
@@ -21,6 +46,9 @@
 - Only show the first runtime for episodes instead of all of them?
 - Update iconography, e.g. in the bottom navigation
 - Launch icon
+- Add widgets
+- Calendar screen for upcoming shows and movies
+- Settings panel on Android Q for when internet is offline - add button to error layout to bring it up
 - Ability to download or share posters and backdrops
 - New name and package - UpNext is already taken
 - Add ability to follow a person as well as a tv show and movie so you can go through and watch someone's filmography.
