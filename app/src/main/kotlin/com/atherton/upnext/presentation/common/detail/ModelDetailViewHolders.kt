@@ -15,8 +15,8 @@ import com.atherton.upnext.util.recyclerview.LinearSpacingItemDecoration
 import com.google.android.material.chip.Chip
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_detail_genres.*
+import kotlinx.android.synthetic.main.item_detail_info_panel.*
 import kotlinx.android.synthetic.main.item_detail_overview.*
-import kotlinx.android.synthetic.main.item_detail_runtime_release_date.*
 import kotlinx.android.synthetic.main.item_detail_scrolling_section.*
 import kotlinx.android.synthetic.main.item_detail_scrolling_section.view.*
 
@@ -24,13 +24,30 @@ sealed class ModelDetailSectionViewHolder(override val containerView: View)
     : RecyclerView.ViewHolder(containerView),
     LayoutContainer
 
-class ModelDetailRuntimeReleaseDateViewHolder(override val containerView: View)
+class ModelDetailInfoPanelViewHolder(override val containerView: View)
     : ModelDetailSectionViewHolder(containerView) {
 
-    fun bind(section: ModelDetailSection.RuntimeRelease) {
-        runtimeTextView.text = section.runtime
-        releaseDateTextView.text = section.releaseDate
-        releaseDateRuntimeDivider.isVisible = section.showDivider
+    fun bind(section: ModelDetailSection.InfoPanel) {
+        if (section.releaseDate != null) {
+            releaseDateTextView.text = section.releaseDate
+            releaseDateTextView.isVisible = true
+        } else {
+            releaseDateTextView.isVisible = false
+        }
+        if (section.runtime != null) {
+            runtimeTextView.text = section.runtime
+            runtimeTextView.isVisible = true
+        } else {
+            runtimeTextView.isVisible = false
+        }
+        if (section.voteAverage != null) {
+            ratingTextView.text = section.voteAverage
+            ratingTextView.isVisible = true
+        } else {
+            ratingTextView.isVisible = false
+        }
+        infoPanelFirstDivider.isVisible = section.showFirstDivider
+        infoPanelSecondDivider.isVisible = section.showSecondDivider
     }
 }
 

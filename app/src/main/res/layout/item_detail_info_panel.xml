@@ -11,7 +11,7 @@
         android:orientation="horizontal">
 
         <TextView
-            style="@style/ContentDetailReleaseDateRuntimeText"
+            style="@style/ContentDetailInfoPanelText"
             android:id="@+id/releaseDateTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -20,18 +20,34 @@
 
         <!--todo do this properly instead of using a TextView-->
         <TextView
-            android:id="@+id/releaseDateRuntimeDivider"
+            android:id="@+id/infoPanelFirstDivider"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/content_detail_divider"/>
 
         <TextView
-            style="@style/ContentDetailReleaseDateRuntimeText"
+            style="@style/ContentDetailInfoPanelText"
             android:id="@+id/runtimeTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/keyline_2x"
             android:layout_marginEnd="@dimen/keyline_2x"/>
+
+        <!--todo do this properly instead of using a TextView-->
+        <TextView
+            android:id="@+id/infoPanelSecondDivider"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/content_detail_divider"/>
+
+        <TextView
+            style="@style/ContentDetailInfoPanelText"
+            android:id="@+id/ratingTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/keyline_2x"
+            android:layout_marginEnd="@dimen/keyline_2x"/>
+
 
     </LinearLayout>
 

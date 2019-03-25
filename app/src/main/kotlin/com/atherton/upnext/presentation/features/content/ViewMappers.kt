@@ -23,7 +23,8 @@ internal fun buildContentDetailSections(watchable: Watchable, appStringProvider:
                 releaseDate = watchable.firstAirDate,
                 runtime = watchable.detail?.runTimes?.formatRunTimes(),
                 seasons = watchable?.detail?.seasons,
-                videos = watchable.detail?.videos
+                videos = watchable.detail?.videos,
+                voteAverage = watchable.voteAverage
             )
         }
         is Movie -> {
@@ -37,7 +38,8 @@ internal fun buildContentDetailSections(watchable: Watchable, appStringProvider:
                 releaseDate = watchable.releaseDate,
                 runtime = watchable.detail?.runtime.toString(),
                 seasons = null,
-                videos = watchable.detail?.videos
+                videos = watchable.detail?.videos,
+                voteAverage = watchable.voteAverage
             )
         }
     }
@@ -53,22 +55,29 @@ private fun buildContentDetailSections(
     releaseDate: String?,
     runtime: String?,
     seasons: List<Season>?,
-    videos: List<Video>?
+    videos: List<Video>?,
+    voteAverage: Float?
 ): List<ModelDetailSection> {
     val sectionList = mutableListOf<ModelDetailSection>()
 
-    val runtimeMins: String? = runtime?.let { appStringProvider.getRuntimeString(it) }
-
-    //todo Also factor in user region when calling API - think there are different 'releases' for each region
-    //val releaseDateFormatted: String? = formatFullDateForDetailScreen(movie.releaseDate)
-    val releaseYear: String? = formatYearForDetailScreen(releaseDate)
-    sectionList.add(
-        ModelDetailSection.RuntimeRelease(
-            runtime = runtimeMins,
-            releaseDate = releaseYear,
-            showDivider = runtime != null && releaseYear != null
+    val showInfoPanel: Boolean = releaseDate != null && runtime != null && voteAverage != null
+    if (showInfoPanel) {
+        //todo Also factor in user region when calling API - think there are different 'releases' for each region
+        //val releaseDateFormatted: String? = formatFullDateForDetailScreen(movie.releaseDate)
+        val releaseYear: String? = formatYearForDetailScreen(releaseDate)
+        val runtimeMins: String? = runtime?.let { appStringProvider.getRuntimeString(it) }
+        val rating: String? = voteAverage?.let { appStringProvider.getVoteAverageString(it.toString()) }
+        val showFirstDivider = runtime != null && releaseYear != null
+        sectionList.add(
+            ModelDetailSection.InfoPanel(
+                releaseDate = releaseYear,
+                runtime = runtimeMins,
+                voteAverage = rating,
+                showFirstDivider = showFirstDivider,
+                showSecondDivider = showFirstDivider && rating != null
+            )
         )
-    )
+    }
 
     overview?.let { sectionList.add(ModelDetailSection.Overview(it)) }
 

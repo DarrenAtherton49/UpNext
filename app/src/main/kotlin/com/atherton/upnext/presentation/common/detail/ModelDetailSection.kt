@@ -6,10 +6,12 @@ import kotlinx.android.parcel.Parcelize
 
 sealed class ModelDetailSection(val viewType: Int, val hasScrollingChildAdapter: Boolean) : Parcelable {
 
-    @Parcelize data class RuntimeRelease(
-        val runtime: String?,
+    @Parcelize data class InfoPanel(
         val releaseDate: String?,
-        val showDivider: Boolean
+        val runtime: String?,
+        val voteAverage: String?,
+        val showFirstDivider: Boolean,
+        val showSecondDivider: Boolean
     ) : ModelDetailSection(RUNTIME_RELEASE, false)
 
     @Parcelize data class Overview(val overview: String) : ModelDetailSection(OVERVIEW, false)

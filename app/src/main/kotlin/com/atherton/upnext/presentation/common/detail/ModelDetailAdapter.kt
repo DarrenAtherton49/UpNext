@@ -32,8 +32,8 @@ class ModelDetailAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ModelDetailSectionViewHolder {
         return when (viewType) {
-            ModelDetailSection.RUNTIME_RELEASE -> ModelDetailRuntimeReleaseDateViewHolder(
-                parent.inflateLayout(R.layout.item_detail_runtime_release_date)
+            ModelDetailSection.RUNTIME_RELEASE -> ModelDetailInfoPanelViewHolder(
+                parent.inflateLayout(R.layout.item_detail_info_panel)
             )
             ModelDetailSection.OVERVIEW -> ModelDetailOverviewViewHolder(parent.inflateLayout(R.layout.item_detail_overview))
             ModelDetailSection.GENRES -> ModelDetailGenresViewHolder(parent.inflateLayout(R.layout.item_detail_genres))
@@ -87,7 +87,7 @@ class ModelDetailAdapter(
     override fun onBindViewHolder(holder: ModelDetailSectionViewHolder, position: Int) {
         val section = getItem(position)
         when (holder) {
-            is ModelDetailRuntimeReleaseDateViewHolder -> holder.bind(section as ModelDetailSection.RuntimeRelease)
+            is ModelDetailInfoPanelViewHolder -> holder.bind(section as ModelDetailSection.InfoPanel)
             is ModelDetailOverviewViewHolder -> holder.bind(section as ModelDetailSection.Overview)
             is ModelDetailGenresViewHolder -> holder.bind(section as ModelDetailSection.Genres)
             is ModelDetailRatingsViewHolder -> holder.bind(section as ModelDetailSection.Ratings)

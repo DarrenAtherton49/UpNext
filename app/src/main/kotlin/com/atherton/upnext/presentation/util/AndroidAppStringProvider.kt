@@ -23,6 +23,10 @@ class AndroidAppStringProvider @Inject constructor(private val resources: Resour
         return resources.getString(R.string.content_detail_runtime_mins).format(runtime)
     }
 
+    override fun getVoteAverageString(voteAverage: String): String {
+        return resources.getString(R.string.content_detail_vote_average).format(voteAverage)
+    }
+
     override fun <T : Any> generateErrorMessage(error: LceResponse.Error<T>): String {
         return when (error) {
             is LceResponse.Error.ServerError -> {

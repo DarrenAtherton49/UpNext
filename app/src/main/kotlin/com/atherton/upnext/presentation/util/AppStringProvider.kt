@@ -10,5 +10,6 @@ interface AppStringProvider {
     fun getCrewHeader(): String
     fun getRecommendedContentHeader(): String
     fun getRuntimeString(runtime: String): String
+    fun getVoteAverageString(voteAverage: String): String
     fun <T : Any> generateErrorMessage(error: LceResponse.Error<T>): String
 }

@@ -42,8 +42,8 @@
         <item name="android:gravity">center_vertical</item>
     </style>
 
-    <style name="ContentDetailReleaseDateRuntimeText" parent="TextAppearance.MaterialComponents.Subtitle1">
-        <item name="android:maxLines">@integer/content_detail_release_date_runtime_max_lines</item>
+    <style name="ContentDetailInfoPanelText" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:maxLines">@integer/content_detail_info_panel_max_lines</item>
         <item name="android:ellipsize">end</item>
     </style>
 
