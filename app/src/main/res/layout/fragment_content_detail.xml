@@ -30,17 +30,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/detailCollapsingToolbarLayout"/>
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/addToWatchlistButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/detailCollapsingToolbarLayout"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="@dimen/keyline_2x"
-                android:layout_marginEnd="@dimen/keyline_2x"
-                app:srcCompat="@drawable/ic_add_white_24dp"
-                android:visibility="gone"/>
-
             <TextView
                 android:id="@+id/titleTextView"
                 style="@style/ContentDetailTitleText"
@@ -49,9 +38,36 @@
                 android:layout_marginStart="@dimen/keyline_2x"
                 android:layout_marginTop="@dimen/keyline_2x"
                 android:layout_marginEnd="@dimen/keyline_2x"
-                app:layout_constraintEnd_toStartOf="@id/addToWatchlistButton"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/posterImageView"
                 app:layout_constraintTop_toBottomOf="@id/detailCollapsingToolbarLayout"/>
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button"
+                android:id="@+id/addToWatchListButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/keyline_2x"
+                android:layout_marginStart="@dimen/keyline_2x"
+                android:layout_marginEnd="@dimen/keyline_2x"
+                app:layout_constraintTop_toBottomOf="@id/posterImageView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/addToListButton"
+                android:backgroundTint="@color/colorPrimaryVariant"
+                android:text="@string/content_detail_add_to_watchlist"/>
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button"
+                android:id="@+id/addToListButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/keyline_2x"
+                app:layout_constraintTop_toTopOf="@id/addToWatchListButton"
+                app:layout_constraintBottom_toBottomOf="@id/addToWatchListButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/addToWatchListButton"
+                android:backgroundTint="@color/colorPrimaryVariant"
+                android:text="@string/content_detail_add_to_list"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

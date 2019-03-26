@@ -16,7 +16,10 @@ import com.atherton.upnext.presentation.main.MainViewModel
 import com.atherton.upnext.presentation.main.MainViewModelFactory
 import com.atherton.upnext.util.base.BaseFragment
 import com.atherton.upnext.util.base.ToolbarOptions
-import com.atherton.upnext.util.extensions.*
+import com.atherton.upnext.util.extensions.getActivityViewModel
+import com.atherton.upnext.util.extensions.getAppComponent
+import com.atherton.upnext.util.extensions.getViewModel
+import com.atherton.upnext.util.extensions.isVisible
 import com.atherton.upnext.util.glide.GlideApp
 import com.atherton.upnext.util.glide.UpNextAppGlideModule
 import kotlinx.android.synthetic.main.detail_screen_appbar.*
@@ -124,7 +127,6 @@ class ContentDetailFragment : BaseFragment<ContentDetailAction, ContentDetailSta
         recyclerViewAdapter.submitData(detailSections)
 
         //todo set button image based on whether show is already in watchlist or not
-        addToWatchlistButton.show(true)
     }
 
     private fun renderContentImages(backdropPath: String?, posterPath: String?) {

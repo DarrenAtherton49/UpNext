@@ -1,9 +1,9 @@
 ### Backlog
 
+- Add an 'Add to list' button on the detail screen
 - Shortcut to add to watchlist on grid screens like a long or double tap?
 - Make genre chips clickable - goes to discover filter
 - Add genres tab to the discover screen tabs to easily look at genre (as well as in the advanced filter)
-- Add an 'Add to list' button on the detail screen
 - The 'up next'/'watchlist' should be 'one click' to mark the next episode as 'watched'. So you should see the episode you're currently on, be able to click 'watched' and the next episode should come up. Also add 'undo' snackbar for this action for accidental clicks.
 - Ability to reorder the movie/tv/person details screen sections in the recyclerview from the settings.
 - Fonts and capitalisation
