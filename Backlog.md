@@ -29,6 +29,7 @@
 - Update iconography, e.g. in the bottom navigation
 - Launch icon
 - Add widgets
+- Make sure that menu item navigation is implemented on all screens (e.g. for settings)
 - Calendar screen for upcoming shows and movies
 - Settings panel on Android Q for when internet is offline - add button to error layout to bring it up
 - Ability to download or share posters and backdrops
