@@ -61,7 +61,6 @@
 - 'top/featured' result on the search screen - different viewholder (full width) for the first item
 - Ability to add missing movies (e.g. random videos that aren't in the database) or add links to youtube videos etc to watch later.
 - Ability to submit your own rating for the tv show or movie.
-- Change detail screen overview maxLines to about 3/4 and add a 'show more' button
 - Rotten Tomatoes, IMDB, Metacritic and Trakt.tv ratings
 - Links/plugins to external websites to watch etc.
 - Add transitions for fragments, e.g. slide up when entering
