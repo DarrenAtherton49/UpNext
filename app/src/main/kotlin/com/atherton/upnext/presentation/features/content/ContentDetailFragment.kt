@@ -130,7 +130,7 @@ class ContentDetailFragment : BaseFragment<ContentDetailAction, ContentDetailSta
         titleTextView.text = watchable.title
         recyclerViewAdapter.submitData(detailSections)
 
-        //todo set button image based on whether show is already in watchlist or not
+        //todo set button text based on whether show is already in watchlist or not
     }
 
     private fun renderContentImages(backdropPath: String?, posterPath: String?) {
