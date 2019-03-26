@@ -98,6 +98,11 @@ class DiscoverTabsViewModel @Inject constructor(
                     .map { DiscoverTabsViewEffect.ViewModeToggled(it) }
             }
 
+        val settingsActionClickedViewEffect = actions.ofType<DiscoverTabsAction.SettingsActionClicked>()
+            .preventMultipleClicks()
+            .subscribeOn(schedulers.io)
+            .map { DiscoverTabsViewEffect.ShowSettingsScreen }
+
         disposables += loadDataChange
             .scan(initialState, reducer)
             .filter { it !is DiscoverTabsState.Idle }
@@ -105,7 +110,11 @@ class DiscoverTabsViewModel @Inject constructor(
             .observeOn(schedulers.main)
             .subscribe(state::setValue, Timber::e)
 
-        val viewEffectChanges = merge(loadViewModeViewEffect, viewModeToggleViewEffect)
+        val viewEffectChanges = merge(
+            loadViewModeViewEffect,
+            viewModeToggleViewEffect,
+            settingsActionClickedViewEffect
+        )
 
         disposables += viewEffectChanges
             .observeOn(schedulers.main)
@@ -121,6 +130,7 @@ sealed class DiscoverTabsAction : BaseAction {
     object Load : DiscoverTabsAction()
     object LoadViewMode : DiscoverTabsAction()
     object ViewModeToggleActionClicked : DiscoverTabsAction()
+    object SettingsActionClicked : DiscoverTabsAction()
 }
 
 sealed class DiscoverTabsChange {
@@ -148,6 +158,7 @@ sealed class DiscoverTabsState : BaseState, Parcelable {
 sealed class DiscoverTabsViewEffect : BaseViewEffect {
     data class ViewModeToggled(val viewMode: SearchModelViewMode) : DiscoverTabsViewEffect()
     data class ViewModeLoaded(val viewMode: SearchModelViewMode) : DiscoverTabsViewEffect()
+    object ShowSettingsScreen : DiscoverTabsViewEffect()
 }
 
 //================================================================================

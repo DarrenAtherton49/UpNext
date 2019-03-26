@@ -66,6 +66,10 @@ class DiscoverTabsFragment
                 viewModel.dispatch(DiscoverTabsAction.ViewModeToggleActionClicked)
                 true
             }
+            R.id.action_settings -> {
+                viewModel.dispatch(DiscoverTabsAction.SettingsActionClicked)
+                true
+            }
             else -> false
         }
     }
@@ -104,6 +108,9 @@ class DiscoverTabsFragment
                 sharedViewModel.dispatch(MainAction.ViewModeToggled(viewEffect.viewMode))
             }
             is DiscoverTabsViewEffect.ViewModeLoaded -> updateViewModeIcon(viewEffect.viewMode)
+            is DiscoverTabsViewEffect.ShowSettingsScreen -> {
+                sharedViewModel.dispatch(MainAction.SettingsActionClicked)
+            }
         }
     }
 

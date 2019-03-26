@@ -158,9 +158,19 @@ class SearchViewModel @Inject constructor(
                 }
             }
 
+        val settingsActionClickedViewEffect = actions.ofType<SearchAction.SettingsActionClicked>()
+            .preventMultipleClicks()
+            .subscribeOn(schedulers.io)
+            .map { SearchViewEffect.ShowSettingsScreen }
+
         val stateChanges = merge(textSearchedChange, retryButtonChange, viewModeChange)
 
-        val viewEffectChanges = merge(loadViewModeViewEffect, viewModeToggleViewEffect, searchResultClickedViewEffect)
+        val viewEffectChanges = merge(
+            loadViewModeViewEffect,
+            viewModeToggleViewEffect,
+            searchResultClickedViewEffect,
+            settingsActionClickedViewEffect
+        )
 
         disposables += viewEffectChanges
             .observeOn(schedulers.main)
@@ -185,6 +195,7 @@ sealed class SearchAction : BaseAction {
     data class SearchTextChanged(val query: String) : SearchAction()
     data class RetryButtonClicked(val query: String) : SearchAction()
     data class SearchResultClicked(val searchModel: Searchable) : SearchAction()
+    object SettingsActionClicked : SearchAction()
 }
 
 sealed class SearchChange {
@@ -226,6 +237,7 @@ sealed class SearchViewEffect : BaseViewEffect {
     data class ShowTvShowDetailScreen(val tvShowId: Int) : SearchViewEffect()
     data class ShowMovieDetailScreen(val movieId: Int) : SearchViewEffect()
     data class ShowPersonDetailScreen(val personId: Int) : SearchViewEffect()
+    object ShowSettingsScreen : SearchViewEffect()
 }
 
 //================================================================================

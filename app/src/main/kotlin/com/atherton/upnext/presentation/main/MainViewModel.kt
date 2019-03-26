@@ -68,6 +68,10 @@ class MainViewModel @Inject constructor(
             .subscribeOn(schedulers.io)
             .map { action -> MainViewEffect.Navigation.PlayYoutubeVideo(action.videoKey) }
 
+        val settingsActionClickedViewEffect = actions.ofType<MainAction.SettingsActionClicked>()
+            .subscribeOn(schedulers.io)
+            .map { MainViewEffect.Navigation.ShowSettingsScreen }
+
         val viewEffectChanges = mergeArray(
             searchActionClickedViewEffect,
             viewModeToggleChangedViewEffect,
@@ -76,7 +80,8 @@ class MainViewModel @Inject constructor(
             tvShowClickedViewEffect,
             movieClickedViewEffect,
             personClickedViewEffect,
-            youtubeVideoClickedViewEffect
+            youtubeVideoClickedViewEffect,
+            settingsActionClickedViewEffect
         )
 
         disposables += viewEffectChanges
@@ -98,6 +103,7 @@ sealed class MainAction : BaseAction {
     data class MovieClicked(val movieId: Int) : MainAction()
     data class PersonClicked(val personId: Int) : MainAction()
     data class YouTubeVideoClicked(val videoKey: String) : MainAction()
+    object SettingsActionClicked : MainAction()
 }
 
 sealed class MainChange {
@@ -114,6 +120,7 @@ sealed class MainViewEffect : BaseViewEffect {
         data class ShowTvDetailScreen(val tvShowId: Int): Navigation()
         data class ShowPersonDetailScreen(val personId: Int): Navigation()
         data class PlayYoutubeVideo(val videoKey: String) : Navigation()
+        object ShowSettingsScreen : Navigation()
     }
     data class ToggleViewMode(val viewMode: SearchModelViewMode) : MainViewEffect()
 }

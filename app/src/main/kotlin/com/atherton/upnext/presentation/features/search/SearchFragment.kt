@@ -95,7 +95,7 @@ class SearchFragment : BaseFragment<SearchAction, SearchState, SearchViewEffect,
     override fun onMenuItemClicked(menuItem: MenuItem): Boolean {
         return when (menuItem.itemId) {
             R.id.action_settings -> {
-                //todo dispatch action to open settings
+                viewModel.dispatch(SearchAction.SettingsActionClicked)
                 true
             }
             R.id.action_toggle_view -> {
@@ -164,6 +164,9 @@ class SearchFragment : BaseFragment<SearchAction, SearchState, SearchViewEffect,
             }
             is SearchViewEffect.ShowPersonDetailScreen -> {
                 sharedViewModel.dispatch(MainAction.PersonClicked(viewEffect.personId))
+            }
+            is SearchViewEffect.ShowSettingsScreen -> {
+                sharedViewModel.dispatch(MainAction.SettingsActionClicked)
             }
         }
     }

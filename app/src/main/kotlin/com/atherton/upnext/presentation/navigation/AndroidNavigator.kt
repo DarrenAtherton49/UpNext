@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.navigation.NavController
+import com.atherton.upnext.R
 import com.atherton.upnext.presentation.features.content.ContentDetailFragmentDirections
 import com.atherton.upnext.presentation.features.content.ContentType
 
@@ -12,7 +13,7 @@ import com.atherton.upnext.presentation.features.content.ContentType
 class AndroidNavigator(private val navController: NavController, val context: Context) : Navigator {
 
     override fun showSearchScreen() {
-        navController.navigate(com.atherton.upnext.R.id.actionSharedGoToSearch)
+        navController.navigate(R.id.actionSharedGoToSearch)
     }
 
     override fun showMovieDetailScreen(movieId: Int) {
@@ -27,6 +28,10 @@ class AndroidNavigator(private val navController: NavController, val context: Co
 
     override fun showPersonDetailScreen(personId: Int) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun showSettingsScreen() {
+        navController.navigate(R.id.actionSharedGoToSettings)
     }
 
     // fall back on web intent if Youtube app is not installed

@@ -84,6 +84,10 @@ class ContentDetailFragment : BaseFragment<ContentDetailAction, ContentDetailSta
                 sharedViewModel.dispatch(MainAction.SearchActionClicked)
                 true
             }
+            R.id.action_settings -> {
+                sharedViewModel.dispatch(MainAction.SettingsActionClicked)
+                true
+            }
             else -> false
         }
     }
@@ -154,6 +158,9 @@ class ContentDetailFragment : BaseFragment<ContentDetailAction, ContentDetailSta
             }
             is ContentDetailViewEffect.PlayYoutubeVideo -> {
                 sharedViewModel.dispatch(MainAction.YouTubeVideoClicked(viewEffect.videoKey))
+            }
+            is ContentDetailViewEffect.ShowSettingsScreen -> {
+                sharedViewModel.dispatch(MainAction.SettingsActionClicked)
             }
         }
     }

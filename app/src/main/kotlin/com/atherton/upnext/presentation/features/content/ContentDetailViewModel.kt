@@ -149,6 +149,11 @@ class ContentDetailViewModel @Inject constructor(
                 }
             }
 
+        val settingsActionClickedViewEffect = actions.ofType<ContentDetailAction.SettingsActionClicked>()
+            .preventMultipleClicks()
+            .subscribeOn(schedulers.io)
+            .map { ContentDetailViewEffect.ShowSettingsScreen }
+
         val stateChanges = merge(loadDataChange, retryButtonChange)
 
         val viewEffectChanges = mergeArray(
@@ -156,7 +161,8 @@ class ContentDetailViewModel @Inject constructor(
             castMemberClickedViewEffect,
             crewMemberClickedViewEffect,
             videoClickedViewEffect,
-            recommendedContentClickedViewEffect
+            recommendedContentClickedViewEffect,
+            settingsActionClickedViewEffect
         )
 
         disposables += viewEffectChanges
@@ -184,6 +190,7 @@ sealed class ContentDetailAction : BaseAction {
     data class CrewMemberClicked(val crewMember: CrewMember) : ContentDetailAction()
     data class YouTubeVideoClicked(val video: Video) : ContentDetailAction()
     data class RecommendedContentClicked(val watchable: Watchable) : ContentDetailAction()
+    object SettingsActionClicked : ContentDetailAction()
 }
 
 sealed class ContentDetailChange {
@@ -219,6 +226,7 @@ sealed class ContentDetailViewEffect : BaseViewEffect {
     data class ShowPersonDetailScreen(val personId: Int) : ContentDetailViewEffect()
     data class PlayYoutubeVideo(val videoKey: String) : ContentDetailViewEffect()
     data class ShowSeasonDetailScreen(val seasonId: Int) : ContentDetailViewEffect()
+    object ShowSettingsScreen : ContentDetailViewEffect()
 }
 
 //================================================================================

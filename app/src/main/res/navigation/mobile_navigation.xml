@@ -43,9 +43,23 @@
             app:argType="com.atherton.upnext.presentation.features.content.ContentType"/>
     </fragment>
 
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.atherton.upnext.presentation.features.settings.SettingsFragment"
+        android:label="@string/fragment_label_settings"
+        tools:layout="@layout/fragment_settings"/>
+
     <action
         android:id="@+id/actionSharedGoToSearch"
         app:destination="@+id/searchFragment"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim"
+        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+        app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+
+    <action
+        android:id="@+id/actionSharedGoToSettings"
+        app:destination="@+id/settingsFragment"
         app:enterAnim="@anim/nav_default_enter_anim"
         app:exitAnim="@anim/nav_default_exit_anim"
         app:popEnterAnim="@anim/nav_default_pop_enter_anim"
