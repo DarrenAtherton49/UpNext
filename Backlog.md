@@ -68,8 +68,9 @@
 - Cut down all data models I don't use to decrease memory footprint
 - Watch videos on app performance and tune everything
 - Look at GrowthJournal backlog for release checklists etc
-- Proguard
+- Turn on Proguard/R8 and configure rules for all libraries
 - Look at TMDB 'changes' api calls - could incorporate this into caching
 - Modularise the codebase
 - Check that error messages look good
+- Add deobfuscation files to developer console for bug reporting
 

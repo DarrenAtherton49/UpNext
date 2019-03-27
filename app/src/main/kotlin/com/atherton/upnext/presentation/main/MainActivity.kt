@@ -13,6 +13,7 @@ import com.atherton.upnext.presentation.navigation.Navigator
 import com.atherton.upnext.util.base.BaseActivity
 import com.atherton.upnext.util.extensions.getAppComponent
 import com.atherton.upnext.util.extensions.getViewModel
+import com.atherton.upnext.util.extensions.isVisible
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 import javax.inject.Named
@@ -38,6 +39,7 @@ class MainActivity : BaseActivity<MainAction, MainState, MainViewEffect, MainVie
         super.onCreate(savedInstanceState)
 
         setupNavigation()
+        addBottomBarVisibilityListener()
     }
 
     override fun renderState(state: MainState) {}
@@ -56,6 +58,19 @@ class MainActivity : BaseActivity<MainAction, MainState, MainViewEffect, MainVie
     private fun setupNavigation() {
         // bottom navigation
         bottomNavigation.setupWithNavController(navController)
+    }
+
+    private fun addBottomBarVisibilityListener() {
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.contentDetailFragment,
+                R.id.searchFragment,
+                R.id.settingsFragment -> {
+                    bottomNavigation.isVisible = false
+                }
+                else -> bottomNavigation.isVisible = true
+            }
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

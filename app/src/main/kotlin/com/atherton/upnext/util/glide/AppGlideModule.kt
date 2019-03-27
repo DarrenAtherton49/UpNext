@@ -14,7 +14,7 @@ class UpNextAppGlideModule : AppGlideModule() {
     companion object {
 
         private const val searchModelGridItemRadius = 12
-        private const val itemDetailVideoRadius = 20
+        private const val itemDetailVideoRadius = 12
 
         val searchModelGridRequestOptions: RequestOptions by lazy {
             RequestOptions()
