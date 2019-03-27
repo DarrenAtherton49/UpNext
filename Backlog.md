@@ -20,6 +20,7 @@
 - Shared element transitions
 - Palette API?
 - Check for Google play policy compliance
+    + Read the guidelines on compliance and the different rules
 - Add privacy policy to app and play store
 - Touch surface ripple animations
 - Polish
@@ -69,8 +70,26 @@
 - Watch videos on app performance and tune everything
 - Look at GrowthJournal backlog for release checklists etc
 - Turn on Proguard/R8 and configure rules for all libraries
+    + Go through our Gradle dependencies and implement ProGuard configurations (such as keeping certain classes) for all libraries. Running ProGuard without this configuration usually breaks classes used e.g. in Dagger 2 or Retrofit, so we should check how to configure it for all dependencies as well as our own code.
+    + Enable R8 and compare APK size before and after minify.
 - Look at TMDB 'changes' api calls - could incorporate this into caching
 - Modularise the codebase
 - Check that error messages look good
 - Add deobfuscation files to developer console for bug reporting
+- Ensure that all layouts are shallow and fast - use ConstraintLayout where needed
+- Add a launch/splash screen? (using theme switch)
+- Ensure that all ViewHolders use 'LayoutContainer' from kotlin android extensions on ViewHolders for view caching
+- Accessibility - make sure that Talkback works properly and explore the accessibility attributes in XML. Also add all contentDescriptions on ImageViews and dynamically set contentDescriptions for images for movies etc.
+- Add support for slices and actions
+- Check rotation and horizontal layouts look ok
+- Create layouts specifically for tablets
+- Go through the play store listing and optimise everything
+    + Make sure to say things like 'this app does not allow you to watch movies or tv shows' and give TMDB attribution etc.
+    + Make sure there is no copyrighted content in the listing.
+- Run lint checks and analyse project
+- Create and use an adaptive icon for the app
+- Use the release checklist to make sure everything is done
+    + https://developer.android.com/distribute/best-practices/launch/launch-checklist
+- Add 'About' screen to the settings screen
+- Add 'Open Source Licenses' screen to the settings screen
 
