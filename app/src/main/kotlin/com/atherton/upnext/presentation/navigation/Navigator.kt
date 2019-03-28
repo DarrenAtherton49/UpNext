@@ -9,4 +9,5 @@ interface Navigator {
     fun playYoutubeVideo(videoKey: String)
     fun showSettingsScreen()
     fun showLicensesScreen()
+    fun showUrlInBrowser(url: String)
 }

@@ -4,6 +4,7 @@ import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.domain.model.SearchModelViewMode
+import com.atherton.upnext.presentation.features.settings.licenses.License
 import com.atherton.upnext.util.base.BaseViewEffect
 import com.atherton.upnext.util.base.UpNextViewModel
 import com.atherton.upnext.util.extensions.preventMultipleClicks
@@ -72,10 +73,17 @@ class MainViewModel @Inject constructor(
             .subscribeOn(schedulers.io)
             .map { MainViewEffect.Navigation.ShowSettingsScreen }
 
-        val openSourceLicensesClickedViewEffect = actions.ofType<MainAction.OpenSourceLicensesClicked>()
+        val openSourceLicensesClickedViewEffect = actions.ofType<MainAction.SettingsAction.OpenSourceLicensesClicked>()
             .subscribeOn(schedulers.io)
             .preventMultipleClicks()
             .map { MainViewEffect.Navigation.Settings.ShowLicensesScreen }
+
+        val licenseClickedViewEffect = actions.ofType<MainAction.LicenseClicked>()
+            .subscribeOn(schedulers.io)
+            .preventMultipleClicks()
+            .map { action ->
+                MainViewEffect.Navigation.ShowLicenseInBrowser(action.license.url)
+            }
 
         val viewEffectChanges = mergeArray(
             searchActionClickedViewEffect,
@@ -87,7 +95,8 @@ class MainViewModel @Inject constructor(
             personClickedViewEffect,
             youtubeVideoClickedViewEffect,
             settingsActionClickedViewEffect,
-            openSourceLicensesClickedViewEffect
+            openSourceLicensesClickedViewEffect,
+            licenseClickedViewEffect
         )
 
         disposables += viewEffectChanges
@@ -110,7 +119,10 @@ sealed class MainAction : BaseAction {
     data class PersonClicked(val personId: Int) : MainAction()
     data class YouTubeVideoClicked(val videoKey: String) : MainAction()
     object SettingsActionClicked : MainAction()
-    object OpenSourceLicensesClicked : MainAction()
+    sealed class SettingsAction : MainAction() {
+        object OpenSourceLicensesClicked : SettingsAction()
+    }
+    data class LicenseClicked(val license: License) : MainAction()
 }
 
 sealed class MainChange {
@@ -131,6 +143,7 @@ sealed class MainViewEffect : BaseViewEffect {
         sealed class Settings : Navigation() {
             object ShowLicensesScreen : Settings()
         }
+        data class ShowLicenseInBrowser(val url: String) : Navigation()
     }
     data class ToggleViewMode(val viewMode: SearchModelViewMode) : MainViewEffect()
 }

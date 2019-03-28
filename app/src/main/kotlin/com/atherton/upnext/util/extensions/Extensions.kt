@@ -142,3 +142,9 @@ fun TextView.setTextOrHide(text: String?) {
         false
     }
 }
+
+fun Context.readFileFromAssets(rawPath: Int): String {
+    return this.resources.openRawResource(rawPath)
+        .bufferedReader()
+        .use { it.readText() }
+}

@@ -5,15 +5,16 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.navigation.NavController
-import com.atherton.upnext.R
 import com.atherton.upnext.presentation.features.content.ContentDetailFragmentDirections
 import com.atherton.upnext.presentation.features.content.ContentType
+
+
 
 
 class AndroidNavigator(private val navController: NavController, val context: Context) : Navigator {
 
     override fun showSearchScreen() {
-        navController.navigate(R.id.actionSharedGoToSearch)
+        navController.navigate(com.atherton.upnext.R.id.actionSharedGoToSearch)
     }
 
     override fun showMovieDetailScreen(movieId: Int) {
@@ -42,10 +43,15 @@ class AndroidNavigator(private val navController: NavController, val context: Co
     }
 
     override fun showSettingsScreen() {
-        navController.navigate(R.id.actionSharedGoToSettings)
+        navController.navigate(com.atherton.upnext.R.id.actionSharedGoToSettings)
     }
 
     override fun showLicensesScreen() {
-        navController.navigate(R.id.actionSharedGoToLicenses)
+        navController.navigate(com.atherton.upnext.R.id.actionSharedGoToLicenses)
+    }
+
+    override fun showUrlInBrowser(url: String) {
+        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        context.startActivity(browserIntent)
     }
 }

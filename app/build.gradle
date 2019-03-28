@@ -70,9 +70,9 @@ dependencies {
     implementation dependencies.glide
     implementation dependencies.kotlin
     implementation dependencies.kotlinReflect
-    implementation dependencies.material
     implementation dependencies.legacySupportV4
     implementation dependencies.lifecycleExtensions
+    implementation dependencies.material
     implementation dependencies.moshi
     implementation dependencies.moshiKotlin
     implementation dependencies.navigationFragmentKTX
@@ -97,8 +97,6 @@ dependencies {
     debugImplementation dependencies.leakCanaryFragments
     releaseImplementation dependencies.leakCanaryNoOp
 
-    testImplementation testDependencies.archTesting
-    testImplementation testDependencies.hamcrest
     testImplementation testDependencies.junit
     testImplementation testDependencies.mockito
     androidTestImplementation testDependencies.espressoCore

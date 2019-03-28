@@ -55,6 +55,7 @@ class SettingsFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
+        recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = recyclerViewAdapter
         recyclerViewAdapter.submitList(populateSettings())
@@ -71,7 +72,7 @@ class SettingsFragment : Fragment() {
 
     private fun onSettingClicked(setting: Setting) {
         when (setting) {
-            is Setting.OpenSourceLicenses -> sharedViewModel.dispatch(MainAction.OpenSourceLicensesClicked)
+            is Setting.OpenSourceLicenses -> sharedViewModel.dispatch(MainAction.SettingsAction.OpenSourceLicensesClicked)
         }
     }
 

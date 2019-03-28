@@ -3,16 +3,24 @@
 - NOTE: Each time an item below is completed, it should be written down as a feature if appropriate.
 - [Setting] denotes that the feature and a setting/toggle for the feature must be implemented.
 
+- NOTE: Each time a dependency is added to the project, it must also be added to LicensesList.kt
+
 ### Alpha
 - Add 'Open Source Licenses' screen to the settings screen
-- Add an 'Add to list' button on the detail screen which brings up the users lists
+    + Contributor name
+    + Library name
+    + License text
+    + Button to view full license
 - Get rid of all nullable id's in the application and then go through and make sure we aren't doing any ?.let{} etc.
+- Set up SqlDelight database
+    + Lists table
+    + User_lists join table
 - The 'up next'/'watchlist' screen should have a button so that it is 'one click' to mark the next episode as 'watched'. So you should see the episode you're currently on, be able to click 'watched' and the next episode should come up. Also add 'undo' snackbar for this action for accidental clicks.
 - [Setting] Shortcut to add to watchlist on grid screens like a long or double tap?
 - Make genre chips clickable - goes to discover filter
 - Caching
     - Look at TMDB 'changes' api calls - could incorporate this into caching
-- Set up SqlDelight database
+- Add an 'Add to list' button on the detail screen which brings up the users lists. Use PopupMenu.
 - Implement Shows Screen
     + Watchlist
     + Watch history/Watched
@@ -30,6 +38,12 @@
 - Cut down all data models I don't use to decrease memory footprint
 - Display TMDB attribution in the app
 - Add 'About' screen to the settings screen
+    + Logo
+    + App name
+    + Add 'View/rate the app on Google play' button
+    + Add social links
+    + TMDB attribution
+    + Link to UserReport to suggest improvements
 - Figure out the best tabs to show in discover
 - Go through TODOs
 - Make sure that menu item navigation is implemented on all screens (e.g. for settings)

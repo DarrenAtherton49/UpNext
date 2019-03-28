@@ -72,6 +72,9 @@
     <!-- SettingsFragment -->
     <string name="settings_open_source_licenses">Open Source Licenses</string>
 
+    <!-- LicensesFragment -->
+    <string name="licenses_view_license">View License</string>
+
     <!-- Error messages -->
     <string name="error_message_server">Server encountered a %d error, please try again later</string>
     <string name="error_message_server_with_error">Server encountered a %1d error, please try again later (status code: %2d)</string>
