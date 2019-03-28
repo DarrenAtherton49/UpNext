@@ -1,95 +1,115 @@
-### Backlog
+## Backlog
 
-- Add an 'Add to list' button on the detail screen
-- Shortcut to add to watchlist on grid screens like a long or double tap?
-- Make genre chips clickable - goes to discover filter
-- Add genres tab to the discover screen tabs to easily look at genre (as well as in the advanced filter)
-- The 'up next'/'watchlist' should be 'one click' to mark the next episode as 'watched'. So you should see the episode you're currently on, be able to click 'watched' and the next episode should come up. Also add 'undo' snackbar for this action for accidental clicks.
-- Ability to reorder the movie/tv/person details screen sections in the recyclerview from the settings.
-- Fonts and capitalisation
-- Add setting for default source of rating (e.g. IMDB, TMDB, Rotten Tomatoes or combined) in places where there is only room to show one score (e.g. in grids).
-- Add pagination to all calls
-- Add setting to hide rating on grid view so it doesn't take up space over thumbnail
-- Figure out the best tabs to show in discover
-- Caching
-- Setting to change region and release times
+- NOTE: Each time an item below is completed, it should be written down as a feature if appropriate.
+- [Setting] denotes that the feature and a setting/toggle for the feature must be implemented.
+
+### Alpha
+- Add 'Open Source Licenses' screen to the settings screen
+- Add an 'Add to list' button on the detail screen which brings up the users lists
 - Get rid of all nullable id's in the application and then go through and make sure we aren't doing any ?.let{} etc.
-- Pre-load and cache the data needed for discover and search to work instantly
-- Add setting to show all runtimes instead of just one (show one by default).
-- Make sure animateLayoutChanges is working in the RecyclerViews (also check it animates when we change toggle view modes in all layouts)
-- Shared element transitions
-- Palette API?
-- Check for Google play policy compliance
-    + Read the guidelines on compliance and the different rules
-- Add privacy policy to app and play store
-- Touch surface ripple animations
-- Polish
-- Consistent loading and error visuals
-- Go through TODOs
-- Only show the first runtime for episodes instead of all of them?
-- Update iconography, e.g. in the bottom navigation
-- Launch icon
-- Add widgets
-- Make sure that menu item navigation is implemented on all screens (e.g. for settings)
-- Calendar screen for upcoming shows and movies
-- Settings panel on Android Q for when internet is offline - add button to error layout to bring it up
-- Ability to download or share posters and backdrops
-- New name and package - UpNext is already taken
+- The 'up next'/'watchlist' screen should have a button so that it is 'one click' to mark the next episode as 'watched'. So you should see the episode you're currently on, be able to click 'watched' and the next episode should come up. Also add 'undo' snackbar for this action for accidental clicks.
+- [Setting] Shortcut to add to watchlist on grid screens like a long or double tap?
+- Make genre chips clickable - goes to discover filter
+- Caching
+    - Look at TMDB 'changes' api calls - could incorporate this into caching
+- Set up SqlDelight database
+- Implement Shows Screen
+    + Watchlist
+    + Watch history/Watched
+- Implement Movies Screen
+    + Watchlist
+    + Watch history/Watched
+- Add genres tab to the discover screen tabs to easily look at genre (as well as in the advanced filter)
+- [Setting] Add setting to show all runtimes for episodes instead of just one (show one by default).
 - Add ability to follow a person as well as a tv show and movie so you can go through and watch someone's filmography.
-- Light, dark and black themes
-- Link to TMDB, IMDB, Trakt, Amazon etc.
-- Trakt syncing
-- TMDB list syncing
-- Implement the list toggle mode layout
-- Access a gallery of posters and backdrops (these are on TMDB as a separate request)
-- Ability to add own rating (is this stored on the app, TMDB or Trakt?)
-- Recommendations
-- Update the grid/list pages to show which content you have already watched without clicking into the detail screen
-- Accessibility, content descriptions etc.
-- Add button to mark 'all episodes before this one' as watched
-- TMDB discussions
-- Custom lists and lists based on filters. Could be used for stuff like dvd collection etc.
-- Unit tests
-- Reminders/notifications
-- Watch history
-- Ability to save searches
-- Gamification/stats/achievements
-- Deep linking and sharing tv shows, movies and people
-- Backup/import - manual and auto with Google Drive
-- Display TMDB attribution
-- Ability to disable movies or tv shows if you only watch one content type. This would remove the bottom tab and also filter any search results
-- Ability to reorder the bottom tabs and/or set the default tab when app opens
-- Advanced filters. E.g. by genre
-- 'top/featured' result on the search screen - different viewholder (full width) for the first item
-- Ability to add missing movies (e.g. random videos that aren't in the database) or add links to youtube videos etc to watch later.
-- Ability to submit your own rating for the tv show or movie.
-- Rotten Tomatoes, IMDB, Metacritic and Trakt.tv ratings
-- Links/plugins to external websites to watch etc.
-- Add transitions for fragments, e.g. slide up when entering
+- Advanced search/filters. E.g. by genre (using Discover API)
+- Add pagination to all calls
+- Pre-load and cache the data needed for discover and search to work instantly (where would be make the api call?)
+- [Setting] Update the grid/list pages to show an icon to show which content you have already watched without clicking into the detail screen
+- Implement the list toggle mode xml layout
 - Cut down all data models I don't use to decrease memory footprint
+- Display TMDB attribution in the app
+- Add 'About' screen to the settings screen
+- Figure out the best tabs to show in discover
+- Go through TODOs
+- Make sure that menu item navigation is implemented on all screens (e.g. for settings)
+- Ensure that all ViewHolders use 'LayoutContainer' from kotlin android extensions on ViewHolders for view caching
+- Unit tests
+- Integration tests
+- Run lint checks and analyse project
+
+### Alpha (Design/Final Touches)
 - Watch videos on app performance and tune everything
-- Look at GrowthJournal backlog for release checklists etc
+- Fonts and capitalisation
+- Create a launcher icon - also an adaptive icon
+- Polish and look for consistency
+- Consistent loading and error visuals
+- Update iconography, e.g. in the bottom navigation
+- Ensure that all layouts are shallow and fast - use ConstraintLayout where needed
+- Check rotation and horizontal layouts look ok
+- Make sure animateLayoutChanges is working in the RecyclerViews (also check it animates when we change toggle view modes in all layouts)
+
+### Alpha Build/Release
+- Add privacy policy to app and play store
+- Use the release checklist to make sure everything is done
+    + https://developer.android.com/distribute/best-practices/launch/launch-checklist
 - Turn on Proguard/R8 and configure rules for all libraries
     + Go through our Gradle dependencies and implement ProGuard configurations (such as keeping certain classes) for all libraries. Running ProGuard without this configuration usually breaks classes used e.g. in Dagger 2 or Retrofit, so we should check how to configure it for all dependencies as well as our own code.
     + Enable R8 and compare APK size before and after minify.
-- Look at TMDB 'changes' api calls - could incorporate this into caching
-- Modularise the codebase
-- Check that error messages look good
 - Add deobfuscation files to developer console for bug reporting
-- Ensure that all layouts are shallow and fast - use ConstraintLayout where needed
-- Add a launch/splash screen? (using theme switch)
-- Ensure that all ViewHolders use 'LayoutContainer' from kotlin android extensions on ViewHolders for view caching
-- Accessibility - make sure that Talkback works properly and explore the accessibility attributes in XML. Also add all contentDescriptions on ImageViews and dynamically set contentDescriptions for images for movies etc.
-- Add support for slices and actions
-- Check rotation and horizontal layouts look ok
-- Create layouts specifically for tablets
+- Check for Google play policy compliance
+    + Read the guidelines on compliance and the different rules
 - Go through the play store listing and optimise everything
     + Make sure to say things like 'this app does not allow you to watch movies or tv shows' and give TMDB attribution etc.
-    + Make sure there is no copyrighted content in the listing.
-- Run lint checks and analyse project
-- Create and use an adaptive icon for the app
-- Use the release checklist to make sure everything is done
-    + https://developer.android.com/distribute/best-practices/launch/launch-checklist
-- Add 'About' screen to the settings screen
-- Add 'Open Source Licenses' screen to the settings screen
+    + Make sure there is no copyrighted content in the listing
+
+### Beta
+- Shared element transitions
+- Touch surface ripple animations
+- Add transitions for fragments, e.g. slide up when entering
+- Add button to mark 'all episodes before this one' as watched
+- [Setting] Light, dark and black themes
+- [Setting] Add setting to show/hide rating on grid view so it doesn't take up space over thumbnail - Default to hidden
+- [Setting] Add setting to change region and release times. After implementing the setting, the API calls should reflect this change.
+- [Setting] Ability to reorder the movie/tv/person details screen sections in the recyclerview from the settings.
+- Access a gallery of posters and backdrops on the detail screen (these are on TMDB as a separate request)
+- Statistics screen
+    + Additional work to make sure that whenever anything is done in the app (such as the user marking a movie as 'watched'), the statistics are calculated and updated in the database.
+
+### 1.0 Release
+- New name and package maybe? - UpNext is already taken
+- Accessibility - make sure that Talkback works properly and explore the accessibility attributes in XML. Also add all contentDescriptions on ImageViews and dynamically set contentDescriptions for images for movies etc.
+- Reminders/notifications
+- Custom lists and lists based on filters. Could be used for stuff like dvd collection etc.
+- Backup/import - manual and auto with Google Drive
+- Watch history screen (probably accessed via statistics screen).
+- Create layouts specifically for tablets
+- Ability to add missing movies (e.g. random videos that aren't in the database) or add links to youtube videos etc to watch later.
+- Add a launch/splash screen? (using theme switch)
+
+### Extra Features/When I Have Spare Time (Dependant on demand)
+- Trakt syncing
+- TMDB list syncing
+- Settings panel on Android Q for when internet is offline - add button to error layout to bring it up
+- Ability to add own rating (is this stored on the app, TMDB or Trakt?)
+- Deep linking and sharing tv shows, movies and people
+- Add home screen widgets (e.g. upcoming, watchlist)
+- Calendar screen for upcoming shows and movies
+- Add support for slices and actions
+- Palette API?
+- Ability to save searches
+- Recommendations
+- Ability to download or share posters and backdrops
+- Links on the detail screen to TMDB, IMDB, Trakt, Amazon etc.
+- TMDB discussions
+- Rotten Tomatoes, IMDB, Metacritic and Trakt.tv ratings
+    + Use OMDB to get some ratings
+- Links/plugins to external websites to watch etc.
+- [Setting] Ability to disable movies or tv shows if you only watch one content type. This would remove the bottom tab and also filter any search results
+- [Setting] Ability to reorder the bottom tabs (e.g. if you use movies more) and/or set the default tab when app opens
+- 'top/featured' result on the search screen - different viewholder (full width) for the first item
+
+### When I have Spare Time (Project/Tech Debt)
+- Modularise the codebase
+
 
