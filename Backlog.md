@@ -6,11 +6,6 @@
 - NOTE: Each time a dependency is added to the project, it must also be added to LicensesList.kt
 
 ### Alpha
-- Add 'Open Source Licenses' screen to the settings screen
-    + Contributor name
-    + Library name
-    + License text
-    + Button to view full license
 - Get rid of all nullable id's in the application and then go through and make sure we aren't doing any ?.let{} etc.
 - Set up SqlDelight database
     + Lists table
