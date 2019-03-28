@@ -85,6 +85,5 @@ class SearchModelAdapter(
                 return oldItem == newItem
             }
         }
-
     }
 }

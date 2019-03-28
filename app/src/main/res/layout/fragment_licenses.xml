@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".presentation.features.settings.SettingsFragment">
+    tools:context=".presentation.features.settings.licenses.LicensesFragment">
 
     <include layout="@layout/base_app_bar"/>
 
