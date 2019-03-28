@@ -9,10 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.atherton.upnext.R
-import com.atherton.upnext.presentation.main.MainActivity
-import com.atherton.upnext.presentation.main.MainModule
-import com.atherton.upnext.presentation.main.MainViewModel
-import com.atherton.upnext.presentation.main.MainViewModelFactory
+import com.atherton.upnext.presentation.main.*
 import com.atherton.upnext.util.extensions.getActivityViewModel
 import com.atherton.upnext.util.extensions.getAppComponent
 import com.atherton.upnext.util.glide.GlideApp
@@ -54,7 +51,7 @@ class SettingsFragment : Fragment() {
 
     private fun setupToolbar() {
         toolbar.setupWithNavController(mainActivity.navController, mainActivity.appBarConfiguration)
-        toolbar.title = getString(R.string.fragment_label_licenses)
+        toolbar.title = getString(R.string.fragment_label_settings)
     }
 
     private fun initRecyclerView() {
@@ -65,12 +62,17 @@ class SettingsFragment : Fragment() {
 
     private fun populateSettings(): List<Setting> {
         return listOf(
-            Setting(getString(R.string.settings_open_source_licenses), R.drawable.ic_description_white_24dp)
+            Setting.OpenSourceLicenses(
+                getString(R.string.settings_open_source_licenses),
+                R.drawable.ic_description_white_24dp
+            )
         )
     }
 
     private fun onSettingClicked(setting: Setting) {
-
+        when (setting) {
+            is Setting.OpenSourceLicenses -> sharedViewModel.dispatch(MainAction.OpenSourceLicensesClicked)
+        }
     }
 
     private fun initInjection() {
@@ -82,5 +84,7 @@ class SettingsFragment : Fragment() {
     }
 }
 
-data class Setting(val title: String, val logoResId: Int)
+sealed class Setting(open val title: String, open val logoResId: Int) {
+    data class OpenSourceLicenses(override val title: String, override val logoResId: Int) : Setting(title, logoResId)
+}
 

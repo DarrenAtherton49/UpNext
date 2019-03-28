@@ -30,10 +30,6 @@ class AndroidNavigator(private val navController: NavController, val context: Co
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun showSettingsScreen() {
-        navController.navigate(R.id.actionSharedGoToSettings)
-    }
-
     // fall back on web intent if Youtube app is not installed
     override fun playYoutubeVideo(videoKey: String) {
         try {
@@ -43,5 +39,13 @@ class AndroidNavigator(private val navController: NavController, val context: Co
             val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=$videoKey"))
             context.startActivity(webIntent)
         }
+    }
+
+    override fun showSettingsScreen() {
+        navController.navigate(R.id.actionSharedGoToSettings)
+    }
+
+    override fun showLicensesScreen() {
+        navController.navigate(R.id.actionSharedGoToLicenses)
     }
 }

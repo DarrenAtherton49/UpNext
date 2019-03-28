@@ -72,6 +72,11 @@ class MainViewModel @Inject constructor(
             .subscribeOn(schedulers.io)
             .map { MainViewEffect.Navigation.ShowSettingsScreen }
 
+        val openSourceLicensesClickedViewEffect = actions.ofType<MainAction.OpenSourceLicensesClicked>()
+            .subscribeOn(schedulers.io)
+            .preventMultipleClicks()
+            .map { MainViewEffect.Navigation.Settings.ShowLicensesScreen }
+
         val viewEffectChanges = mergeArray(
             searchActionClickedViewEffect,
             viewModeToggleChangedViewEffect,
@@ -81,7 +86,8 @@ class MainViewModel @Inject constructor(
             movieClickedViewEffect,
             personClickedViewEffect,
             youtubeVideoClickedViewEffect,
-            settingsActionClickedViewEffect
+            settingsActionClickedViewEffect,
+            openSourceLicensesClickedViewEffect
         )
 
         disposables += viewEffectChanges
@@ -104,6 +110,7 @@ sealed class MainAction : BaseAction {
     data class PersonClicked(val personId: Int) : MainAction()
     data class YouTubeVideoClicked(val videoKey: String) : MainAction()
     object SettingsActionClicked : MainAction()
+    object OpenSourceLicensesClicked : MainAction()
 }
 
 sealed class MainChange {
@@ -121,6 +128,9 @@ sealed class MainViewEffect : BaseViewEffect {
         data class ShowPersonDetailScreen(val personId: Int): Navigation()
         data class PlayYoutubeVideo(val videoKey: String) : Navigation()
         object ShowSettingsScreen : Navigation()
+        sealed class Settings : Navigation() {
+            object ShowLicensesScreen : Settings()
+        }
     }
     data class ToggleViewMode(val viewMode: SearchModelViewMode) : MainViewEffect()
 }

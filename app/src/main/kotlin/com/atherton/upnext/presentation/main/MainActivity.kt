@@ -52,6 +52,7 @@ class MainActivity : BaseActivity<MainAction, MainState, MainViewEffect, MainVie
             is MainViewEffect.Navigation.ShowPersonDetailScreen -> navigator.showPersonDetailScreen(viewEffect.personId)
             is MainViewEffect.Navigation.PlayYoutubeVideo -> navigator.playYoutubeVideo(viewEffect.videoKey)
             is MainViewEffect.Navigation.ShowSettingsScreen -> navigator.showSettingsScreen()
+            is MainViewEffect.Navigation.Settings.ShowLicensesScreen -> navigator.showLicensesScreen()
         }
     }
 

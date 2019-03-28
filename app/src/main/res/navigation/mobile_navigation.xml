@@ -49,9 +49,23 @@
         android:label="@string/fragment_label_settings"
         tools:layout="@layout/fragment_settings"/>
 
+    <fragment
+        android:id="@+id/licensesFragment"
+        android:name="com.atherton.upnext.presentation.features.settings.licenses.LicensesFragment"
+        android:label="@string/fragment_label_licenses"
+        tools:layout="@layout/fragment_licenses"/>
+
     <action
         android:id="@+id/actionSharedGoToSearch"
         app:destination="@+id/searchFragment"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim"
+        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+        app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+
+    <action
+        android:id="@+id/actionSharedGoToContentDetail"
+        app:destination="@+id/contentDetailFragment"
         app:enterAnim="@anim/nav_default_enter_anim"
         app:exitAnim="@anim/nav_default_exit_anim"
         app:popEnterAnim="@anim/nav_default_pop_enter_anim"
@@ -66,8 +80,8 @@
         app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
 
     <action
-        android:id="@+id/actionSharedGoToContentDetail"
-        app:destination="@+id/contentDetailFragment"
+        android:id="@+id/actionSharedGoToLicenses"
+        app:destination="@+id/licensesFragment"
         app:enterAnim="@anim/nav_default_enter_anim"
         app:exitAnim="@anim/nav_default_exit_anim"
         app:popEnterAnim="@anim/nav_default_pop_enter_anim"
