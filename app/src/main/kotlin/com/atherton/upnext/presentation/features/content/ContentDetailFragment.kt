@@ -96,15 +96,20 @@ class ContentDetailFragment : BaseFragment<ContentDetailAction, ContentDetailSta
         when (state) {
             is ContentDetailState.Loading -> {
                 errorLayout.isVisible = false
-                posterImageView.isVisible = false
                 progressBar.isVisible = true
 
                 if (state.watchable != null && state.detailSections != null) {
                     // show a loading state with cached data
                     recyclerView.isVisible = true
+                    posterImageView.isVisible = true
+                    addToWatchListButton.isVisible = true
+                    addToListButton.isVisible = true
                     renderContent(state.watchable, state.detailSections)
                 } else {
                     recyclerView.isVisible = false
+                    posterImageView.isVisible = false
+                    addToWatchListButton.isVisible = false
+                    addToListButton.isVisible = false
                 }
             }
             is ContentDetailState.Content -> {
@@ -112,12 +117,16 @@ class ContentDetailFragment : BaseFragment<ContentDetailAction, ContentDetailSta
                 errorLayout.isVisible = false
                 posterImageView.isVisible = true
                 recyclerView.isVisible = true
+                addToWatchListButton.isVisible = true
+                addToListButton.isVisible = true
                 renderContent(state.watchable, state.detailSections)
             }
             is ContentDetailState.Error -> {
                 progressBar.isVisible = false
                 recyclerView.isVisible = false
                 posterImageView.isVisible = false
+                addToWatchListButton.isVisible = false
+                addToListButton.isVisible = false
                 errorLayout.isVisible = true
                 errorTextView.text = state.message
                 retryButton.isVisible = state.canRetry
