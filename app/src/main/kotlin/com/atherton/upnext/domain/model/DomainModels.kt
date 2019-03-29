@@ -155,7 +155,7 @@ data class CastMember(
     val character: String?,
     val creditId: String?,
     val gender: Gender,
-    val id: Int?,
+    val id: Int,
     val name: String?,
     val order: Int?,
     val profilePath: String?
@@ -166,20 +166,20 @@ data class CrewMember(
     val creditId: String?,
     val department: String?,
     val gender: Gender,
-    val id: Int?,
+    val id: Int,
     val job: String?,
     val name: String?,
     val profilePath: String?
 ) : Parcelable
 
 @Parcelize
-data class Collection(val backdropPath: String?, val id: Int?, val name: String?, val posterPath: String?) : Parcelable
+data class Collection(val backdropPath: String?, val id: Int, val name: String?, val posterPath: String?) : Parcelable
 
 @Parcelize
-data class Genre(val id: Int?, val name: String?) : Parcelable
+data class Genre(val id: Int, val name: String?) : Parcelable
 
 @Parcelize
-data class ProductionCompany(val id: Int?, val logoPath: String?, val name: String?, val originCountry: String?) : Parcelable
+data class ProductionCompany(val id: Int, val logoPath: String?, val name: String?, val originCountry: String?) : Parcelable
 
 @Parcelize
 data class ProductionCountry(val iso31661: String?, val name: String?) : Parcelable
@@ -188,7 +188,8 @@ data class ProductionCountry(val iso31661: String?, val name: String?) : Parcela
 data class SpokenLanguage(val iso6391: String?, val name: String?) : Parcelable
 
 @Parcelize
-data class TvCreatedBy(val id: Int?,
+data class TvCreatedBy(
+    val id: Int,
     val creditId: String?,
     val name: String?,
     val gender: Gender,
@@ -200,7 +201,7 @@ data class TvCreatedBy(val id: Int?,
 data class TvLastEpisodeToAir(
     val airDate: String?,
     val episodeNumber: Int?,
-    val id: Int?,
+    val id: Int,
     val name: String?,
     val overview: String?,
     val productionCode: String?,
@@ -215,7 +216,7 @@ data class TvLastEpisodeToAir(
 data class TvNetwork(
     val headquarters: String?,
     val homepage: String?,
-    val id: Int?,
+    val id: Int,
     val name: String?,
     val originCountry: String?
 ) : Parcelable
@@ -224,7 +225,7 @@ data class TvNetwork(
 data class Season(
     val airDate: String?,
     val episodeCount: Int?,
-    val id: Int?,
+    val id: Int,
     val name: String?,
     val overview: String?,
     val posterPath: String?,

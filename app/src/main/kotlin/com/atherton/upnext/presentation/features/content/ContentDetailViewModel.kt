@@ -111,7 +111,7 @@ class ContentDetailViewModel @Inject constructor(
             .preventMultipleClicks()
             .subscribeOn(schedulers.io)
             .map {
-                it.season.id?.let { id ->
+                it.season.id.let { id ->
                     ContentDetailViewEffect.ShowSeasonDetailScreen(id)
                 }
             }
@@ -120,7 +120,7 @@ class ContentDetailViewModel @Inject constructor(
             .preventMultipleClicks()
             .subscribeOn(schedulers.io)
             .map {
-                it.castMember.id?.let { id ->
+                it.castMember.id.let { id ->
                     ContentDetailViewEffect.ShowPersonDetailScreen(id)
                 }
             }
@@ -129,7 +129,7 @@ class ContentDetailViewModel @Inject constructor(
             .preventMultipleClicks()
             .subscribeOn(schedulers.io)
             .map {
-                it.crewMember.id?.let { id ->
+                it.crewMember.id.let { id ->
                     ContentDetailViewEffect.ShowPersonDetailScreen(id)
                 }
             }

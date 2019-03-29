@@ -6,7 +6,6 @@
 - NOTE: Each time a dependency is added to the project, it must also be added to LicensesList.kt
 
 ### Alpha
-- Get rid of all nullable id's in the application and then go through and make sure we aren't doing any ?.let{} etc.
 - Set up SqlDelight database
     + Lists table
     + User_lists join table
