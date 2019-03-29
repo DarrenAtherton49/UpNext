@@ -67,7 +67,8 @@ class MainActivity : BaseActivity<MainAction, MainState, MainViewEffect, MainVie
             when (destination.id) {
                 R.id.contentDetailFragment,
                 R.id.searchFragment,
-                R.id.settingsFragment -> {
+                R.id.settingsFragment,
+                R.id.licensesFragment -> {
                     bottomNavigation.isVisible = false
                 }
                 else -> bottomNavigation.isVisible = true
