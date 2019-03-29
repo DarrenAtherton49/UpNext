@@ -65,13 +65,12 @@ class MainActivity : BaseActivity<MainAction, MainState, MainViewEffect, MainVie
     private fun addBottomBarVisibilityListener() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.contentDetailFragment,
-                R.id.searchFragment,
-                R.id.settingsFragment,
-                R.id.licensesFragment -> {
-                    bottomNavigation.isVisible = false
+                R.id.showsFragment,
+                R.id.moviesFragment,
+                R.id.discoverFragment -> {
+                    bottomNavigation.isVisible = true
                 }
-                else -> bottomNavigation.isVisible = true
+                else -> bottomNavigation.isVisible = false
             }
         }
     }
