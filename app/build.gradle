@@ -82,6 +82,8 @@ dependencies {
     implementation dependencies.retrofit
     implementation dependencies.retrofitMoshiConverter
     implementation dependencies.retrofitRxJava2Adapter
+    implementation dependencies.roomRuntime
+    implementation dependencies.roomRxJava2
     implementation dependencies.roxie
     implementation dependencies.rxAndroid
     implementation dependencies.rxJava2
@@ -92,6 +94,7 @@ dependencies {
     kapt dependencies.daggerCompiler
     kapt dependencies.glideCompiler
     kapt dependencies.lifecycleCompiler
+    kapt dependencies.roomCompiler
 
     debugImplementation dependencies.leakCanary
     debugImplementation dependencies.leakCanaryFragments

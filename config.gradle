@@ -27,6 +27,7 @@ ext {
     navigationVersion = '2.0.0'
     okHttpVersion = '3.12.1'
     retrofitVersion = '2.5.0'
+    roomVersion = '2.1.0-alpha06'
     roxieVersion = '0.4.0'
     rulesVersion = '0.5'
     runnerVersion = '0.5'
@@ -62,6 +63,9 @@ ext {
         retrofit:                  "com.squareup.retrofit2:retrofit:$retrofitVersion",
         retrofitMoshiConverter:    "com.squareup.retrofit2:converter-moshi:$retrofitVersion",
         retrofitRxJava2Adapter:    "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion",
+        roomCompiler:              "androidx.room:room-compiler:$roomVersion",
+        roomRuntime:               "androidx.room:room-runtime:$roomVersion",
+        roomRxJava2:               "androidx.room:room-rxjava2:$roomVersion",
         roxie:                     "com.ww:roxie:$roxieVersion",
         rxAndroid:                 "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion",
         rxJava2:                   "io.reactivex.rxjava2:rxjava:$rxJavaVersion",

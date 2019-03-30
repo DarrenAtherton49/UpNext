@@ -152,6 +152,24 @@ internal fun generateLicenses(context: Context): List<License> {
             description = getString(R.string.license_retrofit_rxjava_2_adapter_description),
             url = APACHE_2_0_URL
         )
+        val roomRuntime = License(
+            name = getString(R.string.license_room_runtime_name),
+            contributor = getString(R.string.license_contributor_android_open_source),
+            description = getString(R.string.license_room_runtime_description),
+            url = APACHE_2_0_URL
+        )
+        val roomCompiler = License(
+            name = getString(R.string.license_room_compiler_name),
+            contributor = getString(R.string.license_contributor_android_open_source),
+            description = getString(R.string.license_room_compiler_description),
+            url = APACHE_2_0_URL
+        )
+        val roomRxJava2 = License(
+            name = getString(R.string.license_room_rxjava2_name),
+            contributor = getString(R.string.license_contributor_android_open_source),
+            description = getString(R.string.license_room_rxjava2_description),
+            url = APACHE_2_0_URL
+        )
         val roxie = License(
             name = getString(R.string.license_roxie_name),
             contributor = getString(R.string.license_contributor_ww_tech),
@@ -213,6 +231,9 @@ internal fun generateLicenses(context: Context): List<License> {
             retrofit,
             retrofitMoshi,
             retrofitRxJava2Adapter,
+            roomRuntime,
+            roomCompiler,
+            roomRxJava2,
             roxie,
             rxAndroid,
             rxJava2,
