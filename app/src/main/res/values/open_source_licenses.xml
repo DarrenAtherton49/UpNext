@@ -58,7 +58,7 @@
     <string name="license_leak_canary_no_op_name">LeakCanary No Op</string>
     <string name="license_leak_canary_no_op_description">Allows for LeakCanary to be used in release builds</string>
 
-    <string name="license_legacy_support_v4_name">Legacy Support V4></string>
+    <string name="license_legacy_support_v4_name">Legacy Support V4</string>
     <string name="license_legacy_support_v4_description">A collection of helper libraries which provide a
         consistent experience across all versions of android.</string>
 
