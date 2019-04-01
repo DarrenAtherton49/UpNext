@@ -45,7 +45,7 @@ ext {
         daggerCompiler:            "com.google.dagger:dagger-compiler:$daggerVersion",
         glide:                     "com.github.bumptech.glide:glide:$glideVersion",
         glideCompiler:             "com.github.bumptech.glide:compiler:$glideVersion",
-        kotlin:                    "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion",
+        kotlin:                    "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion",
         kotlinReflect:             "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion",
         legacySupportV4:           "androidx.legacy:legacy-support-v4:$androidXVersion",
         leakCanary:                "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion",

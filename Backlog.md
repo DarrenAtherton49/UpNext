@@ -6,7 +6,9 @@
 - NOTE: Each time a dependency is added to the project, it must also be added to LicensesList.kt
 
 ### Alpha
-- Set up SqlDelight database
+- Set up Room database
+    + Search results table
+    + Search terms table
     + Lists table
     + User_lists join table
 - The 'up next'/'watchlist' screen should have a button so that it is 'one click' to mark the next episode as 'watched'. So you should see the episode you're currently on, be able to click 'watched' and the next episode should come up. Also add 'undo' snackbar for this action for accidental clicks.
@@ -15,6 +17,7 @@
 - Caching
     - Look at TMDB 'changes' api calls - could incorporate this into caching
 - Add an 'Add to list' button on the detail screen which brings up the users lists. Use PopupMenu.
+- Implement Person detail screen
 - Implement Shows Screen
     + Watchlist
     + Watch history/Watched
