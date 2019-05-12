@@ -5,7 +5,6 @@ import com.atherton.upnext.domain.repository.ConfigRepository
 import com.atherton.upnext.domain.repository.SearchRepository
 import com.atherton.upnext.domain.repository.SettingsRepository
 import com.atherton.upnext.domain.usecase.GetPopularMoviesTvUseCase
-import com.atherton.upnext.domain.usecase.ToggleDiscoverViewModeUseCase
 import com.atherton.upnext.presentation.main.MainComponent
 import com.atherton.upnext.presentation.main.MainModule
 import com.atherton.upnext.presentation.util.AppStringProvider
@@ -34,7 +33,6 @@ class SearchModule(private val initialState: SearchState?) {
     @Provides
     @Named(SearchViewModelFactory.NAME)
     @PerView internal fun provideViewModelFactory(
-        toggleDiscoverViewModeUseCase: ToggleDiscoverViewModeUseCase,
         settingsRepository: SettingsRepository,
         searchRepository: SearchRepository,
         configRepository: ConfigRepository,
@@ -44,7 +42,6 @@ class SearchModule(private val initialState: SearchState?) {
     ): ViewModelProvider.Factory {
         return SearchViewModelFactory(
             initialState,
-            toggleDiscoverViewModeUseCase,
             settingsRepository,
             searchRepository,
             popularMoviesTvUseCase,

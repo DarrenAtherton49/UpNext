@@ -8,4 +8,5 @@ interface SettingsRepository {
     fun getGridViewMode(): GridViewMode
     fun getGridViewModeObservable(): Observable<GridViewMode>
     fun toggleGridViewMode()
+    fun toggleGridViewModeObservable(): Observable<Unit>
 }

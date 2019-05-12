@@ -6,5 +6,5 @@ import io.reactivex.Single
 
 interface FilterRepository {
 
-    fun getFilters(): Single<LceResponse<List<DiscoverFilter>>>
+    fun getFiltersObservable(): Single<LceResponse<List<DiscoverFilter>>>
 }

@@ -8,7 +8,6 @@ import com.atherton.upnext.domain.repository.ConfigRepository
 import com.atherton.upnext.domain.repository.SearchRepository
 import com.atherton.upnext.domain.repository.SettingsRepository
 import com.atherton.upnext.domain.usecase.GetPopularMoviesTvUseCase
-import com.atherton.upnext.domain.usecase.ToggleDiscoverViewModeUseCase
 import com.atherton.upnext.presentation.common.searchmodel.withSearchModelListImageUrls
 import com.atherton.upnext.presentation.util.AppStringProvider
 import com.atherton.upnext.util.base.BaseViewEffect
@@ -30,7 +29,6 @@ import javax.inject.Inject
 
 class SearchViewModel @Inject constructor(
     initialState: SearchState?,
-    private val toggleDiscoverViewModeUseCase: ToggleDiscoverViewModeUseCase,
     private val settingsRepository: SettingsRepository,
     private val searchRepository: SearchRepository,
     private val popularMoviesTvUseCase: GetPopularMoviesTvUseCase,
@@ -138,7 +136,7 @@ class SearchViewModel @Inject constructor(
         val viewModeToggleViewEffect = actions.ofType<SearchAction.ViewModeToggleActionClicked>()
             .preventMultipleClicks()
             .switchMap {
-                toggleDiscoverViewModeUseCase.invoke()
+                settingsRepository.toggleGridViewModeObservable()
                     .flatMap { settingsRepository.getGridViewModeObservable() }
                     .subscribeOn(schedulers.io)
                     .map { SearchViewEffect.ToggleViewMode(it) }
@@ -245,7 +243,6 @@ sealed class SearchViewEffect : BaseViewEffect {
 @PerView
 class SearchViewModelFactory(
     private val initialState: SearchState?,
-    private val toggleDiscoverViewModeUseCase: ToggleDiscoverViewModeUseCase,
     private val settingsRepository: SettingsRepository,
     private val searchRepository: SearchRepository,
     private val popularMoviesTvUseCase: GetPopularMoviesTvUseCase,
@@ -258,7 +255,6 @@ class SearchViewModelFactory(
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return SearchViewModel(
             initialState,
-            toggleDiscoverViewModeUseCase,
             settingsRepository,
             searchRepository,
             popularMoviesTvUseCase,

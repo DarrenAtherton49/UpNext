@@ -6,9 +6,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.domain.model.DiscoverFilter
 import com.atherton.upnext.domain.model.GridViewMode
 import com.atherton.upnext.domain.model.LceResponse
+import com.atherton.upnext.domain.repository.FilterRepository
 import com.atherton.upnext.domain.repository.SettingsRepository
-import com.atherton.upnext.domain.usecase.GetDiscoverFiltersUseCase
-import com.atherton.upnext.domain.usecase.ToggleDiscoverViewModeUseCase
 import com.atherton.upnext.presentation.util.AppStringProvider
 import com.atherton.upnext.util.base.BaseViewEffect
 import com.atherton.upnext.util.base.UpNextViewModel
@@ -27,9 +26,8 @@ import javax.inject.Inject
 
 class DiscoverTabsViewModel @Inject constructor(
     initialState: DiscoverTabsState?,
-    private val toggleDiscoverViewModeUseCase: ToggleDiscoverViewModeUseCase,
     private val settingsRepository: SettingsRepository,
-    private val getDiscoverFiltersUseCase: GetDiscoverFiltersUseCase,
+    private val filterRepository: FilterRepository,
     private val appStringProvider: AppStringProvider,
     private val schedulers: RxSchedulers
 ): UpNextViewModel<DiscoverTabsAction, DiscoverTabsState, DiscoverTabsViewEffect>() {
@@ -72,7 +70,7 @@ class DiscoverTabsViewModel @Inject constructor(
         val loadDataChange = actions.ofType<DiscoverTabsAction.Load>()
             .distinctUntilChanged()
             .switchMap {
-                getDiscoverFiltersUseCase.invoke()
+                filterRepository.getFiltersObservable()
                     .subscribeOn(schedulers.io)
                     .toObservable()
                     .map<DiscoverTabsChange> { filtersResponse -> DiscoverTabsChange.Result(filtersResponse) }
@@ -92,7 +90,7 @@ class DiscoverTabsViewModel @Inject constructor(
         val viewModeToggleViewEffect = actions.ofType<DiscoverTabsAction.ViewModeToggleActionClicked>()
             .preventMultipleClicks()
             .switchMap {
-                toggleDiscoverViewModeUseCase.invoke()
+                settingsRepository.toggleGridViewModeObservable()
                     .flatMap { settingsRepository.getGridViewModeObservable() }
                     .subscribeOn(schedulers.io)
                     .map { DiscoverTabsViewEffect.ViewModeToggled(it) }
@@ -168,9 +166,8 @@ sealed class DiscoverTabsViewEffect : BaseViewEffect {
 @PerView
 class DiscoverTabsViewModelFactory(
     private val initialState: DiscoverTabsState?,
-    private val toggleDiscoverViewModeUseCase: ToggleDiscoverViewModeUseCase,
     private val settingsRepository: SettingsRepository,
-    private val getDiscoverFiltersUseCase: GetDiscoverFiltersUseCase,
+    private val filterRepository: FilterRepository,
     private val appStringProvider: AppStringProvider,
     private val schedulers: RxSchedulers
 ) : ViewModelProvider.Factory {
@@ -179,9 +176,8 @@ class DiscoverTabsViewModelFactory(
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return DiscoverTabsViewModel(
             initialState,
-            toggleDiscoverViewModeUseCase,
             settingsRepository,
-            getDiscoverFiltersUseCase,
+            filterRepository,
             appStringProvider,
             schedulers
         ) as T

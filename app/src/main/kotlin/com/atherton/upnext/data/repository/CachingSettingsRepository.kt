@@ -18,11 +18,11 @@ class CachingSettingsRepository @Inject constructor(
         return settings.getGridViewModeSetting().toDomainToggleMode()
     }
 
-    override fun getGridViewModeObservable(): Observable<GridViewMode> {
-        return Observable.fromCallable(this::getGridViewMode)
-    }
+    override fun getGridViewModeObservable(): Observable<GridViewMode> = Observable.fromCallable(this::getGridViewMode)
 
     override fun toggleGridViewMode() {
         settings.toggleGridViewModeSetting()
     }
+
+    override fun toggleGridViewModeObservable(): Observable<Unit> = Observable.fromCallable(this::toggleGridViewMode)
 }

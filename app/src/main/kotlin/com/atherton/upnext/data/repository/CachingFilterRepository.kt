@@ -10,7 +10,7 @@ import javax.inject.Singleton
 @Singleton
 class CachingFilterRepository @Inject constructor() : FilterRepository {
 
-    override fun getFilters(): Single<LceResponse<List<DiscoverFilter>>> {
+    override fun getFiltersObservable(): Single<LceResponse<List<DiscoverFilter>>> {
         return Single.fromCallable(this::tempFilters)
     }
 
