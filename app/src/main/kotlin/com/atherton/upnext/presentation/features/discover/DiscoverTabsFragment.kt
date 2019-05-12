@@ -6,7 +6,7 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.R
 import com.atherton.upnext.domain.model.DiscoverFilter
-import com.atherton.upnext.domain.model.SearchModelViewMode
+import com.atherton.upnext.domain.model.GridViewMode
 import com.atherton.upnext.presentation.features.discover.content.DiscoverContentFragment
 import com.atherton.upnext.presentation.main.MainAction
 import com.atherton.upnext.presentation.main.MainViewEffect
@@ -116,12 +116,12 @@ class DiscoverTabsFragment
 
     override fun processSharedViewEffects(viewEffect: MainViewEffect) {}
 
-    private fun updateViewModeIcon(viewMode: SearchModelViewMode) {
+    private fun updateViewModeIcon(viewMode: GridViewMode) {
         editMenuItem(R.id.action_toggle_view) {
             isVisible = true
             icon = when (viewMode) {
-                is SearchModelViewMode.List -> context?.getDrawableCompat(R.drawable.ic_view_grid_white_24dp)
-                is SearchModelViewMode.Grid -> context?.getDrawableCompat(R.drawable.ic_view_list_white_24dp)
+                is GridViewMode.List -> context?.getDrawableCompat(R.drawable.ic_view_grid_white_24dp)
+                is GridViewMode.Grid -> context?.getDrawableCompat(R.drawable.ic_view_list_white_24dp)
             }
         }
     }

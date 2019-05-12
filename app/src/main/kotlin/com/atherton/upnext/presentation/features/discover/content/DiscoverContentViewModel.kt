@@ -4,9 +4,9 @@ import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.domain.model.*
-import com.atherton.upnext.domain.usecase.GetConfigUseCase
+import com.atherton.upnext.domain.repository.ConfigRepository
+import com.atherton.upnext.domain.repository.SettingsRepository
 import com.atherton.upnext.domain.usecase.GetDiscoverItemsForFilterUseCase
-import com.atherton.upnext.domain.usecase.GetDiscoverViewModeUseCase
 import com.atherton.upnext.presentation.common.searchmodel.withSearchModelListImageUrls
 import com.atherton.upnext.presentation.util.AppStringProvider
 import com.atherton.upnext.util.base.BaseViewEffect
@@ -19,7 +19,6 @@ import com.ww.roxie.BaseState
 import com.ww.roxie.Reducer
 import io.reactivex.Observable
 import io.reactivex.Observable.merge
-import io.reactivex.rxkotlin.Observables.combineLatest
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.plusAssign
 import kotlinx.android.parcel.Parcelize
@@ -28,9 +27,9 @@ import javax.inject.Inject
 
 class DiscoverContentViewModel @Inject constructor(
     initialState: DiscoverContentState?,
-    private val getDiscoverViewModeUseCase: GetDiscoverViewModeUseCase,
+    private val settingsRepository: SettingsRepository,
     private val getDiscoverItemsForFilterUseCase: GetDiscoverItemsForFilterUseCase,
-    private val getConfigUseCase: GetConfigUseCase,
+    private val configRepository: ConfigRepository,
     private val appStringProvider: AppStringProvider,
     private val schedulers: RxSchedulers
 ): UpNextViewModel<DiscoverContentAction, DiscoverContentState, DiscoverContentViewEffect>() {
@@ -82,17 +81,12 @@ class DiscoverContentViewModel @Inject constructor(
     private fun bindActions() {
         fun Observable<DiscoverContentAction.Load>.toResultChange(): Observable<DiscoverContentChange> {
             return this.switchMap { action ->
-                combineLatest(
-                    getDiscoverViewModeUseCase.invoke(),
-                    getConfigUseCase.invoke(),
-                    getDiscoverItemsForFilterUseCase.invoke(action.filter)
-                ) { viewMode, config, searchModels -> Triple(searchModels, config, viewMode) }
-                    .map<DiscoverContentChange> { viewData ->
-                        val (searchModels, config, viewMode) = viewData
+                getDiscoverItemsForFilterUseCase.invoke(action.filter)
+                    .map<DiscoverContentChange> { contentModels ->
                         DiscoverContentChange.Result(
-                            response = searchModels,
-                            config = config,
-                            viewMode = viewMode
+                            response = contentModels,
+                            config = configRepository.getConfig(),
+                            viewMode = settingsRepository.getGridViewMode()
                         )
                     }
                     .subscribeOn(schedulers.io)
@@ -140,7 +134,7 @@ class DiscoverContentViewModel @Inject constructor(
 //================================================================================
 
 sealed class DiscoverContentAction : BaseAction {
-    data class Load(val viewMode: SearchModelViewMode?, val filter: DiscoverFilter) : DiscoverContentAction()
+    data class Load(val viewMode: GridViewMode?, val filter: DiscoverFilter) : DiscoverContentAction()
     data class RetryButtonClicked(val filter: DiscoverFilter) : DiscoverContentAction()
     data class SearchModelClicked(val searchModel: Searchable) : DiscoverContentAction()
 }
@@ -150,7 +144,7 @@ sealed class DiscoverContentChange {
     data class Result(
         val response: LceResponse<List<Searchable>>,
         val config: Config,
-        val viewMode: SearchModelViewMode
+        val viewMode: GridViewMode
     ) : DiscoverContentChange()
 }
 
@@ -160,13 +154,13 @@ sealed class DiscoverContentState : BaseState, Parcelable {
     object Idle : DiscoverContentState()
 
     @Parcelize
-    data class Loading(val results: List<Searchable>?, val viewMode: SearchModelViewMode?) : DiscoverContentState()
+    data class Loading(val results: List<Searchable>?, val viewMode: GridViewMode?) : DiscoverContentState()
 
     @Parcelize
     data class Content(
         val results: List<Searchable>,
         val cached: Boolean = false,
-        val viewMode: SearchModelViewMode
+        val viewMode: GridViewMode
     ) : DiscoverContentState()
 
     @Parcelize
@@ -186,9 +180,9 @@ sealed class DiscoverContentViewEffect : BaseViewEffect {
 @PerView
 class DiscoverContentViewModelFactory(
     private val initialState: DiscoverContentState?,
-    private val getDiscoverViewModeUseCase: GetDiscoverViewModeUseCase,
+    private val settingsRepository: SettingsRepository,
     private val getDiscoverItemsForFilterUseCase: GetDiscoverItemsForFilterUseCase,
-    private val getConfigUseCase: GetConfigUseCase,
+    private val configRepository: ConfigRepository,
     private val appStringProvider: AppStringProvider,
     private val schedulers: RxSchedulers
 ) : ViewModelProvider.Factory {
@@ -197,9 +191,9 @@ class DiscoverContentViewModelFactory(
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return DiscoverContentViewModel(
             initialState,
-            getDiscoverViewModeUseCase,
+            settingsRepository,
             getDiscoverItemsForFilterUseCase,
-            getConfigUseCase,
+            configRepository,
             appStringProvider,
             schedulers
         ) as T

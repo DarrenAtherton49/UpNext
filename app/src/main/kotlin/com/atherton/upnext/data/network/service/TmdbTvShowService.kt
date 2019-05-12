@@ -1,9 +1,9 @@
 package com.atherton.upnext.data.network.service
 
-import com.atherton.upnext.data.model.NetworkResponse
-import com.atherton.upnext.data.model.TmdbApiError
-import com.atherton.upnext.data.model.TmdbPagedResponse
-import com.atherton.upnext.data.model.TmdbTvShow
+import com.atherton.upnext.data.network.model.NetworkResponse
+import com.atherton.upnext.data.network.model.TmdbApiError
+import com.atherton.upnext.data.network.model.TmdbPagedResponse
+import com.atherton.upnext.data.network.model.TmdbTvShow
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Path

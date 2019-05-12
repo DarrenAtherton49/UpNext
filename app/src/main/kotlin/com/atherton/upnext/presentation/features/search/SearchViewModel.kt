@@ -4,7 +4,11 @@ import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.domain.model.*
-import com.atherton.upnext.domain.usecase.*
+import com.atherton.upnext.domain.repository.ConfigRepository
+import com.atherton.upnext.domain.repository.SearchRepository
+import com.atherton.upnext.domain.repository.SettingsRepository
+import com.atherton.upnext.domain.usecase.GetPopularMoviesTvUseCase
+import com.atherton.upnext.domain.usecase.ToggleDiscoverViewModeUseCase
 import com.atherton.upnext.presentation.common.searchmodel.withSearchModelListImageUrls
 import com.atherton.upnext.presentation.util.AppStringProvider
 import com.atherton.upnext.util.base.BaseViewEffect
@@ -17,7 +21,6 @@ import com.ww.roxie.BaseState
 import com.ww.roxie.Reducer
 import io.reactivex.Observable
 import io.reactivex.Observable.merge
-import io.reactivex.rxkotlin.Observables.zip
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.plusAssign
 import kotlinx.android.parcel.Parcelize
@@ -28,10 +31,10 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(
     initialState: SearchState?,
     private val toggleDiscoverViewModeUseCase: ToggleDiscoverViewModeUseCase,
-    private val getDiscoverViewModeUseCase: GetDiscoverViewModeUseCase,
-    private val searchMultiUseCase: SearchMultiUseCase,
+    private val settingsRepository: SettingsRepository,
+    private val searchRepository: SearchRepository,
     private val popularMoviesTvUseCase: GetPopularMoviesTvUseCase,
-    private val getConfigUseCase: GetConfigUseCase,
+    private val configRepository: ConfigRepository,
     private val appStringProvider: AppStringProvider,
     private val schedulers: RxSchedulers
 ): UpNextViewModel<SearchAction, SearchState, SearchViewEffect>() {
@@ -87,21 +90,16 @@ class SearchViewModel @Inject constructor(
                 val dataSourceObservable = if (query.isBlank()) {
                     popularMoviesTvUseCase.invoke()
                 } else {
-                    searchMultiUseCase.invoke(query)
+                    searchRepository.searchMulti(query)
                 }
-                zip(
-                    dataSourceObservable,
-                    getConfigUseCase.invoke(),
-                    getDiscoverViewModeUseCase.invoke()
-                ) { searchModels, config, viewMode -> Triple(searchModels, config, viewMode) }
+                dataSourceObservable
                     .subscribeOn(schedulers.io)
-                    .map<SearchChange> { viewData ->
-                        val (searchModels, config, viewMode) = viewData
+                    .map<SearchChange> { searchModels ->
                         SearchChange.Result(
                             query = action.query,
                             response = searchModels,
-                            config = config,
-                            viewMode = viewMode
+                            config = configRepository.getConfig(),
+                            viewMode = settingsRepository.getGridViewMode()
                         )
                     }
                     .startWith(SearchChange.Loading)
@@ -131,7 +129,7 @@ class SearchViewModel @Inject constructor(
         val loadViewModeViewEffect = actions.ofType<SearchAction.LoadViewMode>()
             .preventMultipleClicks()
             .switchMap {
-                getDiscoverViewModeUseCase.invoke()
+                settingsRepository.getGridViewModeObservable()
                     .subscribeOn(schedulers.io)
                     .map { SearchViewEffect.ToggleViewMode(it) }
             }
@@ -141,7 +139,7 @@ class SearchViewModel @Inject constructor(
             .preventMultipleClicks()
             .switchMap {
                 toggleDiscoverViewModeUseCase.invoke()
-                    .flatMap { getDiscoverViewModeUseCase.invoke() }
+                    .flatMap { settingsRepository.getGridViewModeObservable() }
                     .subscribeOn(schedulers.io)
                     .map { SearchViewEffect.ToggleViewMode(it) }
             }
@@ -204,7 +202,7 @@ sealed class SearchChange {
         val query: String,
         val response: LceResponse<List<Searchable>>,
         val config: Config,
-        val viewMode: SearchModelViewMode
+        val viewMode: GridViewMode
     ) : SearchChange()
 }
 
@@ -216,7 +214,7 @@ sealed class SearchState(open val query: String): BaseState, Parcelable {
     @Parcelize
     data class Loading(
         val results: List<Searchable>?,
-        val viewMode: SearchModelViewMode?,
+        val viewMode: GridViewMode?,
         override val query: String
     ) : SearchState(query)
 
@@ -225,7 +223,7 @@ sealed class SearchState(open val query: String): BaseState, Parcelable {
         val results: List<Searchable>,
         val cached: Boolean = false,
         override val query: String,
-        val viewMode: SearchModelViewMode
+        val viewMode: GridViewMode
     ) : SearchState(query)
 
     @Parcelize
@@ -233,7 +231,7 @@ sealed class SearchState(open val query: String): BaseState, Parcelable {
 }
 
 sealed class SearchViewEffect : BaseViewEffect {
-    data class ToggleViewMode(val viewMode: SearchModelViewMode) : SearchViewEffect()
+    data class ToggleViewMode(val viewMode: GridViewMode) : SearchViewEffect()
     data class ShowTvShowDetailScreen(val tvShowId: Int) : SearchViewEffect()
     data class ShowMovieDetailScreen(val movieId: Int) : SearchViewEffect()
     data class ShowPersonDetailScreen(val personId: Int) : SearchViewEffect()
@@ -248,10 +246,10 @@ sealed class SearchViewEffect : BaseViewEffect {
 class SearchViewModelFactory(
     private val initialState: SearchState?,
     private val toggleDiscoverViewModeUseCase: ToggleDiscoverViewModeUseCase,
-    private val getDiscoverViewModeUseCase: GetDiscoverViewModeUseCase,
-    private val searchMultiUseCase: SearchMultiUseCase,
+    private val settingsRepository: SettingsRepository,
+    private val searchRepository: SearchRepository,
     private val popularMoviesTvUseCase: GetPopularMoviesTvUseCase,
-    private val getConfigUseCase: GetConfigUseCase,
+    private val configRepository: ConfigRepository,
     private val appStringProvider: AppStringProvider,
     private val schedulers: RxSchedulers
 ) : ViewModelProvider.Factory {
@@ -261,10 +259,10 @@ class SearchViewModelFactory(
         return SearchViewModel(
             initialState,
             toggleDiscoverViewModeUseCase,
-            getDiscoverViewModeUseCase,
-            searchMultiUseCase,
+            settingsRepository,
+            searchRepository,
             popularMoviesTvUseCase,
-            getConfigUseCase,
+            configRepository,
             appStringProvider,
             schedulers
         ) as T

@@ -1,6 +1,6 @@
 package com.atherton.upnext.util.network.retrofit
 
-import com.atherton.upnext.data.model.NetworkResponse
+import com.atherton.upnext.data.network.model.NetworkResponse
 import com.squareup.moshi.Types
 import io.reactivex.Flowable
 import io.reactivex.Maybe

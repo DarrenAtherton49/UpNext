@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.atherton.upnext.R
 import com.atherton.upnext.domain.model.DiscoverFilter
-import com.atherton.upnext.domain.model.SearchModelViewMode
+import com.atherton.upnext.domain.model.GridViewMode
 import com.atherton.upnext.presentation.common.searchmodel.SearchModelAdapter
 import com.atherton.upnext.presentation.main.MainAction
 import com.atherton.upnext.presentation.main.MainViewEffect
@@ -151,19 +151,19 @@ class DiscoverContentFragment
         }
     }
 
-    private fun initRecyclerView(viewMode: SearchModelViewMode) {
+    private fun initRecyclerView(viewMode: GridViewMode) {
         recyclerView.apply {
             setHasFixedSize(true)
             if (itemDecorationCount > 0) {
                 removeItemDecorationAt(0)
             }
             when (viewMode) {
-                is SearchModelViewMode.Grid -> {
+                is GridViewMode.Grid -> {
                     addItemDecoration(gridItemDecoration)
                     val numColumns = resources.getInteger(R.integer.search_model_grid_num_columns)
                     layoutManager = GridLayoutManager(context, numColumns)
                 }
-                is SearchModelViewMode.List -> {
+                is GridViewMode.List -> {
                     addItemDecoration(listItemDecoration)
                     layoutManager = LinearLayoutManager(context)
                 }

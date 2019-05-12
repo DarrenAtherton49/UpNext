@@ -1,6 +1,6 @@
 package com.atherton.upnext.data.network
 
-import com.atherton.upnext.data.model.*
+import com.atherton.upnext.data.network.model.*
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
 
@@ -77,7 +77,7 @@ class TmdbMultiSearchResponseAdapter {
                 genreIds,
                 id,
                 name,
-                originCountry,
+                originCountries,
                 originalLanguage,
                 originalName,
                 overview,

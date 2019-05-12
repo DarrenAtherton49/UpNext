@@ -35,15 +35,14 @@ data class TvShow(
     override val backdropPath: String?,
     val detail: TvShow.Detail?,
     val firstAirDate: String?,
-    val genreIds: List<Int>?,
     override val id: Int,
     val name: String?,
-    val originCountries: List<String>?,
     val originalLanguage: String?,
     val originalName: String?,
     val overview: String?,
     override val posterPath: String?,
     override val popularity: Float?,
+    val tmdbId: Int,
     val voteAverage: Float?,
     val voteCount: Int?
 ) : Watchable(
@@ -83,7 +82,6 @@ data class Movie(
     val adultContent: Boolean?,
     override val backdropPath: String?,
     val detail: Detail?,
-    val genreIds: List<Int>?,
     override val id: Int,
     val originalLanguage: String?,
     val originalTitle: String?,
@@ -92,6 +90,7 @@ data class Movie(
     override val posterPath: String?,
     val releaseDate: String?,
     override val title: String?,
+    val tmdbId: Int,
     val video: Boolean?,
     val voteAverage: Float?,
     val voteCount: Int?
@@ -127,12 +126,13 @@ data class Movie(
 @Parcelize
 data class Person(
     val adultContent: Boolean?,
-    val detail: Detail,
+    val detail: Detail?,
     override val id: Int,
     val knownFor: List<Watchable>?, // can be movies or tv shows
     val name: String?,
     override val popularity: Float?,
-    val profilePath: String?
+    val profilePath: String?,
+    val tmdbId: Int
 ) : Searchable {
 
     @Parcelize
@@ -267,9 +267,9 @@ data class Config(
     val stillSizes: List<String> // for episode still images
 )
 
-sealed class SearchModelViewMode : Parcelable {
-    @Parcelize object Grid : SearchModelViewMode()
-    @Parcelize object List : SearchModelViewMode()
+sealed class GridViewMode : Parcelable {
+    @Parcelize object Grid : GridViewMode()
+    @Parcelize object List : GridViewMode()
 }
 
 sealed class DiscoverFilter(open val id: Long) : Parcelable {

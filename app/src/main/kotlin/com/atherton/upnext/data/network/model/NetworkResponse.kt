@@ -1,4 +1,4 @@
-package com.atherton.upnext.data.model
+package com.atherton.upnext.data.network.model
 
 import java.io.IOException
 

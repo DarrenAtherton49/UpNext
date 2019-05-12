@@ -1,11 +1,11 @@
 package com.atherton.upnext.data.mapper
 
 import com.atherton.upnext.data.local.AppSettings
-import com.atherton.upnext.domain.model.SearchModelViewMode
+import com.atherton.upnext.domain.model.GridViewMode
 
-fun AppSettings.DiscoverViewToggleSetting.toDomainToggleMode(): SearchModelViewMode {
+fun AppSettings.GridViewModeSetting.toDomainToggleMode(): GridViewMode {
     return when (this) {
-        is AppSettings.DiscoverViewToggleSetting.Grid -> SearchModelViewMode.Grid
-        is AppSettings.DiscoverViewToggleSetting.List -> SearchModelViewMode.List
+        is AppSettings.GridViewModeSetting.Grid -> GridViewMode.Grid
+        is AppSettings.GridViewModeSetting.List -> GridViewMode.List
     }
 }

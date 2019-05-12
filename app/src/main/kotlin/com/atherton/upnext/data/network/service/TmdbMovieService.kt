@@ -1,6 +1,6 @@
 package com.atherton.upnext.data.network.service
 
-import com.atherton.upnext.data.model.*
+import com.atherton.upnext.data.network.model.*
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Path

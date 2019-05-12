@@ -4,7 +4,7 @@ import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.domain.model.*
-import com.atherton.upnext.domain.usecase.GetConfigUseCase
+import com.atherton.upnext.domain.repository.ConfigRepository
 import com.atherton.upnext.domain.usecase.GetMovieDetailUseCase
 import com.atherton.upnext.domain.usecase.GetTvShowDetailUseCase
 import com.atherton.upnext.presentation.common.detail.ModelDetailSection
@@ -22,7 +22,6 @@ import io.reactivex.Observable.merge
 import io.reactivex.Observable.mergeArray
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.plusAssign
-import io.reactivex.rxkotlin.zipWith
 import kotlinx.android.parcel.Parcelize
 import timber.log.Timber
 import javax.inject.Inject
@@ -31,7 +30,7 @@ class ContentDetailViewModel @Inject constructor(
     initialState: ContentDetailState?,
     private val getTvShowDetailUseCase: GetTvShowDetailUseCase,
     private val getMovieDetailUseCase: GetMovieDetailUseCase,
-    private val getConfigUseCase: GetConfigUseCase,
+    private val configRepository: ConfigRepository,
     private val appStringProvider: AppStringProvider,
     private val schedulers: RxSchedulers
 ): UpNextViewModel<ContentDetailAction, ContentDetailState, ContentDetailViewEffect>() {
@@ -89,11 +88,10 @@ class ContentDetailViewModel @Inject constructor(
                     is ContentType.TvShow -> getTvShowDetailUseCase.invoke(action.contentId)
                     is ContentType.Movie -> getMovieDetailUseCase.invoke(action.contentId)
                 }
-                contentObservable.zipWith(getConfigUseCase.invoke())
+                contentObservable
                     .subscribeOn(schedulers.io)
-                    .map<ContentDetailChange> {
-                        val (watchable, config) = it
-                        ContentDetailChange.Result(watchable, config)
+                    .map<ContentDetailChange> { watchable ->
+                        ContentDetailChange.Result(watchable, configRepository.getConfig())
                     }
                     .startWith(ContentDetailChange.Loading)
             }
@@ -247,7 +245,7 @@ class ContentDetailViewModelFactory(
     private val initialState: ContentDetailState?,
     private val getTvShowDetailUseCase: GetTvShowDetailUseCase,
     private val getMovieDetailUseCase: GetMovieDetailUseCase,
-    private val getConfigUseCase: GetConfigUseCase,
+    private val configRepository: ConfigRepository,
     private val appStringProvider: AppStringProvider,
     private val schedulers: RxSchedulers
 ) : ViewModelProvider.Factory {
@@ -258,7 +256,7 @@ class ContentDetailViewModelFactory(
             initialState,
             getTvShowDetailUseCase,
             getMovieDetailUseCase,
-            getConfigUseCase,
+            configRepository,
             appStringProvider,
             schedulers) as T
     }

@@ -5,13 +5,15 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
 import android.net.ConnectivityManager
+import androidx.room.Room
 import com.atherton.upnext.App
 import com.atherton.upnext.BuildConfig
+import com.atherton.upnext.data.db.RoomDb
+import com.atherton.upnext.data.db.dao.SearchResultDao
 import com.atherton.upnext.data.local.AppSettings
 import com.atherton.upnext.data.local.LocalConfigStore
 import com.atherton.upnext.data.local.SharedPreferencesStorage
 import com.atherton.upnext.data.network.TmdbApiKeyInterceptor
-import com.atherton.upnext.data.network.TmdbMultiSearchResponseAdapter
 import com.atherton.upnext.data.network.service.*
 import com.atherton.upnext.data.repository.*
 import com.atherton.upnext.domain.repository.*
@@ -37,7 +39,7 @@ import javax.inject.Singleton
 
 @Singleton
 @Component(
-    modules = [AppModule::class, RepositoryModule::class, ServiceModule::class]
+    modules = [AppModule::class, RepositoryModule::class, ServiceModule::class, DatabaseModule::class]
 )
 interface AppComponent {
 
@@ -84,7 +86,6 @@ class AppModule(private val application: Application) {
     @Provides
     @Singleton internal fun provideMoshi(): Moshi {
         return Moshi.Builder()
-            .add(TmdbMultiSearchResponseAdapter())
             .add(KotlinJsonAdapterFactory())
             .build()
     }
@@ -139,8 +140,12 @@ class RepositoryModule {
         CachingMovieRepository(movieService)
 
     @Provides
-    @Singleton internal fun provideSearchRepository(searchService: TmdbSearchService): SearchRepository =
-        CachingSearchRepository(searchService)
+    @Singleton internal fun provideSearchRepository(
+        searchResultDao: SearchResultDao,
+        searchService: TmdbSearchService
+    ): SearchRepository {
+        return CachingSearchRepository(searchResultDao, searchService)
+    }
 
     @Provides
     @Singleton internal fun providePeopleRepository(peopleService: TmdbPeopleService): PeopleRepository =
@@ -185,4 +190,22 @@ class ServiceModule {
     @Provides
     @Singleton internal fun provideTmdbPeopleService(retrofit: Retrofit): TmdbPeopleService =
         retrofit.create(TmdbPeopleService::class.java)
+}
+
+@Module
+class DatabaseModule {
+
+    @Provides
+    @Singleton internal fun provideRoomDb(@ApplicationContext context: Context): RoomDb {
+        return Room.databaseBuilder(context, RoomDb::class.java, Room_DB_NAME).build()
+    }
+
+    @Provides
+    @Singleton internal fun provideSearchResultDao(roomDb: RoomDb): SearchResultDao {
+        return roomDb.getSearchResultDao()
+    }
+
+    companion object {
+        private const val Room_DB_NAME = "tv_movie_database"
+    }
 }

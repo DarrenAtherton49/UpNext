@@ -5,5 +5,6 @@ import io.reactivex.Observable
 
 interface ConfigRepository {
 
-    fun getConfig(): Observable<Config>
+    fun getConfigObservable(): Observable<Config>
+    fun getConfig(): Config
 }

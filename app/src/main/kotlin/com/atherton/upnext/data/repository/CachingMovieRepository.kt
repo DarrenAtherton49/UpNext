@@ -2,10 +2,10 @@ package com.atherton.upnext.data.repository
 
 import com.atherton.upnext.data.mapper.toDomainLceResponse
 import com.atherton.upnext.data.mapper.toDomainMovie
-import com.atherton.upnext.data.model.NetworkResponse
-import com.atherton.upnext.data.model.TmdbApiError
-import com.atherton.upnext.data.model.TmdbMovie
-import com.atherton.upnext.data.model.TmdbPagedResponse
+import com.atherton.upnext.data.network.model.NetworkResponse
+import com.atherton.upnext.data.network.model.TmdbApiError
+import com.atherton.upnext.data.network.model.TmdbMovie
+import com.atherton.upnext.data.network.model.TmdbPagedResponse
 import com.atherton.upnext.data.network.service.TmdbMovieService
 import com.atherton.upnext.domain.model.LceResponse
 import com.atherton.upnext.domain.model.Movie
@@ -47,11 +47,23 @@ class CachingMovieRepository @Inject constructor(
             Observable.fromCallable {
                 LceResponse.Loading(
                     listOf(
-                        Movie(false, "",
-                            null, null, 1,
-                            null, null, "",
-                            24.4f, "", "", "FAKE MOVIE",
-                            false, 24.4f, 4)
+                        Movie(
+                            false,
+                            "",
+                            null,
+                            1,
+                            null,
+                            null,
+                            "",
+                            24.4f,
+                            "",
+                            "",
+                            "FAKE MOVIE",
+                            2,
+                            false,
+                            24.4f,
+                            4
+                        )
                     )
                 )
             },

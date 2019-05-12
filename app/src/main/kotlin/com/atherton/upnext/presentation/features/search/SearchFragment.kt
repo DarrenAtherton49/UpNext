@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.atherton.upnext.R
-import com.atherton.upnext.domain.model.SearchModelViewMode
+import com.atherton.upnext.domain.model.GridViewMode
 import com.atherton.upnext.presentation.common.searchmodel.SearchModelAdapter
 import com.atherton.upnext.presentation.main.MainAction
 import com.atherton.upnext.presentation.main.MainViewEffect
@@ -151,8 +151,8 @@ class SearchFragment : BaseFragment<SearchAction, SearchState, SearchViewEffect,
                 editMenuItem(R.id.action_toggle_view) {
                     isVisible = true
                     icon = when (viewEffect.viewMode) {
-                        is SearchModelViewMode.List -> context?.getDrawableCompat(R.drawable.ic_view_grid_white_24dp)
-                        is SearchModelViewMode.Grid -> context?.getDrawableCompat(R.drawable.ic_view_list_white_24dp)
+                        is GridViewMode.List -> context?.getDrawableCompat(R.drawable.ic_view_grid_white_24dp)
+                        is GridViewMode.Grid -> context?.getDrawableCompat(R.drawable.ic_view_list_white_24dp)
                     }
                 }
             }
@@ -173,19 +173,19 @@ class SearchFragment : BaseFragment<SearchAction, SearchState, SearchViewEffect,
 
     override fun processSharedViewEffects(viewEffect: MainViewEffect) {}
 
-    private fun initRecyclerView(viewMode: SearchModelViewMode) {
+    private fun initRecyclerView(viewMode: GridViewMode) {
         recyclerView.apply {
             setHasFixedSize(true)
             if (itemDecorationCount > 0) {
                 removeItemDecorationAt(0)
             }
             when (viewMode) {
-                is SearchModelViewMode.Grid -> {
+                is GridViewMode.Grid -> {
                     addItemDecoration(gridItemDecoration)
                     val numColumns = resources.getInteger(R.integer.search_model_grid_num_columns)
                     layoutManager = GridLayoutManager(context, numColumns)
                 }
-                is SearchModelViewMode.List -> {
+                is GridViewMode.List -> {
                     addItemDecoration(listItemDecoration)
                     layoutManager = LinearLayoutManager(context)
                 }

@@ -4,10 +4,10 @@ import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.domain.model.DiscoverFilter
+import com.atherton.upnext.domain.model.GridViewMode
 import com.atherton.upnext.domain.model.LceResponse
-import com.atherton.upnext.domain.model.SearchModelViewMode
+import com.atherton.upnext.domain.repository.SettingsRepository
 import com.atherton.upnext.domain.usecase.GetDiscoverFiltersUseCase
-import com.atherton.upnext.domain.usecase.GetDiscoverViewModeUseCase
 import com.atherton.upnext.domain.usecase.ToggleDiscoverViewModeUseCase
 import com.atherton.upnext.presentation.util.AppStringProvider
 import com.atherton.upnext.util.base.BaseViewEffect
@@ -28,7 +28,7 @@ import javax.inject.Inject
 class DiscoverTabsViewModel @Inject constructor(
     initialState: DiscoverTabsState?,
     private val toggleDiscoverViewModeUseCase: ToggleDiscoverViewModeUseCase,
-    private val getDiscoverViewModeUseCase: GetDiscoverViewModeUseCase,
+    private val settingsRepository: SettingsRepository,
     private val getDiscoverFiltersUseCase: GetDiscoverFiltersUseCase,
     private val appStringProvider: AppStringProvider,
     private val schedulers: RxSchedulers
@@ -83,7 +83,7 @@ class DiscoverTabsViewModel @Inject constructor(
         val loadViewModeViewEffect = actions.ofType<DiscoverTabsAction.LoadViewMode>()
             .preventMultipleClicks()
             .switchMap {
-                getDiscoverViewModeUseCase.invoke()
+                settingsRepository.getGridViewModeObservable()
                     .subscribeOn(schedulers.io)
                     .map { DiscoverTabsViewEffect.ViewModeLoaded(it) }
             }
@@ -93,7 +93,7 @@ class DiscoverTabsViewModel @Inject constructor(
             .preventMultipleClicks()
             .switchMap {
                 toggleDiscoverViewModeUseCase.invoke()
-                    .flatMap { getDiscoverViewModeUseCase.invoke() }
+                    .flatMap { settingsRepository.getGridViewModeObservable() }
                     .subscribeOn(schedulers.io)
                     .map { DiscoverTabsViewEffect.ViewModeToggled(it) }
             }
@@ -156,8 +156,8 @@ sealed class DiscoverTabsState : BaseState, Parcelable {
 }
 
 sealed class DiscoverTabsViewEffect : BaseViewEffect {
-    data class ViewModeToggled(val viewMode: SearchModelViewMode) : DiscoverTabsViewEffect()
-    data class ViewModeLoaded(val viewMode: SearchModelViewMode) : DiscoverTabsViewEffect()
+    data class ViewModeToggled(val viewMode: GridViewMode) : DiscoverTabsViewEffect()
+    data class ViewModeLoaded(val viewMode: GridViewMode) : DiscoverTabsViewEffect()
     object ShowSettingsScreen : DiscoverTabsViewEffect()
 }
 
@@ -169,7 +169,7 @@ sealed class DiscoverTabsViewEffect : BaseViewEffect {
 class DiscoverTabsViewModelFactory(
     private val initialState: DiscoverTabsState?,
     private val toggleDiscoverViewModeUseCase: ToggleDiscoverViewModeUseCase,
-    private val getDiscoverViewModeUseCase: GetDiscoverViewModeUseCase,
+    private val settingsRepository: SettingsRepository,
     private val getDiscoverFiltersUseCase: GetDiscoverFiltersUseCase,
     private val appStringProvider: AppStringProvider,
     private val schedulers: RxSchedulers
@@ -180,7 +180,7 @@ class DiscoverTabsViewModelFactory(
         return DiscoverTabsViewModel(
             initialState,
             toggleDiscoverViewModeUseCase,
-            getDiscoverViewModeUseCase,
+            settingsRepository,
             getDiscoverFiltersUseCase,
             appStringProvider,
             schedulers

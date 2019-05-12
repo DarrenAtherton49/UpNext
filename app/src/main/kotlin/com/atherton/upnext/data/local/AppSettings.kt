@@ -2,11 +2,11 @@ package com.atherton.upnext.data.local
 
 interface AppSettings {
 
-    fun getDiscoverViewSetting(): DiscoverViewToggleSetting
-    fun toggleDiscoverViewSetting()
+    fun getGridViewModeSetting(): GridViewModeSetting
+    fun toggleGridViewModeSetting()
 
-    sealed class DiscoverViewToggleSetting {
-        object Grid : DiscoverViewToggleSetting()
-        object List : DiscoverViewToggleSetting()
+    sealed class GridViewModeSetting {
+        object Grid : GridViewModeSetting()
+        object List : GridViewModeSetting()
     }
 }

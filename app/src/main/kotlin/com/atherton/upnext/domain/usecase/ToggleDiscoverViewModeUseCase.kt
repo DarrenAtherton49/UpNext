@@ -6,5 +6,5 @@ import javax.inject.Inject
 
 class ToggleDiscoverViewModeUseCase @Inject constructor(private val settingsRepository: SettingsRepository) {
 
-    operator fun invoke(): Observable<Unit> = Observable.fromCallable(settingsRepository::toggleDiscoverViewMode)
+    operator fun invoke(): Observable<Unit> = Observable.fromCallable(settingsRepository::toggleGridViewMode)
 }

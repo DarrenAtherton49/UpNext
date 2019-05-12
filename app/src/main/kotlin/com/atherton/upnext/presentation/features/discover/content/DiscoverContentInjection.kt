@@ -1,9 +1,9 @@
 package com.atherton.upnext.presentation.features.discover.content
 
 import androidx.lifecycle.ViewModelProvider
-import com.atherton.upnext.domain.usecase.GetConfigUseCase
+import com.atherton.upnext.domain.repository.ConfigRepository
+import com.atherton.upnext.domain.repository.SettingsRepository
 import com.atherton.upnext.domain.usecase.GetDiscoverItemsForFilterUseCase
-import com.atherton.upnext.domain.usecase.GetDiscoverViewModeUseCase
 import com.atherton.upnext.presentation.main.MainComponent
 import com.atherton.upnext.presentation.main.MainModule
 import com.atherton.upnext.presentation.util.AppStringProvider
@@ -32,17 +32,17 @@ class DiscoverContentModule(private val initialState: DiscoverContentState?) {
     @Provides
     @Named(DiscoverContentViewModelFactory.NAME)
     @PerView internal fun provideViewModelFactory(
-        getDiscoverViewModeUseCase: GetDiscoverViewModeUseCase,
+        settingsRepository: SettingsRepository,
         getDiscoverItemsForFilterUseCase: GetDiscoverItemsForFilterUseCase,
-        getConfigUseCase: GetConfigUseCase,
+        configRepository: ConfigRepository,
         appStringProvider: AppStringProvider,
         schedulers: RxSchedulers
     ): ViewModelProvider.Factory {
         return DiscoverContentViewModelFactory(
             initialState,
-            getDiscoverViewModeUseCase,
+            settingsRepository,
             getDiscoverItemsForFilterUseCase,
-            getConfigUseCase,
+            configRepository,
             appStringProvider,
             schedulers
         )

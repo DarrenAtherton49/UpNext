@@ -2,7 +2,7 @@ package com.atherton.upnext.data.local
 
 import android.content.Context
 import com.atherton.upnext.R
-import com.atherton.upnext.data.model.TmdbConfiguration
+import com.atherton.upnext.data.network.model.TmdbConfiguration
 import com.atherton.upnext.util.extensions.adapt
 import com.atherton.upnext.util.extensions.readFileFromAssets
 import com.atherton.upnext.util.injection.ApplicationContext

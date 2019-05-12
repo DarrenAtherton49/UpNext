@@ -1,4 +1,4 @@
-package com.atherton.upnext.data.model
+package com.atherton.upnext.data.network.model
 
 import com.squareup.moshi.Json
 
@@ -65,7 +65,7 @@ data class TmdbMultiSearchResult(
 
     // Show specific fields
     @Json(name = "first_air_date") val firstAirDate: String?,
-    @Json(name = "origin_country") val originCountry: List<String>?,
+    @Json(name = "origin_country") val originCountries: List<String>?,
     @Json(name = "original_name") val originalName: String?,
 
     // Movie specific fields
@@ -90,7 +90,7 @@ data class TmdbTvShow(
     @Json(name = "genre_ids") val genreIds: List<Int>?,
     @Json(name = "id") val id: Int,
     @Json(name = "name") val name: String?,
-    @Json(name = "origin_country") val originCountry: List<String>?,
+    @Json(name = "origin_country") val originCountries: List<String>?,
     @Json(name = "original_language") val originalLanguage: String?,
     @Json(name = "original_name") val originalName: String?,
     @Json(name = "overview") val overview: String?,

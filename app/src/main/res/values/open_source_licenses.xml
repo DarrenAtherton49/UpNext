@@ -90,6 +90,10 @@
     <string name="license_ok_http_logging_interceptor_description">An OkHttp interceptor which logs HTTP request
         and response data.</string>
 
+    <string name="license_paging_name">Paging Library</string>
+    <string name="license_paging_description">The Paging Library helps you load and display small chunks of
+        data at a time.</string>
+
     <string name="license_recycler_view_name">RecyclerView</string>
     <string name="license_recycler_view_description">A flexible view for providing a limited window into
         a large data set.</string>

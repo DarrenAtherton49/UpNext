@@ -1,7 +1,11 @@
 package com.atherton.upnext.presentation.features.search
 
 import androidx.lifecycle.ViewModelProvider
-import com.atherton.upnext.domain.usecase.*
+import com.atherton.upnext.domain.repository.ConfigRepository
+import com.atherton.upnext.domain.repository.SearchRepository
+import com.atherton.upnext.domain.repository.SettingsRepository
+import com.atherton.upnext.domain.usecase.GetPopularMoviesTvUseCase
+import com.atherton.upnext.domain.usecase.ToggleDiscoverViewModeUseCase
 import com.atherton.upnext.presentation.main.MainComponent
 import com.atherton.upnext.presentation.main.MainModule
 import com.atherton.upnext.presentation.util.AppStringProvider
@@ -31,9 +35,9 @@ class SearchModule(private val initialState: SearchState?) {
     @Named(SearchViewModelFactory.NAME)
     @PerView internal fun provideViewModelFactory(
         toggleDiscoverViewModeUseCase: ToggleDiscoverViewModeUseCase,
-        getDiscoverViewModeUseCase: GetDiscoverViewModeUseCase,
-        searchMultiUseCase: SearchMultiUseCase,
-        getConfigUseCase: GetConfigUseCase,
+        settingsRepository: SettingsRepository,
+        searchRepository: SearchRepository,
+        configRepository: ConfigRepository,
         popularMoviesTvUseCase: GetPopularMoviesTvUseCase,
         appStringProvider: AppStringProvider,
         schedulers: RxSchedulers
@@ -41,10 +45,10 @@ class SearchModule(private val initialState: SearchState?) {
         return SearchViewModelFactory(
             initialState,
             toggleDiscoverViewModeUseCase,
-            getDiscoverViewModeUseCase,
-            searchMultiUseCase,
+            settingsRepository,
+            searchRepository,
             popularMoviesTvUseCase,
-            getConfigUseCase,
+            configRepository,
             appStringProvider,
             schedulers)
     }

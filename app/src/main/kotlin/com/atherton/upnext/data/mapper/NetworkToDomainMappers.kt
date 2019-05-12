@@ -1,6 +1,6 @@
 package com.atherton.upnext.data.mapper
 
-import com.atherton.upnext.data.model.*
+import com.atherton.upnext.data.network.model.*
 import com.atherton.upnext.domain.model.*
 import com.atherton.upnext.domain.model.Collection
 
@@ -19,7 +19,7 @@ import com.atherton.upnext.domain.model.Collection
  *
  */
 internal fun <NETWORK : Any, DOMAIN : Any> NetworkResponse<NETWORK, TmdbApiError>.toDomainLceResponse(
-    cachedData: Boolean,
+    cachedData: Boolean = false,
     fallbackData: DOMAIN? = null,
     dataMapper: (NETWORK) -> DOMAIN
 ): LceResponse<DOMAIN> {
@@ -68,99 +68,99 @@ internal fun List<TmdbMultiSearchModel>?.toDomainWatchables(): List<Watchable> {
 
 fun TmdbTvShow.toDomainTvShow(): TvShow {
     return TvShow(
-        backdropPath,
-        TvShow.Detail(
-            credits?.cast?.toDomainCast(),
-            credits?.crew?.toDomainCrew(),
-            createdBy?.toDomainTvCreatedBy(),
-            runTimes,
-            genres?.toDomainGenres(),
-            homepage,
-            inProduction,
-            languages,
-            lastAirDate,
-            lastEpisodeToAir?.toDomainLastEpisodeToAir(),
-            networks?.toDomainNetworks(),
-            numberOfEpisodes,
-            numberOfSeasons,
-            productionCompanies?.toDomainProductionCompanies(),
-            recommendations?.results?.map { it.toDomainTvShow() },
-            seasons?.toDomainSeasons(),
-            status,
-            type,
-            videos?.results?.toDomainVideos()
+        backdropPath = backdropPath,
+        detail = TvShow.Detail(
+            cast = credits?.cast?.toDomainCast(),
+            crew = credits?.crew?.toDomainCrew(),
+            createdBy = createdBy?.toDomainTvCreatedBy(),
+            runTimes = runTimes,
+            genres = genres?.toDomainGenres(),
+            homepage = homepage,
+            inProduction = inProduction,
+            languages = languages,
+            lastAirDate = lastAirDate,
+            lastEpisodeToAir = lastEpisodeToAir?.toDomainLastEpisodeToAir(),
+            networks = networks?.toDomainNetworks(),
+            numberOfEpisodes = numberOfEpisodes,
+            numberOfSeasons = numberOfSeasons,
+            productionCompanies = productionCompanies?.toDomainProductionCompanies(),
+            recommendations = recommendations?.results?.map { it.toDomainTvShow() },
+            seasons = seasons?.toDomainSeasons(),
+            status = status,
+            type = type,
+            videos = videos?.results?.toDomainVideos()
         ),
-        firstAirDate,
-        genreIds,
-        id,
-        name,
-        originCountry,
-        originalLanguage,
-        originalName,
-        overview,
-        posterPath,
-        popularity,
-        voteAverage,
-        voteCount
+        firstAirDate = firstAirDate,
+        id = id,
+        name = name,
+        originalLanguage = originalLanguage,
+        originalName = originalName,
+        overview = overview,
+        posterPath = posterPath,
+        popularity = popularity,
+        tmdbId = id,
+        voteAverage = voteAverage,
+        voteCount = voteCount
     )
 }
 
 fun TmdbMovie.toDomainMovie(): Movie {
     return Movie(
-        adultContent,
-        backdropPath,
-        Movie.Detail(
-            belongsToCollection?.toDomainCollection(),
-            budget,
-            credits?.cast?.toDomainCast(),
-            credits?.crew?.toDomainCrew(),
-            genres?.toDomainGenres(),
-            homepage,
-            imdbId,
-            productionCompanies?.toDomainProductionCompanies(),
-            productionCountries?.toDomainProductionCountries(),
-            revenue,
-            runtime,
-            recommendations?.results?.map { it.toDomainMovie() },
-            spokenLanguages?.toDomainSpokenLanguages(),
-            status,
-            tagline,
-            videos?.results?.toDomainVideos()
+        adultContent = adultContent,
+        backdropPath = backdropPath,
+        detail = Movie.Detail(
+            belongsToCollection = belongsToCollection?.toDomainCollection(),
+            budget = budget,
+            cast = credits?.cast?.toDomainCast(),
+            crew = credits?.crew?.toDomainCrew(),
+            genres = genres?.toDomainGenres(),
+            homepage = homepage,
+            imdbId = imdbId,
+            productionCompanies = productionCompanies?.toDomainProductionCompanies(),
+            productionCountries = productionCountries?.toDomainProductionCountries(),
+            revenue = revenue,
+            runtime = runtime,
+            recommendations = recommendations?.results?.map { it.toDomainMovie() },
+            spokenLanguages = spokenLanguages?.toDomainSpokenLanguages(),
+            status = status,
+            tagline = tagline,
+            videos = videos?.results?.toDomainVideos()
         ),
-        genreIds,
-        id,
-        originalLanguage,
-        originalTitle,
-        overview,
-        popularity,
-        posterPath,
-        releaseDate,
-        title,
-        video,
-        voteAverage,
-        voteCount
+        id = id,
+        originalLanguage = originalLanguage,
+        originalTitle = originalTitle,
+        overview = overview,
+        popularity = popularity,
+        posterPath = posterPath,
+        releaseDate = releaseDate,
+        title = title,
+        tmdbId = id,
+        video = video,
+        voteAverage = voteAverage,
+        voteCount = voteCount
     )
 }
 
 fun TmdbPerson.toDomainPerson(): Person {
     return Person(
-        adultContent,
-        Person.Detail(
-            birthday,
-            knownForDepartment,
-            deathDay,
-            alsoKnownAs,
-            gender.toDomainGender(),
-            biography,
-            placeOfBirth,
-            imdbId,
-            homepage
+        adultContent = adultContent,
+        detail = Person.Detail(
+            birthday = birthday,
+            knownForDepartment = knownForDepartment,
+            deathDay = deathDay,
+            alsoKnownAs = alsoKnownAs,
+            gender = gender.toDomainGender(),
+            biography = biography,
+            placeOfBirth = placeOfBirth,
+            imdbId = imdbId,
+            homepage = homepage
         ),
-        id,
-        knownFor.toDomainWatchables(),
-        name,
-        popularity,
-        profilePath
+        id = id,
+        knownFor = knownFor.toDomainWatchables(),
+        name = name,
+        popularity = popularity,
+        profilePath = profilePath,
+        tmdbId = id
     )
 }
 

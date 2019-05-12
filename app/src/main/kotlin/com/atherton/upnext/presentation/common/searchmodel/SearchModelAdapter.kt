@@ -15,11 +15,11 @@ class SearchModelAdapter(
     private val onClickListener: (Searchable) -> Unit
 ) : ListAdapter<Searchable, SearchModelGridViewHolder>(SearchDiffCallback) {
 
-    lateinit var viewMode: SearchModelViewMode
+    lateinit var viewMode: GridViewMode
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchModelGridViewHolder {
         return when (viewMode) {
-            is SearchModelViewMode.Grid -> {
+            is GridViewMode.Grid -> {
                 val view: View = parent.inflateLayout(R.layout.item_search_model_grid)
                 when (viewType) {
                     TV_VIEW_TYPE -> TvShowModelGridViewHolder(view, imageLoader).withClickListener()
@@ -28,7 +28,7 @@ class SearchModelAdapter(
                     else -> MovieModelGridViewHolder(view, imageLoader).withClickListener()
                 }
             }
-            is SearchModelViewMode.List -> {
+            is GridViewMode.List -> {
                 val view: View = parent.inflateLayout(R.layout.item_search_model_list)
                 when (viewType) {
                     TV_VIEW_TYPE -> TvShowModelListViewHolder(view, imageLoader).withClickListener()

@@ -3,7 +3,7 @@ package com.atherton.upnext.presentation.main
 import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.atherton.upnext.domain.model.SearchModelViewMode
+import com.atherton.upnext.domain.model.GridViewMode
 import com.atherton.upnext.presentation.features.settings.licenses.License
 import com.atherton.upnext.util.base.BaseViewEffect
 import com.atherton.upnext.util.base.UpNextViewModel
@@ -111,7 +111,7 @@ class MainViewModel @Inject constructor(
 
 sealed class MainAction : BaseAction {
     object SearchActionClicked : MainAction()
-    data class ViewModeToggled(val viewMode: SearchModelViewMode) : MainAction()
+    data class ViewModeToggled(val viewMode: GridViewMode) : MainAction()
     object AddShowButtonClicked : MainAction()
     object AddMovieButtonClicked : MainAction()
     data class TvShowClicked(val tvShowId: Int) : MainAction()
@@ -145,7 +145,7 @@ sealed class MainViewEffect : BaseViewEffect {
         }
         data class ShowLicenseInBrowser(val url: String) : Navigation()
     }
-    data class ToggleViewMode(val viewMode: SearchModelViewMode) : MainViewEffect()
+    data class ToggleViewMode(val viewMode: GridViewMode) : MainViewEffect()
 }
 
 //================================================================================

@@ -2,10 +2,10 @@ package com.atherton.upnext.data.repository
 
 import com.atherton.upnext.data.mapper.toDomainLceResponse
 import com.atherton.upnext.data.mapper.toDomainTvShow
-import com.atherton.upnext.data.model.NetworkResponse
-import com.atherton.upnext.data.model.TmdbApiError
-import com.atherton.upnext.data.model.TmdbPagedResponse
-import com.atherton.upnext.data.model.TmdbTvShow
+import com.atherton.upnext.data.network.model.NetworkResponse
+import com.atherton.upnext.data.network.model.TmdbApiError
+import com.atherton.upnext.data.network.model.TmdbPagedResponse
+import com.atherton.upnext.data.network.model.TmdbTvShow
 import com.atherton.upnext.data.network.service.TmdbTvShowService
 import com.atherton.upnext.domain.model.LceResponse
 import com.atherton.upnext.domain.model.TvShow

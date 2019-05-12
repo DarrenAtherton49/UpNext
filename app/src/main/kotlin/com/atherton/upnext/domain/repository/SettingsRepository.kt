@@ -1,9 +1,11 @@
 package com.atherton.upnext.domain.repository
 
-import com.atherton.upnext.domain.model.SearchModelViewMode
+import com.atherton.upnext.domain.model.GridViewMode
+import io.reactivex.Observable
 
 interface SettingsRepository {
 
-    fun getDiscoverViewMode(): SearchModelViewMode
-    fun toggleDiscoverViewMode()
+    fun getGridViewMode(): GridViewMode
+    fun getGridViewModeObservable(): Observable<GridViewMode>
+    fun toggleGridViewMode()
 }

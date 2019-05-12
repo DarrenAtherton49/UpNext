@@ -7,8 +7,8 @@
 
 ### Alpha
 - Set up Room database
-    + Search results table
-    + Search terms table
+    + Search results and terms tables
+        - Read a List<RoomSearchResult> from the database using search term as parameter, including an join which populates known_for and return this as an LCE.Content.
     + Lists table
     + User_lists join table
 - The 'up next'/'watchlist' screen should have a button so that it is 'one click' to mark the next episode as 'watched'. So you should see the episode you're currently on, be able to click 'watched' and the next episode should come up. Also add 'undo' snackbar for this action for accidental clicks.
@@ -61,6 +61,7 @@
 - Make sure animateLayoutChanges is working in the RecyclerViews (also check it animates when we change toggle view modes in all layouts)
 
 ### Alpha Build/Release
+- Test the release APK, especially for missing ProGuard rules etc.
 - Add privacy policy to app and play store
 - Use the release checklist to make sure everything is done
     + https://developer.android.com/distribute/best-practices/launch/launch-checklist
