@@ -7,10 +7,14 @@ import androidx.room.ForeignKey.CASCADE
 class RoomSearchResultWithKnownFor {
 
     @Embedded
-    lateinit var searchResult: RoomSearchResult
+    var searchResult: RoomSearchResult? = null
 
-    @Relation(parentColumn = "id", entityColumn = "search_result_id", entity = RoomSearchKnownFor::class)
-    lateinit var knownFor: List<RoomSearchKnownFor>
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "search_result_id",
+        entity = RoomSearchKnownFor::class
+    )
+    var knownFor: List<RoomSearchKnownFor> = ArrayList()
 }
 
 @Entity(

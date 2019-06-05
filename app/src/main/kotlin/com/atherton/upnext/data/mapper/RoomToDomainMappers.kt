@@ -10,9 +10,11 @@ private const val TV = "tv"
 private const val PERSON = "person"
 
 fun List<RoomSearchResultWithKnownFor>.toDomainSearchables(): List<Searchable> {
-    return this.map { searchResultAndKnownFor ->
-        with(searchResultAndKnownFor) {
-            when (searchResultAndKnownFor.searchResult.mediaType) {
+    return this.mapNotNull { searchResultAndKnownFor ->
+        val searchResult = searchResultAndKnownFor.searchResult
+        val knownFor = searchResultAndKnownFor.knownFor
+        searchResult?.let {
+            when (searchResult.mediaType) {
                 TV -> searchResult.toDomainTvShow()
                 MOVIE -> searchResult.toDomainMovie()
                 PERSON -> searchResult.toDomainPerson(knownFor)

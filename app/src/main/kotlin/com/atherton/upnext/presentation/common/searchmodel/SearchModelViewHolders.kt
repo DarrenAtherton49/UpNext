@@ -70,6 +70,7 @@ class PersonModelGridViewHolder(
 
     fun bind(person: Person) {
         super.bind(person.name, person.profilePath)
+        searchModelRatingTextView.isVisible = false
     }
 }
 
