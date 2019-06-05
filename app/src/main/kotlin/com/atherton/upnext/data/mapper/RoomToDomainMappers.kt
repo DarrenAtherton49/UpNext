@@ -1,21 +1,23 @@
 package com.atherton.upnext.data.mapper
 
-import com.atherton.upnext.data.db.model.RoomSearchKnownFor
-import com.atherton.upnext.data.db.model.RoomSearchResult
+import com.atherton.upnext.data.db.model.search.RoomSearchKnownFor
+import com.atherton.upnext.data.db.model.search.RoomSearchResult
+import com.atherton.upnext.data.db.model.search.RoomSearchResultWithKnownFor
 import com.atherton.upnext.domain.model.*
 
 private const val MOVIE = "movie"
 private const val TV = "tv"
 private const val PERSON = "person"
 
-fun List<Pair<RoomSearchResult, List<RoomSearchKnownFor>>>.toDomainSearchables(): List<Searchable> {
+fun List<RoomSearchResultWithKnownFor>.toDomainSearchables(): List<Searchable> {
     return this.map { searchResultAndKnownFor ->
-        val (searchResult, knownForList) = searchResultAndKnownFor
-        when (searchResult.mediaType) {
-            TV -> searchResult.toDomainTvShow()
-            MOVIE -> searchResult.toDomainMovie()
-            PERSON -> searchResult.toDomainPerson(knownForList)
-            else -> throw IllegalArgumentException("media_type should be either 'movie', 'tv' or 'person'.")
+        with(searchResultAndKnownFor) {
+            when (searchResultAndKnownFor.searchResult.mediaType) {
+                TV -> searchResult.toDomainTvShow()
+                MOVIE -> searchResult.toDomainMovie()
+                PERSON -> searchResult.toDomainPerson(knownFor)
+                else -> throw IllegalArgumentException("media_type should be either '$MOVIE', '$TV' or '$PERSON'.")
+            }
         }
     }
 }

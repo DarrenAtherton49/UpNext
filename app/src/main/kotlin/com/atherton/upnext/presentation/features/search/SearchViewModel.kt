@@ -147,9 +147,9 @@ class SearchViewModel @Inject constructor(
             .subscribeOn(schedulers.io)
             .map { action ->
                 when (action.searchModel) {
-                    is TvShow -> SearchViewEffect.ShowTvShowDetailScreen(action.searchModel.id)
-                    is Movie -> SearchViewEffect.ShowMovieDetailScreen(action.searchModel.id)
-                    is Person -> SearchViewEffect.ShowPersonDetailScreen(action.searchModel.id)
+                    is TvShow -> SearchViewEffect.ShowTvShowDetailScreen(action.searchModel.tmdbId)
+                    is Movie -> SearchViewEffect.ShowMovieDetailScreen(action.searchModel.tmdbId)
+                    is Person -> SearchViewEffect.ShowPersonDetailScreen(action.searchModel.tmdbId)
                     else -> throw IllegalStateException("Search model must be either a tv show, movie or person")
                 }
             }

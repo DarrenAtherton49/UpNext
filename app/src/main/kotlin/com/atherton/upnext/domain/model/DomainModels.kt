@@ -17,7 +17,7 @@ data class ApiError(val statusMessage: String, val statusCode: Int): Parcelable
 sealed class Watchable(
     open val backdropPath: String?,
     open val title: String?,
-    open val id: Int,
+    open val tmdbId: Int,
     val isSaved: Boolean,
     open val posterPath: String?
 ) : Parcelable
@@ -26,7 +26,7 @@ sealed class Watchable(
  * Wrapper to unify the movie, tv and person results below into one 'type' for discover and search
  */
 interface Searchable : Parcelable {
-    val id: Int
+    val tmdbId: Int
     val popularity: Float?
 }
 
@@ -35,20 +35,20 @@ data class TvShow(
     override val backdropPath: String?,
     val detail: TvShow.Detail?,
     val firstAirDate: String?,
-    override val id: Int,
+    val id: Int,
     val name: String?,
     val originalLanguage: String?,
     val originalName: String?,
     val overview: String?,
     override val posterPath: String?,
     override val popularity: Float?,
-    val tmdbId: Int,
+    override val tmdbId: Int,
     val voteAverage: Float?,
     val voteCount: Int?
 ) : Watchable(
     backdropPath = backdropPath,
     title = name,
-    id = id,
+    tmdbId = tmdbId,
     isSaved = false, //todo change
     posterPath = posterPath
 ), Searchable {
@@ -82,7 +82,7 @@ data class Movie(
     val adultContent: Boolean?,
     override val backdropPath: String?,
     val detail: Detail?,
-    override val id: Int,
+    val id: Int,
     val originalLanguage: String?,
     val originalTitle: String?,
     val overview: String?,
@@ -90,14 +90,14 @@ data class Movie(
     override val posterPath: String?,
     val releaseDate: String?,
     override val title: String?,
-    val tmdbId: Int,
+    override val tmdbId: Int,
     val video: Boolean?,
     val voteAverage: Float?,
     val voteCount: Int?
 ) : Watchable(
     backdropPath = backdropPath,
     title = title,
-    id = id,
+    tmdbId = tmdbId,
     isSaved = false, //todo change
     posterPath = posterPath
 ), Searchable {
@@ -127,12 +127,12 @@ data class Movie(
 data class Person(
     val adultContent: Boolean?,
     val detail: Detail?,
-    override val id: Int,
+    val id: Int,
     val knownFor: List<Watchable>?, // can be movies or tv shows
     val name: String?,
     override val popularity: Float?,
     val profilePath: String?,
-    val tmdbId: Int
+    override val tmdbId: Int
 ) : Searchable {
 
     @Parcelize

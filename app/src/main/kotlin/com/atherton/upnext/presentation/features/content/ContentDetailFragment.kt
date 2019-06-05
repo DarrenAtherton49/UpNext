@@ -160,7 +160,7 @@ class ContentDetailFragment : BaseFragment<ContentDetailAction, ContentDetailSta
                 sharedViewModel.dispatch(MainAction.TvShowClicked(viewEffect.tvShowId))
             }
             is ContentDetailViewEffect.ShowMovieDetailScreen -> {
-                sharedViewModel.dispatch(MainAction.MovieClicked(viewEffect.movieID))
+                sharedViewModel.dispatch(MainAction.MovieClicked(viewEffect.movieId))
             }
             is ContentDetailViewEffect.ShowPersonDetailScreen -> {
                 sharedViewModel.dispatch(MainAction.PersonClicked(viewEffect.personId))

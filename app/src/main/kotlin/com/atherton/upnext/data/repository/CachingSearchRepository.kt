@@ -1,7 +1,7 @@
 package com.atherton.upnext.data.repository
 
 import com.atherton.upnext.data.db.dao.SearchResultDao
-import com.atherton.upnext.data.db.model.RoomSearchTerm
+import com.atherton.upnext.data.db.model.search.RoomSearchTerm
 import com.atherton.upnext.data.mapper.toDomainSearchables
 import com.atherton.upnext.data.mapper.toRoomSearchResults
 import com.atherton.upnext.data.network.model.NetworkResponse
@@ -21,18 +21,21 @@ class CachingSearchRepository @Inject constructor(
 ) : SearchRepository {
 
     override fun searchMulti(query: String): Observable<LceResponse<List<Searchable>>> {
-        val dbResults = searchDatabase(query)
-        return if (dbResults.isEmpty()) {
-            searchNetwork(query).map { results ->
-                LceResponse.Content(results, false)
-            }
-        } else {
-            Observable.fromCallable { LceResponse.Content(dbResults, true) }
-        }
+//        val dbResults = searchDatabase(query)
+//        return if (dbResults.isEmpty()) {
+//            searchNetwork(query).map { results ->
+//                LceResponse.Content(results, false)
+//            }
+//        } else {
+//            Observable.fromCallable { LceResponse.Content(dbResults, true) }
+//        }
+        return searchNetwork(query).map { LceResponse.Content(it, true) }
     }
 
-    private fun searchDatabase(query: String): List<Searchable> {
-        return searchResultDao.getSearchResultsAndKnownFor(query).toDomainSearchables()
+    private fun searchDatabase(query: String): Observable<List<Searchable>> {
+        return searchResultDao.getSearchResultsForSearchTermStream(query).map { searchResultsAndKnownFor ->
+            searchResultsAndKnownFor.toDomainSearchables()
+        }
     }
 
     //todo search, map from network to room and save result
@@ -58,9 +61,8 @@ class CachingSearchRepository @Inject constructor(
                     )
                 }
             }
-            .map {
-                val searchResults = searchResultDao.getSearchResultsAndKnownFor(query)
-                searchResults.toDomainSearchables()
+            .flatMap {
+                searchDatabase(query)
             }
     }
 }

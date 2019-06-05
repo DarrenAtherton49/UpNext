@@ -3,13 +3,12 @@ package com.atherton.upnext.data.db
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.atherton.upnext.data.db.dao.SearchResultDao
-import com.atherton.upnext.data.db.model.RoomSearchKnownFor
-import com.atherton.upnext.data.db.model.RoomSearchResult
-import com.atherton.upnext.data.db.model.RoomSearchTerm
-import com.atherton.upnext.data.db.model.RoomSearchTermResultJoin
+import com.atherton.upnext.data.db.model.search.RoomSearchKnownFor
+import com.atherton.upnext.data.db.model.search.RoomSearchResult
+import com.atherton.upnext.data.db.model.search.RoomSearchTerm
 
 @Database(
-    entities = [RoomSearchResult::class, RoomSearchTerm::class, RoomSearchKnownFor::class, RoomSearchTermResultJoin::class],
+    entities = [RoomSearchResult::class, RoomSearchTerm::class, RoomSearchKnownFor::class],
     version = 1
 )
 abstract class RoomDb : RoomDatabase() {

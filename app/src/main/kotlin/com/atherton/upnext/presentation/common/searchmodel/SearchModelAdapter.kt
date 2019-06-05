@@ -78,7 +78,7 @@ class SearchModelAdapter(
 
             // TMDB ids are not globally unique - only unique per type (e.g. movie)
             override fun areItemsTheSame(oldItem: Searchable, newItem: Searchable): Boolean {
-                return oldItem.id == newItem.id && oldItem::class == newItem::class
+                return oldItem.tmdbId == newItem.tmdbId && oldItem::class == newItem::class
             }
 
             override fun areContentsTheSame(oldItem: Searchable, newItem: Searchable): Boolean {

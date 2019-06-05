@@ -142,8 +142,8 @@ class ContentDetailViewModel @Inject constructor(
             .subscribeOn(schedulers.io)
             .map {
                 when (it.watchable) {
-                    is TvShow -> ContentDetailViewEffect.ShowTvShowDetailScreen(it.watchable.id)
-                    is Movie -> ContentDetailViewEffect.ShowMovieDetailScreen(it.watchable.id)
+                    is TvShow -> ContentDetailViewEffect.ShowTvShowDetailScreen(it.watchable.tmdbId)
+                    is Movie -> ContentDetailViewEffect.ShowMovieDetailScreen(it.watchable.tmdbId)
                 }
             }
 
@@ -220,7 +220,7 @@ sealed class ContentDetailState : BaseState, Parcelable {
 
 sealed class ContentDetailViewEffect : BaseViewEffect {
     data class ShowTvShowDetailScreen(val tvShowId: Int) : ContentDetailViewEffect()
-    data class ShowMovieDetailScreen(val movieID: Int) : ContentDetailViewEffect()
+    data class ShowMovieDetailScreen(val movieId: Int) : ContentDetailViewEffect()
     data class ShowPersonDetailScreen(val personId: Int) : ContentDetailViewEffect()
     data class PlayYoutubeVideo(val videoKey: String) : ContentDetailViewEffect()
     data class ShowSeasonDetailScreen(val seasonId: Int) : ContentDetailViewEffect()

@@ -1,17 +1,18 @@
 package com.atherton.upnext.data.mapper
 
-import com.atherton.upnext.data.db.model.RoomSearchKnownFor
-import com.atherton.upnext.data.db.model.RoomSearchResult
+import com.atherton.upnext.data.db.model.search.RoomSearchKnownFor
+import com.atherton.upnext.data.db.model.search.RoomSearchResult
 import com.atherton.upnext.data.network.model.TmdbMultiSearchResult
 
-fun List<TmdbMultiSearchResult>.toRoomSearchResults(): List<Pair<RoomSearchResult, List<RoomSearchKnownFor>>> {
 
-    val list: MutableList<Pair<RoomSearchResult, List<RoomSearchKnownFor>>> = mutableListOf()
+fun List<TmdbMultiSearchResult>.toRoomSearchResults(): List<Pair<RoomSearchResult, List<RoomSearchKnownFor>?>> {
+
+    val list: MutableList<Pair<RoomSearchResult, List<RoomSearchKnownFor>?>> = mutableListOf()
     this.forEach { networkSearchResult ->
         val searchResult = networkSearchResult.toRoomSearchResult()
         val knownFor = networkSearchResult.knownFor?.toRoomKnownFor()
 
-        if (searchResult != null && knownFor != null) {
+        if (searchResult != null) {
             list.add(Pair(searchResult, knownFor))
         }
     }
