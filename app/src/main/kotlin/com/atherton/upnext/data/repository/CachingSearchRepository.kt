@@ -33,9 +33,11 @@ class CachingSearchRepository @Inject constructor(
     }
 
     private fun searchDatabase(query: String): Observable<List<Searchable>> {
-        return searchResultDao.getSearchResultsForSearchTermStream(query).map { searchResultsAndKnownFor ->
-            searchResultsAndKnownFor.toDomainSearchables()
-        }
+        return searchResultDao.getSearchResultsForSearchTermStream(query)
+            .distinctUntilChanged()
+            .map { searchResultsAndKnownFor ->
+                searchResultsAndKnownFor.toDomainSearchables()
+            }
     }
 
     //todo search, map from network to room and save result

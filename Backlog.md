@@ -5,6 +5,9 @@
 
 - NOTE: Each time a dependency is added to the project, it must also be added to LicensesList.kt
 
+### Feature List
+- Works offline, including past searches
+
 ### Alpha
 - Set up Room database
     + Search results and terms tables
@@ -29,7 +32,7 @@
 - Add ability to follow a person as well as a tv show and movie so you can go through and watch someone's filmography.
 - Advanced search/filters. E.g. by genre (using Discover API)
 - Add pagination to all calls
-- Pre-load and cache the data needed for discover and search to work instantly (where would be make the api call?)
+- Pre-load and cache the data needed for discover and search to work instantly (use WorkManager to periodically fetch data and also fetch it on first app run)
 - [Setting] Update the grid/list pages to show an icon to show which content you have already watched without clicking into the detail screen
 - Implement the list toggle mode xml layout
 - Cut down all data models I don't use to decrease memory footprint
