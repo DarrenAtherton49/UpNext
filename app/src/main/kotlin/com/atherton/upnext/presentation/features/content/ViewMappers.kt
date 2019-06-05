@@ -22,7 +22,7 @@ internal fun buildContentDetailSections(watchable: Watchable, appStringProvider:
                 recommendations = watchable.detail?.recommendations,
                 releaseDate = watchable.firstAirDate,
                 runtime = watchable.detail?.runTimes?.formatRunTimes(),
-                seasons = watchable?.detail?.seasons,
+                seasons = watchable.detail?.seasons,
                 videos = watchable.detail?.videos,
                 voteAverage = watchable.voteAverage
             )
