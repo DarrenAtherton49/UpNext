@@ -80,12 +80,6 @@ internal fun generateLicenses(context: Context): List<License> {
             description = getString(R.string.license_leak_canary_no_op_description),
             url = APACHE_2_0_URL
         )
-        val legacySupportV4 = License(
-            name = getString(R.string.license_legacy_support_v4_name),
-            contributor = getString(R.string.license_contributor_android_open_source),
-            description = getString(R.string.license_legacy_support_v4_description),
-            url = APACHE_2_0_URL
-        )
         val lifecycleCompiler = License(
             name = getString(R.string.license_lifecycle_compiler_name),
             contributor = getString(R.string.license_contributor_android_open_source),
@@ -225,7 +219,6 @@ internal fun generateLicenses(context: Context): List<License> {
             leakCanary,
             leakCanaryFragment,
             leakCanaryNoOp,
-            legacySupportV4,
             lifecycleCompiler,
             lifecycleExtensions,
             moshi,

@@ -12,7 +12,7 @@ ext {
     ]
 
     // dependency versions
-    androidXVersion = '1.0.0'
+    appCompatVersion = '1.1.0-beta01'
     constraintLayoutVersion = '2.0.0-alpha3'
     daggerVersion = '2.17'
     espressoVersion = '3.1.1'
@@ -24,9 +24,10 @@ ext {
     materialVersion = '1.1.0-alpha04'
     mockitoVersion = '1.10.19'
     moshiVersion = '1.8.0'
-    navigationVersion = '2.0.0'
+    navigationVersion = '2.1.0-alpha05'
     okHttpVersion = '3.12.1'
     pagingVersion = '2.1.0'
+    recyclerViewVersion = '1.1.0-alpha06'
     retrofitVersion = '2.5.0'
     roomVersion = '2.1.0-beta01'
     roxieVersion = '0.4.0'
@@ -40,7 +41,7 @@ ext {
 
 
     appDependencies = [
-        appCompat:                 "androidx.appcompat:appcompat:$androidXVersion",
+        appCompat:                 "androidx.appcompat:appcompat:$appCompatVersion",
         constraintLayout:          "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion",
         dagger:                    "com.google.dagger:dagger:$daggerVersion",
         daggerCompiler:            "com.google.dagger:dagger-compiler:$daggerVersion",
@@ -48,7 +49,6 @@ ext {
         glideCompiler:             "com.github.bumptech.glide:compiler:$glideVersion",
         kotlin:                    "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion",
         kotlinReflect:             "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion",
-        legacySupportV4:           "androidx.legacy:legacy-support-v4:$androidXVersion",
         leakCanary:                "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion",
         leakCanaryFragments:       "com.squareup.leakcanary:leakcanary-support-fragment:$leakCanaryVersion",
         leakCanaryNoOp:            "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion",
@@ -61,7 +61,7 @@ ext {
         navigationUiKTX:           "androidx.navigation:navigation-ui-ktx:$navigationVersion",
         okHttpLoggingInterceptor:  "com.squareup.okhttp3:logging-interceptor:$okHttpVersion",
         paging:                    "androidx.paging:paging-runtime:$pagingVersion",
-        recyclerView:              "androidx.recyclerview:recyclerview:$androidXVersion",
+        recyclerView:              "androidx.recyclerview:recyclerview:$recyclerViewVersion",
         retrofit:                  "com.squareup.retrofit2:retrofit:$retrofitVersion",
         retrofitMoshiConverter:    "com.squareup.retrofit2:converter-moshi:$retrofitVersion",
         retrofitRxJava2Adapter:    "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion",
