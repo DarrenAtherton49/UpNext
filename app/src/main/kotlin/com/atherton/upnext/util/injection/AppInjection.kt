@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
 import android.net.ConnectivityManager
-import androidx.room.Room
 import com.atherton.upnext.App
 import com.atherton.upnext.BuildConfig
 import com.atherton.upnext.data.db.RoomDb
@@ -197,15 +196,11 @@ class DatabaseModule {
 
     @Provides
     @Singleton internal fun provideRoomDb(@ApplicationContext context: Context): RoomDb {
-        return Room.databaseBuilder(context, RoomDb::class.java, Room_DB_NAME).build()
+        return RoomDb.create(context = context, useInMemory = false)
     }
 
     @Provides
     @Singleton internal fun provideSearchResultDao(roomDb: RoomDb): SearchResultDao {
         return roomDb.getSearchResultDao()
-    }
-
-    companion object {
-        private const val Room_DB_NAME = "tv_movie_database"
     }
 }
