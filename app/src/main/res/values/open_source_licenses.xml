@@ -90,6 +90,9 @@
     <string name="license_paging_description">The Paging Library helps you load and display small chunks of
         data at a time.</string>
 
+    <string name="license_paging_rx2_name">Paging Library RxJava 2 Support</string>
+    <string name="license_paging_rx2_description">RxJava 2 support for the Paging library.</string>
+
     <string name="license_recycler_view_name">RecyclerView</string>
     <string name="license_recycler_view_description">A flexible view for providing a limited window into
         a large data set.</string>

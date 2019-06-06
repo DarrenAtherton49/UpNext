@@ -128,6 +128,12 @@ internal fun generateLicenses(context: Context): List<License> {
             description = getString(R.string.license_paging_description),
             url = APACHE_2_0_URL
         )
+        val pagingRx2 = License(
+            name = getString(R.string.license_paging_rx2_name),
+            contributor = getString(R.string.license_contributor_android_open_source),
+            description = getString(R.string.license_paging_rx2_description),
+            url = APACHE_2_0_URL
+        )
         val recyclerView = License(
             name = getString(R.string.license_recycler_view_name),
             contributor = getString(R.string.license_contributor_android_open_source),
@@ -227,6 +233,7 @@ internal fun generateLicenses(context: Context): List<License> {
             navigationUI,
             okHttpLoggingInterceptor,
             paging,
+            pagingRx2,
             recyclerView,
             retrofit,
             retrofitMoshi,
