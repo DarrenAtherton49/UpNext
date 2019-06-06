@@ -90,8 +90,6 @@ dependencies {
     implementation dependencies.navigationFragmentKTX
     implementation dependencies.navigationUiKTX
     implementation dependencies.okHttpLoggingInterceptor
-    implementation dependencies.paging
-    implementation dependencies.pagingRx2
     implementation dependencies.recyclerView
     implementation dependencies.retrofit
     implementation dependencies.retrofitMoshiConverter

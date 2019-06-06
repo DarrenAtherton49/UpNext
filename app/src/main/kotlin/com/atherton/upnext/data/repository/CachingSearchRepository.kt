@@ -64,6 +64,8 @@ class CachingSearchRepository @Inject constructor(
                 }
             }
             .flatMap {
+                //todo map to an error if 'it (the network response) is not NetworkResponse.Success
+                //todo use fallback data from database and show message
                 searchDatabase(query)
             }
     }
