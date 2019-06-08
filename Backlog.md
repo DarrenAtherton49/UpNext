@@ -12,7 +12,6 @@
 - Set up Room database
     + Lists table
     + User_lists join table
-- Decide when to invalidate/delete some of the past searches.
 - The 'up next'/'watchlist' screen should have a button so that it is 'one click' to mark the next episode as 'watched'. So you should see the episode you're currently on, be able to click 'watched' and the next episode should come up. Also add 'undo' snackbar for this action for accidental clicks.
 - [Setting] Shortcut to add to watchlist on grid screens like a long or double tap?
 - Show fallback data and offline message if the network requests fail but we still have database data.
@@ -32,7 +31,9 @@
 - Add ability to follow a person as well as a tv show and movie so you can go through and watch someone's filmography.
 - Advanced search/filters. E.g. by genre (using Discover API)
 - Add pagination to all calls
-- Pre-load and cache the data needed for discover and search to work instantly (use WorkManager to periodically fetch data and also fetch it on first app run)
+- WorkManager
+    + Pre-load and cache the data needed for discover and search to work instantly (use WorkManager to periodically fetch data and also fetch it on first app run)
+    + Decide when to invalidate/delete some of the past searches. E.g. only keep the 50 most recent searches.
 - [Setting] Update the grid/list pages to show an icon to show which content you have already watched without clicking into the detail screen
 - Implement the list toggle mode xml layout
 - Cut down all data models I don't use to decrease memory footprint
