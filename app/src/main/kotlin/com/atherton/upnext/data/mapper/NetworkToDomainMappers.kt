@@ -30,6 +30,17 @@ internal fun <NETWORK : Any, DOMAIN : Any> NetworkResponse<NETWORK, TmdbApiError
     }
 }
 
+internal fun <NETWORK : Any, DOMAIN : Any> NetworkResponse<NETWORK, TmdbApiError>.toDomainLceResponse(
+    data: DOMAIN,
+    fallbackData: DOMAIN? = data
+): LceResponse<DOMAIN> {
+    return when (this) {
+        is NetworkResponse.Success -> LceResponse.Content(data, false)
+        is NetworkResponse.ServerError<TmdbApiError> -> LceResponse.Error.ServerError(error?.toDomainApiError(), code, fallbackData)
+        is NetworkResponse.NetworkError -> LceResponse.Error.NetworkError(error, fallbackData)
+    }
+}
+
 private fun TmdbApiError.toDomainApiError(): ApiError = ApiError(statusMessage, statusCode)
 
 internal fun TmdbConfiguration.toDomainConfig(): Config {

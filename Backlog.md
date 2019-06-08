@@ -10,12 +10,12 @@
 
 ### Alpha
 - Set up Room database
-    + Search results and terms tables
-        - Read a List<RoomSearchResult> from the database using search term as parameter, including an join which populates known_for and return this as an LCE.Content.
     + Lists table
     + User_lists join table
+- Decide when to invalidate/delete some of the past searches.
 - The 'up next'/'watchlist' screen should have a button so that it is 'one click' to mark the next episode as 'watched'. So you should see the episode you're currently on, be able to click 'watched' and the next episode should come up. Also add 'undo' snackbar for this action for accidental clicks.
 - [Setting] Shortcut to add to watchlist on grid screens like a long or double tap?
+- Show fallback data and offline message if the network requests fail but we still have database data.
 - Make genre chips clickable - goes to discover filter
 - Caching
     - Look at TMDB 'changes' api calls - could incorporate this into caching
@@ -36,6 +36,7 @@
 - [Setting] Update the grid/list pages to show an icon to show which content you have already watched without clicking into the detail screen
 - Implement the list toggle mode xml layout
 - Cut down all data models I don't use to decrease memory footprint
+- Refresh config from TMDB every 3 days as per documentation
 - Display TMDB attribution in the app
 - Add 'About' screen to the settings screen
     + Logo

@@ -52,7 +52,7 @@ class DiscoverContentViewModel @Inject constructor(
                 when (change.response) {
                     is LceResponse.Loading -> {
                         DiscoverContentState.Loading(
-                            results = change.response.data.withSearchModelListImageUrls(change.config),
+                            results = change.response.data?.withSearchModelListImageUrls(change.config),
                             viewMode = change.viewMode
                         )
                     }

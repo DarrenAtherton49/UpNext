@@ -17,7 +17,7 @@ import java.io.IOException
 sealed class LceResponse<out T : Any> {
 
     // can assume that any data used in the Loading state is cached
-    data class Loading<T : Any>(val data: T) : LceResponse<T>()
+    data class Loading<T : Any>(val data: T?) : LceResponse<T>()
 
     data class Content<T : Any>(val data: T, val cached: Boolean) : LceResponse<T>()
 

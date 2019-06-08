@@ -2,6 +2,7 @@ package com.atherton.upnext.data.repository
 
 import com.atherton.upnext.data.db.dao.SearchResultDao
 import com.atherton.upnext.data.db.model.search.RoomSearchTerm
+import com.atherton.upnext.data.mapper.toDomainLceResponse
 import com.atherton.upnext.data.mapper.toDomainSearchables
 import com.atherton.upnext.data.mapper.toRoomSearchResults
 import com.atherton.upnext.data.network.model.NetworkResponse
@@ -20,28 +21,6 @@ class CachingSearchRepository @Inject constructor(
     private val searchService: TmdbSearchService
 ) : SearchRepository {
 
-    override fun searchMulti(query: String): Observable<LceResponse<List<Searchable>>> {
-//        val dbResults = searchDatabase(query)
-//        return if (dbResults.isEmpty()) {
-//            searchNetwork(query).map { results ->
-//                LceResponse.Content(results, false)
-//            }
-//        } else {
-//            Observable.fromCallable { LceResponse.Content(dbResults, true) }
-//        }
-        return searchNetwork(query).map { LceResponse.Content(it, true) }
-    }
-
-    private fun searchDatabase(query: String): Observable<List<Searchable>> {
-        return searchResultDao.getSearchResultsForSearchTermStream(query)
-            .distinctUntilChanged()
-            .map { searchResultsAndKnownFor ->
-                searchResultsAndKnownFor.toDomainSearchables()
-            }
-    }
-
-    //todo search, map from network to room and save result
-    //todo read result, map to domain
     /*
      * 1) Saves search term into database
      * 2) Fetches the search results from the network
@@ -51,7 +30,7 @@ class CachingSearchRepository @Inject constructor(
      * 6) Stores search term and results join id's in database
      * 6) Retrieves search results from database (db is source of truth) and maps then to domain objects
      */
-    private fun searchNetwork(query: String): Observable<List<Searchable>> {
+    override fun searchMulti(query: String): Observable<LceResponse<List<Searchable>>> {
         return searchService.searchMulti(query)
             .toObservable()
             .doOnNext { networkResponse ->
@@ -63,10 +42,10 @@ class CachingSearchRepository @Inject constructor(
                     )
                 }
             }
-            .flatMap {
-                //todo map to an error if 'it (the network response) is not NetworkResponse.Success
-                //todo use fallback data from database and show message
-                searchDatabase(query)
+            .map { networkResponse ->
+                val dbResults = searchResultDao.getSearchResultsForSearchTerm(query)
+                val domainResults = dbResults.toDomainSearchables()
+                networkResponse.toDomainLceResponse(data = domainResults)
             }
     }
 }

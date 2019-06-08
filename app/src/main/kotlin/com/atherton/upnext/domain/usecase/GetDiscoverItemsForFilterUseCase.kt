@@ -135,8 +135,13 @@ class GetDiscoverItemsForFilterUseCase @Inject constructor(
         }
     }
 
-    private fun sortTopRated(tvShows: List<TvShow>, movies: List<Movie>): List<Searchable> {
-        val topRated: List<Searchable> = tvShows + movies
+    private fun sortTopRated(tvShows: List<TvShow>?, movies: List<Movie>?): List<Searchable> {
+        val topRated: List<Searchable> = when {
+            tvShows != null && movies != null -> tvShows + movies
+            tvShows != null -> tvShows
+            movies != null -> movies
+            else -> emptyList()
+        }
         return topRated.sortedByDescending { searchModel ->
             when (searchModel) {
                 is TvShow -> searchModel.voteAverage
@@ -147,8 +152,13 @@ class GetDiscoverItemsForFilterUseCase @Inject constructor(
         }
     }
 
-    private fun sortMostPopular(tvShows: List<TvShow>, movies: List<Movie>): List<Searchable> {
-        val mostPopular: List<Searchable> = tvShows + movies
+    private fun sortMostPopular(tvShows: List<TvShow>?, movies: List<Movie>?): List<Searchable> {
+        val mostPopular: List<Searchable> = when {
+            tvShows != null && movies != null -> tvShows + movies
+            tvShows != null -> tvShows
+            movies != null -> movies
+            else -> emptyList()
+        }
         return mostPopular.sortedByDescending { it.popularity }
     }
 }

@@ -51,8 +51,13 @@ class GetPopularMoviesTvUseCase @Inject constructor(
         }
     }
 
-    private fun sortByPopularity(tvShows: List<TvShow>, movies: List<Movie>): List<Searchable> {
-        val mostPopular: List<Searchable> = tvShows + movies
+    private fun sortByPopularity(tvShows: List<TvShow>?, movies: List<Movie>?): List<Searchable> {
+        val mostPopular: List<Searchable> = when {
+            tvShows != null && movies != null -> tvShows + movies
+            tvShows != null -> tvShows
+            movies != null -> movies
+            else -> emptyList()
+        }
         return mostPopular.sortedByDescending { it.popularity }
     }
 }

@@ -52,10 +52,13 @@ class ContentDetailViewModel @Inject constructor(
             is ContentDetailChange.Result -> {
                 when (change.response) {
                     is LceResponse.Loading -> {
-                        val watchableWithImageUrls = change.response.data.withContentDetailImageUrls(change.config)
+                        val watchableWithImageUrls = change.response.data?.withContentDetailImageUrls(change.config)
+                        val detailSections = watchableWithImageUrls?.let {
+                            buildContentDetailSections(it, appStringProvider)
+                        }
                         ContentDetailState.Loading(
                             watchable = watchableWithImageUrls,
-                            detailSections = buildContentDetailSections(watchableWithImageUrls, appStringProvider)
+                            detailSections = detailSections
                         )
                     }
                     is LceResponse.Content -> {

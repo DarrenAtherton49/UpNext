@@ -124,6 +124,8 @@ class DiscoverContentFragment
                 errorLayout.isVisible = true
                 errorTextView.text = state.message
                 retryButton.isVisible = state.canRetry
+
+                //todo deal with offline mode - if we have fallback data then show that
             }
         }
     }

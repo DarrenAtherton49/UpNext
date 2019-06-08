@@ -136,11 +136,20 @@ class SearchFragment : BaseFragment<SearchAction, SearchState, SearchViewEffect,
                 }
             }
             is SearchState.Error -> {
+
                 progressBar.isVisible = false
-                recyclerView.isVisible = false
-                errorLayout.isVisible = true
-                errorTextView.text = state.message
-                retryButton.isVisible = state.canRetry
+
+                if (state.fallbackResults != null && state.fallbackResults.isNotEmpty()) { // show cached data
+                    recyclerView.isVisible = true
+                    initRecyclerView(state.viewMode)
+                    recyclerViewAdapter.submitList(state.fallbackResults)
+                    //todo show device is offline message?
+                } else {
+                    recyclerView.isVisible = false
+                    errorLayout.isVisible = true
+                    errorTextView.text = state.message
+                    retryButton.isVisible = state.canRetry
+                }
             }
         }
     }

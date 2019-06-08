@@ -52,7 +52,7 @@ class SearchViewModel @Inject constructor(
                 when (change.response) {
                     is LceResponse.Loading -> {
                         SearchState.Loading(
-                            results = change.response.data.withSearchModelListImageUrls(change.config),
+                            results = change.response.data?.withSearchModelListImageUrls(change.config),
                             viewMode = change.viewMode,
                             query = change.query
                         )
@@ -69,7 +69,9 @@ class SearchViewModel @Inject constructor(
                         SearchState.Error(
                             message = appStringProvider.generateErrorMessage(change.response),
                             canRetry = change.response is LceResponse.Error.NetworkError,
-                            query = change.query
+                            query = change.query,
+                            viewMode = change.viewMode,
+                            fallbackResults = change.response.fallbackData?.withSearchModelListImageUrls(change.config)
                         )
                     }
                 }
@@ -225,7 +227,13 @@ sealed class SearchState(open val query: String): BaseState, Parcelable {
     ) : SearchState(query)
 
     @Parcelize
-    data class Error(val message: String, val canRetry: Boolean, override val query: String) : SearchState(query)
+    data class Error(
+        val message: String,
+        val canRetry: Boolean,
+        override val query: String,
+        val viewMode: GridViewMode,
+        val fallbackResults: List<Searchable>?
+    ) : SearchState(query)
 }
 
 sealed class SearchViewEffect : BaseViewEffect {
