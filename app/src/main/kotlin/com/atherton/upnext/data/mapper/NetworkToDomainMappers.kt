@@ -18,6 +18,7 @@ import com.atherton.upnext.domain.model.Collection
  * @param dataMapper provides a way to map from data layer models to app-level/domain models
  *
  */
+@Deprecated("Deprecated")
 internal fun <NETWORK : Any, DOMAIN : Any> NetworkResponse<NETWORK, TmdbApiError>.toDomainLceResponse(
     cachedData: Boolean = false,
     fallbackData: DOMAIN? = null,
