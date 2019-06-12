@@ -25,6 +25,7 @@ import com.atherton.upnext.util.injection.AppComponent
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.moshi.Moshi
+import java.util.concurrent.Executors
 
 fun Context.getDrawableCompat(@DrawableRes id: Int): Drawable? = ContextCompat.getDrawable(this, id)
 
@@ -147,4 +148,8 @@ fun Context.readFileFromAssets(rawPath: Int): String {
     return this.resources.openRawResource(rawPath)
         .bufferedReader()
         .use { it.readText() }
+}
+
+fun ioThread(block: () -> Unit) {
+    Executors.newSingleThreadExecutor().execute(block)
 }

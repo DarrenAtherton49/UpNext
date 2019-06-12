@@ -149,9 +149,9 @@ class SearchViewModel @Inject constructor(
             .subscribeOn(schedulers.io)
             .map { action ->
                 when (action.searchModel) {
-                    is TvShow -> SearchViewEffect.ShowTvShowDetailScreen(action.searchModel.tmdbId)
-                    is Movie -> SearchViewEffect.ShowMovieDetailScreen(action.searchModel.tmdbId)
-                    is Person -> SearchViewEffect.ShowPersonDetailScreen(action.searchModel.tmdbId)
+                    is TvShow -> SearchViewEffect.ShowTvShowDetailScreen(action.searchModel.id)
+                    is Movie -> SearchViewEffect.ShowMovieDetailScreen(action.searchModel.id)
+                    is Person -> SearchViewEffect.ShowPersonDetailScreen(action.searchModel.id)
                     else -> throw IllegalStateException("Search model must be either a tv show, movie or person")
                 }
             }
@@ -238,9 +238,9 @@ sealed class SearchState(open val query: String): BaseState, Parcelable {
 
 sealed class SearchViewEffect : BaseViewEffect {
     data class ToggleViewMode(val viewMode: GridViewMode) : SearchViewEffect()
-    data class ShowTvShowDetailScreen(val tvShowId: Int) : SearchViewEffect()
-    data class ShowMovieDetailScreen(val movieId: Int) : SearchViewEffect()
-    data class ShowPersonDetailScreen(val personId: Int) : SearchViewEffect()
+    data class ShowTvShowDetailScreen(val tvShowId: Long) : SearchViewEffect()
+    data class ShowMovieDetailScreen(val movieId: Long) : SearchViewEffect()
+    data class ShowPersonDetailScreen(val personId: Long) : SearchViewEffect()
     object ShowSettingsScreen : SearchViewEffect()
 }
 

@@ -8,6 +8,7 @@ import android.net.ConnectivityManager
 import com.atherton.upnext.App
 import com.atherton.upnext.BuildConfig
 import com.atherton.upnext.data.db.RoomDb
+import com.atherton.upnext.data.db.dao.MovieDao
 import com.atherton.upnext.data.db.dao.SearchResultDao
 import com.atherton.upnext.data.local.AppSettings
 import com.atherton.upnext.data.local.LocalConfigStore
@@ -135,8 +136,12 @@ class RepositoryModule {
         = CachingTvShowRepository(tvShowService)
 
     @Provides
-    @Singleton internal fun provideMovieRepository(movieService: TmdbMovieService): MovieRepository =
-        CachingMovieRepository(movieService)
+    @Singleton internal fun provideMovieRepository(
+        movieDao: MovieDao,
+        movieService: TmdbMovieService
+    ): MovieRepository {
+        return CachingMovieRepository(movieDao, movieService)
+    }
 
     @Provides
     @Singleton internal fun provideSearchRepository(
@@ -196,11 +201,16 @@ class DatabaseModule {
 
     @Provides
     @Singleton internal fun provideRoomDb(@ApplicationContext context: Context): RoomDb {
-        return RoomDb.create(context = context, useInMemory = false)
+        return RoomDb.getInstance(context = context, useInMemory = false)
     }
 
     @Provides
     @Singleton internal fun provideSearchResultDao(roomDb: RoomDb): SearchResultDao {
         return roomDb.getSearchResultDao()
+    }
+
+    @Provides
+    @Singleton internal fun provideMovieDao(roomDb: RoomDb): MovieDao {
+        return roomDb.getMovieDao()
     }
 }

@@ -26,7 +26,8 @@ interface SearchResultDao {
 
             knownForList?.forEach { knownFor ->
                 knownFor.searchResultId = searchResultId // defines data needed for join
-                insertKnownFor(knownFor)
+            }?.also {
+                insertAllKnownFor(knownForList)
             }
         }
     }
@@ -38,7 +39,7 @@ interface SearchResultDao {
     fun insertSearchResult(searchResult: RoomSearchResult): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertKnownFor(knownFor: RoomSearchKnownFor): Long
+    fun insertAllKnownFor(knownFor: List<RoomSearchKnownFor>)
 
     @Transaction
     @Query("SELECT sr.* FROM search_result sr WHERE sr.search_term_id = (SELECT id FROM search_term WHERE term = :searchTerm) ORDER BY sr.search_result_order ASC")

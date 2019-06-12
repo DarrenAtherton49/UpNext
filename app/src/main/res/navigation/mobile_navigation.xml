@@ -36,8 +36,8 @@
         tools:layout="@layout/fragment_content_detail">
         <argument
             android:name="contentId"
-            app:argType="integer"
-            android:defaultValue="-1"/>
+            app:argType="long"
+            />
         <argument
             android:name="contentType"
             app:argType="com.atherton.upnext.presentation.features.content.ContentType"/>

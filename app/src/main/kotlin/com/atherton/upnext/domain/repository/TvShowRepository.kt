@@ -6,7 +6,7 @@ import io.reactivex.Observable
 
 interface TvShowRepository {
 
-    fun getTvShow(id: Int): Observable<LceResponse<TvShow>>
+    fun getTvShow(id: Long): Observable<LceResponse<TvShow>>
     fun getPopular(): Observable<LceResponse<List<TvShow>>>
     fun getTopRated(): Observable<LceResponse<List<TvShow>>>
     fun getAiringToday(): Observable<LceResponse<List<TvShow>>>

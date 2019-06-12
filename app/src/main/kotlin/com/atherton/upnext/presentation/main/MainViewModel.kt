@@ -114,9 +114,9 @@ sealed class MainAction : BaseAction {
     data class ViewModeToggled(val viewMode: GridViewMode) : MainAction()
     object AddShowButtonClicked : MainAction()
     object AddMovieButtonClicked : MainAction()
-    data class TvShowClicked(val tvShowId: Int) : MainAction()
-    data class MovieClicked(val movieId: Int) : MainAction()
-    data class PersonClicked(val personId: Int) : MainAction()
+    data class TvShowClicked(val tvShowId: Long) : MainAction()
+    data class MovieClicked(val movieId: Long) : MainAction()
+    data class PersonClicked(val personId: Long) : MainAction()
     data class YouTubeVideoClicked(val videoKey: String) : MainAction()
     object SettingsActionClicked : MainAction()
     sealed class SettingsAction : MainAction() {
@@ -135,9 +135,9 @@ data class MainState(val isIdle: Boolean = true): BaseState, Parcelable
 sealed class MainViewEffect : BaseViewEffect {
     sealed class Navigation : MainViewEffect() {
         object ShowSearchScreen : Navigation()
-        data class ShowMovieDetailScreen(val movieId: Int): Navigation()
-        data class ShowTvDetailScreen(val tvShowId: Int): Navigation()
-        data class ShowPersonDetailScreen(val personId: Int): Navigation()
+        data class ShowMovieDetailScreen(val movieId: Long): Navigation()
+        data class ShowTvDetailScreen(val tvShowId: Long): Navigation()
+        data class ShowPersonDetailScreen(val personId: Long): Navigation()
         data class PlayYoutubeVideo(val videoKey: String) : Navigation()
         object ShowSettingsScreen : Navigation()
         sealed class Settings : Navigation() {

@@ -67,7 +67,7 @@ class ContentDetailFragment : BaseFragment<ContentDetailAction, ContentDetailSta
 
         arguments?.let {
             val args = ContentDetailFragmentArgs.fromBundle(it)
-            val contentId: Int = args.contentId
+            val contentId: Long = args.contentId
             val contentType: ContentType = args.contentType
             retryButton.setOnClickListener {
                 viewModel.dispatch(ContentDetailAction.RetryButtonClicked(contentId, contentType))

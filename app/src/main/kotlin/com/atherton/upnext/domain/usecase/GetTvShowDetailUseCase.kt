@@ -9,5 +9,5 @@ import javax.inject.Inject
 class GetTvShowDetailUseCase @Inject constructor(private val tvShowRepository: TvShowRepository) {
 
     //todo check why we need to call map{} in order to cast from TvShow to Watchable
-    operator fun invoke(id: Int): Observable<LceResponse<Watchable>> = tvShowRepository.getTvShow(id).map { it }
+    operator fun invoke(id: Long): Observable<LceResponse<Watchable>> = tvShowRepository.getTvShow(id).map { it }
 }

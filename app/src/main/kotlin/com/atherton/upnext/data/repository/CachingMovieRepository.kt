@@ -1,88 +1,142 @@
 package com.atherton.upnext.data.repository
 
-import com.atherton.upnext.data.mapper.toDomainLceResponse
-import com.atherton.upnext.data.mapper.toDomainMovie
+import com.atherton.upnext.data.db.dao.MovieDao
+import com.atherton.upnext.data.db.model.movie.RoomMovie
+import com.atherton.upnext.data.db.model.movie.RoomMovieAllData
+import com.atherton.upnext.data.mapper.*
 import com.atherton.upnext.data.network.model.NetworkResponse
-import com.atherton.upnext.data.network.model.TmdbApiError
 import com.atherton.upnext.data.network.model.TmdbMovie
-import com.atherton.upnext.data.network.model.TmdbPagedResponse
 import com.atherton.upnext.data.network.service.TmdbMovieService
 import com.atherton.upnext.domain.model.LceResponse
 import com.atherton.upnext.domain.model.Movie
 import com.atherton.upnext.domain.repository.MovieRepository
 import io.reactivex.Observable
-import io.reactivex.Single
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class CachingMovieRepository @Inject constructor(
-    //todo add in-memory cache
-    //todo add database
+    private val movieDao: MovieDao,
     private val movieService: TmdbMovieService
 ) : MovieRepository {
 
-    override fun getMovie(id: Int): Observable<LceResponse<Movie>> {
+    //todo modify this to check if movie is in database and if it is still valid (time based?)
+    override fun getMovie(id: Long): Observable<LceResponse<Movie>> {
         return movieService.getMovieDetails(id)
             .toObservable()
-            .map { it.toDomainLceResponse(false) { movie -> movie.toDomainMovie() }
-        }
-    }
-
-    override fun getPopular(): Observable<LceResponse<List<Movie>>> {
-        return movieService.getPopular().toDomainMovies()
-    }
-
-    override fun getUpcoming(): Observable<LceResponse<List<Movie>>> {
-        return movieService.getUpcoming().toDomainMovies()
-    }
-
-    override fun getTopRated(): Observable<LceResponse<List<Movie>>> {
-        return movieService.getTopRated().toDomainMovies()
-    }
-
-    override fun getNowPlaying(): Observable<LceResponse<List<Movie>>> {
-        //todo remove this temp object and replace with cached list
-        return Observable.concat(
-            Observable.fromCallable {
-                LceResponse.Loading(
-                    listOf(
-                        Movie(
-                            false,
-                            "",
-                            null,
-                            1,
-                            null,
-                            null,
-                            "",
-                            24.4f,
-                            "",
-                            "",
-                            "FAKE MOVIE",
-                            2,
-                            false,
-                            24.4f,
-                            4
-                        )
-                    )
-                )
-            },
-            movieService.getNowPlaying()
-                .map {
-                    it.toDomainLceResponse(false) { response ->
-                        response.results.map { movie -> movie.toDomainMovie() }
-                    }
+            .doOnNext { networkResponse ->
+                if (networkResponse is NetworkResponse.Success) {
+                    val networkMovie: TmdbMovie = networkResponse.body
+                    saveFullMovieToDatabase(networkMovie)
                 }
-                .toObservable()
+            }
+            .map { networkResponse ->
+                val dbMovieData: RoomMovieAllData = movieDao.getMovieForId(id)
+                val recommendations: List<RoomMovie> = movieDao.getRecommendationsForMovie(dbMovieData.movie.id)
+                val domainMovie = dbMovieData.movie.toDomainMovie(
+                    cast = dbMovieData.cast,
+                    crew = dbMovieData.crew,
+                    genres = dbMovieData.genres,
+                    productionCompanies = dbMovieData.productionCompanies,
+                    productionCountries = dbMovieData.productionCountries,
+                    spokenLanguages = dbMovieData.spokenLanguages,
+                    recommendations = recommendations,
+                    videos = dbMovieData.videos
+                )
+                networkResponse.toDomainLceResponse(data = domainMovie)
+            }
+    }
+
+    //todo modify this to check if movies are in database and if it is still valid (time based?)
+    override fun getPopular(): Observable<LceResponse<List<Movie>>> {
+        return movieService.getPopular()
+            .toObservable()
+            .doOnNext { networkResponse ->
+                if (networkResponse is NetworkResponse.Success) {
+                    val networkPopularMovies: List<TmdbMovie> = networkResponse.body.results
+                    saveMoviesForPlaylist(networkPopularMovies, POPULAR)
+                }
+            }
+            .map { networkResponse ->
+                networkResponse.toDomainLceResponse(data = getMoviesForPlaylist(POPULAR))
+            }
+    }
+
+    //todo modify this to check if movies are in database and if it is still valid (time based?)
+    override fun getTopRated(): Observable<LceResponse<List<Movie>>> {
+        return movieService.getTopRated()
+            .toObservable()
+            .doOnNext { networkResponse ->
+                if (networkResponse is NetworkResponse.Success) {
+                    val networkTopRatedMovies: List<TmdbMovie> = networkResponse.body.results
+                    saveMoviesForPlaylist(networkTopRatedMovies, TOP_RATED)
+                }
+            }
+            .map { networkResponse ->
+                networkResponse.toDomainLceResponse(data = getMoviesForPlaylist(TOP_RATED))
+            }
+    }
+
+    //todo modify this to check if movies are in database and if it is still valid (time based?)
+    override fun getUpcoming(): Observable<LceResponse<List<Movie>>> {
+        return movieService.getUpcoming()
+            .toObservable()
+            .doOnNext { networkResponse ->
+                if (networkResponse is NetworkResponse.Success) {
+                    val networkUpcomingMovies: List<TmdbMovie> = networkResponse.body.results
+                    saveMoviesForPlaylist(networkUpcomingMovies, UPCOMING)
+                }
+            }
+            .map { networkResponse ->
+                networkResponse.toDomainLceResponse(data = getMoviesForPlaylist(UPCOMING))
+            }
+    }
+
+    //todo modify this to check if movies are in database and if it is still valid (time based?)
+    override fun getNowPlaying(): Observable<LceResponse<List<Movie>>> {
+        return movieService.getNowPlaying()
+            .toObservable()
+            .doOnNext { networkResponse ->
+                if (networkResponse is NetworkResponse.Success) {
+                    val networkNowPlayingVideos: List<TmdbMovie> = networkResponse.body.results
+                    saveMoviesForPlaylist(networkNowPlayingVideos, NOW_PLAYING)
+                }
+            }
+            .map { networkResponse ->
+                networkResponse.toDomainLceResponse(data = getMoviesForPlaylist(NOW_PLAYING))
+            }
+    }
+
+    private fun saveFullMovieToDatabase(movie: TmdbMovie) {
+        val movieId: Long = movie.id.toLong()
+        movieDao.insertMovieData(
+            movie = movie.toRoomMovie(true),
+            genres = movie.genres?.toRoomGenres(movieId),
+            productionCompanies = movie.productionCompanies?.toRoomProductionCompanies(movieId),
+            productionCountries = movie.productionCountries?.toRoomProductionCountries(movieId),
+            spokenLanguages = movie.spokenLanguages?.toRoomSpokenLanguages(movieId),
+            castMembers = movie.credits?.cast?.toRoomCast(movieId),
+            crewMembers = movie.credits?.crew?.toRoomCrew(movieId),
+            recommendations = movie.recommendations?.results?.toRoomMovies(false),
+            videos = movie.videos?.results?.toRoomVideos(movieId)
         )
     }
 
-    private fun Single<NetworkResponse<TmdbPagedResponse<TmdbMovie>, TmdbApiError>>.toDomainMovies()
-        : Observable<LceResponse<List<Movie>>> {
-        return this.map {
-            it.toDomainLceResponse(false) { response ->
-                response.results.map { movie -> movie.toDomainMovie() }
-            }
-        }.toObservable()
+    private fun getMoviesForPlaylist(playlistName: String): List<Movie> {
+        val dbMovieData: List<RoomMovie> = movieDao.getMoviesForPlaylist(playlistName)
+        return dbMovieData.map { it.toDomainMovie() }
+    }
+
+
+    private fun saveMoviesForPlaylist(networkMovies: List<TmdbMovie>, playlistName: String) {
+        val dbMovies = networkMovies.toRoomMovies(false)
+        movieDao.insertAllMoviesForPlaylist(dbMovies, playlistName)
+    }
+
+    companion object {
+        private const val POPULAR = "Popular"
+        private const val TOP_RATED = "Top Rated"
+        private const val UPCOMING = "Upcoming"
+        private const val NOW_PLAYING = "Now Playing"
     }
 }

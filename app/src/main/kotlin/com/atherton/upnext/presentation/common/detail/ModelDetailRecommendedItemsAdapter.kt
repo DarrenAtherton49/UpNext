@@ -39,11 +39,11 @@ class ModelDetailRecommendedItemsAdapter(
         private object DiffCallback : DiffUtil.ItemCallback<Watchable>() {
 
             override fun areItemsTheSame(oldItem: Watchable, newItem: Watchable): Boolean {
-                return oldItem.tmdbId == newItem.tmdbId
+                return oldItem.id == newItem.id && oldItem::class == newItem::class
             }
 
             override fun areContentsTheSame(oldItem: Watchable, newItem: Watchable): Boolean {
-                return oldItem == newItem
+                return oldItem.title == newItem.title && oldItem.posterPath == newItem.posterPath
             }
         }
     }

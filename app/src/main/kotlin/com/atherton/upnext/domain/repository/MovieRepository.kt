@@ -6,7 +6,7 @@ import io.reactivex.Observable
 
 interface MovieRepository {
 
-    fun getMovie(id: Int): Observable<LceResponse<Movie>>
+    fun getMovie(id: Long): Observable<LceResponse<Movie>>
     fun getPopular(): Observable<LceResponse<List<Movie>>>
     fun getUpcoming(): Observable<LceResponse<List<Movie>>>
     fun getTopRated(): Observable<LceResponse<List<Movie>>>

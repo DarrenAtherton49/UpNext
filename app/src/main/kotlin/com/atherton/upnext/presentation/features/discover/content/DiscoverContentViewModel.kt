@@ -107,9 +107,9 @@ class DiscoverContentViewModel @Inject constructor(
             .subscribeOn(schedulers.io)
             .map { action ->
                 when (action.searchModel) {
-                    is TvShow -> DiscoverContentViewEffect.ShowTvShowDetailScreen(action.searchModel.tmdbId)
-                    is Movie -> DiscoverContentViewEffect.ShowMovieDetailScreen(action.searchModel.tmdbId)
-                    is Person -> DiscoverContentViewEffect.ShowPersonDetailScreen(action.searchModel.tmdbId)
+                    is TvShow -> DiscoverContentViewEffect.ShowTvShowDetailScreen(action.searchModel.id)
+                    is Movie -> DiscoverContentViewEffect.ShowMovieDetailScreen(action.searchModel.id)
+                    is Person -> DiscoverContentViewEffect.ShowPersonDetailScreen(action.searchModel.id)
                     else -> throw IllegalStateException("Search model must be either a tv show, movie or person")
                 }
             }
@@ -168,9 +168,9 @@ sealed class DiscoverContentState : BaseState, Parcelable {
 }
 
 sealed class DiscoverContentViewEffect : BaseViewEffect {
-    data class ShowTvShowDetailScreen(val tvShowId: Int) : DiscoverContentViewEffect()
-    data class ShowMovieDetailScreen(val movieId: Int) : DiscoverContentViewEffect()
-    data class ShowPersonDetailScreen(val personId: Int) : DiscoverContentViewEffect()
+    data class ShowTvShowDetailScreen(val tvShowId: Long) : DiscoverContentViewEffect()
+    data class ShowMovieDetailScreen(val movieId: Long) : DiscoverContentViewEffect()
+    data class ShowPersonDetailScreen(val personId: Long) : DiscoverContentViewEffect()
 }
 
 //================================================================================

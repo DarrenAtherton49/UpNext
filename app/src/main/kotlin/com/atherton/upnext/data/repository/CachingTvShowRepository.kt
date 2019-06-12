@@ -22,7 +22,7 @@ class CachingTvShowRepository @Inject constructor(
     private val tvShowService: TmdbTvShowService
 ) : TvShowRepository {
 
-    override fun getTvShow(id: Int): Observable<LceResponse<TvShow>> {
+    override fun getTvShow(id: Long): Observable<LceResponse<TvShow>> {
         return tvShowService.getTvDetails(id)
             .toObservable()
             .map { it.toDomainLceResponse(false) { tvShow -> tvShow.toDomainTvShow() }

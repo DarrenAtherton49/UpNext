@@ -145,8 +145,8 @@ class ContentDetailViewModel @Inject constructor(
             .subscribeOn(schedulers.io)
             .map {
                 when (it.watchable) {
-                    is TvShow -> ContentDetailViewEffect.ShowTvShowDetailScreen(it.watchable.tmdbId)
-                    is Movie -> ContentDetailViewEffect.ShowMovieDetailScreen(it.watchable.tmdbId)
+                    is TvShow -> ContentDetailViewEffect.ShowTvShowDetailScreen(it.watchable.id)
+                    is Movie -> ContentDetailViewEffect.ShowMovieDetailScreen(it.watchable.id)
                 }
             }
 
@@ -184,8 +184,8 @@ class ContentDetailViewModel @Inject constructor(
 //================================================================================
 
 sealed class ContentDetailAction : BaseAction {
-    data class Load(val contentId: Int, val contentType: ContentType) : ContentDetailAction()
-    data class RetryButtonClicked(val contentId: Int, val contentType: ContentType) : ContentDetailAction()
+    data class Load(val contentId: Long, val contentType: ContentType) : ContentDetailAction()
+    data class RetryButtonClicked(val contentId: Long, val contentType: ContentType) : ContentDetailAction()
     data class SeasonClicked(val season: Season) : ContentDetailAction()
     data class CastMemberClicked(val castMember: CastMember) : ContentDetailAction()
     data class CrewMemberClicked(val crewMember: CrewMember) : ContentDetailAction()
@@ -222,9 +222,9 @@ sealed class ContentDetailState : BaseState, Parcelable {
 }
 
 sealed class ContentDetailViewEffect : BaseViewEffect {
-    data class ShowTvShowDetailScreen(val tvShowId: Int) : ContentDetailViewEffect()
-    data class ShowMovieDetailScreen(val movieId: Int) : ContentDetailViewEffect()
-    data class ShowPersonDetailScreen(val personId: Int) : ContentDetailViewEffect()
+    data class ShowTvShowDetailScreen(val tvShowId: Long) : ContentDetailViewEffect()
+    data class ShowMovieDetailScreen(val movieId: Long) : ContentDetailViewEffect()
+    data class ShowPersonDetailScreen(val personId: Long) : ContentDetailViewEffect()
     data class PlayYoutubeVideo(val videoKey: String) : ContentDetailViewEffect()
     data class ShowSeasonDetailScreen(val seasonId: Int) : ContentDetailViewEffect()
     object ShowSettingsScreen : ContentDetailViewEffect()

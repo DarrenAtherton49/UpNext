@@ -14,6 +14,7 @@
     + User_lists join table
 - The 'up next'/'watchlist' screen should have a button so that it is 'one click' to mark the next episode as 'watched'. So you should see the episode you're currently on, be able to click 'watched' and the next episode should come up. Also add 'undo' snackbar for this action for accidental clicks.
 - [Setting] Shortcut to add to watchlist on grid screens like a long or double tap?
+    + When user clicks save, check database to see if movie details are in database already. If not, then call movie/detail network call first and then perform the save.
 - Show fallback data and offline message if the network requests fail but we still have database data.
 - Make genre chips clickable - goes to discover filter
 - Caching
@@ -48,6 +49,7 @@
     + Link to UserReport to suggest improvements
 - Figure out the best tabs to show in discover
 - Go through TODOs
+- Abstract Dao's and Retrofit services behind a 'DataSource' interface for testing
 - Make sure that menu item navigation is implemented on all screens (e.g. for settings)
 - Ensure that all ViewHolders use 'LayoutContainer' from kotlin android extensions on ViewHolders for view caching
 - Unit tests

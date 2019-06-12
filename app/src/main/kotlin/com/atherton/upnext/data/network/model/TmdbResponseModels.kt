@@ -162,7 +162,7 @@ data class TmdbMovie(
     @Json(name = "tagline") val tagline: String?,
 
     // appendable fields
-    @Json(name = "credits") val credits: TmdbTvShow.Credits?,
+    @Json(name = "credits") val credits: Credits?,
     @Json(name = "recommendations") val recommendations: TmdbPagedResponse<TmdbMovie>?,
     @Json(name = "videos") val videos: Videos?
 ) : TmdbMultiSearchModel() {

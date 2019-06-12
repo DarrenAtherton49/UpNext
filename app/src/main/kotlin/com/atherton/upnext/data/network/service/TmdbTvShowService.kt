@@ -13,7 +13,7 @@ interface TmdbTvShowService {
 
     @GET("tv/{tv_id}")
     fun getTvDetails(
-        @Path("tv_id") id: Int,
+        @Path("tv_id") id: Long,
         @Query("append_to_response") appendToResponse: String = "credits,reviews,recommendations,videos"
     ): Single<NetworkResponse<TmdbTvShow, TmdbApiError>>
 

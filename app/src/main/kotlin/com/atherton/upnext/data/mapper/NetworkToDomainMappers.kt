@@ -58,16 +58,6 @@ internal fun TmdbConfiguration.toDomainConfig(): Config {
     }
 }
 
-internal fun List<TmdbMultiSearchModel>?.toDomainSearchables(): List<Searchable> {
-    return this?.map { searchResult: TmdbMultiSearchModel ->
-        when (searchResult) {
-            is TmdbTvShow -> searchResult.toDomainTvShow()
-            is TmdbMovie -> searchResult.toDomainMovie()
-            is TmdbPerson -> searchResult.toDomainPerson()
-        }
-    } ?: emptyList()
-}
-
 internal fun List<TmdbMultiSearchModel>?.toDomainWatchables(): List<Watchable> {
     return this?.mapNotNull { searchResult ->
         when (searchResult) {
@@ -103,14 +93,13 @@ fun TmdbTvShow.toDomainTvShow(): TvShow {
             videos = videos?.results?.toDomainVideos()
         ),
         firstAirDate = firstAirDate,
-        id = id,
+        id = id.toLong(),
         name = name,
         originalLanguage = originalLanguage,
         originalName = originalName,
         overview = overview,
         posterPath = posterPath,
         popularity = popularity,
-        tmdbId = id,
         voteAverage = voteAverage,
         voteCount = voteCount
     )
@@ -138,7 +127,7 @@ fun TmdbMovie.toDomainMovie(): Movie {
             tagline = tagline,
             videos = videos?.results?.toDomainVideos()
         ),
-        id = id,
+        id = id.toLong(),
         originalLanguage = originalLanguage,
         originalTitle = originalTitle,
         overview = overview,
@@ -146,7 +135,6 @@ fun TmdbMovie.toDomainMovie(): Movie {
         posterPath = posterPath,
         releaseDate = releaseDate,
         title = title,
-        tmdbId = id,
         video = video,
         voteAverage = voteAverage,
         voteCount = voteCount
@@ -167,19 +155,18 @@ fun TmdbPerson.toDomainPerson(): Person {
             imdbId = imdbId,
             homepage = homepage
         ),
-        id = id,
+        id = id.toLong(),
         knownFor = knownFor.toDomainWatchables(),
         name = name,
         popularity = popularity,
-        profilePath = profilePath,
-        tmdbId = id
+        profilePath = profilePath
     )
 }
 
 private fun List<TmdbCastMember>.toDomainCast(): List<CastMember> {
     return this.mapNotNull {
         if (it.id != null) {
-            CastMember(it.castId, it.character, it.creditId, it.gender.toDomainGender(), it.id, it.name, it.order, it.profilePath)
+            CastMember(it.castId, it.character, it.creditId, it.gender.toDomainGender(), it.id.toLong(), it.name, it.order, it.profilePath)
         } else null
     }
 }
@@ -187,21 +174,21 @@ private fun List<TmdbCastMember>.toDomainCast(): List<CastMember> {
 private fun List<TmdbCrewMember>.toDomainCrew(): List<CrewMember> {
     return this.mapNotNull {
         if (it.id != null) {
-            CrewMember(it.creditId, it.department, it.gender.toDomainGender(), it.id, it.job, it.name, it.profilePath)
+            CrewMember(it.creditId, it.department, it.gender.toDomainGender(), it.id.toLong(), it.job, it.name, it.profilePath)
         } else null
     }
 }
 
 private fun TmdbCollection.toDomainCollection(): Collection? {
     return if (id != null) {
-        Collection(backdropPath, id, name, posterPath)
+        Collection(backdropPath, id.toLong(), name, posterPath)
     } else null
 }
 
 private fun List<TmdbGenre>.toDomainGenres(): List<Genre> {
     return this.mapNotNull {
         if (it.id != null) {
-            Genre(it.id, it.name)
+            Genre(it.id.toLong(), it.name)
         } else null
     }
 }
@@ -209,7 +196,7 @@ private fun List<TmdbGenre>.toDomainGenres(): List<Genre> {
 private fun List<TmdbProductionCompany>.toDomainProductionCompanies(): List<ProductionCompany> {
     return this.mapNotNull {
         if (it.id != null) {
-            ProductionCompany(it.id, it.logoPath, it.name, it.originCountry)
+            ProductionCompany(it.id.toLong(), it.logoPath, it.name, it.originCountry)
         } else null
     }
 }

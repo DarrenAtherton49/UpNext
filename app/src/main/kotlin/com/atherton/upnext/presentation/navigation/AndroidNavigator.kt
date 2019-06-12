@@ -17,17 +17,17 @@ class AndroidNavigator(private val navController: NavController, val context: Co
         navController.navigate(com.atherton.upnext.R.id.actionSharedGoToSearch)
     }
 
-    override fun showMovieDetailScreen(movieId: Int) {
+    override fun showMovieDetailScreen(movieId: Long) {
         val action = ContentDetailFragmentDirections.actionSharedGoToContentDetail(movieId, ContentType.Movie)
         navController.navigate(action)
     }
 
-    override fun showTvShowDetailScreen(tvShowId: Int) {
+    override fun showTvShowDetailScreen(tvShowId: Long) {
         val action = ContentDetailFragmentDirections.actionSharedGoToContentDetail(tvShowId, ContentType.TvShow)
         navController.navigate(action)
     }
 
-    override fun showPersonDetailScreen(personId: Int) {
+    override fun showPersonDetailScreen(personId: Long) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
