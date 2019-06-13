@@ -25,7 +25,7 @@ class CachingConfigRepository @Inject constructor(
 
     private var cachedConfig: Config? = null
 
-    //todo check for config from network every 3 days. Pass an 'isStale' function into the cacher to check.
+    //todo check for config from network every 3 days
     override fun getConfigObservable(): Observable<Config> {
         return if (cachedConfig != null) {
             Observable.fromCallable { cachedConfig }

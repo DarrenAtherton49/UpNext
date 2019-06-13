@@ -4,13 +4,16 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.atherton.upnext.data.db.dao.MovieDao
 import com.atherton.upnext.data.db.dao.SearchResultDao
+import com.atherton.upnext.data.db.dao.TvShowDao
 import com.atherton.upnext.data.db.model.movie.*
 import com.atherton.upnext.data.db.model.search.RoomSearchKnownFor
 import com.atherton.upnext.data.db.model.search.RoomSearchResult
 import com.atherton.upnext.data.db.model.search.RoomSearchTerm
+import com.atherton.upnext.data.db.model.tv.*
 import com.atherton.upnext.util.extensions.ioThread
 
 @Database(
@@ -20,22 +23,36 @@ import com.atherton.upnext.util.extensions.ioThread
         RoomSearchKnownFor::class,
         RoomMovie::class,
         RoomMovieGenre::class,
-        RoomProductionCompany::class,
+        RoomMovieProductionCompany::class,
         RoomProductionCountry::class,
         RoomSpokenLanguage::class,
-        RoomCastMember::class,
-        RoomCrewMember::class,
-        RoomVideo::class,
+        RoomMovieCastMember::class,
+        RoomMovieCrewMember::class,
+        RoomMovieVideo::class,
         RoomMovieRecommendationJoin::class,
         RoomMoviePlaylist::class,
-        RoomMoviePlaylistJoin::class
+        RoomMoviePlaylistJoin::class,
+        RoomTvShow::class,
+        RoomTvShowGenre::class,
+        RoomTvShowProductionCompany::class,
+        RoomTvShowCastMember::class,
+        RoomTvShowCrewMember::class,
+        RoomTvShowCreatedBy::class,
+        RoomTvShowNetwork::class,
+        RoomTvShowSeason::class,
+        RoomTvShowVideo::class,
+        RoomTvShowRecommendationJoin::class,
+        RoomTvShowPlaylist::class,
+        RoomTvShowPlaylistJoin::class
     ],
     version = 1
 )
+@TypeConverters(RoomTypeConverters::class)
 abstract class RoomDb : RoomDatabase() {
 
     abstract fun getSearchResultDao(): SearchResultDao
     abstract fun getMovieDao(): MovieDao
+    abstract fun getTvShowDao(): TvShowDao
 
     companion object {
         private const val ROOM_DB_NAME = "tv_movie_database"
@@ -69,6 +86,7 @@ abstract class RoomDb : RoomDatabase() {
 
         private fun prePopulateDatabase(roomDb: RoomDb) {
             roomDb.getMovieDao().insertAllPlaylists(PREPOPULATE_MOVIE_PLAYLISTS)
+            roomDb.getTvShowDao().insertAllPlaylists(PREPOPULATE_TV_SHOW_PLAYLISTS)
         }
 
         private val PREPOPULATE_MOVIE_PLAYLISTS = listOf(
@@ -76,6 +94,13 @@ abstract class RoomDb : RoomDatabase() {
             RoomMoviePlaylist(name = "Top Rated"),
             RoomMoviePlaylist(name = "Upcoming"),
             RoomMoviePlaylist(name = "Now Playing")
+        )
+
+        private val PREPOPULATE_TV_SHOW_PLAYLISTS = listOf(
+            RoomTvShowPlaylist(name = "Popular"),
+            RoomTvShowPlaylist(name = "Top Rated"),
+            RoomTvShowPlaylist(name = "Airing Today"),
+            RoomTvShowPlaylist(name = "On The Air")
         )
     }
 }

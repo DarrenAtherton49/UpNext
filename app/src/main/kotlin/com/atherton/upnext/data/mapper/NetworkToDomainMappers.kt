@@ -71,11 +71,11 @@ fun TmdbTvShow.toDomainTvShow(): TvShow {
     return TvShow(
         backdropPath = backdropPath,
         detail = TvShow.Detail(
-            cast = credits?.cast?.toDomainCast(),
-            crew = credits?.crew?.toDomainCrew(),
+            cast = credits?.cast?.toDomainMovieCast(),
+            crew = credits?.crew?.toDomainMovieCrew(),
             createdBy = createdBy?.toDomainTvCreatedBy(),
             runTimes = runTimes,
-            genres = genres?.toDomainGenres(),
+            genres = genres?.toDomainMoviesGenres(),
             homepage = homepage,
             inProduction = inProduction,
             languages = languages,
@@ -84,7 +84,7 @@ fun TmdbTvShow.toDomainTvShow(): TvShow {
             networks = networks?.toDomainNetworks(),
             numberOfEpisodes = numberOfEpisodes,
             numberOfSeasons = numberOfSeasons,
-            productionCompanies = productionCompanies?.toDomainProductionCompanies(),
+            productionCompanies = productionCompanies?.toDomainMovieProductionCompanies(),
             recommendations = recommendations?.results?.map { it.toDomainTvShow() },
             seasons = seasons?.toDomainSeasons(),
             status = status,
@@ -111,12 +111,12 @@ fun TmdbMovie.toDomainMovie(): Movie {
         detail = Movie.Detail(
             belongsToCollection = belongsToCollection?.toDomainCollection(),
             budget = budget,
-            cast = credits?.cast?.toDomainCast(),
-            crew = credits?.crew?.toDomainCrew(),
-            genres = genres?.toDomainGenres(),
+            cast = credits?.cast?.toDomainMovieCast(),
+            crew = credits?.crew?.toDomainMovieCrew(),
+            genres = genres?.toDomainMoviesGenres(),
             homepage = homepage,
             imdbId = imdbId,
-            productionCompanies = productionCompanies?.toDomainProductionCompanies(),
+            productionCompanies = productionCompanies?.toDomainMovieProductionCompanies(),
             productionCountries = productionCountries?.toDomainProductionCountries(),
             revenue = revenue,
             runtime = runtime,
@@ -162,7 +162,7 @@ fun TmdbPerson.toDomainPerson(): Person {
     )
 }
 
-private fun List<TmdbCastMember>.toDomainCast(): List<CastMember> {
+private fun List<TmdbCastMember>.toDomainMovieCast(): List<CastMember> {
     return this.mapNotNull {
         if (it.id != null) {
             CastMember(it.castId, it.character, it.creditId, it.gender.toDomainGender(), it.id.toLong(), it.name, it.order, it.profilePath)
@@ -170,7 +170,7 @@ private fun List<TmdbCastMember>.toDomainCast(): List<CastMember> {
     }
 }
 
-private fun List<TmdbCrewMember>.toDomainCrew(): List<CrewMember> {
+private fun List<TmdbCrewMember>.toDomainMovieCrew(): List<CrewMember> {
     return this.mapNotNull {
         if (it.id != null) {
             CrewMember(it.creditId, it.department, it.gender.toDomainGender(), it.id.toLong(), it.job, it.name, it.profilePath)
@@ -184,7 +184,7 @@ private fun TmdbCollection.toDomainCollection(): Collection? {
     } else null
 }
 
-private fun List<TmdbGenre>.toDomainGenres(): List<Genre> {
+private fun List<TmdbGenre>.toDomainMoviesGenres(): List<Genre> {
     return this.mapNotNull {
         if (it.id != null) {
             Genre(it.id.toLong(), it.name)
@@ -192,7 +192,7 @@ private fun List<TmdbGenre>.toDomainGenres(): List<Genre> {
     }
 }
 
-private fun List<TmdbProductionCompany>.toDomainProductionCompanies(): List<ProductionCompany> {
+private fun List<TmdbProductionCompany>.toDomainMovieProductionCompanies(): List<ProductionCompany> {
     return this.mapNotNull {
         if (it.id != null) {
             ProductionCompany(it.id.toLong(), it.logoPath, it.name, it.originCountry)
@@ -220,11 +220,11 @@ private fun List<TmdbVideo>.toDomainVideos(): List<Video> {
         }
 }
 
-private fun List<TmdbTvCreatedBy>.toDomainTvCreatedBy(): List<TvCreatedBy> {
+private fun List<TmdbTvCreatedBy>.toDomainTvCreatedBy(): List<TvShowCreatedBy> {
     return this.mapNotNull {
         if (it.id != null) {
-            TvCreatedBy(
-                it.id,
+            TvShowCreatedBy(
+                it.id.toLong(),
                 it.creditId,
                 it.name,
                 it.gender.toDomainGender(),
@@ -252,12 +252,12 @@ private fun Int?.toVideoSize(): VideoSize {
     }
 }
 
-private fun TmdbTvLastEpisodeToAir.toDomainLastEpisodeToAir(): TvLastEpisodeToAir? {
+private fun TmdbTvLastEpisodeToAir.toDomainLastEpisodeToAir(): TvShowLastEpisodeToAir? {
     return if (id != null) {
-        TvLastEpisodeToAir(
+        TvShowLastEpisodeToAir(
             airDate,
             episodeNumber,
-            id,
+            id.toLong(),
             name,
             overview,
             productionCode,
@@ -273,15 +273,15 @@ private fun TmdbTvLastEpisodeToAir.toDomainLastEpisodeToAir(): TvLastEpisodeToAi
 private fun List<TmdbTvNetwork>.toDomainNetworks(): List<TvNetwork> {
     return this.mapNotNull {
         if (it.id != null) {
-            TvNetwork(it.headquarters, it.homepage, it.id, it.name, it.originCountry)
+            TvNetwork(it.headquarters, it.homepage, it.id.toLong(), it.name, it.originCountry)
         } else null
     }
 }
 
-private fun List<TmdbSeason>.toDomainSeasons(): List<Season> {
+private fun List<TmdbSeason>.toDomainSeasons(): List<TvSeason> {
     return this.mapNotNull {
         if (it.id != null) {
-            Season(it.airDate, it.episodeCount, it.id, it.name, it.overview, it.posterPath, it.seasonNumber)
+            TvSeason(it.airDate, it.episodeCount, it.id.toLong(), it.name, it.overview, it.posterPath, it.seasonNumber)
         } else null
     }
 }

@@ -4,6 +4,7 @@ import com.atherton.upnext.data.db.model.movie.*
 import com.atherton.upnext.data.db.model.search.RoomSearchKnownFor
 import com.atherton.upnext.data.db.model.search.RoomSearchResult
 import com.atherton.upnext.data.db.model.search.RoomSearchResultWithKnownFor
+import com.atherton.upnext.data.db.model.tv.*
 import com.atherton.upnext.domain.model.*
 import com.atherton.upnext.domain.model.Collection
 
@@ -134,14 +135,14 @@ fun RoomMovieAllData.toDomainMovie(recommendations: List<RoomMovie>): Movie {
 }
 
 fun RoomMovie.toDomainMovie(
-    cast: List<RoomCastMember>? = null,
-    crew: List<RoomCrewMember>? = null,
+    cast: List<RoomMovieCastMember>? = null,
+    crew: List<RoomMovieCrewMember>? = null,
     genres: List<RoomMovieGenre>? = null,
-    productionCompanies: List<RoomProductionCompany>? = null,
+    productionCompanies: List<RoomMovieProductionCompany>? = null,
     productionCountries: List<RoomProductionCountry>? = null,
     spokenLanguages: List<RoomSpokenLanguage>? = null,
     recommendations: List<RoomMovie>? = null,
-    videos: List<RoomVideo>? = null
+    videos: List<RoomMovieVideo>? = null
 ): Movie {
     return Movie(
         adultContent = adultContent,
@@ -149,12 +150,12 @@ fun RoomMovie.toDomainMovie(
         detail = Movie.Detail(
             belongsToCollection = belongsToCollection?.toDomainCollection(),
             budget = budget,
-            cast = cast?.toDomainCast(),
-            crew = crew?.toDomainCrew(),
-            genres = genres?.toDomainGenres(),
+            cast = cast?.toDomainMovieCast(),
+            crew = crew?.toDomainMovieCrew(),
+            genres = genres?.toDomainMovieGenres(),
             homepage = homepage,
             imdbId = imdbId,
-            productionCompanies = productionCompanies?.toDomainProductionCompanies(),
+            productionCompanies = productionCompanies?.toDomainMovieProductionCompanies(),
             productionCountries = productionCountries?.toDomainProductionCountries(),
             revenue = revenue,
             runtime = runtime,
@@ -164,7 +165,7 @@ fun RoomMovie.toDomainMovie(
             spokenLanguages = spokenLanguages?.toDomainSpokenLanguages(),
             status = status,
             tagline = tagline,
-            videos = videos?.toDomainVideos()
+            videos = videos?.toDomainMovieVideos()
         ),
         id = id,
         originalLanguage = originalLanguage,
@@ -189,7 +190,7 @@ private fun RoomMovieCollection.toDomainCollection(): Collection {
     )
 }
 
-private fun List<RoomCastMember>.toDomainCast(): List<CastMember> {
+private fun List<RoomMovieCastMember>.toDomainMovieCast(): List<CastMember> {
     return this.map { castMember ->
         CastMember(
             castId = castMember.castId,
@@ -204,7 +205,7 @@ private fun List<RoomCastMember>.toDomainCast(): List<CastMember> {
     }
 }
 
-private fun List<RoomCrewMember>.toDomainCrew(): List<CrewMember> {
+private fun List<RoomMovieCrewMember>.toDomainMovieCrew(): List<CrewMember> {
     return this.map { crewMember ->
         CrewMember(
             creditId = crewMember.creditId,
@@ -226,7 +227,7 @@ private fun Int?.toDomainGender(): Gender {
     }
 }
 
-private fun List<RoomMovieGenre>.toDomainGenres(): List<Genre> {
+private fun List<RoomMovieGenre>.toDomainMovieGenres(): List<Genre> {
     return this.map { genre ->
         Genre(
             id = genre.id,
@@ -235,7 +236,7 @@ private fun List<RoomMovieGenre>.toDomainGenres(): List<Genre> {
     }
 }
 
-private fun List<RoomProductionCompany>.toDomainProductionCompanies(): List<ProductionCompany> {
+private fun List<RoomMovieProductionCompany>.toDomainMovieProductionCompanies(): List<ProductionCompany> {
     return this.map { productionCompany ->
         ProductionCompany(
             id = productionCompany.id,
@@ -264,7 +265,7 @@ private fun List<RoomSpokenLanguage>.toDomainSpokenLanguages(): List<SpokenLangu
     }
 }
 
-private fun List<RoomVideo>.toDomainVideos(): List<Video> {
+private fun List<RoomMovieVideo>.toDomainMovieVideos(): List<Video> {
     return this.map { video ->
         Video(
             id = video.id,
@@ -285,5 +286,185 @@ private fun Int?.toVideoSize(): VideoSize {
         720 -> VideoSize.V720
         1080 -> VideoSize.V1080
         else -> VideoSize.Unknown
+    }
+}
+
+fun RoomTvShowAllData.toDomainTvShow(recommendations: List<RoomTvShow>): TvShow {
+    return this.tvShow.toDomainTvShow(
+        cast = cast,
+        createdBy = createdBy,
+        crew = crew,
+        genres = genres,
+        productionCompanies = productionCompanies,
+        networks = networks,
+        seasons = seasons,
+        recommendations = recommendations,
+        videos = videos
+    )
+}
+
+fun RoomTvShow.toDomainTvShow(
+    cast: List<RoomTvShowCastMember>? = null,
+    createdBy: List<RoomTvShowCreatedBy>? = null,
+    crew: List<RoomTvShowCrewMember>? = null,
+    genres: List<RoomTvShowGenre>? = null,
+    productionCompanies: List<RoomTvShowProductionCompany>? = null,
+    networks: List<RoomTvShowNetwork>? = null,
+    seasons: List<RoomTvShowSeason>? = null,
+    recommendations: List<RoomTvShow>? = null,
+    videos: List<RoomTvShowVideo>? = null
+): TvShow {
+    return TvShow(
+        backdropPath = backdropPath,
+        detail = TvShow.Detail(
+            cast = cast?.toDomainTvShowCast(),
+            createdBy = createdBy?.toDomainTvShowCreatedBy(),
+            crew = crew?.toDomainTvShowCrew(),
+            genres = genres?.toDomainTvShowGenres(),
+            homepage = homepage,
+            inProduction = inProduction,
+            languages = languages,
+            lastAirDate = lastAirDate,
+            lastEpisodeToAir = lastEpisodeToAir?.toDomainLastEpisodeToAir(),
+            networks = networks?.toDomainTvNetworks(),
+            numberOfEpisodes = numberOfEpisodes,
+            numberOfSeasons = numberOfSeasons,
+            productionCompanies = productionCompanies?.toDomainTvProductionCompanies(),
+            recommendations = recommendations?.map { recommendedTvShow ->
+                recommendedTvShow.toDomainTvShow(null, null, null, null, null, null, null , null, null)
+            },
+            runTimes = runTimes,
+            seasons = seasons?.toDomainTvSeasons(),
+            status = status,
+            type = type,
+            videos = videos?.toDomainTvShowVideos()
+        ),
+        firstAirDate = firstAirDate,
+        id = id,
+        name = name,
+        originalLanguage = originalLanguage,
+        originalName = originalName,
+        overview = overview,
+        posterPath = posterPath,
+        popularity = popularity,
+        voteAverage = voteAverage,
+        voteCount = voteCount
+    )
+}
+
+private fun List<RoomTvShowCastMember>.toDomainTvShowCast(): List<CastMember> {
+    return this.map { castMember ->
+        CastMember(
+            castId = castMember.castId,
+            character = castMember.character,
+            creditId = castMember.creditId,
+            gender = castMember.gender.toDomainGender(),
+            id = castMember.id,
+            name = castMember.name,
+            order = castMember.order,
+            profilePath = castMember.profilePath
+        )
+    }
+}
+
+private fun List<RoomTvShowCrewMember>.toDomainTvShowCrew(): List<CrewMember> {
+    return this.map { crewMember ->
+        CrewMember(
+            creditId = crewMember.creditId,
+            department = crewMember.department,
+            gender = crewMember.gender.toDomainGender(),
+            id = crewMember.id,
+            job = crewMember.job,
+            name = crewMember.name,
+            profilePath = crewMember.profilePath
+        )
+    }
+}
+
+private fun List<RoomTvShowGenre>.toDomainTvShowGenres(): List<Genre> {
+    return this.map { genre ->
+        Genre(
+            id = genre.id,
+            name = genre.name
+        )
+    }
+}
+
+private fun List<RoomTvShowVideo>.toDomainTvShowVideos(): List<Video> {
+    return this.map { video ->
+        Video(
+            id = video.id,
+            key = video.key,
+            name = video.name,
+            site = video.site,
+            size = video.size.toVideoSize(),
+            thumbnail = null,
+            type = video.type
+        )
+    }
+}
+
+private fun List<RoomTvShowCreatedBy>.toDomainTvShowCreatedBy(): List<TvShowCreatedBy> {
+    return this.map { createdBy ->
+        TvShowCreatedBy(
+            id = createdBy.id,
+            creditId = createdBy.creditId,
+            name = createdBy.name,
+            gender = createdBy.gender.toDomainGender(),
+            profilePath = createdBy.profilePath
+        )
+    }
+}
+
+private fun RoomTvShowLastEpisodeToAir.toDomainLastEpisodeToAir(): TvShowLastEpisodeToAir {
+    return TvShowLastEpisodeToAir(
+        airDate = airDate,
+        episodeNumber = episodeNumber,
+        id = id.toLong(),
+        name = name,
+        overview = overview,
+        productionCode = productionCode,
+        seasonNumber = seasonNumber,
+        showId = showId,
+        stillPath = stillPath,
+        voteAverage = voteAverage,
+        voteCount = voteCount
+    )
+}
+
+private fun List<RoomTvShowNetwork>.toDomainTvNetworks(): List<TvNetwork> {
+    return this.map { network ->
+        TvNetwork(
+            headquarters = network.headquarters,
+            homepage = network.homepage,
+            id = network.id,
+            name = network.name,
+            originCountry = network.originCountry
+        )
+    }
+}
+
+private fun List<RoomTvShowProductionCompany>.toDomainTvProductionCompanies(): List<ProductionCompany> {
+    return this.map { productionCompany ->
+        ProductionCompany(
+            id = productionCompany.id,
+            logoPath = productionCompany.logoPath,
+            name = productionCompany.name,
+            originCountry = productionCompany.originCountry
+        )
+    }
+}
+
+private fun List<RoomTvShowSeason>.toDomainTvSeasons(): List<TvSeason> {
+    return this.map { season ->
+        TvSeason(
+            airDate = season.airDate,
+            episodeCount = season.episodeCount,
+            id = season.id,
+            name = season.name,
+            overview = season.overview,
+            posterPath = season.posterPath,
+            seasonNumber = season.seasonNumber
+        )
     }
 }

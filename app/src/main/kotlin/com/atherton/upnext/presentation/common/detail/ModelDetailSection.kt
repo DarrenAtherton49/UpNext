@@ -19,7 +19,7 @@ sealed class ModelDetailSection(val viewType: Int, val hasScrollingChildAdapter:
     @Parcelize data class Ratings(val ratings: List<String>) : ModelDetailSection(RATINGS, false)
     @Parcelize data class Seasons(
         val sectionTitle: String,
-        val seasons: List<Season>
+        val seasons: List<TvSeason>
     ) : ModelDetailSection(SEASONS, false)
 
     @Parcelize data class Cast(

@@ -10,6 +10,7 @@ import com.atherton.upnext.BuildConfig
 import com.atherton.upnext.data.db.RoomDb
 import com.atherton.upnext.data.db.dao.MovieDao
 import com.atherton.upnext.data.db.dao.SearchResultDao
+import com.atherton.upnext.data.db.dao.TvShowDao
 import com.atherton.upnext.data.local.AppSettings
 import com.atherton.upnext.data.local.LocalConfigStore
 import com.atherton.upnext.data.local.SharedPreferencesStorage
@@ -132,8 +133,12 @@ class AppModule(private val application: Application) {
 class RepositoryModule {
 
     @Provides
-    @Singleton internal fun provideTvShowRepository(tvShowService: TmdbTvShowService): TvShowRepository
-        = CachingTvShowRepository(tvShowService)
+    @Singleton internal fun provideTvShowRepository(
+        tvShowDao: TvShowDao,
+        tvShowService: TmdbTvShowService
+    ): TvShowRepository {
+        return CachingTvShowRepository(tvShowDao, tvShowService)
+    }
 
     @Provides
     @Singleton internal fun provideMovieRepository(
@@ -212,5 +217,10 @@ class DatabaseModule {
     @Provides
     @Singleton internal fun provideMovieDao(roomDb: RoomDb): MovieDao {
         return roomDb.getMovieDao()
+    }
+
+    @Provides
+    @Singleton internal fun provideTvShowDao(roomDb: RoomDb): TvShowDao {
+        return roomDb.getTvShowDao()
     }
 }

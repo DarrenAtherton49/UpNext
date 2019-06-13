@@ -54,7 +54,7 @@ private fun buildContentDetailSections(
     recommendations: List<Watchable>?,
     releaseDate: String?,
     runtime: String?,
-    seasons: List<Season>?,
+    seasons: List<TvSeason>?,
     videos: List<Video>?,
     voteAverage: Float?
 ): List<ModelDetailSection> {

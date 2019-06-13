@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.item_detail_scrolling_section.view.*
 class ModelDetailAdapter(
     private val imageLoader: GlideRequests,
     private val childRecyclerItemSpacingPx: Int,
-    private val onSeasonClickListener: (Season) -> Unit,
+    private val onSeasonClickListener: (TvSeason) -> Unit,
     private val onCastMemberClickListener: (CastMember) -> Unit,
     private val onCrewMemberClickListener: (CrewMember) -> Unit,
     private val onVideoClickListener: (Video) -> Unit,

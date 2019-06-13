@@ -185,7 +185,7 @@ class ContentDetailViewModel @Inject constructor(
 sealed class ContentDetailAction : BaseAction {
     data class Load(val contentId: Long, val contentType: ContentType) : ContentDetailAction()
     data class RetryButtonClicked(val contentId: Long, val contentType: ContentType) : ContentDetailAction()
-    data class SeasonClicked(val season: Season) : ContentDetailAction()
+    data class SeasonClicked(val season: TvSeason) : ContentDetailAction()
     data class CastMemberClicked(val castMember: CastMember) : ContentDetailAction()
     data class CrewMemberClicked(val crewMember: CrewMember) : ContentDetailAction()
     data class YouTubeVideoClicked(val video: Video) : ContentDetailAction()
@@ -224,7 +224,7 @@ sealed class ContentDetailViewEffect : BaseViewEffect {
     data class ShowMovieDetailScreen(val movieId: Long) : ContentDetailViewEffect()
     data class ShowPersonDetailScreen(val personId: Long) : ContentDetailViewEffect()
     data class PlayYoutubeVideo(val videoKey: String) : ContentDetailViewEffect()
-    data class ShowSeasonDetailScreen(val seasonId: Int) : ContentDetailViewEffect()
+    data class ShowSeasonDetailScreen(val seasonId: Long) : ContentDetailViewEffect()
     object ShowSettingsScreen : ContentDetailViewEffect()
 }
 

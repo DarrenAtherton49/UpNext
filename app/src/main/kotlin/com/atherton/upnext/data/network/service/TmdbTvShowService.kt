@@ -12,7 +12,7 @@ import retrofit2.http.Query
 interface TmdbTvShowService {
 
     @GET("tv/{tv_id}")
-    fun getTvDetails(
+    fun getTvShowDetails(
         @Path("tv_id") id: Long,
         @Query("append_to_response") appendToResponse: String = "credits,reviews,recommendations,videos"
     ): Single<NetworkResponse<TmdbTvShow, TmdbApiError>>

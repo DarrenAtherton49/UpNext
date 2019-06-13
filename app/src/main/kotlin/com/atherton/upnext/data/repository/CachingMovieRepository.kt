@@ -21,6 +21,7 @@ class CachingMovieRepository @Inject constructor(
 ) : MovieRepository {
 
     //todo modify this to check if movie is in database and if it is still valid (time based?)
+    //todo modify this call to add a 'forceRefresh' parameter (e.g. in case of pull-to-refresh)
     override fun getMovie(id: Long): Observable<LceResponse<Movie>> {
         return movieDao.getMovieListForIdSingle(id)
             .toObservable()
@@ -149,14 +150,14 @@ class CachingMovieRepository @Inject constructor(
         val movieId: Long = movie.id.toLong()
         movieDao.insertMovieData(
             movie = movie.toRoomMovie(true),
-            genres = movie.genres?.toRoomGenres(movieId),
+            castMembers = movie.credits?.cast?.toRoomMovieCast(movieId),
+            crewMembers = movie.credits?.crew?.toRoomMovieCrew(movieId),
+            genres = movie.genres?.toRoomMovieGenres(movieId),
             productionCompanies = movie.productionCompanies?.toRoomProductionCompanies(movieId),
-            productionCountries = movie.productionCountries?.toRoomProductionCountries(movieId),
+            productionCountries = movie.productionCountries?.toRoomMovieProductionCountries(movieId),
             spokenLanguages = movie.spokenLanguages?.toRoomSpokenLanguages(movieId),
-            castMembers = movie.credits?.cast?.toRoomCast(movieId),
-            crewMembers = movie.credits?.crew?.toRoomCrew(movieId),
             recommendations = movie.recommendations?.results?.toRoomMovies(false),
-            videos = movie.videos?.results?.toRoomVideos(movieId)
+            videos = movie.videos?.results?.toRoomMovieVideos(movieId)
         )
     }
 

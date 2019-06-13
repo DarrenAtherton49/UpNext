@@ -13,6 +13,7 @@
     + Lists table
     + User_lists join table
 - Cache the tv repository requests
+- Check all CachingRepositories and cache everything in Room
 - The 'up next'/'watchlist' screen should have a button so that it is 'one click' to mark the next episode as 'watched'. So you should see the episode you're currently on, be able to click 'watched' and the next episode should come up. Also add 'undo' snackbar for this action for accidental clicks.
 - [Setting] Shortcut to add to watchlist on grid screens like a long or double tap?
     + When user clicks save, check database to see if movie details are in database already. If not, then call movie/detail network call first and then perform the save.
@@ -32,10 +33,11 @@
 - [Setting] Add setting to show all runtimes for episodes instead of just one (show one by default).
 - Add ability to follow a person as well as a tv show and movie so you can go through and watch someone's filmography.
 - Advanced search/filters. E.g. by genre (using Discover API)
-- Add pagination to all calls
+- Figure out when to invalidate data, e.g. stored movies and tv shows
 - WorkManager
     + Pre-load and cache the data needed for discover to work instantly (use WorkManager to periodically fetch data and also fetch it on first app run)
     + Decide when to invalidate/delete some of the past searches. E.g. only keep the 50 most recent searches.
+    + Fetch and store a new config every 3 days
 - [Setting] Update the grid/list pages to show an icon to show which content you have already watched without clicking into the detail screen
 - Implement the list toggle mode xml layout
 - Cut down all data models I don't use to decrease memory footprint

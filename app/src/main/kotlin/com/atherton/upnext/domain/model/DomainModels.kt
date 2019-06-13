@@ -54,20 +54,20 @@ data class TvShow(
     data class Detail(
         val cast: List<CastMember>?,
         val crew: List<CrewMember>?,
-        val createdBy: List<TvCreatedBy>?,
-        val runTimes: List<Int>?,
+        val createdBy: List<TvShowCreatedBy>?,
         val genres: List<Genre>?,
         val homepage: String?,
         val inProduction: Boolean?,
         val languages: List<String>?,
         val lastAirDate: String?,
-        val lastEpisodeToAir: TvLastEpisodeToAir?,
+        val lastEpisodeToAir: TvShowLastEpisodeToAir?,
         val networks: List<TvNetwork>?,
         val numberOfEpisodes: Int?,
         val numberOfSeasons: Int?,
         val productionCompanies: List<ProductionCompany>?,
         val recommendations: List<Watchable>?,
-        val seasons: List<Season>?,
+        val runTimes: List<Int>?,
+        val seasons: List<TvSeason>?,
         val status: String?,
         val type: String?,
         val videos: List<Video>?
@@ -182,8 +182,8 @@ data class ProductionCountry(val iso31661: String?, val name: String?) : Parcela
 data class SpokenLanguage(val iso6391: String?, val name: String?) : Parcelable
 
 @Parcelize
-data class TvCreatedBy(
-    val id: Int,
+data class TvShowCreatedBy(
+    val id: Long,
     val creditId: String?,
     val name: String?,
     val gender: Gender,
@@ -192,10 +192,10 @@ data class TvCreatedBy(
 
 //todo refactor this into a proper 'Episode' type when we need a list of episodes?
 @Parcelize
-data class TvLastEpisodeToAir(
+data class TvShowLastEpisodeToAir(
     val airDate: String?,
     val episodeNumber: Int?,
-    val id: Int,
+    val id: Long,
     val name: String?,
     val overview: String?,
     val productionCode: String?,
@@ -210,16 +210,16 @@ data class TvLastEpisodeToAir(
 data class TvNetwork(
     val headquarters: String?,
     val homepage: String?,
-    val id: Int,
+    val id: Long,
     val name: String?,
     val originCountry: String?
 ) : Parcelable
 
 @Parcelize
-data class Season(
+data class TvSeason(
     val airDate: String?,
     val episodeCount: Int?,
-    val id: Int,
+    val id: Long,
     val name: String?,
     val overview: String?,
     val posterPath: String?,

@@ -10,23 +10,23 @@ interface MovieDao {
     @Transaction
     fun insertMovieData(
         movie: RoomMovie,
+        castMembers: List<RoomMovieCastMember>?,
+        crewMembers: List<RoomMovieCrewMember>?,
         genres: List<RoomMovieGenre>?,
-        productionCompanies: List<RoomProductionCompany>?,
+        productionCompanies: List<RoomMovieProductionCompany>?,
         productionCountries: List<RoomProductionCountry>?,
         spokenLanguages: List<RoomSpokenLanguage>?,
-        castMembers: List<RoomCastMember>?,
-        crewMembers: List<RoomCrewMember>?,
         recommendations: List<RoomMovie>?,
-        videos: List<RoomVideo>?
+        videos: List<RoomMovieVideo>?
     ) {
         insertMovie(movie)
 
+        castMembers?.let { insertAllCastMembers(it) }
+        crewMembers?.let { insertAllCrewMembers(it) }
         genres?.let { insertAllGenres(it) }
         productionCompanies?.let { insertAllProductionCompanies(it) }
         productionCountries?.let { insertAllProductionCountries(it) }
         spokenLanguages?.let { insertAllSpokenLanguages(it) }
-        castMembers?.let { insertAllCastMembers(it) }
-        crewMembers?.let { insertAllCrewMembers(it) }
         videos?.let { insertAllVideos(it) }
 
         val recommendedList = mutableListOf<RoomMovieRecommendationJoin>()
@@ -70,7 +70,7 @@ interface MovieDao {
     fun insertAllGenres(genres: List<RoomMovieGenre>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAllProductionCompanies(productionCompanies: List<RoomProductionCompany>)
+    fun insertAllProductionCompanies(productionCompanies: List<RoomMovieProductionCompany>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAllProductionCountries(productionCountries: List<RoomProductionCountry>)
@@ -79,13 +79,13 @@ interface MovieDao {
     fun insertAllSpokenLanguages(spokenLanguages: List<RoomSpokenLanguage>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAllCastMembers(castMembers: List<RoomCastMember>)
+    fun insertAllCastMembers(castMembers: List<RoomMovieCastMember>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAllCrewMembers(crewMembers: List<RoomCrewMember>)
+    fun insertAllCrewMembers(crewMembers: List<RoomMovieCrewMember>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAllVideos(videos: List<RoomVideo>)
+    fun insertAllVideos(videos: List<RoomMovieVideo>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAllRecommendations(recommendations: List<RoomMovieRecommendationJoin>)
