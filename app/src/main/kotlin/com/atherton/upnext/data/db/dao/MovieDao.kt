@@ -113,6 +113,10 @@ interface MovieDao {
     @Query("SELECT m.* FROM movie_playlist_join mpj INNER JOIN movie m ON mpj.movie_id = m.id INNER JOIN movie_playlist p ON mpj.playlist_id = p.id WHERE p.id = (SELECT id from movie_playlist WHERE name = :playlistName) ORDER BY m.popularity")
     fun getMoviesForPlaylist(playlistName: String): List<RoomMovie>
 
+    @Transaction
+    @Query("SELECT m.* FROM movie_playlist_join mpj INNER JOIN movie m ON mpj.movie_id = m.id INNER JOIN movie_playlist p ON mpj.playlist_id = p.id WHERE p.id = (SELECT id from movie_playlist WHERE name = :playlistName) ORDER BY m.popularity")
+    fun getMoviesForPlaylistSingle(playlistName: String): Single<List<RoomMovie>>
+
     @Query("SELECT id from movie_playlist WHERE name = :playlistName")
     fun getPlaylistIdForName(playlistName: String): Long
 }

@@ -45,63 +45,103 @@ class CachingMovieRepository @Inject constructor(
             }
     }
 
-    //todo modify this to check if movies are in database and if it is still valid (time based?)
+    //todo modify this to check if movies are are still valid (time based?)
     override fun getPopular(): Observable<LceResponse<List<Movie>>> {
-        return movieService.getPopular()
+        return movieDao.getMoviesForPlaylistSingle(POPULAR)
             .toObservable()
-            .doOnNext { networkResponse ->
-                if (networkResponse is NetworkResponse.Success) {
-                    val networkPopularMovies: List<TmdbMovie> = networkResponse.body.results
-                    saveMoviesForPlaylist(networkPopularMovies, POPULAR)
+            .flatMap { movieList ->
+                if (movieList.isNotEmpty()) {
+                    Observable.fromCallable {
+                        LceResponse.Content(data = movieList.map { it.toDomainMovie() })
+                    }
+                } else {
+                    movieService.getPopular()
+                        .toObservable()
+                        .doOnNext { networkResponse ->
+                            if (networkResponse is NetworkResponse.Success) {
+                                val networkPopularMovies: List<TmdbMovie> = networkResponse.body.results
+                                saveMoviesForPlaylist(networkPopularMovies, POPULAR)
+                            }
+                        }
+                        .map { networkResponse ->
+                            networkResponse.toDomainLceResponse(data = getMoviesForPlaylist(POPULAR))
+                        }
                 }
-            }
-            .map { networkResponse ->
-                networkResponse.toDomainLceResponse(data = getMoviesForPlaylist(POPULAR))
             }
     }
 
-    //todo modify this to check if movies are in database and if it is still valid (time based?)
+    //todo modify this to check if movies are are still valid (time based?)
     override fun getTopRated(): Observable<LceResponse<List<Movie>>> {
-        return movieService.getTopRated()
+        return movieDao.getMoviesForPlaylistSingle(TOP_RATED)
             .toObservable()
-            .doOnNext { networkResponse ->
-                if (networkResponse is NetworkResponse.Success) {
-                    val networkTopRatedMovies: List<TmdbMovie> = networkResponse.body.results
-                    saveMoviesForPlaylist(networkTopRatedMovies, TOP_RATED)
+            .flatMap { movieList ->
+                if (movieList.isNotEmpty()) {
+                    Observable.fromCallable {
+                        LceResponse.Content(data = movieList.map { it.toDomainMovie() })
+                    }
+                } else {
+                    movieService.getTopRated()
+                        .toObservable()
+                        .doOnNext { networkResponse ->
+                            if (networkResponse is NetworkResponse.Success) {
+                                val networkTopRatedMovies: List<TmdbMovie> = networkResponse.body.results
+                                saveMoviesForPlaylist(networkTopRatedMovies, TOP_RATED)
+                            }
+                        }
+                        .map { networkResponse ->
+                            networkResponse.toDomainLceResponse(data = getMoviesForPlaylist(TOP_RATED))
+                        }
                 }
-            }
-            .map { networkResponse ->
-                networkResponse.toDomainLceResponse(data = getMoviesForPlaylist(TOP_RATED))
             }
     }
 
-    //todo modify this to check if movies are in database and if it is still valid (time based?)
+    //todo modify this to check if movies are are still valid (time based?)
     override fun getUpcoming(): Observable<LceResponse<List<Movie>>> {
-        return movieService.getUpcoming()
+        return movieDao.getMoviesForPlaylistSingle(UPCOMING)
             .toObservable()
-            .doOnNext { networkResponse ->
-                if (networkResponse is NetworkResponse.Success) {
-                    val networkUpcomingMovies: List<TmdbMovie> = networkResponse.body.results
-                    saveMoviesForPlaylist(networkUpcomingMovies, UPCOMING)
+            .flatMap { movieList ->
+                if (movieList.isNotEmpty()) {
+                    Observable.fromCallable {
+                        LceResponse.Content(data = movieList.map { it.toDomainMovie() })
+                    }
+                } else {
+                    movieService.getUpcoming()
+                        .toObservable()
+                        .doOnNext { networkResponse ->
+                            if (networkResponse is NetworkResponse.Success) {
+                                val networkUpcomingMovies: List<TmdbMovie> = networkResponse.body.results
+                                saveMoviesForPlaylist(networkUpcomingMovies, UPCOMING)
+                            }
+                        }
+                        .map { networkResponse ->
+                            networkResponse.toDomainLceResponse(data = getMoviesForPlaylist(UPCOMING))
+                        }
                 }
-            }
-            .map { networkResponse ->
-                networkResponse.toDomainLceResponse(data = getMoviesForPlaylist(UPCOMING))
             }
     }
 
-    //todo modify this to check if movies are in database and if it is still valid (time based?)
+    //todo modify this to check if movies are are still valid (time based?)
     override fun getNowPlaying(): Observable<LceResponse<List<Movie>>> {
-        return movieService.getNowPlaying()
+        return movieDao.getMoviesForPlaylistSingle(NOW_PLAYING)
             .toObservable()
-            .doOnNext { networkResponse ->
-                if (networkResponse is NetworkResponse.Success) {
-                    val networkNowPlayingVideos: List<TmdbMovie> = networkResponse.body.results
-                    saveMoviesForPlaylist(networkNowPlayingVideos, NOW_PLAYING)
+            .flatMap { movieList ->
+                if (movieList.isNotEmpty()) {
+                    Observable.fromCallable {
+                        LceResponse.Content(data = movieList.map { it.toDomainMovie() })
+                    }
+                } else {
+                    movieService.getNowPlaying()
+                        .toObservable()
+                        .doOnNext { networkResponse ->
+                            if (networkResponse is NetworkResponse.Success) {
+                                val networkNowPlayingVideos: List<TmdbMovie> = networkResponse.body.results
+                                saveMoviesForPlaylist(networkNowPlayingVideos, NOW_PLAYING)
+                            }
+                        }
+                        .map { networkResponse ->
+                            networkResponse.toDomainLceResponse(data = getMoviesForPlaylist(NOW_PLAYING))
+                        }
                 }
-            }
-            .map { networkResponse ->
-                networkResponse.toDomainLceResponse(data = getMoviesForPlaylist(NOW_PLAYING))
             }
     }
 
