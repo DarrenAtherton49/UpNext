@@ -28,7 +28,7 @@ ext {
     okHttpVersion = '3.12.1'
     recyclerViewVersion = '1.1.0-alpha06'
     retrofitVersion = '2.5.0'
-    roomVersion = '2.1.0-beta01'
+    roomVersion = '2.1.0'
     roxieVersion = '0.4.0'
     rulesVersion = '0.5'
     runnerVersion = '0.5'
