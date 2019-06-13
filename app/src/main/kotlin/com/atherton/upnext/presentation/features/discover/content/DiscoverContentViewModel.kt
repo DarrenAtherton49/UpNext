@@ -59,7 +59,6 @@ class DiscoverContentViewModel @Inject constructor(
                     is LceResponse.Content -> {
                         DiscoverContentState.Content(
                             results = change.response.data.withSearchModelListImageUrls(change.config),
-                            cached = change.response.cached,
                             viewMode = change.viewMode
                         )
                     }
@@ -159,7 +158,6 @@ sealed class DiscoverContentState : BaseState, Parcelable {
     @Parcelize
     data class Content(
         val results: List<Searchable>,
-        val cached: Boolean = false,
         val viewMode: GridViewMode
     ) : DiscoverContentState()
 

@@ -39,8 +39,7 @@ class GetDiscoverItemsForFilterUseCase @Inject constructor(
                 // when both responses have final content (not loading), combine both
                 tvResponse is LceResponse.Content && moviesResponse is LceResponse.Content -> {
                     val sorted = sortTopRated(tvResponse.data, moviesResponse.data)
-                    val cached = tvResponse.cached && moviesResponse.cached
-                    LceResponse.Content(sorted, cached)
+                    LceResponse.Content(sorted)
                 }
                 // when one response has final content and other is loading, surface it as loading
                 tvResponse is LceResponse.Content && moviesResponse is LceResponse.Loading -> {
@@ -79,8 +78,7 @@ class GetDiscoverItemsForFilterUseCase @Inject constructor(
                 // when both responses have final content (not loading), combine both
                 tvResponse is LceResponse.Content && moviesResponse is LceResponse.Content -> {
                     val sorted = sortMostPopular(tvResponse.data, moviesResponse.data)
-                    val cached = tvResponse.cached && moviesResponse.cached
-                    LceResponse.Content(sorted, cached)
+                    LceResponse.Content(sorted)
                 }
                 // when one response has final content and other is loading, surface it as loading
                 tvResponse is LceResponse.Content && moviesResponse is LceResponse.Loading -> {
@@ -123,14 +121,14 @@ class GetDiscoverItemsForFilterUseCase @Inject constructor(
 
     private fun LceResponse<List<Movie>>.moviesToSearchModelsResponse(): LceResponse<List<Searchable>> {
         return when (this) {
-            is LceResponse.Content -> LceResponse.Content<List<Searchable>>(this.data, this.cached)
+            is LceResponse.Content -> LceResponse.Content<List<Searchable>>(this.data)
             else -> this
         }
     }
 
     private fun LceResponse<List<TvShow>>.tvShowToSearchModelsResponse(): LceResponse<List<Searchable>> {
         return when (this) {
-            is LceResponse.Content -> LceResponse.Content<List<Searchable>>(this.data, this.cached)
+            is LceResponse.Content -> LceResponse.Content<List<Searchable>>(this.data)
             else -> this
         }
     }

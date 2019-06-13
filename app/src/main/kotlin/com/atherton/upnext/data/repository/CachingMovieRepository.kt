@@ -22,28 +22,26 @@ class CachingMovieRepository @Inject constructor(
 
     //todo modify this to check if movie is in database and if it is still valid (time based?)
     override fun getMovie(id: Long): Observable<LceResponse<Movie>> {
-        return movieService.getMovieDetails(id)
+        return movieDao.getMovieListForIdSingle(id)
             .toObservable()
-            .doOnNext { networkResponse ->
-                if (networkResponse is NetworkResponse.Success) {
-                    val networkMovie: TmdbMovie = networkResponse.body
-                    saveFullMovieToDatabase(networkMovie)
+            .flatMap { movieList ->
+                if (movieList.isNotEmpty() && movieList[0].isModelComplete) { // movie is cached and has all data
+                    Observable.fromCallable {
+                        LceResponse.Content(data = getMovieFromDatabase(id)) // fetch the full movie and all relations
+                    }
+                } else {
+                    movieService.getMovieDetails(id)
+                        .toObservable()
+                        .doOnNext { networkResponse ->
+                            if (networkResponse is NetworkResponse.Success) {
+                                val networkMovie: TmdbMovie = networkResponse.body
+                                saveFullMovieToDatabase(networkMovie)
+                            }
+                        }
+                        .map { networkResponse ->
+                            networkResponse.toDomainLceResponse(data = getMovieFromDatabase(id))
+                        }
                 }
-            }
-            .map { networkResponse ->
-                val dbMovieData: RoomMovieAllData = movieDao.getMovieForId(id)
-                val recommendations: List<RoomMovie> = movieDao.getRecommendationsForMovie(dbMovieData.movie.id)
-                val domainMovie = dbMovieData.movie.toDomainMovie(
-                    cast = dbMovieData.cast,
-                    crew = dbMovieData.crew,
-                    genres = dbMovieData.genres,
-                    productionCompanies = dbMovieData.productionCompanies,
-                    productionCountries = dbMovieData.productionCountries,
-                    spokenLanguages = dbMovieData.spokenLanguages,
-                    recommendations = recommendations,
-                    videos = dbMovieData.videos
-                )
-                networkResponse.toDomainLceResponse(data = domainMovie)
             }
     }
 
@@ -122,11 +120,16 @@ class CachingMovieRepository @Inject constructor(
         )
     }
 
+    private fun getMovieFromDatabase(id: Long): Movie {
+        val dbMovieData: RoomMovieAllData = movieDao.getFullMovieForId(id)
+        val recommendations: List<RoomMovie> = movieDao.getRecommendationsForMovie(dbMovieData.movie.id)
+        return dbMovieData.toDomainMovie(recommendations)
+    }
+
     private fun getMoviesForPlaylist(playlistName: String): List<Movie> {
         val dbMovieData: List<RoomMovie> = movieDao.getMoviesForPlaylist(playlistName)
         return dbMovieData.map { it.toDomainMovie() }
     }
-
 
     private fun saveMoviesForPlaylist(networkMovies: List<TmdbMovie>, playlistName: String) {
         val dbMovies = networkMovies.toRoomMovies(false)

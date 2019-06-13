@@ -65,8 +65,7 @@ class ContentDetailViewModel @Inject constructor(
                         val watchableWithImageUrls = change.response.data.withContentDetailImageUrls(change.config)
                         ContentDetailState.Content(
                             watchable = watchableWithImageUrls,
-                            detailSections = buildContentDetailSections(watchableWithImageUrls, appStringProvider),
-                            cached = change.response.cached
+                            detailSections = buildContentDetailSections(watchableWithImageUrls, appStringProvider)
                         )
                     }
                     is LceResponse.Error -> {
@@ -213,8 +212,7 @@ sealed class ContentDetailState : BaseState, Parcelable {
     @Parcelize
     data class Content(
         val watchable: Watchable,
-        val detailSections: List<ModelDetailSection>,
-        val cached: Boolean = false
+        val detailSections: List<ModelDetailSection>
     ) : ContentDetailState()
 
     @Parcelize

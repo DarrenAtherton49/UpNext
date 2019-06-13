@@ -2,6 +2,7 @@ package com.atherton.upnext.data.db.dao
 
 import androidx.room.*
 import com.atherton.upnext.data.db.model.movie.*
+import io.reactivex.Single
 
 @Dao
 interface MovieDao {
@@ -95,9 +96,14 @@ interface MovieDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAllMoviePlaylistJoins(moviePlaylistJoins: List<RoomMoviePlaylistJoin>)
 
+    // we use a List here because RxJava 2 can't emit nulls if the movie doesn't exist
     @Transaction
     @Query("SELECT * FROM movie WHERE id = :id")
-    fun getMovieForId(id: Long): RoomMovieAllData
+    fun getMovieListForIdSingle(id: Long): Single<List<RoomMovie>>
+
+    @Transaction
+    @Query("SELECT * FROM movie WHERE id = :id")
+    fun getFullMovieForId(id: Long): RoomMovieAllData
 
     @Transaction
     @Query("SELECT m2.* FROM movie_recommendation_join mrj INNER JOIN movie m1 ON mrj.movie_id = m1.id INNER JOIN movie m2 ON mrj.recommendation_id = m2.id WHERE mrj.movie_id = :movieId")

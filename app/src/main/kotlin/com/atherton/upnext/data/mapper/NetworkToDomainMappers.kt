@@ -20,12 +20,11 @@ import com.atherton.upnext.domain.model.Collection
  */
 @Deprecated("Deprecated")
 internal fun <NETWORK : Any, DOMAIN : Any> NetworkResponse<NETWORK, TmdbApiError>.toDomainLceResponse(
-    cachedData: Boolean = false,
     fallbackData: DOMAIN? = null,
     dataMapper: (NETWORK) -> DOMAIN
 ): LceResponse<DOMAIN> {
     return when (this) {
-        is NetworkResponse.Success -> LceResponse.Content(dataMapper(body), cachedData)
+        is NetworkResponse.Success -> LceResponse.Content(dataMapper(body))
         is NetworkResponse.ServerError<TmdbApiError> -> LceResponse.Error.ServerError(error?.toDomainApiError(), code, fallbackData)
         is NetworkResponse.NetworkError -> LceResponse.Error.NetworkError(error, fallbackData)
     }
@@ -36,7 +35,7 @@ internal fun <NETWORK : Any, DOMAIN : Any> NetworkResponse<NETWORK, TmdbApiError
     fallbackData: DOMAIN? = data
 ): LceResponse<DOMAIN> {
     return when (this) {
-        is NetworkResponse.Success -> LceResponse.Content(data, false)
+        is NetworkResponse.Success -> LceResponse.Content(data)
         is NetworkResponse.ServerError<TmdbApiError> -> LceResponse.Error.ServerError(error?.toDomainApiError(), code, fallbackData)
         is NetworkResponse.NetworkError -> LceResponse.Error.NetworkError(error, fallbackData)
     }

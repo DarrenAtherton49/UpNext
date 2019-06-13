@@ -120,6 +120,19 @@ private fun RoomSearchKnownFor.toDomainMovie(): Movie {
     )
 }
 
+fun RoomMovieAllData.toDomainMovie(recommendations: List<RoomMovie>): Movie {
+    return this.movie.toDomainMovie(
+        cast = cast,
+        crew = crew,
+        genres = genres,
+        productionCompanies = productionCompanies,
+        productionCountries = productionCountries,
+        spokenLanguages = spokenLanguages,
+        recommendations = recommendations,
+        videos = videos
+    )
+}
+
 fun RoomMovie.toDomainMovie(
     cast: List<RoomCastMember>? = null,
     crew: List<RoomCrewMember>? = null,

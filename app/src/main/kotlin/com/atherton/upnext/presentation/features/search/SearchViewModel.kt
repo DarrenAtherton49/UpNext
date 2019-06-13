@@ -60,7 +60,6 @@ class SearchViewModel @Inject constructor(
                     is LceResponse.Content -> {
                         SearchState.Content(
                             results = change.response.data.withSearchModelListImageUrls(change.config),
-                            cached = change.response.cached,
                             query = change.query,
                             viewMode = change.viewMode
                         )
@@ -221,7 +220,6 @@ sealed class SearchState(open val query: String): BaseState, Parcelable {
     @Parcelize
     data class Content(
         val results: List<Searchable>,
-        val cached: Boolean = false,
         override val query: String,
         val viewMode: GridViewMode
     ) : SearchState(query)

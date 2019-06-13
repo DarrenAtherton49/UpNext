@@ -19,7 +19,7 @@ class CachingPeopleRepository @Inject constructor(
 
     override fun getPerson(id: Int): Single<LceResponse<Person>> {
         return peopleService.getPersonDetails(id).map {
-            it.toDomainLceResponse(false) { person -> person.toDomainPerson() }
+            it.toDomainLceResponse { person -> person.toDomainPerson() }
         }
     }
 }

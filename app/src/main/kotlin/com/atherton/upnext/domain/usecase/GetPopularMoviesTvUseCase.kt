@@ -27,8 +27,7 @@ class GetPopularMoviesTvUseCase @Inject constructor(
             when {
                 tvResponse is LceResponse.Content && moviesResponse is LceResponse.Content -> {
                     val sorted = sortByPopularity(tvResponse.data, moviesResponse.data)
-                    val cached = tvResponse.cached && moviesResponse.cached
-                    LceResponse.Content(sorted, cached)
+                    LceResponse.Content(sorted)
                 }
                 // when one response has final content and other is loading, surface it as loading
                 tvResponse is LceResponse.Content && moviesResponse is LceResponse.Loading -> {

@@ -25,7 +25,7 @@ class CachingTvShowRepository @Inject constructor(
     override fun getTvShow(id: Long): Observable<LceResponse<TvShow>> {
         return tvShowService.getTvDetails(id)
             .toObservable()
-            .map { it.toDomainLceResponse(false) { tvShow -> tvShow.toDomainTvShow() }
+            .map { it.toDomainLceResponse { tvShow -> tvShow.toDomainTvShow() }
         }
     }
 
@@ -48,7 +48,7 @@ class CachingTvShowRepository @Inject constructor(
     private fun Single<NetworkResponse<TmdbPagedResponse<TmdbTvShow>, TmdbApiError>>.toDomainTvShows()
         : Observable<LceResponse<List<TvShow>>> {
         return this.toObservable().map {
-            it.toDomainLceResponse(false) { response ->
+            it.toDomainLceResponse { response ->
                 response.results.map { tvShow -> tvShow.toDomainTvShow() }
             }
         }

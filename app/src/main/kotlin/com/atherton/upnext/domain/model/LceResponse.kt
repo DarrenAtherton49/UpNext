@@ -19,7 +19,7 @@ sealed class LceResponse<out T : Any> {
     // can assume that any data used in the Loading state is cached
     data class Loading<T : Any>(val data: T?) : LceResponse<T>()
 
-    data class Content<T : Any>(val data: T, val cached: Boolean) : LceResponse<T>()
+    data class Content<T : Any>(val data: T) : LceResponse<T>()
 
     // can assume that any data used in the Error state is cached
     sealed class Error<T : Any>(open val fallbackData: T?) : LceResponse<T>() {

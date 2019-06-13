@@ -8,6 +8,6 @@ import javax.inject.Inject
 
 class GetMovieDetailUseCase @Inject constructor(private val movieRepository: MovieRepository) {
 
-    //todo check why we need to call map{} in order to cast from TvShow to Watchable
+    //todo check why we need to call map{} in order to cast from Movie to Watchable
     operator fun invoke(id: Long): Observable<LceResponse<Watchable>> = movieRepository.getMovie(id).map { it }
 }

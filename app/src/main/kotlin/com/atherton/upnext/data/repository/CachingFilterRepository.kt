@@ -23,6 +23,6 @@ class CachingFilterRepository @Inject constructor() : FilterRepository {
             DiscoverFilter.Preset.PopularTvMovies,
             DiscoverFilter.Preset.TopRatedTvMovies,
             DiscoverFilter.Preset.UpcomingMovies
-        ), true)
+        ))
     }
 }
