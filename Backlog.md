@@ -12,7 +12,6 @@
 - Set up Room database
     + Lists table
     + User_lists join table
-- Cache the tv repository requests
 - Check all CachingRepositories and cache everything in Room
 - The 'up next'/'watchlist' screen should have a button so that it is 'one click' to mark the next episode as 'watched'. So you should see the episode you're currently on, be able to click 'watched' and the next episode should come up. Also add 'undo' snackbar for this action for accidental clicks.
 - [Setting] Shortcut to add to watchlist on grid screens like a long or double tap?
