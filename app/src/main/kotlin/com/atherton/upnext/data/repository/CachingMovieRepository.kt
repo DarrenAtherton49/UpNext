@@ -27,8 +27,13 @@ class CachingMovieRepository @Inject constructor(
             .toObservable()
             .flatMap { movieList ->
                 if (movieList.isNotEmpty() && movieList[0].isModelComplete) { // movie is cached and has all data
+                    val movie: Movie? = getMovieFromDatabase(id) // fetch the full movie and all relations
                     Observable.fromCallable {
-                        LceResponse.Content(data = getMovieFromDatabase(id)) // fetch the full movie and all relations
+                        if (movie != null) {
+                            LceResponse.Content(data = movie)
+                        } else {
+                            throw IllegalStateException("Movie should be in database - check query")
+                        }
                     }
                 } else {
                     movieService.getMovieDetails(id)
@@ -161,10 +166,15 @@ class CachingMovieRepository @Inject constructor(
         )
     }
 
-    private fun getMovieFromDatabase(id: Long): Movie {
-        val dbMovieData: RoomMovieAllData = movieDao.getFullMovieForId(id)
-        val recommendations: List<RoomMovie> = movieDao.getRecommendationsForMovie(dbMovieData.movie.id)
-        return dbMovieData.toDomainMovie(recommendations)
+    private fun getMovieFromDatabase(id: Long): Movie? {
+        val dbMovieData: RoomMovieAllData? = movieDao.getFullMovieForId(id)
+        return if (dbMovieData != null) {
+            val movie: RoomMovie? = dbMovieData.movie
+            if (movie != null) {
+                val recommendations: List<RoomMovie> = movieDao.getRecommendationsForMovie(movie.id)
+                return dbMovieData.toDomainMovie(recommendations)
+            } else null
+        } else null
     }
 
     private fun getMoviesForPlaylist(playlistName: String): List<Movie> {

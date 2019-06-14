@@ -27,8 +27,13 @@ class CachingTvShowRepository @Inject constructor(
             .toObservable()
             .flatMap { tvShowList ->
                 if (tvShowList.isNotEmpty() && tvShowList[0].isModelComplete) {
+                    val tvShow: TvShow? = getTvShowFromDatabase(id)
                     Observable.fromCallable {
-                        LceResponse.Content(data = getTvShowFromDatabase(id)) // fetch the full tv show and all relations
+                        if (tvShow != null) {
+                            LceResponse.Content(data = tvShow) // fetch the full tv show and all relations
+                        } else {
+                            throw IllegalStateException("TV Show should be in database - check query")
+                        }
                     }
                 } else {
                     tvShowService.getTvShowDetails(id)
@@ -149,7 +154,7 @@ class CachingTvShowRepository @Inject constructor(
     private fun saveFullTvShowToDatabase(tvShow: TmdbTvShow) {
         val tvShowId: Long = tvShow.id.toLong()
         tvShowDao.insertTvShowData(
-            tvShow = tvShow.toRoomTvShow(false),
+            tvShow = tvShow.toRoomTvShow(true),
             genres = tvShow.genres?.toRoomTvShowGenres(tvShowId),
             productionCompanies = tvShow.productionCompanies?.toRoomTvProductionCompanies(tvShowId),
             castMembers = tvShow.credits?.cast?.toRoomTvShowCast(tvShowId),
@@ -162,10 +167,15 @@ class CachingTvShowRepository @Inject constructor(
         )
     }
 
-    private fun getTvShowFromDatabase(id: Long): TvShow {
-        val dbTvShowData: RoomTvShowAllData = tvShowDao.getFullTvShowForId(id)
-        val recommendations: List<RoomTvShow> = tvShowDao.getRecommendationsForTvShow(id)
-        return dbTvShowData.toDomainTvShow(recommendations)
+    private fun getTvShowFromDatabase(id: Long): TvShow? {
+        val dbTvShowData: RoomTvShowAllData? = tvShowDao.getFullTvShowForId(id)
+        return if (dbTvShowData != null) {
+            val tvShow: RoomTvShow? = dbTvShowData.tvShow
+            if (tvShow != null) {
+                val recommendations: List<RoomTvShow> = tvShowDao.getRecommendationsForTvShow(tvShow.id)
+                return dbTvShowData.toDomainTvShow(recommendations)
+            } else null
+        } else null
     }
 
     private fun getTvShowsForPlaylist(playlistName: String): List<TvShow> {

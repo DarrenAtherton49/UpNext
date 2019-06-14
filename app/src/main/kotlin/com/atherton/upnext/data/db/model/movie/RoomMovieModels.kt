@@ -9,7 +9,7 @@ private const val MOVIE_ID = "MOVIE_ID"
 class RoomMovieAllData {
 
     @Embedded
-    lateinit var movie: RoomMovie
+    var movie: RoomMovie? = null
 
     @Relation(parentColumn = ID, entityColumn = MOVIE_ID, entity = RoomMovieCastMember::class)
     var cast: List<RoomMovieCastMember> = ArrayList()

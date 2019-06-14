@@ -8,7 +8,7 @@ private const val SHOW_ID = "show_id"
 class RoomTvShowAllData {
     
     @Embedded
-    lateinit var tvShow: RoomTvShow
+    var tvShow: RoomTvShow? = null
 
     @Relation(parentColumn = ID, entityColumn = SHOW_ID, entity = RoomTvShowCastMember::class)
     var cast: List<RoomTvShowCastMember> = ArrayList()

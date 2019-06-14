@@ -108,7 +108,7 @@ interface TvShowDao {
 
     @Transaction
     @Query("SELECT * FROM tv_show WHERE id = :id")
-    fun getFullTvShowForId(id: Long): RoomTvShowAllData
+    fun getFullTvShowForId(id: Long): RoomTvShowAllData?
 
     @Transaction
     @Query("SELECT tv2.* FROM tv_show_recommendation_join tvrj INNER JOIN tv_show tv1 ON tvrj.show_id = tv1.id INNER JOIN tv_show tv2 ON tvrj.recommendation_id = tv2.id WHERE tvrj.show_id = :showId")

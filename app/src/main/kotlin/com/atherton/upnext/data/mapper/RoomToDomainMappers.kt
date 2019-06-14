@@ -121,8 +121,8 @@ private fun RoomSearchKnownFor.toDomainMovie(): Movie {
     )
 }
 
-fun RoomMovieAllData.toDomainMovie(recommendations: List<RoomMovie>): Movie {
-    return this.movie.toDomainMovie(
+fun RoomMovieAllData.toDomainMovie(recommendations: List<RoomMovie>): Movie? {
+    return this.movie?.toDomainMovie(
         cast = cast,
         crew = crew,
         genres = genres,
@@ -289,8 +289,8 @@ private fun Int?.toVideoSize(): VideoSize {
     }
 }
 
-fun RoomTvShowAllData.toDomainTvShow(recommendations: List<RoomTvShow>): TvShow {
-    return this.tvShow.toDomainTvShow(
+fun RoomTvShowAllData.toDomainTvShow(recommendations: List<RoomTvShow>): TvShow? {
+    return this.tvShow?.toDomainTvShow(
         cast = cast,
         createdBy = createdBy,
         crew = crew,

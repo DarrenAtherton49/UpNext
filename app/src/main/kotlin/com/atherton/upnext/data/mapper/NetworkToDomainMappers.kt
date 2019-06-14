@@ -31,13 +31,14 @@ internal fun <NETWORK : Any, DOMAIN : Any> NetworkResponse<NETWORK, TmdbApiError
 }
 
 internal fun <NETWORK : Any, DOMAIN : Any> NetworkResponse<NETWORK, TmdbApiError>.toDomainLceResponse(
-    data: DOMAIN,
+    data: DOMAIN?,
     fallbackData: DOMAIN? = data
 ): LceResponse<DOMAIN> {
-    return when (this) {
-        is NetworkResponse.Success -> LceResponse.Content(data)
-        is NetworkResponse.ServerError<TmdbApiError> -> LceResponse.Error.ServerError(error?.toDomainApiError(), code, fallbackData)
-        is NetworkResponse.NetworkError -> LceResponse.Error.NetworkError(error, fallbackData)
+    return when {
+        this is NetworkResponse.Success && data != null -> LceResponse.Content(data)
+        this is NetworkResponse.ServerError<TmdbApiError> -> LceResponse.Error.ServerError(error?.toDomainApiError(), code, fallbackData)
+        this is NetworkResponse.NetworkError -> LceResponse.Error.NetworkError(error, fallbackData)
+        else -> throw IllegalStateException("Data should not be null if network response was a success")
     }
 }
 

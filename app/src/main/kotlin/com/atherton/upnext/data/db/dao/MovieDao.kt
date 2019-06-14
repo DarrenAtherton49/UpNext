@@ -103,7 +103,7 @@ interface MovieDao {
 
     @Transaction
     @Query("SELECT * FROM movie WHERE id = :id")
-    fun getFullMovieForId(id: Long): RoomMovieAllData
+    fun getFullMovieForId(id: Long): RoomMovieAllData?
 
     @Transaction
     @Query("SELECT m2.* FROM movie_recommendation_join mrj INNER JOIN movie m1 ON mrj.movie_id = m1.id INNER JOIN movie m2 ON mrj.recommendation_id = m2.id WHERE mrj.movie_id = :movieId")
