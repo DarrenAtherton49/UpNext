@@ -32,8 +32,7 @@ data class RoomSearchTerm(
 @Entity(
     tableName = "search_result",
     indices = [
-        Index(value = ["id"], unique = true),
-        Index(value = ["search_term_id", "media_type", "tmdb_id"], unique = true)
+        Index(value = ["search_term_id", "media_type", "id"], unique = true)
     ],
     foreignKeys = [
         ForeignKey(
@@ -50,7 +49,7 @@ data class RoomSearchResult(
     // common fields
     @ColumnInfo(name = "adult") val adultContent: Boolean?,
     @ColumnInfo(name = "backdrop_path") val backdropPath: String?,
-    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") var id: Long = 0,
+    @PrimaryKey @ColumnInfo(name = "id") val id: Long,
     @ColumnInfo(name = "media_type") val mediaType: String, // either 'tv', 'movie' or 'person'
     @ColumnInfo(name = "name") val name: String?,
     @ColumnInfo(name = "original_language") val originalLanguage: String?,
@@ -58,7 +57,6 @@ data class RoomSearchResult(
     @ColumnInfo(name = "popularity") val popularity: Float?,
     @ColumnInfo(name = "poster_path") val posterPath: String?,
     @ColumnInfo(name = "release_date") val releaseDate: String?,
-    @ColumnInfo(name = "tmdb_id") val tmdbId: Int,
     @ColumnInfo(name = "vote_average") val voteAverage: Float?,
     @ColumnInfo(name = "vote_count") val voteCount: Int?,
 
@@ -88,7 +86,7 @@ data class RoomSearchKnownFor(
     // common fields
     @ColumnInfo(name = "adult") val adultContent: Boolean?,
     @ColumnInfo(name = "backdrop_path") val backdropPath: String?,
-    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") var id: Long = 0,
+    @PrimaryKey @ColumnInfo(name = "id") val id: Long,
     @ColumnInfo(name = "media_type") val mediaType: String, // either 'tv', 'movie' or 'person'
     @ColumnInfo(name = "name") val name: String?,
     @ColumnInfo(name = "original_language") val originalLanguage: String?,
@@ -96,7 +94,6 @@ data class RoomSearchKnownFor(
     @ColumnInfo(name = "popularity") val popularity: Float?,
     @ColumnInfo(name = "poster_path") val posterPath: String?,
     @ColumnInfo(name = "release_date") val releaseDate: String?,
-    @ColumnInfo(name = "tmdb_id") val tmdbId: Int,
     @ColumnInfo(name = "vote_average") val voteAverage: Float?,
     @ColumnInfo(name = "vote_count") val voteCount: Int?,
 

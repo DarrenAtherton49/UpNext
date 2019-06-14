@@ -26,6 +26,7 @@ private fun TmdbMultiSearchResult.toRoomSearchResult(): RoomSearchResult? {
         RoomSearchResult(
             adultContent = adultContent,
             backdropPath = backdropPath,
+            id = id.toLong(),
             mediaType = mediaType,
             name = name,
             originalLanguage = originalLanguage,
@@ -33,7 +34,6 @@ private fun TmdbMultiSearchResult.toRoomSearchResult(): RoomSearchResult? {
             popularity = popularity,
             posterPath = posterPath,
             releaseDate = releaseDate,
-            tmdbId = id,
             voteAverage = voteAverage,
             voteCount = voteCount,
 
@@ -62,6 +62,7 @@ private fun TmdbMultiSearchResult.toRoomKnownFor(): RoomSearchKnownFor? {
             adultContent = adultContent,
             backdropPath = backdropPath,
             firstAirDate = firstAirDate,
+            id = id.toLong(),
             mediaType = mediaType,
             name = name,
             originalLanguage = originalLanguage,
@@ -72,7 +73,6 @@ private fun TmdbMultiSearchResult.toRoomKnownFor(): RoomSearchKnownFor? {
             posterPath = posterPath,
             releaseDate = releaseDate,
             title = title,
-            tmdbId = id,
             video = video,
             voteAverage = voteAverage,
             voteCount = voteCount

@@ -89,18 +89,22 @@ abstract class RoomDb : RoomDatabase() {
             roomDb.getTvShowDao().insertAllPlaylists(PREPOPULATE_TV_SHOW_PLAYLISTS)
         }
 
-        private val PREPOPULATE_MOVIE_PLAYLISTS = listOf(
-            RoomMoviePlaylist(name = "Popular"),
-            RoomMoviePlaylist(name = "Top Rated"),
-            RoomMoviePlaylist(name = "Upcoming"),
-            RoomMoviePlaylist(name = "Now Playing")
-        )
+        private val PREPOPULATE_MOVIE_PLAYLISTS by lazy {
+            listOf(
+                RoomMoviePlaylist(name = "Popular"),
+                RoomMoviePlaylist(name = "Top Rated"),
+                RoomMoviePlaylist(name = "Upcoming"),
+                RoomMoviePlaylist(name = "Now Playing")
+            )
+        }
 
-        private val PREPOPULATE_TV_SHOW_PLAYLISTS = listOf(
-            RoomTvShowPlaylist(name = "Popular"),
-            RoomTvShowPlaylist(name = "Top Rated"),
-            RoomTvShowPlaylist(name = "Airing Today"),
-            RoomTvShowPlaylist(name = "On The Air")
-        )
+        private val PREPOPULATE_TV_SHOW_PLAYLISTS by lazy {
+            listOf(
+                RoomTvShowPlaylist(name = "Popular"),
+                RoomTvShowPlaylist(name = "Top Rated"),
+                RoomTvShowPlaylist(name = "Airing Today"),
+                RoomTvShowPlaylist(name = "On The Air")
+            )
+        }
     }
 }
