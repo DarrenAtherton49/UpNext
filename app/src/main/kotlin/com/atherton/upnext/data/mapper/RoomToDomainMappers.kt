@@ -1,5 +1,6 @@
 package com.atherton.upnext.data.mapper
 
+import com.atherton.upnext.data.db.model.config.RoomConfig
 import com.atherton.upnext.data.db.model.movie.*
 import com.atherton.upnext.data.db.model.search.RoomSearchKnownFor
 import com.atherton.upnext.data.db.model.search.RoomSearchResult
@@ -467,4 +468,16 @@ private fun List<RoomTvShowSeason>.toDomainTvSeasons(): List<TvSeason> {
             seasonNumber = season.seasonNumber
         )
     }
+}
+
+internal fun RoomConfig.toDomainConfig(): Config {
+    return Config(
+        backdropSizes = backdropSizes,
+        baseUrl = baseUrl,
+        logoSizes = logoSizes,
+        posterSizes = posterSizes,
+        profileSizes = profileSizes,
+        secureBaseUrl = secureBaseUrl,
+        stillSizes = stillSizes
+    )
 }

@@ -1,5 +1,6 @@
 package com.atherton.upnext.data.mapper
 
+import com.atherton.upnext.data.db.model.config.RoomConfig
 import com.atherton.upnext.data.db.model.movie.*
 import com.atherton.upnext.data.db.model.search.RoomSearchKnownFor
 import com.atherton.upnext.data.db.model.search.RoomSearchResult
@@ -398,5 +399,19 @@ fun List<TmdbTvCreatedBy>.toRoomTvShowCreatedBy(showId: Long): List<RoomTvShowCr
                 showId = showId
             )
         } else null
+    }
+}
+
+fun TmdbConfiguration.toRoomConfig(): RoomConfig {
+    with(images) {
+        return RoomConfig(
+            backdropSizes = backdropSizes,
+            baseUrl = baseUrl,
+            logoSizes = logoSizes,
+            posterSizes = posterSizes,
+            profileSizes = profileSizes,
+            secureBaseUrl = secureBaseUrl,
+            stillSizes = stillSizes
+        )
     }
 }

@@ -11,7 +11,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class LocalConfigStore @Inject constructor(
+class FallbackConfigStore @Inject constructor(
     @param:ApplicationContext private val context: Context,
     private val moshi: Moshi
 ) {

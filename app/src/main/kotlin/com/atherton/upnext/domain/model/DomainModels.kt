@@ -252,12 +252,12 @@ sealed class VideoSize : Parcelable {
 }
 
 data class Config(
-    val baseUrl: String,
-    val secureBaseUrl: String,
     val backdropSizes: List<String>,
+    val baseUrl: String,
     val logoSizes: List<String>,
     val posterSizes: List<String>,
     val profileSizes: List<String>,
+    val secureBaseUrl: String,
     val stillSizes: List<String> // for episode still images
 )
 

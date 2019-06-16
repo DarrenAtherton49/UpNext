@@ -6,9 +6,11 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.atherton.upnext.data.db.dao.ConfigDao
 import com.atherton.upnext.data.db.dao.MovieDao
 import com.atherton.upnext.data.db.dao.SearchResultDao
 import com.atherton.upnext.data.db.dao.TvShowDao
+import com.atherton.upnext.data.db.model.config.RoomConfig
 import com.atherton.upnext.data.db.model.movie.*
 import com.atherton.upnext.data.db.model.search.RoomSearchKnownFor
 import com.atherton.upnext.data.db.model.search.RoomSearchResult
@@ -43,7 +45,8 @@ import com.atherton.upnext.util.extensions.ioThread
         RoomTvShowVideo::class,
         RoomTvShowRecommendationJoin::class,
         RoomTvShowPlaylist::class,
-        RoomTvShowPlaylistJoin::class
+        RoomTvShowPlaylistJoin::class,
+        RoomConfig::class
     ],
     version = 1
 )
@@ -53,6 +56,7 @@ abstract class RoomDb : RoomDatabase() {
     abstract fun getSearchResultDao(): SearchResultDao
     abstract fun getMovieDao(): MovieDao
     abstract fun getTvShowDao(): TvShowDao
+    abstract fun getConfigDao(): ConfigDao
 
     companion object {
         private const val ROOM_DB_NAME = "tv_movie_database"

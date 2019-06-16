@@ -12,11 +12,13 @@
 - Set up Room database
     + Lists table
     + User_lists join table
-- Check all CachingRepositories and cache everything in Room
+- CachingConfigRepository - cache the config call
+- CachingPeopleRepository - cache the network calls in Room
 - The 'up next'/'watchlist' screen should have a button so that it is 'one click' to mark the next episode as 'watched'. So you should see the episode you're currently on, be able to click 'watched' and the next episode should come up. Also add 'undo' snackbar for this action for accidental clicks.
 - [Setting] Shortcut to add to watchlist on grid screens like a long or double tap?
     + When user clicks save, check database to see if movie details are in database already. If not, then call movie/detail network call first and then perform the save.
 - Show fallback data and offline message if the network requests fail but we still have database data.
+- Change error layout so that whole screen is clickable to retry instead of just a button
 - Make genre chips clickable - goes to discover filter
 - Caching
     - Look at TMDB 'changes' api calls - could incorporate this into caching
@@ -32,11 +34,13 @@
 - [Setting] Add setting to show all runtimes for episodes instead of just one (show one by default).
 - Add ability to follow a person as well as a tv show and movie so you can go through and watch someone's filmography.
 - Advanced search/filters. E.g. by genre (using Discover API)
-- Figure out when to invalidate data, e.g. stored movies and tv shows
+- Figure out when to invalidate data, e.g. stored movies, tv shows and people.
+    + When to refresh the data (e.g. when someone goes to the movie detail screen, the getMovie() call should go to the network instead of the database if X time has passed or something)
+    + When to delete the data (e.g. old searches)
 - WorkManager
     + Pre-load and cache the data needed for discover to work instantly (use WorkManager to periodically fetch data and also fetch it on first app run)
     + Decide when to invalidate/delete some of the past searches. E.g. only keep the 50 most recent searches.
-    + Fetch and store a new config every 3 days
+    + Fetch and store a new config every 3 days (call the ConfigRepository refreshConfig() function)
 - [Setting] Update the grid/list pages to show an icon to show which content you have already watched without clicking into the detail screen
 - Implement the list toggle mode xml layout
 - Cut down all data models I don't use to decrease memory footprint
@@ -51,7 +55,7 @@
     + Link to UserReport to suggest improvements
 - Figure out the best tabs to show in discover
 - Go through TODOs
-- Abstract Dao's and Retrofit services behind a 'DataSource' interface for testing
+- Abstract the Dao's and Retrofit services behind a 'DataSource' interface for testing
 - Make sure that menu item navigation is implemented on all screens (e.g. for settings)
 - Ensure that all ViewHolders use 'LayoutContainer' from kotlin android extensions on ViewHolders for view caching
 - Unit tests

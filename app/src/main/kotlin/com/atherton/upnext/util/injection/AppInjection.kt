@@ -8,11 +8,12 @@ import android.net.ConnectivityManager
 import com.atherton.upnext.App
 import com.atherton.upnext.BuildConfig
 import com.atherton.upnext.data.db.RoomDb
+import com.atherton.upnext.data.db.dao.ConfigDao
 import com.atherton.upnext.data.db.dao.MovieDao
 import com.atherton.upnext.data.db.dao.SearchResultDao
 import com.atherton.upnext.data.db.dao.TvShowDao
 import com.atherton.upnext.data.local.AppSettings
-import com.atherton.upnext.data.local.LocalConfigStore
+import com.atherton.upnext.data.local.FallbackConfigStore
 import com.atherton.upnext.data.local.SharedPreferencesStorage
 import com.atherton.upnext.data.network.TmdbApiKeyInterceptor
 import com.atherton.upnext.data.network.service.*
@@ -162,10 +163,11 @@ class RepositoryModule {
 
     @Provides
     @Singleton internal fun provideConfigRepository(
+        configDao: ConfigDao,
         configService: TmdbConfigService,
-        localConfigStore: LocalConfigStore
+        localConfigStore: FallbackConfigStore
     ): ConfigRepository {
-        return CachingConfigRepository(configService, localConfigStore)
+        return CachingConfigRepository(configDao, configService, localConfigStore)
     }
 
     @Provides
@@ -222,5 +224,10 @@ class DatabaseModule {
     @Provides
     @Singleton internal fun provideTvShowDao(roomDb: RoomDb): TvShowDao {
         return roomDb.getTvShowDao()
+    }
+
+    @Provides
+    @Singleton internal fun provideConfigDao(roomDb: RoomDb): ConfigDao {
+        return roomDb.getConfigDao()
     }
 }

@@ -47,13 +47,13 @@ private fun TmdbApiError.toDomainApiError(): ApiError = ApiError(statusMessage, 
 internal fun TmdbConfiguration.toDomainConfig(): Config {
     with(images) {
         return Config(
-            baseUrl,
-            secureBaseUrl,
-            backdropSizes,
-            logoSizes,
-            posterSizes,
-            profileSizes,
-            stillSizes
+            backdropSizes = backdropSizes,
+            baseUrl = baseUrl,
+            logoSizes = logoSizes,
+            posterSizes = posterSizes,
+            profileSizes = profileSizes,
+            secureBaseUrl = secureBaseUrl,
+            stillSizes = stillSizes
         )
     }
 }
