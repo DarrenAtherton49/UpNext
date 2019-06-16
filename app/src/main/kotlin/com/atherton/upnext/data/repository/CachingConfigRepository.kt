@@ -25,17 +25,26 @@ class CachingConfigRepository @Inject constructor(
     private val fallbackConfigStore: FallbackConfigStore
 ) : ConfigRepository {
 
+    private var cachedConfig: Config? = null
+
     override fun getConfig(): Config {
-        val dbConfig: RoomConfig? = configDao.getConfig()
-        return if (dbConfig != null) {
-            dbConfig.toDomainConfig()
+        val cached = cachedConfig
+        if (cached != null) {
+            return cached
         } else {
-            val fallbackConfig = fallbackConfigStore.getConfig()
-            val config = fallbackConfig.toDomainConfig()
-            ioThread {
-                configDao.insertConfig(fallbackConfig.toRoomConfig())
+            val dbConfig: RoomConfig? = configDao.getConfig()
+            return if (dbConfig != null) {
+                val config = dbConfig.toDomainConfig()
+                cachedConfig = config
+                config
+            } else {
+                val fallbackConfig = fallbackConfigStore.getConfig()
+                val config = fallbackConfig.toDomainConfig()
+                ioThread {
+                    configDao.insertConfig(fallbackConfig.toRoomConfig())
+                }
+                config
             }
-            config
         }
     }
 

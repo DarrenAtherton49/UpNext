@@ -101,7 +101,7 @@
     + Additional work to make sure that whenever anything is done in the app (such as the user marking a movie as 'watched'), the statistics are calculated and updated in the database.
 
 ### 1.0 Release
-- New name and package maybe? - UpNext is already taken
+- New name and package maybe? - UpNext is already taken. Find and replace all instances of 'UpNext' from the project
 - Accessibility - make sure that Talkback works properly and explore the accessibility attributes in XML. Also add all contentDescriptions on ImageViews and dynamically set contentDescriptions for images for movies etc.
 - Reminders/notifications
 - Custom lists and lists based on filters. Could be used for stuff like dvd collection etc.

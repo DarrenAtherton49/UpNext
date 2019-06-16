@@ -3,7 +3,7 @@ package com.atherton.upnext.data.network.model
 import com.squareup.moshi.Json
 
 /*
- * Network/data models. The below models should always be mapped to app-level/domain models before use.
+ * Network/data models. The below models should always be mapped to domain or Room models before use.
  */
 
 // Retrofit/Moshi deserialize to this class when there is an API error.
