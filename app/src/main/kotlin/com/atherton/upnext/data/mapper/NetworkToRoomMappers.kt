@@ -2,24 +2,17 @@ package com.atherton.upnext.data.mapper
 
 import com.atherton.upnext.data.db.model.config.RoomConfig
 import com.atherton.upnext.data.db.model.movie.*
-import com.atherton.upnext.data.db.model.search.RoomSearchKnownFor
+import com.atherton.upnext.data.db.model.person.RoomPerson
+import com.atherton.upnext.data.db.model.person.RoomPersonCredit
+import com.atherton.upnext.data.db.model.person.RoomPersonCreditType
 import com.atherton.upnext.data.db.model.search.RoomSearchResult
 import com.atherton.upnext.data.db.model.tv.*
 import com.atherton.upnext.data.network.model.*
 
-
-fun List<TmdbMultiSearchResult>.toRoomSearchResults(): List<Pair<RoomSearchResult, List<RoomSearchKnownFor>?>> {
-
-    val list: MutableList<Pair<RoomSearchResult, List<RoomSearchKnownFor>?>> = mutableListOf()
-    this.forEach { networkSearchResult ->
-        val searchResult = networkSearchResult.toRoomSearchResult()
-        val knownFor = networkSearchResult.knownFor?.toRoomKnownFor()
-
-        if (searchResult != null) {
-            list.add(Pair(searchResult, knownFor))
-        }
+fun List<TmdbMultiSearchResult>.toRoomSearchResults(): List<RoomSearchResult> {
+    return this.mapNotNull { searchResult ->
+        searchResult.toRoomSearchResult()
     }
-    return list
 }
 
 private fun TmdbMultiSearchResult.toRoomSearchResult(): RoomSearchResult? {
@@ -49,34 +42,6 @@ private fun TmdbMultiSearchResult.toRoomSearchResult(): RoomSearchResult? {
 
             // Person specific fields
             profilePath = profilePath
-        )
-    } else null
-}
-
-fun List<TmdbMultiSearchResult>.toRoomKnownFor(): List<RoomSearchKnownFor> {
-    return this.mapNotNull { it.toRoomKnownFor() }
-}
-
-private fun TmdbMultiSearchResult.toRoomKnownFor(): RoomSearchKnownFor? {
-    return if (id != null && mediaType != null) {
-        return RoomSearchKnownFor(
-            adultContent = adultContent,
-            backdropPath = backdropPath,
-            firstAirDate = firstAirDate,
-            id = id.toLong(),
-            mediaType = mediaType,
-            name = name,
-            originalLanguage = originalLanguage,
-            originalName = originalName,
-            originalTitle = originalTitle,
-            overview = overview,
-            popularity = popularity,
-            posterPath = posterPath,
-            releaseDate = releaseDate,
-            title = title,
-            video = video,
-            voteAverage = voteAverage,
-            voteCount = voteCount
         )
     } else null
 }
@@ -414,4 +379,86 @@ fun TmdbConfiguration.toRoomConfig(): RoomConfig {
             stillSizes = stillSizes
         )
     }
+}
+
+fun TmdbPerson.toRoomPerson(isModelComplete: Boolean): RoomPerson {
+    return RoomPerson(
+        adultContent = adultContent,
+        id = id.toLong(),
+        name = name,
+        popularity = popularity,
+        profilePath = profilePath,
+        alsoKnownAs = alsoKnownAs,
+        biography = biography,
+        birthday = birthday,
+        deathDay = deathDay,
+        gender = gender,
+        homepage = homepage,
+        imdbId = imdbId,
+        knownForDepartment = knownForDepartment,
+        placeOfBirth = placeOfBirth,
+        isModelComplete = isModelComplete
+    )
+}
+
+fun TmdbPerson.MovieCredits.toRoomPersonMovieCredits(personId: Long): List<RoomPersonCredit> {
+    val credits: MutableList<RoomPersonCredit> = ArrayList()
+    this.cast.forEach { credit ->
+        if (credit.id != null && credit.posterPath != null && credit.title != null) {
+            credits.add(
+                RoomPersonCredit(
+                    id = credit.id.toLong(),
+                    posterPath = credit.posterPath,
+                    title = credit.title,
+                    creditType = RoomPersonCreditType.MOVIE_CAST,
+                    personId = personId
+                )
+            )
+        }
+    }
+    this.crew.forEach { credit ->
+        if (credit.id != null && credit.posterPath != null && credit.title != null) {
+            credits.add(
+                RoomPersonCredit(
+                    id = credit.id.toLong(),
+                    posterPath = credit.posterPath,
+                    title = credit.title,
+                    creditType = RoomPersonCreditType.MOVIE_CREW,
+                    personId = personId
+                )
+            )
+        }
+    }
+    return credits.toList()
+}
+
+fun TmdbPerson.TvCredits.toRoomPersonTvCredits(personId: Long): List<RoomPersonCredit> {
+    val credits: MutableList<RoomPersonCredit> = ArrayList()
+    this.cast.forEach { credit ->
+        if (credit.id != null && credit.posterPath != null && credit.name != null) {
+            credits.add(
+                RoomPersonCredit(
+                    id = credit.id.toLong(),
+                    posterPath = credit.posterPath,
+                    title = credit.name,
+                    creditType = RoomPersonCreditType.TV_CAST,
+                    personId = personId
+                )
+            )
+        }
+    }
+    this.crew.forEach { credit ->
+        if (credit.id != null && credit.posterPath != null && credit.name != null) {
+            credits.add(
+                RoomPersonCredit(
+                    id = credit.id.toLong(),
+                    posterPath = credit.posterPath,
+                    title = credit.name,
+                    creditType = RoomPersonCreditType.TV_CREW,
+                    personId = personId
+                )
+            )
+        }
+    }
+    return credits.toList()
 }

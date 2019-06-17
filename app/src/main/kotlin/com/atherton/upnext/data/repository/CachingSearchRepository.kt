@@ -1,6 +1,7 @@
 package com.atherton.upnext.data.repository
 
 import com.atherton.upnext.data.db.dao.SearchResultDao
+import com.atherton.upnext.data.db.model.search.RoomSearchResult
 import com.atherton.upnext.data.db.model.search.RoomSearchTerm
 import com.atherton.upnext.data.mapper.toDomainLceResponse
 import com.atherton.upnext.data.mapper.toDomainSearchables
@@ -43,8 +44,8 @@ class CachingSearchRepository @Inject constructor(
                 }
             }
             .map { networkResponse ->
-                val dbResults = searchResultDao.getSearchResultsForSearchTerm(query)
-                val domainResults = dbResults.toDomainSearchables()
+                val dbResults: List<RoomSearchResult> = searchResultDao.getSearchResultsForSearchTerm(query)
+                val domainResults: List<Searchable> = dbResults.toDomainSearchables()
                 networkResponse.toDomainLceResponse(data = domainResults)
             }
     }

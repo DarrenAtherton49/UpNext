@@ -123,7 +123,6 @@ data class Person(
     val adultContent: Boolean?,
     val detail: Detail?,
     override val id: Long,
-    val knownFor: List<Watchable>?, // can be movies or tv shows
     val name: String?,
     override val popularity: Float?,
     val profilePath: String?
@@ -139,9 +138,20 @@ data class Person(
         val biography: String?,
         val placeOfBirth: String?,
         val imdbId: String?,
-        val homepage: String?
+        val homepage: String?,
+        val movieCastCredits: List<PersonCredit>,
+        val movieCrewCredits: List<PersonCredit>,
+        val tvCastCredits: List<PersonCredit>,
+        val tvCrewCredits: List<PersonCredit>
     ) : Parcelable
 }
+
+@Parcelize
+data class PersonCredit(
+    val id: Long,
+    val posterPath: String,
+    val title: String
+) : Parcelable
 
 @Parcelize
 data class CastMember(

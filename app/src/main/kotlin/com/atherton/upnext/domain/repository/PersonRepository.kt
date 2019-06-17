@@ -2,9 +2,9 @@ package com.atherton.upnext.domain.repository
 
 import com.atherton.upnext.domain.model.LceResponse
 import com.atherton.upnext.domain.model.Person
-import io.reactivex.Single
+import io.reactivex.Observable
 
-interface PeopleRepository {
+interface PersonRepository {
 
-    fun getPerson(id: Int): Single<LceResponse<Person>>
+    fun getPerson(id: Long): Observable<LceResponse<Person>>
 }

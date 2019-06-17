@@ -112,10 +112,11 @@ class TmdbMultiSearchResponseAdapter {
             TmdbPerson(
                 adultContent,
                 id,
-                knownFor.toSpecificEntities(),
                 name,
                 popularity,
                 profilePath,
+                null,
+                null,
                 null,
                 null,
                 null,

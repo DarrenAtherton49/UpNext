@@ -12,7 +12,6 @@
 - Set up Room database
     + Lists table
     + User_lists join table
-- CachingPeopleRepository - cache the network calls in Room
 - The 'up next'/'watchlist' screen should have a button so that it is 'one click' to mark the next episode as 'watched'. So you should see the episode you're currently on, be able to click 'watched' and the next episode should come up. Also add 'undo' snackbar for this action for accidental clicks.
 - [Setting] Shortcut to add to watchlist on grid screens like a long or double tap?
     + When user clicks save, check database to see if movie details are in database already. If not, then call movie/detail network call first and then perform the save.
@@ -42,7 +41,7 @@
     + Fetch and store a new config every 3 days (call the ConfigRepository refreshConfig() function)
 - [Setting] Update the grid/list pages to show an icon to show which content you have already watched without clicking into the detail screen
 - Implement the list toggle mode xml layout
-- Cut down all data models I don't use to decrease memory footprint
+- Cut down all data models I don't use to decrease memory footprint. For example on the list/grid screens, we probably don't need a lot of the attributes other than the name and the image urls for the content. Then when we navigate to the detail screen, we get everything
 - Refresh config from TMDB every 3 days as per documentation
 - Display TMDB attribution in the app
 - Add 'About' screen to the settings screen

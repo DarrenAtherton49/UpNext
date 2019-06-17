@@ -8,10 +8,7 @@ import android.net.ConnectivityManager
 import com.atherton.upnext.App
 import com.atherton.upnext.BuildConfig
 import com.atherton.upnext.data.db.RoomDb
-import com.atherton.upnext.data.db.dao.ConfigDao
-import com.atherton.upnext.data.db.dao.MovieDao
-import com.atherton.upnext.data.db.dao.SearchResultDao
-import com.atherton.upnext.data.db.dao.TvShowDao
+import com.atherton.upnext.data.db.dao.*
 import com.atherton.upnext.data.local.AppSettings
 import com.atherton.upnext.data.local.FallbackConfigStore
 import com.atherton.upnext.data.local.SharedPreferencesStorage
@@ -51,7 +48,7 @@ interface AppComponent {
     fun appStringProvider(): AppStringProvider
     fun tvShowRepository(): TvShowRepository
     fun movieRepository(): MovieRepository
-    fun peopleRepository(): PeopleRepository
+    fun personRepository(): PersonRepository
     fun searchRepository(): SearchRepository
     fun configRepository(): ConfigRepository
     fun settingsRepository(): SettingsRepository
@@ -158,8 +155,12 @@ class RepositoryModule {
     }
 
     @Provides
-    @Singleton internal fun providePeopleRepository(peopleService: TmdbPeopleService): PeopleRepository =
-        CachingPeopleRepository(peopleService)
+    @Singleton internal fun providePersonRepository(
+        personDao: PersonDao,
+        personService: TmdbPersonService
+    ): PersonRepository  {
+        return CachingPersonRepository(personDao, personService)
+    }
 
     @Provides
     @Singleton internal fun provideConfigRepository(
@@ -199,8 +200,8 @@ class ServiceModule {
         retrofit.create(TmdbConfigService::class.java)
 
     @Provides
-    @Singleton internal fun provideTmdbPeopleService(retrofit: Retrofit): TmdbPeopleService =
-        retrofit.create(TmdbPeopleService::class.java)
+    @Singleton internal fun provideTmdbPersonService(retrofit: Retrofit): TmdbPersonService =
+        retrofit.create(TmdbPersonService::class.java)
 }
 
 @Module
@@ -224,6 +225,11 @@ class DatabaseModule {
     @Provides
     @Singleton internal fun provideTvShowDao(roomDb: RoomDb): TvShowDao {
         return roomDb.getTvShowDao()
+    }
+
+    @Provides
+    @Singleton internal fun providePersonDao(roomDb: RoomDb): PersonDao {
+        return roomDb.getPersonDao()
     }
 
     @Provides

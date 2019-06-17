@@ -6,13 +6,11 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.atherton.upnext.data.db.dao.ConfigDao
-import com.atherton.upnext.data.db.dao.MovieDao
-import com.atherton.upnext.data.db.dao.SearchResultDao
-import com.atherton.upnext.data.db.dao.TvShowDao
+import com.atherton.upnext.data.db.dao.*
 import com.atherton.upnext.data.db.model.config.RoomConfig
 import com.atherton.upnext.data.db.model.movie.*
-import com.atherton.upnext.data.db.model.search.RoomSearchKnownFor
+import com.atherton.upnext.data.db.model.person.RoomPerson
+import com.atherton.upnext.data.db.model.person.RoomPersonCredit
 import com.atherton.upnext.data.db.model.search.RoomSearchResult
 import com.atherton.upnext.data.db.model.search.RoomSearchTerm
 import com.atherton.upnext.data.db.model.tv.*
@@ -22,7 +20,6 @@ import com.atherton.upnext.util.extensions.ioThread
     entities = [
         RoomSearchResult::class,
         RoomSearchTerm::class,
-        RoomSearchKnownFor::class,
         RoomMovie::class,
         RoomMovieGenre::class,
         RoomMovieProductionCompany::class,
@@ -46,6 +43,8 @@ import com.atherton.upnext.util.extensions.ioThread
         RoomTvShowRecommendationJoin::class,
         RoomTvShowPlaylist::class,
         RoomTvShowPlaylistJoin::class,
+        RoomPerson::class,
+        RoomPersonCredit::class,
         RoomConfig::class
     ],
     version = 1
@@ -56,6 +55,7 @@ abstract class RoomDb : RoomDatabase() {
     abstract fun getSearchResultDao(): SearchResultDao
     abstract fun getMovieDao(): MovieDao
     abstract fun getTvShowDao(): TvShowDao
+    abstract fun getPersonDao(): PersonDao
     abstract fun getConfigDao(): ConfigDao
 
     companion object {

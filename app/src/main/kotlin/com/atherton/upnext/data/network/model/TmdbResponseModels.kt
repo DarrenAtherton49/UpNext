@@ -179,7 +179,6 @@ data class TmdbPerson(
     // base/search fields
     @Json(name = "adult") val adultContent: Boolean?,
     @Json(name = "id") val id: Int,
-    @Json(name = "known_for") val knownFor: List<TmdbMultiSearchModel>?, // can be tv shows or movies
     @Json(name = "name") val name: String?,
     @Json(name = "popularity") val popularity: Float?,
     @Json(name = "profile_path") val profilePath: String?,
@@ -193,8 +192,47 @@ data class TmdbPerson(
     @Json(name = "biography") val biography: String?,
     @Json(name = "place_of_birth") val placeOfBirth: String?,
     @Json(name = "imdb_id") val imdbId: String?,
-    @Json(name = "homepage") val homepage: String?
-) : TmdbMultiSearchModel()
+    @Json(name = "homepage") val homepage: String?,
+
+    // appendable fields
+    @Json(name = "movie_credits") val movieCredits: MovieCredits?,
+    @Json(name = "tv_credits") val tvCredits: TvCredits?
+) : TmdbMultiSearchModel() {
+
+    data class MovieCredits(
+        @Json(name = "cast") val cast: List<Cast>,
+        @Json(name = "crew") val crew: List<Crew>
+    ) {
+        data class Cast(
+            @Json(name = "id") val id: Int?,
+            @Json(name = "poster_path") val posterPath: String?,
+            @Json(name = "title") val title: String?
+        )
+
+        data class Crew(
+            @Json(name = "id") val id: Int?,
+            @Json(name = "poster_path") val posterPath: String?,
+            @Json(name = "title") val title: String?
+        )
+    }
+
+    data class TvCredits(
+        @Json(name = "cast") val cast: List<Cast>,
+        @Json(name = "crew") val crew: List<Crew>
+    ) {
+        data class Cast(
+            @Json(name = "id") val id: Int?,
+            @Json(name = "name") val name: String?,
+            @Json(name = "poster_path") val posterPath: String?
+        )
+
+        data class Crew(
+            @Json(name = "id") val id: Int?,
+            @Json(name = "name") val name: String?,
+            @Json(name = "poster_path") val posterPath: String?
+        )
+    }
+}
 
 data class TmdbCollection(
     @Json(name = "backdrop_path") val backdropPath: String?,

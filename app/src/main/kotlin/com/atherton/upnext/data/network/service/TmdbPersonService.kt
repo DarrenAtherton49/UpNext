@@ -7,10 +7,10 @@ import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Path
 
-interface TmdbPeopleService {
+interface TmdbPersonService {
 
     @GET("/person/{person_id}")
     fun getPersonDetails(
-        @Path("person_id") id: Int
+        @Path("person_id") id: Long
     ): Single<NetworkResponse<TmdbPerson, TmdbApiError>>
 }

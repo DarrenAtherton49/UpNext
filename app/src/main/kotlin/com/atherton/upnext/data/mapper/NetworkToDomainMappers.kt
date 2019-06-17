@@ -141,28 +141,6 @@ fun TmdbMovie.toDomainMovie(): Movie {
     )
 }
 
-fun TmdbPerson.toDomainPerson(): Person {
-    return Person(
-        adultContent = adultContent,
-        detail = Person.Detail(
-            birthday = birthday,
-            knownForDepartment = knownForDepartment,
-            deathDay = deathDay,
-            alsoKnownAs = alsoKnownAs,
-            gender = gender.toDomainGender(),
-            biography = biography,
-            placeOfBirth = placeOfBirth,
-            imdbId = imdbId,
-            homepage = homepage
-        ),
-        id = id.toLong(),
-        knownFor = knownFor.toDomainWatchables(),
-        name = name,
-        popularity = popularity,
-        profilePath = profilePath
-    )
-}
-
 private fun List<TmdbCastMember>.toDomainMovieCast(): List<CastMember> {
     return this.mapNotNull {
         if (it.id != null) {

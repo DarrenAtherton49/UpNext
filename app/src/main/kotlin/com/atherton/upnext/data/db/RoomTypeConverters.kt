@@ -1,6 +1,7 @@
 package com.atherton.upnext.data.db
 
 import androidx.room.TypeConverter
+import com.atherton.upnext.data.db.model.person.RoomPersonCreditType
 
 internal class RoomTypeConverters {
 
@@ -32,5 +33,26 @@ internal class RoomTypeConverters {
     @TypeConverter
     fun listOfIntsToString(value: List<Int>?): String? {
         return value?.joinToString(separator = ",")
+    }
+
+    @TypeConverter
+    fun personCreditTypeToInt(credit: RoomPersonCreditType): Int {
+        return when (credit) {
+            RoomPersonCreditType.TV_CAST -> RoomPersonCreditType.TYPE_TV_CAST
+            RoomPersonCreditType.TV_CREW -> RoomPersonCreditType.TYPE_TV_CREW
+            RoomPersonCreditType.MOVIE_CAST -> RoomPersonCreditType.TYPE_MOVIE_CAST
+            RoomPersonCreditType.MOVIE_CREW -> RoomPersonCreditType.TYPE_MOVIE_CREW
+        }
+    }
+
+    @TypeConverter
+    fun intToPersonCreditType(int: Int): RoomPersonCreditType {
+        return when (int) {
+            RoomPersonCreditType.TYPE_TV_CAST -> RoomPersonCreditType.TV_CAST
+            RoomPersonCreditType.TYPE_TV_CREW -> RoomPersonCreditType.TV_CREW
+            RoomPersonCreditType.TYPE_MOVIE_CAST -> RoomPersonCreditType.MOVIE_CAST
+            RoomPersonCreditType.TYPE_MOVIE_CREW -> RoomPersonCreditType.MOVIE_CREW
+            else -> throw IllegalArgumentException("Invalid person credit type")
+        }
     }
 }
