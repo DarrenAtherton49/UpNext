@@ -10,6 +10,7 @@ interface MovieDao {
     @Transaction
     fun insertMovieData(
         movie: RoomMovie,
+        movieStatus: RoomMovieStatus,
         castMembers: List<RoomMovieCastMember>?,
         crewMembers: List<RoomMovieCrewMember>?,
         genres: List<RoomMovieGenre>?,
@@ -20,6 +21,7 @@ interface MovieDao {
         videos: List<RoomMovieVideo>?
     ) {
         insertMovie(movie)
+        insertMovieStatus(movieStatus)
 
         castMembers?.let { insertAllCastMembers(it) }
         crewMembers?.let { insertAllCrewMembers(it) }
@@ -62,6 +64,9 @@ interface MovieDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertMovie(movie: RoomMovie): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertMovieStatus(movieStatus: RoomMovieStatus)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAllMovies(movies: List<RoomMovie>): List<Long>

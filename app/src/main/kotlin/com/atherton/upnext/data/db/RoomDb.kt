@@ -21,6 +21,7 @@ import com.atherton.upnext.util.extensions.ioThread
         RoomSearchResult::class,
         RoomSearchTerm::class,
         RoomMovie::class,
+        RoomMovieStatus::class,
         RoomMovieGenre::class,
         RoomMovieProductionCompany::class,
         RoomProductionCountry::class,

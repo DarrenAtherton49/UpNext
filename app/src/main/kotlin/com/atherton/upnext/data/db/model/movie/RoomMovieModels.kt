@@ -69,6 +69,30 @@ data class RoomMovie(
     @ColumnInfo(name = "is_model_complete") val isModelComplete: Boolean
 )
 
+@Entity(
+    tableName = "movie_status",
+    indices = [
+        Index(value = [MOVIE_ID], unique = true)
+    ],
+    foreignKeys = [
+        ForeignKey(
+            entity = RoomMovie::class,
+            parentColumns = [ID],
+            childColumns = [MOVIE_ID],
+            onUpdate = CASCADE,
+            onDelete = CASCADE
+        )
+    ]
+)
+data class RoomMovieStatus(
+    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = ID) var id: Long = 0,
+    @ColumnInfo(name = "in_watchlist") val inWatchlist: Boolean = false,
+    @ColumnInfo(name = "is_watched") val isWatched: Boolean = false,
+
+    // Join/utility field
+    @ColumnInfo(name = MOVIE_ID) val movieId: Long
+)
+
 data class RoomMovieCollection(
     @ColumnInfo(name = "backdrop_path") val backdropPath: String?,
     @PrimaryKey @ColumnInfo(name = ID) val id: Long,

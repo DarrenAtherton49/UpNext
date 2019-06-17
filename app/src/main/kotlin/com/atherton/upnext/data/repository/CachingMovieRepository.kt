@@ -3,6 +3,7 @@ package com.atherton.upnext.data.repository
 import com.atherton.upnext.data.db.dao.MovieDao
 import com.atherton.upnext.data.db.model.movie.RoomMovie
 import com.atherton.upnext.data.db.model.movie.RoomMovieAllData
+import com.atherton.upnext.data.db.model.movie.RoomMovieStatus
 import com.atherton.upnext.data.mapper.*
 import com.atherton.upnext.data.network.model.NetworkResponse
 import com.atherton.upnext.data.network.model.TmdbMovie
@@ -155,6 +156,7 @@ class CachingMovieRepository @Inject constructor(
         val movieId: Long = movie.id.toLong()
         movieDao.insertMovieData(
             movie = movie.toRoomMovie(true),
+            movieStatus = RoomMovieStatus(movieId = movieId),
             castMembers = movie.credits?.cast?.toRoomMovieCast(movieId),
             crewMembers = movie.credits?.crew?.toRoomMovieCrew(movieId),
             genres = movie.genres?.toRoomMovieGenres(movieId),

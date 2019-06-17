@@ -10,8 +10,36 @@
 
 ### Alpha
 - Set up Room database
-    + Lists table
-    + User_lists join table
+    - Custom lists
+        - movie_lists table
+               * id: Long
+                * name: String
+                * order: Int
+            + Pre-populated data (do this in RoomDb)
+                * watchlist (order: 1)
+                * watched (order: 2) - Add each movie to this when it has been marked as watched 
+        - movie_lists_join table
+            + Columns
+                * movie_id: Long
+                * list_id: Long
+        - tv_show_lists table
+            + Columns
+                * id: Long
+                * name: String
+                * order: Int
+            + Pre-populated data (do this in RoomDb)
+                * watchlist (order: 1)
+                * watched - only add to this when every episode is complete
+                * history (order: 2) - Add each episode to this when it has been marked as watched 
+        - tv_show_lists_join table
+            + Columns
+                * show_id: Long
+                * content: Long
+                * contentType: Enum (tv show, episode or season)
+    - tv show
+        + tv show - add flag 
+        + season - when an episode is marked as 'watched', update the season 'watchCount'
+        + episode - when an episode is marked as 'watched', update the episode 'watched' flag
 - The 'up next'/'watchlist' screen should have a button so that it is 'one click' to mark the next episode as 'watched'. So you should see the episode you're currently on, be able to click 'watched' and the next episode should come up. Also add 'undo' snackbar for this action for accidental clicks.
 - [Setting] Shortcut to add to watchlist on grid screens like a long or double tap?
     + When user clicks save, check database to see if movie details are in database already. If not, then call movie/detail network call first and then perform the save.
@@ -29,6 +57,13 @@
     + Watchlist
     + Watch history/Watched
 - Implement remaining sections on detail screen such as 'seasons'
+- TV show/movie lists
+    + Have option to sort the list items, e.g.
+        * Recently watched
+        * Newest episode
+        * Alphabetical
+        * Total episodes
+        * Episodes left to watch
 - Add genres tab to the discover screen tabs to easily look at genre (as well as in the advanced filter)
 - [Setting] Add setting to show all runtimes for episodes instead of just one (show one by default).
 - Add ability to follow a person as well as a tv show and movie so you can go through and watch someone's filmography.
@@ -92,6 +127,7 @@
 - Touch surface ripple animations
 - Add transitions for fragments, e.g. slide up when entering
 - Add button to mark 'all episodes before this one' as watched
+- Don't show a '0.00' rating for content - show 'n/a' or something instead
 - [Setting] Light, dark and black themes
     + Use DayNight theme
 - [Setting] Add setting to show/hide rating on grid view so it doesn't take up space over thumbnail - Default to hidden

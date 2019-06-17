@@ -319,6 +319,7 @@ data class RoomTvShowSeason(
     @ColumnInfo(name = "overview") val overview: String?,
     @ColumnInfo(name = "poster_path") val posterPath: String?,
     @ColumnInfo(name = "season_number") val seasonNumber: Int?,
+    @ColumnInfo(name = "watch_count") val watchCount: Int = 0,
 
     @ColumnInfo(name = SHOW_ID) val showId: Long
 )
