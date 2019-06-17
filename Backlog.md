@@ -37,7 +37,7 @@
                 * content: Long
                 * contentType: Enum (tv show, episode or season)
     - tv show
-        + tv show - add flag 
+        + tv_show_status table - copy the movie_status table layout
         + season - when an episode is marked as 'watched', update the season 'watchCount'
         + episode - when an episode is marked as 'watched', update the episode 'watched' flag
 - The 'up next'/'watchlist' screen should have a button so that it is 'one click' to mark the next episode as 'watched'. So you should see the episode you're currently on, be able to click 'watched' and the next episode should come up. Also add 'undo' snackbar for this action for accidental clicks.
