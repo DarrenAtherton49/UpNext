@@ -28,6 +28,7 @@
 - Implement Movies Screen
     + Watchlist
     + Watch history/Watched
+- Implement remaining sections on detail screen such as 'seasons'
 - Add genres tab to the discover screen tabs to easily look at genre (as well as in the advanced filter)
 - [Setting] Add setting to show all runtimes for episodes instead of just one (show one by default).
 - Add ability to follow a person as well as a tv show and movie so you can go through and watch someone's filmography.
@@ -92,6 +93,7 @@
 - Add transitions for fragments, e.g. slide up when entering
 - Add button to mark 'all episodes before this one' as watched
 - [Setting] Light, dark and black themes
+    + Use DayNight theme
 - [Setting] Add setting to show/hide rating on grid view so it doesn't take up space over thumbnail - Default to hidden
 - [Setting] Add setting to change region and release times. After implementing the setting, the API calls should reflect this change.
 - [Setting] Ability to reorder the movie/tv/person details screen sections in the recyclerview from the settings.
