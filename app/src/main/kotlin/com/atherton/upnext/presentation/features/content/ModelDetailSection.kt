@@ -1,4 +1,4 @@
-package com.atherton.upnext.presentation.common.detail
+package com.atherton.upnext.presentation.features.content
 
 import android.os.Parcelable
 import com.atherton.upnext.domain.model.*

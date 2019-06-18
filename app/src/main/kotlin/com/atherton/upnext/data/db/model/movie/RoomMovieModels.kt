@@ -4,7 +4,7 @@ import androidx.room.*
 import androidx.room.ForeignKey.CASCADE
 
 private const val ID = "id"
-private const val MOVIE_ID = "MOVIE_ID"
+private const val MOVIE_ID = "movie_id"
 
 class RoomMovieAllData {
 
@@ -276,7 +276,6 @@ data class RoomMovieCrewMember(
     ]
 )
 data class RoomMovieRecommendationJoin(
-
     @ColumnInfo(name = MOVIE_ID) val movieId: Long,
     @ColumnInfo(name = "recommendation_id") val recommendationId: Long
 )
@@ -338,7 +337,6 @@ data class RoomMoviePlaylist(
     ]
 )
 data class RoomMoviePlaylistJoin(
-
     @ColumnInfo(name = MOVIE_ID) val movieId: Long,
     @ColumnInfo(name = "playlist_id") val playlistId: Long
 )

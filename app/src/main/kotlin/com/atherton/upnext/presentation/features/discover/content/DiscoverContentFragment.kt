@@ -80,15 +80,7 @@ class DiscoverContentFragment
         }
     }
 
-    override fun onMenuItemClicked(menuItem: MenuItem): Boolean {
-        return when (menuItem.itemId) {
-            R.id.action_search -> {
-                sharedViewModel.dispatch(MainAction.SearchActionClicked)
-                true
-            }
-            else -> false
-        }
-    }
+    override fun onMenuItemClicked(menuItem: MenuItem): Boolean = false
 
     override fun renderState(state: DiscoverContentState) {
         when (state) {
@@ -119,13 +111,19 @@ class DiscoverContentFragment
                 }
             }
             is DiscoverContentState.Error -> {
-                progressBar.isVisible = false
-                recyclerView.isVisible = false
-                errorLayout.isVisible = true
-                errorTextView.text = state.message
-                retryButton.isVisible = state.canRetry
 
-                //todo deal with offline mode - if we have fallback data then show that
+                progressBar.isVisible = false
+
+                if (state.fallbackResults != null && state.fallbackResults.isNotEmpty()) {
+                    recyclerView.isVisible = true
+                    recyclerViewAdapter.submitList(state.fallbackResults)
+                    //todo show device is offline/data is stale message?
+                } else {
+                    recyclerView.isVisible = false
+                    errorLayout.isVisible = true
+                    errorTextView.text = state.message
+                    retryButton.isVisible = state.canRetry
+                }
             }
         }
     }

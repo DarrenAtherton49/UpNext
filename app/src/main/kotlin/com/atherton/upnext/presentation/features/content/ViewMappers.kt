@@ -1,7 +1,6 @@
 package com.atherton.upnext.presentation.features.content
 
 import com.atherton.upnext.domain.model.*
-import com.atherton.upnext.presentation.common.detail.ModelDetailSection
 import com.atherton.upnext.presentation.common.searchmodel.buildBackdropPath
 import com.atherton.upnext.presentation.common.searchmodel.buildPosterPath
 import com.atherton.upnext.presentation.common.searchmodel.buildProfilePath

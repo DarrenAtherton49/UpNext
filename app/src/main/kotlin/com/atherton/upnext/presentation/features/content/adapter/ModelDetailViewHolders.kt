@@ -1,4 +1,4 @@
-package com.atherton.upnext.presentation.common.detail
+package com.atherton.upnext.presentation.features.content.adapter
 
 import android.os.Parcelable
 import android.view.View
@@ -9,6 +9,7 @@ import com.atherton.upnext.domain.model.CastMember
 import com.atherton.upnext.domain.model.CrewMember
 import com.atherton.upnext.domain.model.Video
 import com.atherton.upnext.domain.model.Watchable
+import com.atherton.upnext.presentation.features.content.ModelDetailSection
 import com.atherton.upnext.util.extensions.isVisible
 import com.atherton.upnext.util.glide.GlideRequests
 import com.atherton.upnext.util.recyclerview.LinearSpacingItemDecoration

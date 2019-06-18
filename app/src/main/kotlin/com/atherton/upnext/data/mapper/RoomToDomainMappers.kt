@@ -1,6 +1,8 @@
 package com.atherton.upnext.data.mapper
 
 import com.atherton.upnext.data.db.model.config.RoomConfig
+import com.atherton.upnext.data.db.model.list.RoomMovieList
+import com.atherton.upnext.data.db.model.list.RoomTvShowList
 import com.atherton.upnext.data.db.model.movie.*
 import com.atherton.upnext.data.db.model.person.RoomPerson
 import com.atherton.upnext.data.db.model.person.RoomPersonAllData
@@ -75,7 +77,11 @@ private fun RoomSearchResult.toDomainPerson(): Person {
     )
 }
 
-fun RoomMovieAllData.toDomainMovie(recommendations: List<RoomMovie>): Movie? {
+fun List<RoomMovieAllData>.toDomainMovies(): List<Movie> {
+    return this.mapNotNull { it.toDomainMovie(null) }
+}
+
+fun RoomMovieAllData.toDomainMovie(recommendations: List<RoomMovie>?): Movie? {
     return this.movie?.toDomainMovie(
         cast = cast,
         crew = crew,
@@ -374,7 +380,7 @@ private fun RoomTvShowLastEpisodeToAir.toDomainLastEpisodeToAir(): TvShowLastEpi
     return TvShowLastEpisodeToAir(
         airDate = airDate,
         episodeNumber = episodeNumber,
-        id = id.toLong(),
+        id = id,
         name = name,
         overview = overview,
         productionCode = productionCode,
@@ -470,6 +476,26 @@ fun List<RoomPersonCredit>.toDomainPersonCredits(predicate: (RoomPersonCredit) -
             id = credit.id,
             posterPath = credit.posterPath,
             title = credit.title
+        )
+    }
+}
+
+fun List<RoomMovieList>.toDomainMovieLists(): List<MovieList> {
+    return this.map { movieList ->
+        MovieList(
+            id = movieList.id,
+            name = movieList.name,
+            sortOrder = movieList.sortOrder
+        )
+    }
+}
+
+fun List<RoomTvShowList>.toDomainTvShowLists(): List<TvShowList> {
+    return this.map { tvShowList ->
+        TvShowList(
+            id = tvShowList.id,
+            name = tvShowList.name,
+            sortOrder = tvShowList.sortOrder
         )
     }
 }

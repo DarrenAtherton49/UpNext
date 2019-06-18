@@ -304,3 +304,9 @@ sealed class DiscoverFilter(open val id: Long) : Parcelable {
     //todo add custom params below? Like search params used to define filter
     sealed class Custom(id: Long, val name: String) : DiscoverFilter(id)
 }
+
+@Parcelize
+data class MovieList(val id: Long, val name: String, val sortOrder: Int) : Parcelable
+
+@Parcelize
+data class TvShowList(val id: Long, val name: String, val sortOrder: Int) : Parcelable

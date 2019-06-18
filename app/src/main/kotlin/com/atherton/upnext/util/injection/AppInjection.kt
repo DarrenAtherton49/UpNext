@@ -141,9 +141,10 @@ class RepositoryModule {
     @Provides
     @Singleton internal fun provideMovieRepository(
         movieDao: MovieDao,
+        listDao: ListDao,
         movieService: TmdbMovieService
     ): MovieRepository {
-        return CachingMovieRepository(movieDao, movieService)
+        return CachingMovieRepository(movieDao, listDao, movieService)
     }
 
     @Provides
@@ -230,6 +231,11 @@ class DatabaseModule {
     @Provides
     @Singleton internal fun providePersonDao(roomDb: RoomDb): PersonDao {
         return roomDb.getPersonDao()
+    }
+
+    @Provides
+    @Singleton internal fun provideListDao(roomDb: RoomDb): ListDao {
+        return roomDb.getListDao()
     }
 
     @Provides

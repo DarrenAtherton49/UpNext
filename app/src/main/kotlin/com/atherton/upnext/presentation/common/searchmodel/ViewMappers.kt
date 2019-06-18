@@ -36,3 +36,12 @@ internal fun List<Searchable>.withSearchModelListImageUrls(config: Config): List
         }
     }.filterIsInstance(Searchable::class.java)
 }
+
+internal fun List<Movie>.withListImageUrls(config: Config): List<Movie> {
+    return this.map {
+        it.copy(
+            backdropPath = buildBackdropPath(it.backdropPath, config),
+            posterPath = buildPosterPath(it.posterPath, config)
+        )
+    }
+}

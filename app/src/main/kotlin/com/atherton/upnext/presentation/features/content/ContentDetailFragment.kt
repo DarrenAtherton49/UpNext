@@ -8,8 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.atherton.upnext.R
 import com.atherton.upnext.domain.model.Watchable
-import com.atherton.upnext.presentation.common.detail.ModelDetailAdapter
-import com.atherton.upnext.presentation.common.detail.ModelDetailSection
+import com.atherton.upnext.presentation.features.content.adapter.ModelDetailAdapter
 import com.atherton.upnext.presentation.main.MainAction
 import com.atherton.upnext.presentation.main.MainViewEffect
 import com.atherton.upnext.presentation.main.MainViewModel

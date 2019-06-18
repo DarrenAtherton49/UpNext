@@ -7,7 +7,6 @@ import com.atherton.upnext.domain.model.*
 import com.atherton.upnext.domain.repository.ConfigRepository
 import com.atherton.upnext.domain.usecase.GetMovieDetailUseCase
 import com.atherton.upnext.domain.usecase.GetTvShowDetailUseCase
-import com.atherton.upnext.presentation.common.detail.ModelDetailSection
 import com.atherton.upnext.presentation.util.AppStringProvider
 import com.atherton.upnext.util.base.BaseViewEffect
 import com.atherton.upnext.util.base.UpNextViewModel
@@ -33,7 +32,7 @@ class ContentDetailViewModel @Inject constructor(
     private val configRepository: ConfigRepository,
     private val appStringProvider: AppStringProvider,
     private val schedulers: RxSchedulers
-): UpNextViewModel<ContentDetailAction, ContentDetailState, ContentDetailViewEffect>() {
+) : UpNextViewModel<ContentDetailAction, ContentDetailState, ContentDetailViewEffect>() {
 
     override val initialState = initialState ?: ContentDetailState.Idle
 

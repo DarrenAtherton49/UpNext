@@ -22,7 +22,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     initialState: MainState?,
     private val schedulers: RxSchedulers
-): UpNextViewModel<MainAction, MainState, MainViewEffect>() {
+) : UpNextViewModel<MainAction, MainState, MainViewEffect>() {
 
     override val initialState = initialState ?: MainState()
 

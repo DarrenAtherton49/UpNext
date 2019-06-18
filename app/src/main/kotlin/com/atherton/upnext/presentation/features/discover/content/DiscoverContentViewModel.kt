@@ -32,7 +32,7 @@ class DiscoverContentViewModel @Inject constructor(
     private val configRepository: ConfigRepository,
     private val appStringProvider: AppStringProvider,
     private val schedulers: RxSchedulers
-): UpNextViewModel<DiscoverContentAction, DiscoverContentState, DiscoverContentViewEffect>() {
+) : UpNextViewModel<DiscoverContentAction, DiscoverContentState, DiscoverContentViewEffect>() {
 
     override val initialState = initialState ?: DiscoverContentState.Idle
 
@@ -65,7 +65,8 @@ class DiscoverContentViewModel @Inject constructor(
                     is LceResponse.Error -> {
                         DiscoverContentState.Error(
                             message = appStringProvider.generateErrorMessage(change.response),
-                            canRetry = change.response is LceResponse.Error.NetworkError
+                            canRetry = change.response is LceResponse.Error.NetworkError,
+                            fallbackResults = change.response.fallbackData?.withSearchModelListImageUrls(change.config)
                         )
                     }
                 }
@@ -78,6 +79,7 @@ class DiscoverContentViewModel @Inject constructor(
     }
 
     private fun bindActions() {
+
         fun Observable<DiscoverContentAction.Load>.toResultChange(): Observable<DiscoverContentChange> {
             return this.switchMap { action ->
                 getDiscoverItemsForFilterUseCase.invoke(action.filter)
@@ -98,6 +100,7 @@ class DiscoverContentViewModel @Inject constructor(
             .toResultChange()
 
         val retryButtonChange = actions.ofType<DiscoverContentAction.RetryButtonClicked>()
+            .preventMultipleClicks()
             .map { DiscoverContentAction.Load(null, it.filter) }
             .toResultChange()
 
@@ -162,7 +165,11 @@ sealed class DiscoverContentState : BaseState, Parcelable {
     ) : DiscoverContentState()
 
     @Parcelize
-    data class Error(val message: String, val canRetry: Boolean) : DiscoverContentState()
+    data class Error(
+        val message: String,
+        val canRetry: Boolean,
+        val fallbackResults: List<Searchable>?
+    ) : DiscoverContentState()
 }
 
 sealed class DiscoverContentViewEffect : BaseViewEffect {

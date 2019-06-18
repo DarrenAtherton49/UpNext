@@ -1,5 +1,6 @@
 package com.atherton.upnext.data.repository
 
+import com.atherton.upnext.data.db.dao.ListDao
 import com.atherton.upnext.data.db.dao.MovieDao
 import com.atherton.upnext.data.db.model.movie.RoomMovie
 import com.atherton.upnext.data.db.model.movie.RoomMovieAllData
@@ -10,6 +11,7 @@ import com.atherton.upnext.data.network.model.TmdbMovie
 import com.atherton.upnext.data.network.service.TmdbMovieService
 import com.atherton.upnext.domain.model.LceResponse
 import com.atherton.upnext.domain.model.Movie
+import com.atherton.upnext.domain.model.MovieList
 import com.atherton.upnext.domain.repository.MovieRepository
 import io.reactivex.Observable
 import javax.inject.Inject
@@ -18,6 +20,7 @@ import javax.inject.Singleton
 @Singleton
 class CachingMovieRepository @Inject constructor(
     private val movieDao: MovieDao,
+    private val listDao: ListDao,
     private val movieService: TmdbMovieService
 ) : MovieRepository {
 
@@ -148,6 +151,31 @@ class CachingMovieRepository @Inject constructor(
                         .map { networkResponse ->
                             networkResponse.toDomainLceResponse(data = getMoviesForPlaylist(NOW_PLAYING))
                         }
+                }
+            }
+    }
+
+    override fun getMovieLists(): Observable<LceResponse<List<MovieList>>> {
+        return listDao.getMovieListsSingle()
+            .toObservable()
+            .map { movieLists ->
+                if (movieLists.isNotEmpty()) {
+                    LceResponse.Content(data = movieLists.toDomainMovieLists())
+                } else {
+                    LceResponse.Content(data = emptyList())
+                }
+            }
+    }
+
+    override fun getMoviesForList(listId: Long): Observable<LceResponse<List<Movie>>> {
+        return listDao.getMoviesForListSingle(listId)
+            .toObservable()
+            .map { movieDataList ->
+                val domainMovies = movieDataList.toDomainMovies()
+                if (domainMovies.isNotEmpty()) {
+                    LceResponse.Content(data = domainMovies)
+                } else {
+                    LceResponse.Content(data = emptyList())
                 }
             }
     }

@@ -35,7 +35,7 @@ class SearchViewModel @Inject constructor(
     private val configRepository: ConfigRepository,
     private val appStringProvider: AppStringProvider,
     private val schedulers: RxSchedulers
-): UpNextViewModel<SearchAction, SearchState, SearchViewEffect>() {
+) : UpNextViewModel<SearchAction, SearchState, SearchViewEffect>() {
 
     override val initialState = initialState ?: SearchState.Idle
 
@@ -196,7 +196,9 @@ sealed class SearchAction : BaseAction {
 }
 
 sealed class SearchChange {
+
     object Loading : SearchChange()
+
     data class Result(
         val query: String,
         val response: LceResponse<List<Searchable>>,

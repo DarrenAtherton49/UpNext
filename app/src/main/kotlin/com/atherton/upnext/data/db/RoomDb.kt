@@ -8,6 +8,10 @@ import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.atherton.upnext.data.db.dao.*
 import com.atherton.upnext.data.db.model.config.RoomConfig
+import com.atherton.upnext.data.db.model.list.RoomMovieList
+import com.atherton.upnext.data.db.model.list.RoomMovieListJoin
+import com.atherton.upnext.data.db.model.list.RoomTvShowList
+import com.atherton.upnext.data.db.model.list.RoomTvShowListJoin
 import com.atherton.upnext.data.db.model.movie.*
 import com.atherton.upnext.data.db.model.person.RoomPerson
 import com.atherton.upnext.data.db.model.person.RoomPersonCredit
@@ -32,6 +36,8 @@ import com.atherton.upnext.util.extensions.ioThread
         RoomMovieRecommendationJoin::class,
         RoomMoviePlaylist::class,
         RoomMoviePlaylistJoin::class,
+        RoomMovieList::class,
+        RoomMovieListJoin::class,
         RoomTvShow::class,
         RoomTvShowGenre::class,
         RoomTvShowProductionCompany::class,
@@ -44,6 +50,8 @@ import com.atherton.upnext.util.extensions.ioThread
         RoomTvShowRecommendationJoin::class,
         RoomTvShowPlaylist::class,
         RoomTvShowPlaylistJoin::class,
+        RoomTvShowList::class,
+        RoomTvShowListJoin::class,
         RoomPerson::class,
         RoomPersonCredit::class,
         RoomConfig::class
@@ -57,6 +65,7 @@ abstract class RoomDb : RoomDatabase() {
     abstract fun getMovieDao(): MovieDao
     abstract fun getTvShowDao(): TvShowDao
     abstract fun getPersonDao(): PersonDao
+    abstract fun getListDao(): ListDao
     abstract fun getConfigDao(): ConfigDao
 
     companion object {
@@ -92,6 +101,8 @@ abstract class RoomDb : RoomDatabase() {
         private fun prePopulateDatabase(roomDb: RoomDb) {
             roomDb.getMovieDao().insertAllPlaylists(PREPOPULATE_MOVIE_PLAYLISTS)
             roomDb.getTvShowDao().insertAllPlaylists(PREPOPULATE_TV_SHOW_PLAYLISTS)
+            roomDb.getListDao().insertAllMovieLists(PREPOPULATE_MOVIE_CUSTOM_LISTS)
+            roomDb.getListDao().insertAllTvShowLists(PREPOPULATE_TV_SHOW_CUSTOM_LISTS)
         }
 
         private val PREPOPULATE_MOVIE_PLAYLISTS by lazy {
@@ -109,6 +120,21 @@ abstract class RoomDb : RoomDatabase() {
                 RoomTvShowPlaylist(name = "Top Rated"),
                 RoomTvShowPlaylist(name = "Airing Today"),
                 RoomTvShowPlaylist(name = "On The Air")
+            )
+        }
+
+        private val PREPOPULATE_MOVIE_CUSTOM_LISTS by lazy {
+            listOf(
+                RoomMovieList(name = "Watchlist", sortOrder = 1),
+                RoomMovieList(name = "Watched", sortOrder = 2)
+            )
+        }
+
+        private val PREPOPULATE_TV_SHOW_CUSTOM_LISTS by lazy {
+            listOf(
+                RoomTvShowList(name = "Watchlist", sortOrder = 1),
+                RoomTvShowList(name = "Watched", sortOrder = 2),
+                RoomTvShowList(name = "History", sortOrder = 3)
             )
         }
     }

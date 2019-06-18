@@ -1,4 +1,4 @@
-package com.atherton.upnext.presentation.common.detail
+package com.atherton.upnext.presentation.features.content.adapter
 
 import android.os.Parcelable
 import android.util.SparseArray
@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.atherton.upnext.R
 import com.atherton.upnext.domain.model.*
+import com.atherton.upnext.presentation.features.content.ModelDetailSection
 import com.atherton.upnext.util.extensions.inflateLayout
 import com.atherton.upnext.util.glide.GlideRequests
 import kotlinx.android.synthetic.main.item_detail_scrolling_section.view.*
@@ -27,7 +28,7 @@ class ModelDetailAdapter(
     //todo create a second recycledViewPool to share photos and videos views?
 
     // Maps of child RecyclerView adapters and state to restore
-    private lateinit var childAdapters: SparseArray<ScrollingChildAdapter<*,*>>
+    private lateinit var childAdapters: SparseArray<ScrollingChildAdapter<*, *>>
     private lateinit var childAdapterStates: SparseArray<Parcelable?>
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ModelDetailSectionViewHolder {

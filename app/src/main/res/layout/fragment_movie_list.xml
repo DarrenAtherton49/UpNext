@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:animateLayoutChanges="true"
+    tools:context=".presentation.features.movies.content.MovieListFragment">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="@dimen/keyline_2x"
+        android:paddingStart="@dimen/keyline_2x"
+        android:paddingEnd="@dimen/keyline_2x"
+        android:paddingBottom="@dimen/keyline_8x"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:scrollbars="none"
+        android:clipToPadding="false"
+        android:visibility="gone"/>
+
+    <include
+        layout="@layout/error_retry_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+
+    <ProgressBar
+        style="?android:attr/progressBarStyle"
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:visibility="gone"/>
+
+</FrameLayout>

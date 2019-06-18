@@ -1,4 +1,4 @@
-package com.atherton.upnext.presentation.common.detail
+package com.atherton.upnext.presentation.features.content.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil

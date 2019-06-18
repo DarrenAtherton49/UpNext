@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Shows -->
+    <integer name="tv_shows_menu_order_search">0</integer>
+
+    <!-- Movies -->
+    <integer name="movies_menu_order_search">0</integer>
+
     <!-- Discover -->
     <integer name="discover_menu_order_search">0</integer>
     <integer name="discover_menu_order_toggle_view">1</integer>

@@ -15,7 +15,7 @@ import javax.inject.Inject
 class ShowsViewModel @Inject constructor(
     initialState: ShowsState?,
     private val schedulers: RxSchedulers
-): UpNextViewModel<ShowsAction, ShowsState, ShowsViewEffect>() {
+) : UpNextViewModel<ShowsAction, ShowsState, ShowsViewEffect>() {
 
     override val initialState = initialState ?: ShowsState()
 

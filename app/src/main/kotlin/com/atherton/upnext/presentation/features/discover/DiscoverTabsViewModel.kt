@@ -132,7 +132,9 @@ sealed class DiscoverTabsAction : BaseAction {
 }
 
 sealed class DiscoverTabsChange {
+
     object Loading : DiscoverTabsChange()
+
     data class Result(
         val response: LceResponse<List<DiscoverFilter>>
     ) : DiscoverTabsChange()
