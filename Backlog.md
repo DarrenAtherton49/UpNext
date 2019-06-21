@@ -137,6 +137,7 @@
 - [Setting] Add setting to change region and release times. After implementing the setting, the API calls should reflect this change.
 - [Setting] Ability to reorder the movie/tv/person details screen sections in the recyclerview from the settings.
 - Access a gallery of posters and backdrops on the detail screen (these are on TMDB as a separate request)
+- Onboarding screen? - E.g. choose some movies or tv shows to add.
 - Statistics screen
     + Additional work to make sure that whenever anything is done in the app (such as the user marking a movie as 'watched'), the statistics are calculated and updated in the database.
 
