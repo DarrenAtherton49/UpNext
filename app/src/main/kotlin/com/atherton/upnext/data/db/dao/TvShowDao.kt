@@ -124,4 +124,11 @@ interface TvShowDao {
 
     @Query("SELECT id from tv_show_playlist WHERE name = :playlistName")
     fun getPlaylistIdForName(playlistName: String): Long
+
+    companion object {
+        const val PLAYLIST_POPULAR = "Popular"
+        const val PLAYLIST_TOP_RATED = "Top Rated"
+        const val PLAYLIST_AIRING_TODAY = "Airing Today"
+        const val PLAYLIST_ON_THE_AIR = "On The Air"
+    }
 }

@@ -69,7 +69,14 @@ data class RoomTvShow(
     @ColumnInfo(name = "status") val status: String?,
     @ColumnInfo(name = "type") val type: String?,
 
+    @Embedded(prefix = "state") val state: RoomTvShowState = RoomTvShowState(),
+
     @ColumnInfo(name = "is_model_complete") val isModelComplete: Boolean
+)
+
+data class RoomTvShowState(
+    @ColumnInfo(name = "in_watchlist") val inWatchlist: Boolean = false,
+    @ColumnInfo(name = "is_watched") val isWatched: Boolean = false
 )
 
 @Entity(

@@ -21,6 +21,9 @@ interface ListDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAllTvShowLists(tvShowLists: List<RoomTvShowList>)
 
+    @Query("SELECT id from movie_list WHERE name = :listName")
+    fun getListIdForName(listName: String): Long
+
     @Query("SELECT * from movie_list ORDER BY sort_order")
     fun getMovieListsSingle(): Single<List<RoomMovieList>>
 
@@ -30,4 +33,13 @@ interface ListDao {
     @Transaction
     @Query("SELECT m.* FROM movie_list_join mlj INNER JOIN movie m on mlj.movie_id = m.id INNER JOIN movie_list l ON mlj.list_id = l.id WHERE l.id = :listId")
     fun getMoviesForListSingle(listId: Long): Single<List<RoomMovieAllData>>
+
+    companion object {
+        const val LIST_MOVIE_WATCHLIST = "Watchlist"
+        const val LIST_MOVIE_WATCHED = "Watched"
+
+        const val LIST_TV_WATCHLIST = "Watchlist"
+        const val LIST_TV_WATCHED = "Watched"
+        const val LIST_TV_HISTORY = "History"
+    }
 }

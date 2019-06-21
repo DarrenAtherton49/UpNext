@@ -18,8 +18,16 @@ sealed class Watchable(
     open val backdropPath: String?,
     open val title: String?,
     open val id: Long,
-    open val posterPath: String?
-) : Parcelable
+    open val posterPath: String?,
+    open val state: State
+) : Parcelable {
+
+    @Parcelize
+    data class State(
+        val inWatchlist: Boolean = false,
+        val isWatched: Boolean = false
+    ) : Parcelable
+}
 
 /**
  * Wrapper to unify the movie, tv and person results below into one 'type' for discover and search
@@ -41,13 +49,15 @@ data class TvShow(
     val overview: String?,
     override val posterPath: String?,
     override val popularity: Float?,
+    override val state: State,
     val voteAverage: Float?,
     val voteCount: Int?
 ) : Watchable(
     backdropPath = backdropPath,
     title = name,
     id = id,
-    posterPath = posterPath
+    posterPath = posterPath,
+    state = state
 ), Searchable {
 
     @Parcelize
@@ -86,6 +96,7 @@ data class Movie(
     override val popularity: Float?,
     override val posterPath: String?,
     val releaseDate: String?,
+    override val state: State,
     override val title: String?,
     val video: Boolean?,
     val voteAverage: Float?,
@@ -94,7 +105,8 @@ data class Movie(
     backdropPath = backdropPath,
     title = title,
     id = id,
-    posterPath = posterPath
+    posterPath = posterPath,
+    state = state
 ), Searchable {
 
     @Parcelize

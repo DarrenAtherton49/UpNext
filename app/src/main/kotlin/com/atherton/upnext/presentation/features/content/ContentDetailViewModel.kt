@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.domain.model.*
 import com.atherton.upnext.domain.repository.ConfigRepository
-import com.atherton.upnext.domain.usecase.GetMovieDetailUseCase
-import com.atherton.upnext.domain.usecase.GetTvShowDetailUseCase
+import com.atherton.upnext.domain.repository.MovieRepository
+import com.atherton.upnext.domain.repository.TvShowRepository
 import com.atherton.upnext.presentation.util.AppStringProvider
 import com.atherton.upnext.util.base.BaseViewEffect
 import com.atherton.upnext.util.base.UpNextViewModel
@@ -27,8 +27,8 @@ import javax.inject.Inject
 
 class ContentDetailViewModel @Inject constructor(
     initialState: ContentDetailState?,
-    private val getTvShowDetailUseCase: GetTvShowDetailUseCase,
-    private val getMovieDetailUseCase: GetMovieDetailUseCase,
+    private val movieRepository: MovieRepository,
+    private val tvShowRepository: TvShowRepository,
     private val configRepository: ConfigRepository,
     private val appStringProvider: AppStringProvider,
     private val schedulers: RxSchedulers
@@ -86,8 +86,14 @@ class ContentDetailViewModel @Inject constructor(
         fun Observable<ContentDetailAction.Load>.toResultChange(): Observable<ContentDetailChange> {
             return this.switchMap { action ->
                 val contentObservable = when (action.contentType) {
-                    is ContentType.TvShow -> getTvShowDetailUseCase.invoke(action.contentId)
-                    is ContentType.Movie -> getMovieDetailUseCase.invoke(action.contentId)
+                    is ContentType.TvShow -> {
+                        tvShowRepository.getTvShow(action.contentId)
+                            .map<LceResponse<Watchable>> { it }
+                    }
+                    is ContentType.Movie -> {
+                        movieRepository.getMovie(action.contentId)
+                            .map<LceResponse<Watchable>> { it }
+                    }
                 }
                 contentObservable
                     .subscribeOn(schedulers.io)
@@ -105,6 +111,27 @@ class ContentDetailViewModel @Inject constructor(
             .map { ContentDetailAction.Load(it.contentId, it.contentType) }
             .preventMultipleClicks()
             .toResultChange()
+
+        val watchlistButtonChange = actions.ofType<ContentDetailAction.WatchlistButtonClicked>()
+            .preventMultipleClicks()
+            .switchMap { action ->
+                val watchlistObservable = when (action.contentType) {
+                    is ContentType.TvShow -> {
+                        tvShowRepository.toggleTvShowWatchlistStatus(action.contentId)
+                            .map<LceResponse<Watchable>> { it }
+                    }
+                    is ContentType.Movie -> {
+                        movieRepository.toggleMovieWatchlistStatus(action.contentId)
+                            .map<LceResponse<Watchable>> { it }
+                    }
+                }
+                watchlistObservable
+                    .subscribeOn(schedulers.io)
+                    .map<ContentDetailChange> { watchable ->
+                        ContentDetailChange.Result(watchable, configRepository.getConfig())
+                    }
+                    .startWith(ContentDetailChange.Loading)
+            }
 
         val seasonClickedViewEffect = actions.ofType<ContentDetailAction.SeasonClicked>()
             .preventMultipleClicks()
@@ -153,7 +180,11 @@ class ContentDetailViewModel @Inject constructor(
             .subscribeOn(schedulers.io)
             .map { ContentDetailViewEffect.ShowSettingsScreen }
 
-        val stateChanges = merge(loadDataChange, retryButtonChange)
+        val stateChanges = merge(
+            loadDataChange,
+            retryButtonChange,
+            watchlistButtonChange
+        )
 
         val viewEffectChanges = mergeArray(
             seasonClickedViewEffect,
@@ -184,6 +215,7 @@ class ContentDetailViewModel @Inject constructor(
 sealed class ContentDetailAction : BaseAction {
     data class Load(val contentId: Long, val contentType: ContentType) : ContentDetailAction()
     data class RetryButtonClicked(val contentId: Long, val contentType: ContentType) : ContentDetailAction()
+    data class WatchlistButtonClicked(val contentId: Long, val contentType: ContentType) : ContentDetailAction()
     data class SeasonClicked(val season: TvSeason) : ContentDetailAction()
     data class CastMemberClicked(val castMember: CastMember) : ContentDetailAction()
     data class CrewMemberClicked(val crewMember: CrewMember) : ContentDetailAction()
@@ -243,8 +275,8 @@ sealed class ContentType : Parcelable {
 @PerView
 class ContentDetailViewModelFactory(
     private val initialState: ContentDetailState?,
-    private val getTvShowDetailUseCase: GetTvShowDetailUseCase,
-    private val getMovieDetailUseCase: GetMovieDetailUseCase,
+    private val movieRepository: MovieRepository,
+    private val tvShowRepository: TvShowRepository,
     private val configRepository: ConfigRepository,
     private val appStringProvider: AppStringProvider,
     private val schedulers: RxSchedulers
@@ -254,8 +286,8 @@ class ContentDetailViewModelFactory(
     override fun <T : ViewModel?> create(modelClass: Class<T>): T  {
         return ContentDetailViewModel(
             initialState,
-            getTvShowDetailUseCase,
-            getMovieDetailUseCase,
+            movieRepository,
+            tvShowRepository,
             configRepository,
             appStringProvider,
             schedulers) as T

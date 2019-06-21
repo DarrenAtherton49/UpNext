@@ -7,6 +7,11 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.atherton.upnext.data.db.dao.*
+import com.atherton.upnext.data.db.dao.ListDao.Companion.LIST_MOVIE_WATCHED
+import com.atherton.upnext.data.db.dao.ListDao.Companion.LIST_MOVIE_WATCHLIST
+import com.atherton.upnext.data.db.dao.ListDao.Companion.LIST_TV_HISTORY
+import com.atherton.upnext.data.db.dao.ListDao.Companion.LIST_TV_WATCHED
+import com.atherton.upnext.data.db.dao.ListDao.Companion.LIST_TV_WATCHLIST
 import com.atherton.upnext.data.db.model.config.RoomConfig
 import com.atherton.upnext.data.db.model.list.RoomMovieList
 import com.atherton.upnext.data.db.model.list.RoomMovieListJoin
@@ -25,7 +30,6 @@ import com.atherton.upnext.util.extensions.ioThread
         RoomSearchResult::class,
         RoomSearchTerm::class,
         RoomMovie::class,
-        RoomMovieStatus::class,
         RoomMovieGenre::class,
         RoomMovieProductionCompany::class,
         RoomProductionCountry::class,
@@ -107,34 +111,34 @@ abstract class RoomDb : RoomDatabase() {
 
         private val PREPOPULATE_MOVIE_PLAYLISTS by lazy {
             listOf(
-                RoomMoviePlaylist(name = "Popular"),
-                RoomMoviePlaylist(name = "Top Rated"),
-                RoomMoviePlaylist(name = "Upcoming"),
-                RoomMoviePlaylist(name = "Now Playing")
+                RoomMoviePlaylist(name = MovieDao.PLAYLIST_POPULAR),
+                RoomMoviePlaylist(name = MovieDao.PLAYLIST_TOP_RATED),
+                RoomMoviePlaylist(name = MovieDao.PLAYLIST_UPCOMING),
+                RoomMoviePlaylist(name = MovieDao.PLAYLIST_NOW_PLAYING)
             )
         }
 
         private val PREPOPULATE_TV_SHOW_PLAYLISTS by lazy {
             listOf(
-                RoomTvShowPlaylist(name = "Popular"),
-                RoomTvShowPlaylist(name = "Top Rated"),
-                RoomTvShowPlaylist(name = "Airing Today"),
-                RoomTvShowPlaylist(name = "On The Air")
+                RoomTvShowPlaylist(name = TvShowDao.PLAYLIST_POPULAR),
+                RoomTvShowPlaylist(name = TvShowDao.PLAYLIST_TOP_RATED),
+                RoomTvShowPlaylist(name = TvShowDao.PLAYLIST_AIRING_TODAY),
+                RoomTvShowPlaylist(name = TvShowDao.PLAYLIST_ON_THE_AIR)
             )
         }
 
         private val PREPOPULATE_MOVIE_CUSTOM_LISTS by lazy {
             listOf(
-                RoomMovieList(name = "Watchlist", sortOrder = 1),
-                RoomMovieList(name = "Watched", sortOrder = 2)
+                RoomMovieList(name = LIST_MOVIE_WATCHLIST, sortOrder = 1),
+                RoomMovieList(name = LIST_MOVIE_WATCHED, sortOrder = 2)
             )
         }
 
         private val PREPOPULATE_TV_SHOW_CUSTOM_LISTS by lazy {
             listOf(
-                RoomTvShowList(name = "Watchlist", sortOrder = 1),
-                RoomTvShowList(name = "Watched", sortOrder = 2),
-                RoomTvShowList(name = "History", sortOrder = 3)
+                RoomTvShowList(name = LIST_TV_WATCHLIST, sortOrder = 1),
+                RoomTvShowList(name = LIST_TV_WATCHED, sortOrder = 2),
+                RoomTvShowList(name = LIST_TV_HISTORY, sortOrder = 3)
             )
         }
     }

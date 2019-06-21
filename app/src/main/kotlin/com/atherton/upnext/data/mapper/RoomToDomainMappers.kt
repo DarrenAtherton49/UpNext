@@ -42,6 +42,7 @@ private fun RoomSearchResult.toDomainTvShow(): TvShow {
         overview = overview,
         posterPath = posterPath,
         popularity = popularity,
+        state = Watchable.State(), //todo change this to fetch a RoomTvShowState once we start saving search results in the 'tv_show' table
         voteAverage = voteAverage,
         voteCount = voteCount
     )
@@ -59,6 +60,7 @@ private fun RoomSearchResult.toDomainMovie(): Movie {
         popularity = popularity,
         posterPath = posterPath,
         releaseDate = releaseDate,
+        state = Watchable.State(), //todo change this to fetch a RoomMovieState once we start saving search results in the 'movie' table
         title = title,
         video = video,
         voteAverage = voteAverage,
@@ -88,8 +90,8 @@ fun RoomMovieAllData.toDomainMovie(recommendations: List<RoomMovie>?): Movie? {
         genres = genres,
         productionCompanies = productionCompanies,
         productionCountries = productionCountries,
-        spokenLanguages = spokenLanguages,
         recommendations = recommendations,
+        spokenLanguages = spokenLanguages,
         videos = videos
     )
 }
@@ -100,8 +102,8 @@ fun RoomMovie.toDomainMovie(
     genres: List<RoomMovieGenre>? = null,
     productionCompanies: List<RoomMovieProductionCompany>? = null,
     productionCountries: List<RoomProductionCountry>? = null,
-    spokenLanguages: List<RoomSpokenLanguage>? = null,
     recommendations: List<RoomMovie>? = null,
+    spokenLanguages: List<RoomSpokenLanguage>? = null,
     videos: List<RoomMovieVideo>? = null
 ): Movie {
     return Movie(
@@ -120,7 +122,7 @@ fun RoomMovie.toDomainMovie(
             revenue = revenue,
             runtime = runtime,
             recommendations = recommendations?.map { recommendedMovie ->
-                recommendedMovie.toDomainMovie(null, null, null, null, null, null, null, null)
+                recommendedMovie.toDomainMovie(null, null, null, null, null, null, null)
             },
             spokenLanguages = spokenLanguages?.toDomainSpokenLanguages(),
             status = status,
@@ -134,6 +136,7 @@ fun RoomMovie.toDomainMovie(
         popularity = popularity,
         posterPath = posterPath,
         releaseDate = releaseDate,
+        state = state.toDomainWatchableState(),
         title = title,
         video = video,
         voteAverage = voteAverage,
@@ -307,6 +310,7 @@ fun RoomTvShow.toDomainTvShow(
         overview = overview,
         posterPath = posterPath,
         popularity = popularity,
+        state = state.toDomainWatchableState(),
         voteAverage = voteAverage,
         voteCount = voteCount
     )
@@ -498,4 +502,18 @@ fun List<RoomTvShowList>.toDomainTvShowLists(): List<TvShowList> {
             sortOrder = tvShowList.sortOrder
         )
     }
+}
+
+private fun RoomMovieState.toDomainWatchableState(): Watchable.State {
+    return Watchable.State(
+        inWatchlist = inWatchlist,
+        isWatched = isWatched
+    )
+}
+
+private fun RoomTvShowState.toDomainWatchableState(): Watchable.State {
+    return Watchable.State(
+        inWatchlist = inWatchlist,
+        isWatched = isWatched
+    )
 }

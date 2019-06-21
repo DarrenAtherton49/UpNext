@@ -11,4 +11,5 @@ interface TvShowRepository {
     fun getTopRated(): Observable<LceResponse<List<TvShow>>>
     fun getAiringToday(): Observable<LceResponse<List<TvShow>>>
     fun getOnTheAir(): Observable<LceResponse<List<TvShow>>>
+    fun toggleTvShowWatchlistStatus(tvShowId: Long): Observable<LceResponse<TvShow>>
 }

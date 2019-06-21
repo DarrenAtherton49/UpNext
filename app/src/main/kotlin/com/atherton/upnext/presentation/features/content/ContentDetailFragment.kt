@@ -68,9 +68,15 @@ class ContentDetailFragment : BaseFragment<ContentDetailAction, ContentDetailSta
             val args = ContentDetailFragmentArgs.fromBundle(it)
             val contentId: Long = args.contentId
             val contentType: ContentType = args.contentType
+
             retryButton.setOnClickListener {
                 viewModel.dispatch(ContentDetailAction.RetryButtonClicked(contentId, contentType))
             }
+
+            watchlistButton.setOnClickListener {
+                viewModel.dispatch(ContentDetailAction.WatchlistButtonClicked(contentId, contentType))
+            }
+
             if (savedInstanceState == null) {
                 viewModel.dispatch(ContentDetailAction.Load(contentId, contentType))
             }
@@ -101,13 +107,13 @@ class ContentDetailFragment : BaseFragment<ContentDetailAction, ContentDetailSta
                     // show a loading state with cached data
                     recyclerView.isVisible = true
                     posterImageView.isVisible = true
-                    addToWatchListButton.isVisible = true
+                    watchlistButton.isVisible = true
                     addToListButton.isVisible = true
                     renderContent(state.watchable, state.detailSections)
                 } else {
                     recyclerView.isVisible = false
                     posterImageView.isVisible = false
-                    addToWatchListButton.isVisible = false
+                    watchlistButton.isVisible = false
                     addToListButton.isVisible = false
                 }
             }
@@ -116,7 +122,7 @@ class ContentDetailFragment : BaseFragment<ContentDetailAction, ContentDetailSta
                 errorLayout.isVisible = false
                 posterImageView.isVisible = true
                 recyclerView.isVisible = true
-                addToWatchListButton.isVisible = true
+                watchlistButton.isVisible = true
                 addToListButton.isVisible = true
                 renderContent(state.watchable, state.detailSections)
             }
@@ -124,7 +130,7 @@ class ContentDetailFragment : BaseFragment<ContentDetailAction, ContentDetailSta
                 progressBar.isVisible = false
                 recyclerView.isVisible = false
                 posterImageView.isVisible = false
-                addToWatchListButton.isVisible = false
+                watchlistButton.isVisible = false
                 addToListButton.isVisible = false
                 errorLayout.isVisible = true
                 errorTextView.text = state.message
@@ -138,7 +144,11 @@ class ContentDetailFragment : BaseFragment<ContentDetailAction, ContentDetailSta
         titleTextView.text = watchable.title
         recyclerViewAdapter.submitData(detailSections)
 
-        //todo set button text based on whether show is already in watchlist or not
+        watchlistButton.text = if (watchable.state.inWatchlist) {
+            getString(R.string.content_detail_remove_from_watchlist)
+        } else {
+            getString(R.string.content_detail_add_to_watchlist)
+        }
     }
 
     private fun renderContentImages(backdropPath: String?, posterPath: String?) {

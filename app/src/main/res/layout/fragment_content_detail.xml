@@ -44,7 +44,7 @@
 
             <com.google.android.material.button.MaterialButton
                 style="@style/Widget.MaterialComponents.Button"
-                android:id="@+id/addToWatchListButton"
+                android:id="@+id/watchlistButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/keyline_2x"
@@ -62,10 +62,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/keyline_2x"
-                app:layout_constraintTop_toTopOf="@id/addToWatchListButton"
-                app:layout_constraintBottom_toBottomOf="@id/addToWatchListButton"
+                app:layout_constraintTop_toTopOf="@id/watchlistButton"
+                app:layout_constraintBottom_toBottomOf="@id/watchlistButton"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/addToWatchListButton"
+                app:layout_constraintStart_toEndOf="@id/watchlistButton"
                 android:backgroundTint="@color/colorPrimaryVariant"
                 android:text="@string/content_detail_add_to_list"/>
 

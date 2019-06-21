@@ -1,6 +1,7 @@
 package com.atherton.upnext.data.db.dao
 
 import androidx.room.*
+import com.atherton.upnext.data.db.model.list.RoomMovieListJoin
 import com.atherton.upnext.data.db.model.movie.*
 import io.reactivex.Single
 
@@ -10,7 +11,6 @@ interface MovieDao {
     @Transaction
     fun insertMovieData(
         movie: RoomMovie,
-        movieStatus: RoomMovieStatus,
         castMembers: List<RoomMovieCastMember>?,
         crewMembers: List<RoomMovieCrewMember>?,
         genres: List<RoomMovieGenre>?,
@@ -21,7 +21,6 @@ interface MovieDao {
         videos: List<RoomMovieVideo>?
     ) {
         insertMovie(movie)
-        insertMovieStatus(movieStatus)
 
         castMembers?.let { insertAllCastMembers(it) }
         crewMembers?.let { insertAllCrewMembers(it) }
@@ -52,6 +51,7 @@ interface MovieDao {
         val playlistId: Long = getPlaylistIdForName(playlistName)
         if (playlistId != 0L) {
             val movieIds: List<Long> = insertAllMovies(movies)
+
             val moviePlaylistJoins: List<RoomMoviePlaylistJoin> = movieIds.map { movieId ->
                 RoomMoviePlaylistJoin(
                     movieId = movieId,
@@ -59,14 +59,38 @@ interface MovieDao {
                 )
             }
             insertAllMoviePlaylistJoins(moviePlaylistJoins)
+        } else {
+            throw IllegalStateException("Invalid playlist id")
         }
     }
+
+    @Transaction
+    fun toggleMovieWatchlistStatus(updatedMovie: RoomMovie, listId: Long) {
+
+        if (listId != 0L) {
+            updateMovie(updatedMovie)
+
+            val movieWatchlistJoin = RoomMovieListJoin(
+                movieId = updatedMovie.id,
+                listId = listId
+            )
+
+            if (updatedMovie.state.inWatchlist) {
+                insertMovieListJoin(movieWatchlistJoin)
+            } else {
+                deleteMovieListJoin(movieWatchlistJoin)
+            }
+        }
+    }
+
+    @Delete
+    fun deleteMovieListJoin(movieListJoin: RoomMovieListJoin)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertMovie(movie: RoomMovie): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertMovieStatus(movieStatus: RoomMovieStatus)
+    fun insertMovieListJoin(movieListJoin: RoomMovieListJoin)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAllMovies(movies: List<RoomMovie>): List<Long>
@@ -104,11 +128,16 @@ interface MovieDao {
     // we use a List here because RxJava 2 can't emit nulls if the movie doesn't exist
     @Transaction
     @Query("SELECT * FROM movie WHERE id = :id")
-    fun getMovieListForIdSingle(id: Long): Single<List<RoomMovie>>
+    fun getMovieForIdSingle(id: Long): Single<List<RoomMovie>>
 
     @Transaction
     @Query("SELECT * FROM movie WHERE id = :id")
     fun getFullMovieForId(id: Long): RoomMovieAllData?
+
+    // we use a List here because RxJava 2 can't emit nulls if the movie doesn't exist
+    @Transaction
+    @Query("SELECT * FROM movie WHERE id = :id")
+    fun getFullMovieForIdSingle(id: Long): Single<List<RoomMovieAllData>>
 
     @Transaction
     @Query("SELECT m2.* FROM movie_recommendation_join mrj INNER JOIN movie m1 ON mrj.movie_id = m1.id INNER JOIN movie m2 ON mrj.recommendation_id = m2.id WHERE mrj.movie_id = :movieId")
@@ -124,4 +153,14 @@ interface MovieDao {
 
     @Query("SELECT id from movie_playlist WHERE name = :playlistName")
     fun getPlaylistIdForName(playlistName: String): Long
+
+    @Update
+    fun updateMovie(movie: RoomMovie)
+
+    companion object {
+        const val PLAYLIST_POPULAR = "Popular"
+        const val PLAYLIST_TOP_RATED = "Top Rated"
+        const val PLAYLIST_UPCOMING = "Upcoming"
+        const val PLAYLIST_NOW_PLAYING = "Now Playing"
+    }
 }

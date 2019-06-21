@@ -57,7 +57,8 @@
     <string name="search_textfield_label">Find Movies, Shows or People…</string>
 
     <!--Content (movie/tv) Detail Fragment -->
-    <string name="content_detail_add_to_watchlist">Up Next</string>
+    <string name="content_detail_add_to_watchlist">Add To Watchlist</string>
+    <string name="content_detail_remove_from_watchlist">Remove From Watchlist</string>
     <string name="content_detail_add_to_list">Add To List</string>
     <string name="content_detail_runtime_mins">%1s mins</string>
     <string name="content_detail_vote_average">%1s/10</string>

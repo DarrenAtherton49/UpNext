@@ -1,6 +1,10 @@
 package com.atherton.upnext.data.repository
 
 import com.atherton.upnext.data.db.dao.TvShowDao
+import com.atherton.upnext.data.db.dao.TvShowDao.Companion.PLAYLIST_AIRING_TODAY
+import com.atherton.upnext.data.db.dao.TvShowDao.Companion.PLAYLIST_ON_THE_AIR
+import com.atherton.upnext.data.db.dao.TvShowDao.Companion.PLAYLIST_POPULAR
+import com.atherton.upnext.data.db.dao.TvShowDao.Companion.PLAYLIST_TOP_RATED
 import com.atherton.upnext.data.db.model.tv.RoomTvShow
 import com.atherton.upnext.data.db.model.tv.RoomTvShowAllData
 import com.atherton.upnext.data.mapper.*
@@ -53,7 +57,7 @@ class CachingTvShowRepository @Inject constructor(
 
     //todo modify this to check if shows are are still valid (time based?)
     override fun getPopular(): Observable<LceResponse<List<TvShow>>> {
-        return tvShowDao.getTvShowsForPlaylistSingle(POPULAR)
+        return tvShowDao.getTvShowsForPlaylistSingle(PLAYLIST_POPULAR)
             .toObservable()
             .flatMap { tvShowList ->
                 if (tvShowList.isNotEmpty()) {
@@ -66,11 +70,11 @@ class CachingTvShowRepository @Inject constructor(
                         .doOnNext { networkResponse ->
                             if (networkResponse is NetworkResponse.Success) {
                                 val networkPopularTvShows: List<TmdbTvShow> = networkResponse.body.results
-                                saveTvShowsForPlaylist(networkPopularTvShows, POPULAR)
+                                saveTvShowsForPlaylist(networkPopularTvShows, PLAYLIST_POPULAR)
                             }
                         }
                         .map { networkResponse ->
-                            networkResponse.toDomainLceResponse(data = getTvShowsForPlaylist(POPULAR))
+                            networkResponse.toDomainLceResponse(data = getTvShowsForPlaylist(PLAYLIST_POPULAR))
                         }
                 }
             }
@@ -78,7 +82,7 @@ class CachingTvShowRepository @Inject constructor(
 
     //todo modify this to check if shows are are still valid (time based?)
     override fun getTopRated(): Observable<LceResponse<List<TvShow>>> {
-        return tvShowDao.getTvShowsForPlaylistSingle(TOP_RATED)
+        return tvShowDao.getTvShowsForPlaylistSingle(PLAYLIST_TOP_RATED)
             .toObservable()
             .flatMap { tvShowList ->
                 if (tvShowList.isNotEmpty()) {
@@ -91,11 +95,11 @@ class CachingTvShowRepository @Inject constructor(
                         .doOnNext { networkResponse ->
                             if (networkResponse is NetworkResponse.Success) {
                                 val networkTopRatedTvShows: List<TmdbTvShow> = networkResponse.body.results
-                                saveTvShowsForPlaylist(networkTopRatedTvShows, TOP_RATED)
+                                saveTvShowsForPlaylist(networkTopRatedTvShows, PLAYLIST_TOP_RATED)
                             }
                         }
                         .map { networkResponse ->
-                            networkResponse.toDomainLceResponse(data = getTvShowsForPlaylist(TOP_RATED))
+                            networkResponse.toDomainLceResponse(data = getTvShowsForPlaylist(PLAYLIST_TOP_RATED))
                         }
                 }
             }
@@ -103,7 +107,7 @@ class CachingTvShowRepository @Inject constructor(
 
     //todo modify this to check if shows are are still valid (time based?)
     override fun getAiringToday(): Observable<LceResponse<List<TvShow>>> {
-        return tvShowDao.getTvShowsForPlaylistSingle(AIRING_TODAY)
+        return tvShowDao.getTvShowsForPlaylistSingle(PLAYLIST_AIRING_TODAY)
             .toObservable()
             .flatMap { tvShowList ->
                 if (tvShowList.isNotEmpty()) {
@@ -116,11 +120,11 @@ class CachingTvShowRepository @Inject constructor(
                         .doOnNext { networkResponse ->
                             if (networkResponse is NetworkResponse.Success) {
                                 val networkAiringTodayTvShows: List<TmdbTvShow> = networkResponse.body.results
-                                saveTvShowsForPlaylist(networkAiringTodayTvShows, AIRING_TODAY)
+                                saveTvShowsForPlaylist(networkAiringTodayTvShows, PLAYLIST_AIRING_TODAY)
                             }
                         }
                         .map { networkResponse ->
-                            networkResponse.toDomainLceResponse(data = getTvShowsForPlaylist(AIRING_TODAY))
+                            networkResponse.toDomainLceResponse(data = getTvShowsForPlaylist(PLAYLIST_AIRING_TODAY))
                         }
                 }
             }
@@ -128,7 +132,7 @@ class CachingTvShowRepository @Inject constructor(
 
     //todo modify this to check if shows are are still valid (time based?)
     override fun getOnTheAir(): Observable<LceResponse<List<TvShow>>> {
-        return tvShowDao.getTvShowsForPlaylistSingle(ON_THE_AIR)
+        return tvShowDao.getTvShowsForPlaylistSingle(PLAYLIST_ON_THE_AIR)
             .toObservable()
             .flatMap { tvShowList ->
                 if (tvShowList.isNotEmpty()) {
@@ -141,14 +145,18 @@ class CachingTvShowRepository @Inject constructor(
                         .doOnNext { networkResponse ->
                             if (networkResponse is NetworkResponse.Success) {
                                 val networkOnTheAirTvShows: List<TmdbTvShow> = networkResponse.body.results
-                                saveTvShowsForPlaylist(networkOnTheAirTvShows, ON_THE_AIR)
+                                saveTvShowsForPlaylist(networkOnTheAirTvShows, PLAYLIST_ON_THE_AIR)
                             }
                         }
                         .map { networkResponse ->
-                            networkResponse.toDomainLceResponse(data = getTvShowsForPlaylist(ON_THE_AIR))
+                            networkResponse.toDomainLceResponse(data = getTvShowsForPlaylist(PLAYLIST_ON_THE_AIR))
                         }
                 }
             }
+    }
+
+    override fun toggleTvShowWatchlistStatus(tvShowId: Long): Observable<LceResponse<TvShow>> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     private fun saveFullTvShowToDatabase(tvShow: TmdbTvShow) {
@@ -186,12 +194,5 @@ class CachingTvShowRepository @Inject constructor(
     private fun saveTvShowsForPlaylist(networkTvShows: List<TmdbTvShow>, playlistName: String) {
         val dbTvShows = networkTvShows.toRoomTvShows(false)
         tvShowDao.insertAllTvShowsForPlaylist(dbTvShows, playlistName)
-    }
-
-    companion object {
-        private const val POPULAR = "Popular"
-        private const val TOP_RATED = "Top Rated"
-        private const val AIRING_TODAY = "Airing Today"
-        private const val ON_THE_AIR = "On The Air"
     }
 }

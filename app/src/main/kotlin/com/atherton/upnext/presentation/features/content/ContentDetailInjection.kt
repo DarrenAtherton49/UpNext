@@ -2,8 +2,8 @@ package com.atherton.upnext.presentation.features.content
 
 import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.domain.repository.ConfigRepository
-import com.atherton.upnext.domain.usecase.GetMovieDetailUseCase
-import com.atherton.upnext.domain.usecase.GetTvShowDetailUseCase
+import com.atherton.upnext.domain.repository.MovieRepository
+import com.atherton.upnext.domain.repository.TvShowRepository
 import com.atherton.upnext.presentation.main.MainComponent
 import com.atherton.upnext.presentation.main.MainModule
 import com.atherton.upnext.presentation.util.AppStringProvider
@@ -32,16 +32,16 @@ class ContentDetailModule(private val initialState: ContentDetailState?) {
     @Provides
     @Named(ContentDetailViewModelFactory.NAME)
     @PerView internal fun provideViewModelFactory(
-        getTvShowDetailUseCase: GetTvShowDetailUseCase,
-        getMovieDetailUseCase: GetMovieDetailUseCase,
+        movieRepository: MovieRepository,
+        tvShowRepository: TvShowRepository,
         configRepository: ConfigRepository,
         appStringProvider: AppStringProvider,
         schedulers: RxSchedulers
     ): ViewModelProvider.Factory {
         return ContentDetailViewModelFactory(
             initialState,
-            getTvShowDetailUseCase,
-            getMovieDetailUseCase,
+            movieRepository,
+            tvShowRepository,
             configRepository,
             appStringProvider,
             schedulers

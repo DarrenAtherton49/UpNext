@@ -44,7 +44,9 @@
 - [Setting] Shortcut to add to watchlist on grid screens like a long or double tap?
     + When user clicks save, check database to see if movie details are in database already. If not, then call movie/detail network call first and then perform the save.
 - Show fallback data and offline message if the network requests fail but we still have database data.
+- Bug - content detail screen can show 'null mins'
 - Change error layout so that whole screen is clickable to retry instead of just a button
+- Organise/sort mapper functions
 - Make genre chips clickable - goes to discover filter
 - Caching
     - Look at TMDB 'changes' api calls - could incorporate this into caching
@@ -123,6 +125,7 @@
     + Make sure there is no copyrighted content in the listing
 
 ### Beta
+- Backoff/retry on all network requests - resilience
 - Shared element transitions
 - Touch surface ripple animations
 - Add transitions for fragments, e.g. slide up when entering
