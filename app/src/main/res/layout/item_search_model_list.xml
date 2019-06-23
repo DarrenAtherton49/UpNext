@@ -8,14 +8,13 @@
     <ImageView
         android:id="@+id/searchModelImageView"
         android:layout_width="@dimen/search_model_poster_width"
-        android:layout_height="@dimen/search_model_poster_height"
-        android:layout_marginTop="@dimen/keyline"
-        android:layout_marginBottom="@dimen/keyline"/>
+        android:layout_height="@dimen/search_model_poster_height"/>
 
     <TextView
         style="@style/SearchModelListTitleText"
         android:id="@+id/searchModelTitleTextView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        />
 
 </LinearLayout>

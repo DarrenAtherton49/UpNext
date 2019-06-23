@@ -9,7 +9,7 @@ import com.atherton.upnext.domain.model.Movie
 import com.atherton.upnext.domain.model.MovieList
 import com.atherton.upnext.domain.repository.ConfigRepository
 import com.atherton.upnext.domain.repository.MovieRepository
-import com.atherton.upnext.presentation.common.searchmodel.withListImageUrls
+import com.atherton.upnext.presentation.common.searchmodel.formattedForMovieList
 import com.atherton.upnext.presentation.util.AppStringProvider
 import com.atherton.upnext.util.base.BaseViewEffect
 import com.atherton.upnext.util.base.UpNextViewModel
@@ -52,16 +52,23 @@ class MovieListViewModel @Inject constructor(
             is MovieListChange.Result -> {
                 when (change.response) {
                     is LceResponse.Loading -> {
-                        MovieListState.Loading(results = change.response.data?.withListImageUrls(change.config))
+                        MovieListState.Loading(
+                            results = change.response.data?.formattedForMovieList(change.config, appStringProvider)
+                        )
                     }
                     is LceResponse.Content -> {
-                        MovieListState.Content(results = change.response.data.withListImageUrls(change.config))
+                        MovieListState.Content(
+                            results = change.response.data.formattedForMovieList(change.config, appStringProvider)
+                        )
                     }
                     is LceResponse.Error -> {
                         MovieListState.Error(
                             message = appStringProvider.generateErrorMessage(change.response),
                             canRetry = change.response is LceResponse.Error.NetworkError,
-                            fallbackResults = change.response.fallbackData?.withListImageUrls(change.config)
+                            fallbackResults = change.response.fallbackData?.formattedForMovieList(
+                                change.config,
+                                appStringProvider
+                            )
                         )
                     }
                 }
@@ -115,7 +122,7 @@ class MovieListViewModel @Inject constructor(
 sealed class MovieListAction : BaseAction {
     data class Load(val movieList: MovieList) : MovieListAction()
     data class RetryButtonClicked(val movieList: MovieList) : MovieListAction()
-    data class MovieClicked(val movie: Movie) : MovieListAction()
+    data class MovieClicked(val movieId: Long) : MovieListAction()
 }
 
 sealed class MovieListChange {
@@ -134,16 +141,16 @@ sealed class MovieListState : BaseState, Parcelable {
     object Idle : MovieListState()
 
     @Parcelize
-    data class Loading(val results: List<Movie>?) : MovieListState()
+    data class Loading(val results: List<MovieListItem>?) : MovieListState()
 
     @Parcelize
-    data class Content(val results: List<Movie>) : MovieListState()
+    data class Content(val results: List<MovieListItem>) : MovieListState()
 
     @Parcelize
     data class Error(
         val message: String,
         val canRetry: Boolean,
-        val fallbackResults: List<Movie>?
+        val fallbackResults: List<MovieListItem>?
     ) : MovieListState()
 }
 

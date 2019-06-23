@@ -89,8 +89,14 @@
     </style>
 
     <style name="TvMoviesTabLayout" parent="Widget.MaterialComponents.TabLayout.Colored">
-        <item name="tabMode">fixed</item>
+        <item name="tabMode">scrollable</item>
         <item name="tabGravity">center</item>
+    </style>
+
+    <style name="MoviesListItemTitleText" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:minLines">@integer/movies_list_item_title_min_lines</item>
+        <item name="android:maxLines">@integer/movies_list_item_title_max_lines</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
     <style name="DiscoverTabLayout" parent="Widget.MaterialComponents.TabLayout.Colored">

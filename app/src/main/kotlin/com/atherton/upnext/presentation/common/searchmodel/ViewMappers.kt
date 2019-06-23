@@ -1,6 +1,10 @@
 package com.atherton.upnext.presentation.common.searchmodel
 
 import com.atherton.upnext.domain.model.*
+import com.atherton.upnext.presentation.features.content.formatReleaseYear
+import com.atherton.upnext.presentation.features.content.formatVoteAverage
+import com.atherton.upnext.presentation.features.movies.content.MovieListItem
+import com.atherton.upnext.presentation.util.AppStringProvider
 
 //todo write function to generate path based on device screen size?
 fun buildBackdropPath(backdropPath: String?, config: Config): String? =
@@ -37,11 +41,30 @@ internal fun List<Searchable>.withSearchModelListImageUrls(config: Config): List
     }.filterIsInstance(Searchable::class.java)
 }
 
-internal fun List<Movie>.withListImageUrls(config: Config): List<Movie> {
-    return this.map {
-        it.copy(
-            backdropPath = buildBackdropPath(it.backdropPath, config),
-            posterPath = buildPosterPath(it.posterPath, config)
+internal fun List<Movie>.formattedForMovieList(config: Config, appStringProvider: AppStringProvider): List<MovieListItem> {
+    return this.map { movie ->
+        val releaseYear: String? = formatReleaseYear(movie.releaseDate)
+        val runtimeMins: String? = movie.detail?.runtime?.toString()?.let { appStringProvider.getRuntimeString(it) }
+        val rating: String? = formatVoteAverage(movie.voteAverage)
+
+        val titleAndReleaseDateString: String? = when {
+            movie.title != null && releaseYear != null -> "${movie.title} ($releaseYear)"
+            movie.title != null -> movie.title
+            else -> null
+        }
+
+        MovieListItem(
+            genres = movie.detail?.genres,
+            movieId = movie.id,
+            posterPath = buildPosterPath(movie.posterPath, config),
+            runtime = runtimeMins,
+            titleAndReleaseDate = titleAndReleaseDateString,
+            voteAverage = rating
+//            watchlistButtonText = if (movie.state.inWatchlist) {
+//                appStringProvider.getRemoveFromWatchlistString()
+//            } else {
+//                appStringProvider.getAddToWatchlistString()
+//            }
         )
     }
 }

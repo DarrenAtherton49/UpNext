@@ -14,6 +14,9 @@
     <!-- Common views -->
     <dimen name="primary_action_button_corner_radius">56dp</dimen>
 
+    <!-- Movies list -->
+    <dimen name="movies_list_spacing">16dp</dimen>
+
     <!-- Search models -->
     <dimen name="search_model_list_spacing">16dp</dimen>
     <dimen name="search_model_grid_spacing">16dp</dimen>
@@ -29,4 +32,5 @@
     <dimen name="content_detail_video_width">180dp</dimen>
     <dimen name="content_detail_video_play_button_size">48dp</dimen>
     <dimen name="content_detail_child_items_spacing">16dp</dimen>
+
 </resources>

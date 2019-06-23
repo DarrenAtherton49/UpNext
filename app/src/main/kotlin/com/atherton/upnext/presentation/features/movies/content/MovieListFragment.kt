@@ -18,6 +18,7 @@ import com.atherton.upnext.util.extensions.getAppComponent
 import com.atherton.upnext.util.extensions.getViewModel
 import com.atherton.upnext.util.extensions.isVisible
 import com.atherton.upnext.util.glide.GlideApp
+import com.atherton.upnext.util.recyclerview.LinearSpacingItemDecoration
 import kotlinx.android.synthetic.main.error_retry_layout.*
 import kotlinx.android.synthetic.main.fragment_movie_list.*
 import javax.inject.Inject
@@ -43,7 +44,14 @@ class MovieListFragment : BaseFragment<MovieListAction, MovieListState, MovieLis
     private val recyclerViewAdapter: MovieListAdapter by lazy {
         MovieListAdapter(
             imageLoader = GlideApp.with(this),
-            onClickListener = { movie -> viewModel.dispatch(MovieListAction.MovieClicked(movie)) }
+            onClickListener = { movieListItem -> viewModel.dispatch(MovieListAction.MovieClicked(movieListItem.movieId)) }
+        )
+    }
+
+    private val movieListItemDecoration: LinearSpacingItemDecoration by lazy {
+        LinearSpacingItemDecoration(
+            spacingInPixels = resources.getDimensionPixelSize(R.dimen.movies_list_spacing),
+            orientation = LinearSpacingItemDecoration.Orientation.Vertical
         )
     }
 
@@ -120,6 +128,10 @@ class MovieListFragment : BaseFragment<MovieListAction, MovieListState, MovieLis
     private fun initRecyclerView() {
         recyclerView.apply {
             setHasFixedSize(true)
+            if (itemDecorationCount > 0) {
+                removeItemDecorationAt(0)
+            }
+            addItemDecoration(movieListItemDecoration)
             layoutManager = LinearLayoutManager(context)
             adapter = recyclerViewAdapter
         }

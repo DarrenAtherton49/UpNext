@@ -13,8 +13,15 @@ class UpNextAppGlideModule : AppGlideModule() {
 
     companion object {
 
+        private const val movieListItemRadius = 12
         private const val searchModelGridItemRadius = 12
         private const val itemDetailVideoRadius = 12
+
+        val movieListRequestOptions: RequestOptions by lazy {
+            RequestOptions()
+                .transforms(CenterCrop(), RoundedCorners(movieListItemRadius))
+                .error(R.drawable.ic_broken_image_white_24dp)
+        }
 
         val searchModelGridRequestOptions: RequestOptions by lazy {
             RequestOptions()

@@ -48,7 +48,6 @@
             android:layout_marginStart="@dimen/keyline_2x"
             android:layout_marginEnd="@dimen/keyline_2x"/>
 
-
     </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>

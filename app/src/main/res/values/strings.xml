@@ -41,6 +41,10 @@
     <string name="movies_tab_watched">Watched</string>
     <string name="movies_add_movie">Add a movie</string>
 
+    <!-- MovieListFragment -->
+    <string name="movie_list_item_add_to_watchlist">Add To Watchlist</string>
+    <string name="movie_list_item_remove_from_watchlist">Remove From Watchlist</string>
+
     <!-- DiscoverTabsFragment -->
     <string name="discover_tabs_filter_button">Advanced</string>
 

@@ -136,11 +136,11 @@ fun EditText.whenTextChanges(emitInitialValue: Boolean = false, block: (String) 
 inline fun <reified T> Moshi.adapt(json: String): T? = this.adapter(T::class.java).fromJson(json)
 
 fun TextView.setTextOrHide(text: String?) {
-    isVisible = if (text != null) {
+    if (text != null) {
+        isVisible = true
         setText(text)
-        true
     } else {
-        false
+        isVisible = false
     }
 }
 

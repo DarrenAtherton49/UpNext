@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.atherton.upnext.domain.model.Movie
 import com.atherton.upnext.domain.model.Person
 import com.atherton.upnext.domain.model.TvShow
+import com.atherton.upnext.presentation.features.content.formatVoteAverage
 import com.atherton.upnext.util.extensions.isVisible
 import com.atherton.upnext.util.glide.GlideRequests
 import com.atherton.upnext.util.glide.UpNextAppGlideModule
@@ -119,5 +120,3 @@ class PersonModelListViewHolder(
         super.bind(person.name, person.profilePath)
     }
 }
-
-private fun formatVoteAverage(voteAverage: Float?): String? = voteAverage?.let { String.format("%.1f", it) }

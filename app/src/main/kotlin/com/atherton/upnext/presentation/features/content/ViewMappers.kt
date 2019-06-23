@@ -63,10 +63,10 @@ private fun buildContentDetailSections(
     if (showInfoPanel) {
         //todo Also factor in user region when calling API - think there are different 'releases' for each region
         //val releaseDateFormatted: String? = formatFullDateForDetailScreen(movie.releaseDate)
-        val releaseYear: String? = formatYearForDetailScreen(releaseDate)
+        val releaseYear: String? = formatReleaseYear(releaseDate)
         val runtimeMins: String? = runtime?.let { appStringProvider.getRuntimeString(it) }
         val rating: String? = voteAverage?.let { appStringProvider.getVoteAverageString(it.toString()) }
-        val showFirstDivider = runtime != null && releaseYear != null
+        val showFirstDivider = runtimeMins != null && releaseYear != null
         sectionList.add(
             ModelDetailSection.InfoPanel(
                 releaseDate = releaseYear,
@@ -123,13 +123,13 @@ private fun formatFullDateForDetailScreen(dateString: String?): String? {
     } else dateString
 }
 
-private fun formatYearForDetailScreen(dateString: String?): String? {
+fun formatReleaseYear(dateString: String?): String? {
     return if (dateString != null && dateString.length > 4) {
         dateString.take(4)
     } else dateString
 }
 
-private fun List<Int>.formatRunTimes(): String? {
+fun List<Int>.formatRunTimes(): String? {
     return when {
         this.isNotEmpty() -> {
             val endOfRunTimes = this.size - 1
@@ -144,6 +144,12 @@ private fun List<Int>.formatRunTimes(): String? {
         }
         else -> null
     }
+}
+
+fun formatVoteAverage(voteAverage: Float?): String? {
+    return if (voteAverage != null && voteAverage != 0.0f) {
+        String.format("%.1f", voteAverage)
+    } else null
 }
 
 internal fun Watchable.withContentDetailImageUrls(config: Config): Watchable {
