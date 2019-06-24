@@ -35,7 +35,9 @@ internal fun buildContentDetailSections(watchable: Watchable, appStringProvider:
                 overview = watchable.overview,
                 recommendations = watchable.detail?.recommendations,
                 releaseDate = watchable.releaseDate,
-                runtime = watchable.detail?.runtime.toString(),
+                runtime = if (watchable.detail?.runtime != null && watchable.detail.runtime != 0) {
+                    watchable.detail.runtime.toString()
+                } else null,
                 seasons = null,
                 videos = watchable.detail?.videos,
                 voteAverage = watchable.voteAverage
@@ -57,6 +59,7 @@ private fun buildContentDetailSections(
     videos: List<Video>?,
     voteAverage: Float?
 ): List<ModelDetailSection> {
+
     val sectionList = mutableListOf<ModelDetailSection>()
 
     val showInfoPanel: Boolean = releaseDate != null && runtime != null && voteAverage != null
@@ -130,20 +133,10 @@ fun formatReleaseYear(dateString: String?): String? {
 }
 
 fun List<Int>.formatRunTimes(): String? {
-    return when {
-        this.isNotEmpty() -> {
-            val endOfRunTimes = this.size - 1
-            buildString {
-                this@formatRunTimes.forEachIndexed { index, runtime ->
-                    append(runtime)
-                    if (index != endOfRunTimes) {
-                        append(", ")
-                    }
-                }
-            }
-        }
-        else -> null
-    }
+    val validRuntimes = this.filter { it != 0 }
+    return if (validRuntimes.isNotEmpty()) {
+        validRuntimes.joinToString(separator = ", ")
+    } else null
 }
 
 fun formatVoteAverage(voteAverage: Float?): String? {

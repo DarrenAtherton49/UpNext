@@ -11,6 +11,7 @@ import com.atherton.upnext.domain.model.Video
 import com.atherton.upnext.domain.model.Watchable
 import com.atherton.upnext.presentation.features.content.ModelDetailSection
 import com.atherton.upnext.util.extensions.isVisible
+import com.atherton.upnext.util.extensions.setTextOrHide
 import com.atherton.upnext.util.glide.GlideRequests
 import com.atherton.upnext.util.recyclerview.LinearSpacingItemDecoration
 import com.google.android.material.chip.Chip
@@ -29,24 +30,9 @@ class ModelDetailInfoPanelViewHolder(override val containerView: View)
     : ModelDetailSectionViewHolder(containerView) {
 
     fun bind(section: ModelDetailSection.InfoPanel) {
-        if (section.releaseDate != null) {
-            releaseDateTextView.text = section.releaseDate
-            releaseDateTextView.isVisible = true
-        } else {
-            releaseDateTextView.isVisible = false
-        }
-        if (section.runtime != null) {
-            runtimeTextView.text = section.runtime
-            runtimeTextView.isVisible = true
-        } else {
-            runtimeTextView.isVisible = false
-        }
-        if (section.voteAverage != null) {
-            ratingTextView.text = section.voteAverage
-            ratingTextView.isVisible = true
-        } else {
-            ratingTextView.isVisible = false
-        }
+        releaseDateTextView.setTextOrHide(section.releaseDate)
+        runtimeTextView.setTextOrHide(section.runtime)
+        ratingTextView.setTextOrHide(section.voteAverage)
         infoPanelFirstDivider.isVisible = section.showFirstDivider
         infoPanelSecondDivider.isVisible = section.showSecondDivider
     }

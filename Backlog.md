@@ -18,7 +18,6 @@
 - [Setting] Shortcut to add to watchlist on grid screens like a long or double tap?
     + When user clicks save, check database to see if movie details are in database already. If not, then call movie/detail network call first and then perform the save.
 - Show fallback data and offline message if the network requests fail but we still have database data.
-- Bug - content detail screen can show 'null mins'
 - Change error layout so that whole screen is clickable to retry instead of just a button
 - Organise/sort mapper functions
 - Make genre chips clickable - goes to discover filter
@@ -42,6 +41,7 @@
         * Episodes left to watch
 - Add genres tab to the discover screen tabs to easily look at genre (as well as in the advanced filter)
 - [Setting] Add setting to show all runtimes for episodes instead of just one (show one by default).
+- [Setting] Add setting to navigate to 
 - Add ability to follow a person as well as a tv show and movie so you can go through and watch someone's filmography.
 - Advanced search/filters. E.g. by genre (using Discover API)
 - Figure out when to invalidate data, e.g. stored movies, tv shows and people.
@@ -50,11 +50,10 @@
 - WorkManager
     + Pre-load and cache the data needed for discover to work instantly (use WorkManager to periodically fetch data and also fetch it on first app run)
     + Decide when to invalidate/delete some of the past searches. E.g. only keep the 50 most recent searches.
-    + Fetch and store a new config every 3 days (call the ConfigRepository refreshConfig() function)
+    + Fetch and store a new config every 3 days (call the ConfigRepository refreshConfig() function) as per TMDB documentation
 - [Setting] Update the grid/list pages to show an icon to show which content you have already watched without clicking into the detail screen
 - Implement the list toggle mode xml layout
 - Cut down all data models I don't use to decrease memory footprint. For example on the list/grid screens, we probably don't need a lot of the attributes other than the name and the image urls for the content. Then when we navigate to the detail screen, we get everything
-- Refresh config from TMDB every 3 days as per documentation
 - Display TMDB attribution in the app
 - Refactor ViewMapper files so that they're better organised by functionality
 - Add 'About' screen to the settings screen
