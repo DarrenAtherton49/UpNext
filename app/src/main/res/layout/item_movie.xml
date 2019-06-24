@@ -30,33 +30,54 @@
 
     </FrameLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <TextView
-            style="@style/MoviesListItemTitleText"
-            android:id="@+id/titleAndReleaseDateTextView"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/keyline_2x"
-            android:layout_marginBottom="@dimen/keyline"/>
+            android:orientation="vertical"
+            android:layout_gravity="top|start">
 
-        <TextView
-            android:id="@+id/genresTextView"
+            <TextView
+                android:id="@+id/releaseDateTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/keyline_2x"
+                android:layout_marginBottom="@dimen/keyline"/>
+
+            <TextView
+                style="@style/MoviesListItemTitleText"
+                android:id="@+id/titleTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/keyline_2x"
+                android:layout_marginBottom="@dimen/keyline"/>
+
+            <TextView
+                android:id="@+id/genresTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/keyline_2x"
+                android:layout_marginBottom="@dimen/keyline"/>
+
+            <TextView
+                android:id="@+id/runtimeTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/keyline_2x"/>
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/watchlistButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/keyline_2x"
-            android:layout_marginBottom="@dimen/keyline_2x"/>
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="4dp"
+            android:src="@drawable/ic_add_white_24dp"/>
 
-        <TextView
-            android:id="@+id/runtimeTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/keyline_2x"
-            android:layout_marginEnd="@dimen/keyline_2x"/>
-
-    </LinearLayout>
+    </FrameLayout>
 
 </LinearLayout>

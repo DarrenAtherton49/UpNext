@@ -18,10 +18,10 @@ class MovieViewHolder(
         imageLoader.load(movieListItem.posterPath).apply(UpNextAppGlideModule.movieListRequestOptions).into(movieImageView)
         ratingTextView.setTextOrHide(movieListItem.voteAverage)
 
-        titleAndReleaseDateTextView.setTextOrHide(movieListItem.titleAndReleaseDate)
-        runtimeTextView.setTextOrHide(movieListItem.runtime)
-
+        releaseDateTextView.setTextOrHide(movieListItem.releaseDate)
+        titleTextView.setTextOrHide(movieListItem.title)
         genresTextView.setTextOrHide(movieListItem.genresString)
+        runtimeTextView.setTextOrHide(movieListItem.runtime)
     }
 
     fun clear() {

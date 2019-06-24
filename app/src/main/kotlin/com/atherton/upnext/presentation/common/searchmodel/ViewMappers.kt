@@ -47,12 +47,6 @@ internal fun List<Movie>.formattedForMovieList(config: Config, appStringProvider
         val runtimeMins: String? = movie.detail?.runtime?.toString()?.let { appStringProvider.getRuntimeString(it) }
         val rating: String? = formatVoteAverage(movie.voteAverage)
 
-        val titleAndReleaseDateString: String? = when {
-            movie.title != null && releaseYear != null -> "${movie.title} ($releaseYear)"
-            movie.title != null -> movie.title
-            else -> null
-        }
-
         val genres: List<Genre>? = movie.detail?.genres
         val genresString: String? = if (genres != null && genres.isNotEmpty()) {
             genres.mapNotNull { it.name }.joinToString(separator = ", ")
@@ -62,8 +56,9 @@ internal fun List<Movie>.formattedForMovieList(config: Config, appStringProvider
             genresString = genresString,
             movieId = movie.id,
             posterPath = buildPosterPath(movie.posterPath, config),
+            releaseDate = releaseYear,
             runtime = runtimeMins,
-            titleAndReleaseDate = titleAndReleaseDateString,
+            title = movie.title,
             voteAverage = rating
 //            watchlistButtonText = if (movie.state.inWatchlist) {
 //                appStringProvider.getRemoveFromWatchlistString()
