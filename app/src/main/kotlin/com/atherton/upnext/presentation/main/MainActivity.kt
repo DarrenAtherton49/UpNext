@@ -58,8 +58,10 @@ class MainActivity : BaseActivity<MainAction, MainState, MainViewEffect, MainVie
     }
 
     private fun setupNavigation() {
-        // bottom navigation
         bottomNavigation.setupWithNavController(navController)
+
+        // use the below line if we don't want fragment to be re-created when user re-selects the same button on bottom nav
+        //bottomNavigation.setOnNavigationItemReselectedListener {  }
     }
 
     private fun addBottomBarVisibilityListener() {

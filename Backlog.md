@@ -111,6 +111,7 @@
 
 ### Alpha Build/Release
 - Test the release APK, especially for missing ProGuard rules etc.
+- Look at the pre-launch report and fix any issues in there.
 - Add privacy policy to app and play store
 - Use the release checklist to make sure everything is done
     + https://developer.android.com/distribute/best-practices/launch/launch-checklist

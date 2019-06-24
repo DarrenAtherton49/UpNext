@@ -53,6 +53,7 @@ interface AppComponent {
     fun configRepository(): ConfigRepository
     fun settingsRepository(): SettingsRepository
     fun filterRepository(): FilterRepository
+    fun roomDb(): RoomDb
 }
 
 

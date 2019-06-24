@@ -96,7 +96,7 @@ class MovieListViewModel @Inject constructor(
         }
 
         val loadDataChange = actions.ofType<MovieListAction.Load>()
-            .distinctUntilChanged()
+            //.distinctUntilChanged()
             .toResultChange()
 
         val retryButtonChange = actions.ofType<MovieListAction.RetryButtonClicked>()

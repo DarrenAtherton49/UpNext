@@ -1,6 +1,7 @@
 package com.atherton.upnext
 
 import android.app.Application
+import com.atherton.upnext.util.extensions.ioThread
 import com.atherton.upnext.util.extensions.onAndroidPieOrLater
 import com.atherton.upnext.util.injection.AppComponent
 import com.atherton.upnext.util.injection.AppModule
@@ -45,11 +46,22 @@ class App : Application() {
         })
 
         initInjection()
+
+        startDatabase()
     }
 
     private fun initInjection() {
         appComponent = DaggerAppComponent.builder()
             .appModule(AppModule(this))
             .build()
+    }
+
+    private fun startDatabase() {
+        ioThread {
+            // we call a function on one of the room Dao's so that the database gets created and the pre-populated
+            // data is inserted. Note that it doesn't matter which Dao function gets called, we just need to create
+            // the database before navigating to the shows or movies screen so that the initial data is there.
+            appComponent.roomDb().getConfigDao().getConfig()
+        }
     }
 }
