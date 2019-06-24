@@ -53,8 +53,13 @@ internal fun List<Movie>.formattedForMovieList(config: Config, appStringProvider
             else -> null
         }
 
+        val genres: List<Genre>? = movie.detail?.genres
+        val genresString: String? = if (genres != null && genres.isNotEmpty()) {
+            genres.mapNotNull { it.name }.joinToString(separator = ", ")
+        } else null
+
         MovieListItem(
-            genres = movie.detail?.genres,
+            genresString = genresString,
             movieId = movie.id,
             posterPath = buildPosterPath(movie.posterPath, config),
             runtime = runtimeMins,

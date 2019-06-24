@@ -9,37 +9,11 @@
 - Works offline, including past searches
 
 ### Alpha
-- Set up Room database
-    - Custom lists
-        - movie_lists table
-               * id: Long
-                * name: String
-                * order: Int
-            + Pre-populated data (do this in RoomDb)
-                * watchlist (order: 1)
-                * watched (order: 2) - Add each movie to this when it has been marked as watched 
-        - movie_lists_join table
-            + Columns
-                * movie_id: Long
-                * list_id: Long
-        - tv_show_lists table
-            + Columns
-                * id: Long
-                * name: String
-                * order: Int
-            + Pre-populated data (do this in RoomDb)
-                * watchlist (order: 1)
-                * watched - only add to this when every episode is complete
-                * history (order: 2) - Add each episode to this when it has been marked as watched 
-        - tv_show_lists_join table
-            + Columns
-                * show_id: Long
-                * content: Long
-                * contentType: Enum (tv show, episode or season)
-    - tv show
-        + tv_show_status table - copy the movie_status table layout
-        + season - when an episode is marked as 'watched', update the season 'watchCount'
-        + episode - when an episode is marked as 'watched', update the episode 'watched' flag
+- Add each movie to the 'watched' list and update its' Boolean fields when it has been marked as watched.
+- TV: When an episode is marked as 'watched', update the season 'watchCount'.
+- TV: When an episode is marked as 'watched', update the episode 'watched' flag
+- TV: Add each episode to the history list when it has been marked as watched.
+- TV: Add show to 'watched' list and update its' Boolean fields when every episode has been watched.
 - The 'up next'/'watchlist' screen should have a button so that it is 'one click' to mark the next episode as 'watched'. So you should see the episode you're currently on, be able to click 'watched' and the next episode should come up. Also add 'undo' snackbar for this action for accidental clicks.
 - [Setting] Shortcut to add to watchlist on grid screens like a long or double tap?
     + When user clicks save, check database to see if movie details are in database already. If not, then call movie/detail network call first and then perform the save.
@@ -82,6 +56,7 @@
 - Cut down all data models I don't use to decrease memory footprint. For example on the list/grid screens, we probably don't need a lot of the attributes other than the name and the image urls for the content. Then when we navigate to the detail screen, we get everything
 - Refresh config from TMDB every 3 days as per documentation
 - Display TMDB attribution in the app
+- Refactor ViewMapper files so that they're better organised by functionality
 - Add 'About' screen to the settings screen
     + Logo
     + App name

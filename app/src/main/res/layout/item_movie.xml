@@ -44,31 +44,18 @@
             android:layout_marginBottom="@dimen/keyline"/>
 
         <TextView
+            android:id="@+id/genresTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/keyline_2x"
+            android:layout_marginBottom="@dimen/keyline_2x"/>
+
+        <TextView
             android:id="@+id/runtimeTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/keyline_2x"
-            android:layout_marginEnd="@dimen/keyline_2x"
-            android:layout_marginBottom="@dimen/keyline_2x"/>
-
-        <HorizontalScrollView
-            android:id="@+id/genreChipHorizontalScrollView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="@dimen/keyline_2x"
-            android:paddingEnd="@dimen/keyline_2x"
-            android:layout_marginBottom="@dimen/keyline_2x"
-            android:clipToPadding="false"
-            android:scrollbars="none">
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/genreChipGroup"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:chipSpacingHorizontal="@dimen/keyline_2x"
-                app:singleLine="true"/>
-
-        </HorizontalScrollView>
+            android:layout_marginEnd="@dimen/keyline_2x"/>
 
     </LinearLayout>
 
