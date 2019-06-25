@@ -71,6 +71,12 @@ data class RoomMovie(
     @ColumnInfo(name = "is_model_complete") val isModelComplete: Boolean
 )
 
+data class RoomMovieMinimal(
+    @ColumnInfo(name = ID) val id: Long,
+    @ColumnInfo(name = "is_model_complete") val isModelComplete: Boolean,
+    @Embedded(prefix = "state_") val state: RoomMovieState = RoomMovieState()
+)
+
 data class RoomMovieState(
     @ColumnInfo(name = "in_watchlist") val inWatchlist: Boolean = false,
     @ColumnInfo(name = "is_watched") val isWatched: Boolean = false

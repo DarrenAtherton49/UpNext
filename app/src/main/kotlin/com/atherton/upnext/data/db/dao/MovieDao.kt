@@ -5,8 +5,67 @@ import com.atherton.upnext.data.db.model.list.RoomMovieListJoin
 import com.atherton.upnext.data.db.model.movie.*
 import io.reactivex.Single
 
+private const val ROW_NOT_INSERTED: Long = -1L
+
 @Dao
 interface MovieDao {
+
+    /**
+     * Function to insert a movie or update a movie if the movie already exists.
+     * If the insert returns '-1', the movie exists so we need to fetch it, copy it's watchlist state
+     * and then update the movie in the database.
+     */
+    @Transaction
+    fun insertOrUpdate(newMovie: RoomMovie): Long {
+        val id: Long = insertMovie(newMovie)
+        return if (id == ROW_NOT_INSERTED) { // movie already exists, so preserve watchlist state etc.
+            val existingMovie: RoomMovieMinimal = getMinimalMovieForId(newMovie.id)
+            val updatedMovie: RoomMovie = newMovie.copy(
+                isModelComplete = existingMovie.isModelComplete,
+                state = existingMovie.state
+            )
+            updateMovie(updatedMovie)
+            updatedMovie.id
+        } else {
+            id
+        }
+    }
+
+    /**
+     * Function to insert new movies and update any movies that already exist.
+     * Returns the list of movie id's which have been either inserted or updated.
+     */
+    @Transaction
+    fun insertOrUpdateMovies(newMovies: List<RoomMovie>): List<Long> {
+
+        if (newMovies.isNotEmpty()) {
+
+            val ids: List<Long> = insertAllMovies(newMovies)
+
+            // movies that already exist, so preserve watchlist state etc.
+            val moviesTpUpdate = mutableListOf<RoomMovie>()
+            ids.forEachIndexed { index, id ->
+                if (id == ROW_NOT_INSERTED) {
+                    moviesTpUpdate.add(newMovies[index])
+                }
+            }
+
+            // copy state from each existing movie to each new movie
+            val updatedMovies: List<RoomMovie> = moviesTpUpdate.map { movieToUpdate ->
+                val existingMovie: RoomMovieMinimal = getMinimalMovieForId(movieToUpdate.id)
+                movieToUpdate.copy(
+                    isModelComplete = existingMovie.isModelComplete,
+                    state = existingMovie.state
+                )
+            }
+
+            if (updatedMovies.isNotEmpty()) {
+                updateMovies(updatedMovies)
+            }
+        }
+
+        return newMovies.map { movie -> movie.id }
+    }
 
     @Transaction
     fun insertFullMovieData(
@@ -21,15 +80,7 @@ interface MovieDao {
         videos: List<RoomMovieVideo>?
     ) {
 
-        val existingMovie: RoomMovie? = getMovieForId(movie.id)
-        if (existingMovie != null) { // preserve watchlist state etc.
-            val updatedMovie: RoomMovie = movie.copy(
-                state = existingMovie.state
-            )
-            updateMovie(updatedMovie)
-        } else {
-            insertMovie(movie)
-        }
+        insertOrUpdate(movie)
 
         castMembers?.let { insertAllCastMembers(it) }
         crewMembers?.let { insertAllCrewMembers(it) }
@@ -39,52 +90,29 @@ interface MovieDao {
         spokenLanguages?.let { insertAllSpokenLanguages(it) }
         videos?.let { insertAllVideos(it) }
 
-        val recommendedList = mutableListOf<RoomMovieRecommendationJoin>()
-        recommendations?.forEach { recommendedMovie ->
 
-            val existingRecommendedMovie: RoomMovie? = getMovieForId(recommendedMovie.id)
-            val recommendationId: Long = if (existingRecommendedMovie != null) { // preserve watchlist state etc.
-                val updatedMovie: RoomMovie = recommendedMovie.copy(
-                    state = existingRecommendedMovie.state,
-                    isModelComplete = existingRecommendedMovie.isModelComplete
-                )
-                updateMovie(updatedMovie)
-                updatedMovie.id
-            } else {
-                insertMovie(recommendedMovie)
-            }
-
-            recommendedList.add(
+        if (recommendations != null) {
+            val movieIds: List<Long> = insertOrUpdateMovies(recommendations)
+            val recommendedJoinList: List<RoomMovieRecommendationJoin> = movieIds.map { recommendedMovieId ->
                 RoomMovieRecommendationJoin(
                     movieId = movie.id,
-                    recommendationId = recommendationId
+                    recommendationId = recommendedMovieId
                 )
-            )
-        }
-        if (recommendedList.isNotEmpty()) {
-            insertAllRecommendations(recommendedList)
+            }
+
+            if (recommendedJoinList.isNotEmpty()) {
+                insertAllRecommendations(recommendedJoinList)
+            }
         }
     }
 
     @Transaction
-    fun insertAllMoviesForPlaylist(movies: List<RoomMovie>, playlistName: String) {
+    fun insertAllMoviesForPlaylist(newMovies: List<RoomMovie>, playlistName: String) {
 
         val playlistId: Long = getPlaylistIdForName(playlistName)
         if (playlistId != 0L) {
 
-            val movieIds: List<Long> = movies.map { playlistMovie ->
-                val existingMovie: RoomMovie? = getMovieForId(playlistMovie.id)
-                if (existingMovie != null) { // preserve watchlist state etc.
-                    val updatedMovie: RoomMovie = playlistMovie.copy(
-                        state = existingMovie.state,
-                        isModelComplete = existingMovie.isModelComplete
-                    )
-                    updateMovie(updatedMovie)
-                    updatedMovie.id
-                } else {
-                    insertMovie(playlistMovie)
-                }
-            }
+            val movieIds: List<Long> = insertOrUpdateMovies(newMovies)
 
             val moviePlaylistJoins: List<RoomMoviePlaylistJoin> = movieIds.map { movieId ->
                 RoomMoviePlaylistJoin(
@@ -114,19 +142,21 @@ interface MovieDao {
             } else {
                 deleteMovieListJoin(movieWatchlistJoin)
             }
+        } else {
+            throw IllegalStateException("Invalid list id")
         }
     }
 
     @Delete
     fun deleteMovieListJoin(movieListJoin: RoomMovieListJoin)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertMovie(movie: RoomMovie): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertMovieListJoin(movieListJoin: RoomMovieListJoin)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAllMovies(movies: List<RoomMovie>): List<Long>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -168,6 +198,11 @@ interface MovieDao {
     @Query("SELECT * FROM movie WHERE id = :id")
     fun getMovieForId(id: Long): RoomMovie?
 
+    // we use this cut-down version of movie e.g. when preserving watchlist state as part of a movie update
+    @Transaction
+    @Query("SELECT id, is_model_complete, state_in_watchlist, state_is_watched FROM movie WHERE id = :id")
+    fun getMinimalMovieForId(id: Long): RoomMovieMinimal
+
     @Transaction
     @Query("SELECT * FROM movie WHERE id = :id")
     fun getFullMovieForId(id: Long): RoomMovieAllData?
@@ -194,6 +229,9 @@ interface MovieDao {
 
     @Update
     fun updateMovie(movie: RoomMovie)
+
+    @Update
+    fun updateMovies(movies: List<RoomMovie>)
 
     companion object {
         const val PLAYLIST_POPULAR = "Popular"
