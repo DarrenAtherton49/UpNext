@@ -63,13 +63,13 @@ data class RoomTvShow(
     @ColumnInfo(name = "in_production") val inProduction: Boolean?,
     @ColumnInfo(name = "languages") val languages: List<String>?,
     @ColumnInfo(name = "last_air_date") val lastAirDate: String?,
-    @Embedded(prefix = "last_episode_to_air") val lastEpisodeToAir: RoomTvShowLastEpisodeToAir?,
+    @Embedded(prefix = "last_episode_to_air_") val lastEpisodeToAir: RoomTvShowLastEpisodeToAir?,
     @ColumnInfo(name = "number_of_episodes") val numberOfEpisodes: Int?,
     @ColumnInfo(name = "number_of_seasons") val numberOfSeasons: Int?,
     @ColumnInfo(name = "status") val status: String?,
     @ColumnInfo(name = "type") val type: String?,
 
-    @Embedded(prefix = "state") val state: RoomTvShowState = RoomTvShowState(),
+    @Embedded(prefix = "state_") val state: RoomTvShowState = RoomTvShowState(),
 
     @ColumnInfo(name = "is_model_complete") val isModelComplete: Boolean
 )

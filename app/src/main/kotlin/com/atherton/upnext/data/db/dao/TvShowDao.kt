@@ -8,7 +8,7 @@ import io.reactivex.Single
 interface TvShowDao {
 
     @Transaction
-    fun insertTvShowData(
+    fun insertFullTvShowData(
         tvShow: RoomTvShow,
         genres: List<RoomTvShowGenre>?,
         productionCompanies: List<RoomTvShowProductionCompany>?,
@@ -20,7 +20,16 @@ interface TvShowDao {
         recommendations: List<RoomTvShow>?,
         videos: List<RoomTvShowVideo>?
     ) {
-        insertTvShow(tvShow)
+
+        val existingTvShow: RoomTvShow? = getTvShowForId(tvShow.id)
+        if (existingTvShow != null) { // preserve watchlist state etc.
+            val updatedTvShow: RoomTvShow = tvShow.copy(
+                state = existingTvShow.state
+            )
+            updateTvShow(updatedTvShow)
+        } else {
+            insertTvShow(tvShow)
+        }
 
         genres?.let { insertAllGenres(it) }
         productionCompanies?.let { insertAllProductionCompanies(it) }
@@ -33,7 +42,19 @@ interface TvShowDao {
 
         val recommendedList = mutableListOf<RoomTvShowRecommendationJoin>()
         recommendations?.forEach { recommendedTvShow ->
-            val recommendationId = insertTvShow(recommendedTvShow)
+
+            val existingRecommendedTvShow: RoomTvShow? = getTvShowForId(recommendedTvShow.id)
+            val recommendationId: Long = if (existingRecommendedTvShow != null) { // preserve watchlist state etc.
+                val updatedTvShow: RoomTvShow = recommendedTvShow.copy(
+                    state = existingRecommendedTvShow.state,
+                    isModelComplete = existingRecommendedTvShow.isModelComplete
+                )
+                updateTvShow(updatedTvShow)
+                updatedTvShow.id
+            } else {
+                insertTvShow(recommendedTvShow)
+            }
+
             recommendedList.add(
                 RoomTvShowRecommendationJoin(
                     showId = tvShow.id,
@@ -51,7 +72,21 @@ interface TvShowDao {
 
         val playlistId: Long = getPlaylistIdForName(playlistName)
         if (playlistId != 0L) {
-            val tvShowIds: List<Long> = insertAllTvShows(tvShows)
+
+            val tvShowIds: List<Long> = tvShows.map { playlistTvShow ->
+                val existingTvShow: RoomTvShow? = getTvShowForId(playlistTvShow.id)
+                if (existingTvShow != null) { // preserve watchlist state etc.
+                    val updatedTvShow: RoomTvShow = playlistTvShow.copy(
+                        state = existingTvShow.state,
+                        isModelComplete = existingTvShow.isModelComplete
+                    )
+                    updateTvShow(updatedTvShow)
+                    updatedTvShow.id
+                } else {
+                    insertTvShow(playlistTvShow)
+                }
+            }
+
             val tvShowPlaylistJoins: List<RoomTvShowPlaylistJoin> = tvShowIds.map { tvShowId ->
                 RoomTvShowPlaylistJoin(
                     showId = tvShowId,
@@ -108,6 +143,10 @@ interface TvShowDao {
 
     @Transaction
     @Query("SELECT * FROM tv_show WHERE id = :id")
+    fun getTvShowForId(id: Long): RoomTvShow?
+
+    @Transaction
+    @Query("SELECT * FROM tv_show WHERE id = :id")
     fun getFullTvShowForId(id: Long): RoomTvShowAllData?
 
     @Transaction
@@ -124,6 +163,9 @@ interface TvShowDao {
 
     @Query("SELECT id from tv_show_playlist WHERE name = :playlistName")
     fun getPlaylistIdForName(playlistName: String): Long
+
+    @Update
+    fun updateTvShow(tvShow: RoomTvShow)
 
     companion object {
         const val PLAYLIST_POPULAR = "Popular"

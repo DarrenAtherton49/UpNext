@@ -70,13 +70,34 @@
 
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/watchlistButton"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_gravity="bottom|end"
-            android:layout_marginBottom="4dp"
-            android:src="@drawable/ic_add_white_24dp"/>
+            android:layout_marginBottom="4dp">
+
+            <ImageButton
+                android:id="@+id/watchlistButton"
+                android:layout_width="@dimen/movies_list_toggle_button_size"
+                android:layout_height="@dimen/movies_list_toggle_button_size"
+                android:layout_marginEnd="@dimen/keyline"
+                android:background="?android:selectableItemBackground"/>
+
+            <ImageButton
+                android:id="@+id/watchedButton"
+                android:layout_width="@dimen/movies_list_toggle_button_size"
+                android:layout_height="@dimen/movies_list_toggle_button_size"
+                android:layout_marginEnd="@dimen/keyline"
+                android:background="?android:selectableItemBackground"/>
+
+            <ImageButton
+                android:id="@+id/addToListButton"
+                android:layout_width="@dimen/movies_list_toggle_button_size"
+                android:layout_height="@dimen/movies_list_toggle_button_size"
+                android:background="?android:selectableItemBackground"/>
+
+        </LinearLayout>
 
     </FrameLayout>
 

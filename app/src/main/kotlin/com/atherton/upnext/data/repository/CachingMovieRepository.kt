@@ -220,7 +220,8 @@ class CachingMovieRepository @Inject constructor(
 
     private fun saveFullMovieToDatabase(movie: TmdbMovie) {
         val movieId: Long = movie.id.toLong()
-        movieDao.insertMovieData(
+
+        movieDao.insertFullMovieData(
             movie = movie.toRoomMovie(true),
             castMembers = movie.credits?.cast?.toRoomMovieCast(movieId),
             crewMembers = movie.credits?.crew?.toRoomMovieCrew(movieId),

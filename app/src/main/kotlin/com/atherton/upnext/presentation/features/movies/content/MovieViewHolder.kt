@@ -18,6 +18,10 @@ class MovieViewHolder(
         imageLoader.load(movieListItem.posterPath).apply(UpNextAppGlideModule.movieListRequestOptions).into(movieImageView)
         ratingTextView.setTextOrHide(movieListItem.voteAverage)
 
+        imageLoader.load(movieListItem.watchlistButtonResId).into(watchlistButton)
+        imageLoader.load(movieListItem.watchedButtonResId).into(watchedButton)
+        imageLoader.load(movieListItem.addToListButtonResId).into(addToListButton)
+
         releaseDateTextView.setTextOrHide(movieListItem.releaseDate)
         titleTextView.setTextOrHide(movieListItem.title)
         genresTextView.setTextOrHide(movieListItem.genresString)

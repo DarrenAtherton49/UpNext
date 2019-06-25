@@ -161,7 +161,7 @@ class CachingTvShowRepository @Inject constructor(
 
     private fun saveFullTvShowToDatabase(tvShow: TmdbTvShow) {
         val tvShowId: Long = tvShow.id.toLong()
-        tvShowDao.insertTvShowData(
+        tvShowDao.insertFullTvShowData(
             tvShow = tvShow.toRoomTvShow(true),
             genres = tvShow.genres?.toRoomTvShowGenres(tvShowId),
             productionCompanies = tvShow.productionCompanies?.toRoomTvProductionCompanies(tvShowId),

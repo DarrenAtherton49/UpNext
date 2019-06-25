@@ -57,7 +57,7 @@ data class RoomMovie(
     @ColumnInfo(name = "vote_count") val voteCount: Int?,
 
     // detail fields (more detail fields can be found in class RoomMovieAllData)
-    @Embedded(prefix = "belongs_to_collection") val belongsToCollection: RoomMovieCollection?,
+    @Embedded(prefix = "belongs_to_collection_") val belongsToCollection: RoomMovieCollection?,
     @ColumnInfo(name = "budget") val budget: Int?,
     @ColumnInfo(name = "homepage") val homepage: String?,
     @ColumnInfo(name = "imdb_id") val imdbId: String?,
@@ -66,7 +66,7 @@ data class RoomMovie(
     @ColumnInfo(name = "status") val status: String?,
     @ColumnInfo(name = "tagline") val tagline: String?,
 
-    @Embedded(prefix = "state") val state: RoomMovieState = RoomMovieState(),
+    @Embedded(prefix = "state_") val state: RoomMovieState = RoomMovieState(),
 
     @ColumnInfo(name = "is_model_complete") val isModelComplete: Boolean
 )

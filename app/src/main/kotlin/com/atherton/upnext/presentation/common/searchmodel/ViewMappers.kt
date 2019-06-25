@@ -1,5 +1,6 @@
 package com.atherton.upnext.presentation.common.searchmodel
 
+import com.atherton.upnext.R
 import com.atherton.upnext.domain.model.*
 import com.atherton.upnext.presentation.features.content.formatReleaseYear
 import com.atherton.upnext.presentation.features.content.formatVoteAverage
@@ -53,18 +54,24 @@ internal fun List<Movie>.formattedForMovieList(config: Config, appStringProvider
         } else null
 
         MovieListItem(
+            addToListButtonResId = R.drawable.ic_list_add_white_24dp,
             genresString = genresString,
             movieId = movie.id,
             posterPath = buildPosterPath(movie.posterPath, config),
             releaseDate = releaseYear,
             runtime = runtimeMins,
             title = movie.title,
-            voteAverage = rating
-//            watchlistButtonText = if (movie.state.inWatchlist) {
-//                appStringProvider.getRemoveFromWatchlistString()
-//            } else {
-//                appStringProvider.getAddToWatchlistString()
-//            }
+            voteAverage = rating,
+            watchedButtonResId = if (movie.state.isWatched) {
+                R.drawable.ic_archive_yellow_24dp
+            } else {
+                R.drawable.ic_archive_white_24dp
+            },
+            watchlistButtonResId = if (movie.state.inWatchlist) {
+                R.drawable.ic_check_circle_yellow_24dp
+            } else {
+                R.drawable.ic_check_circle_white_24dp
+            }
         )
     }
 }
