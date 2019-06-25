@@ -74,6 +74,12 @@ data class RoomTvShow(
     @ColumnInfo(name = "is_model_complete") val isModelComplete: Boolean
 )
 
+data class RoomTvShowMinimal(
+    @ColumnInfo(name = ID) val id: Long,
+    @ColumnInfo(name = "is_model_complete") val isModelComplete: Boolean,
+    @Embedded(prefix = "state_") val state: RoomTvShowState
+)
+
 data class RoomTvShowState(
     @ColumnInfo(name = "in_watchlist") val inWatchlist: Boolean = false,
     @ColumnInfo(name = "is_watched") val isWatched: Boolean = false

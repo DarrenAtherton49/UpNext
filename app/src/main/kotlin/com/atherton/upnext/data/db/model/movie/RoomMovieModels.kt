@@ -74,7 +74,7 @@ data class RoomMovie(
 data class RoomMovieMinimal(
     @ColumnInfo(name = ID) val id: Long,
     @ColumnInfo(name = "is_model_complete") val isModelComplete: Boolean,
-    @Embedded(prefix = "state_") val state: RoomMovieState = RoomMovieState()
+    @Embedded(prefix = "state_") val state: RoomMovieState
 )
 
 data class RoomMovieState(

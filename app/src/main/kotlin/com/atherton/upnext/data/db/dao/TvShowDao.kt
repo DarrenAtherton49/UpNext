@@ -4,8 +4,68 @@ import androidx.room.*
 import com.atherton.upnext.data.db.model.tv.*
 import io.reactivex.Single
 
+private const val ROW_NOT_INSERTED: Long = -1L
+
 @Dao
 interface TvShowDao {
+
+    /**
+     * Function to insert a tv show or update a tv show if the movie already exists.
+     * If the insert returns '-1', the tv show already exists so we need to fetch it, copy it's watchlist state
+     * and then update the tv show in the database.
+     * Returns the id of the tv show.
+     */
+    @Transaction
+    fun insertOrUpdateTvShow(newTvShow: RoomTvShow): Long {
+        val id: Long = insertTvShow(newTvShow)
+        return if (id == ROW_NOT_INSERTED) { // tv show already exists, so preserve watchlist state etc.
+            val existingTvShow: RoomTvShowMinimal = getMinimalTvShowForId(newTvShow.id)
+            val updatedTvShow: RoomTvShow = newTvShow.copy(
+                isModelComplete = existingTvShow.isModelComplete,
+                state = existingTvShow.state
+            )
+            updateTvShow(updatedTvShow)
+            updatedTvShow.id
+        } else {
+            id
+        }
+    }
+
+    /**
+     * Function to insert new tv shows and update any tv shows that already exist.
+     * Returns the list of tv show id's which have been either inserted or updated.
+     */
+    @Transaction
+    fun insertOrUpdateTvShows(newTvShows: List<RoomTvShow>): List<Long> {
+
+        if (newTvShows.isNotEmpty()) {
+
+            val ids: List<Long> = insertAllTvShows(newTvShows)
+
+            // tv shows that already exist, so preserve watchlist state etc.
+            val tvShowsToUpdate = mutableListOf<RoomTvShow>()
+            ids.forEachIndexed { index, id ->
+                if (id == ROW_NOT_INSERTED) {
+                    tvShowsToUpdate.add(newTvShows[index])
+                }
+            }
+
+            // copy state from each existing tv show to each new tv show
+            val updatedTvShows: List<RoomTvShow> = tvShowsToUpdate.map { tvShowToUpdate ->
+                val existingTvShow: RoomTvShowMinimal = getMinimalTvShowForId(tvShowToUpdate.id)
+                tvShowToUpdate.copy(
+                    isModelComplete = existingTvShow.isModelComplete,
+                    state = existingTvShow.state
+                )
+            }
+
+            if (updatedTvShows.isNotEmpty()) {
+                updateTvShows(updatedTvShows)
+            }
+        }
+
+        return newTvShows.map { tvShow -> tvShow.id }
+    }
 
     @Transaction
     fun insertFullTvShowData(
@@ -21,15 +81,7 @@ interface TvShowDao {
         videos: List<RoomTvShowVideo>?
     ) {
 
-        val existingTvShow: RoomTvShow? = getTvShowForId(tvShow.id)
-        if (existingTvShow != null) { // preserve watchlist state etc.
-            val updatedTvShow: RoomTvShow = tvShow.copy(
-                state = existingTvShow.state
-            )
-            updateTvShow(updatedTvShow)
-        } else {
-            insertTvShow(tvShow)
-        }
+        insertOrUpdateTvShow(tvShow)
 
         genres?.let { insertAllGenres(it) }
         productionCompanies?.let { insertAllProductionCompanies(it) }
@@ -40,52 +92,28 @@ interface TvShowDao {
         seasons?.let { insertAllSeasons(it) }
         videos?.let { insertAllVideos(it) }
 
-        val recommendedList = mutableListOf<RoomTvShowRecommendationJoin>()
-        recommendations?.forEach { recommendedTvShow ->
-
-            val existingRecommendedTvShow: RoomTvShow? = getTvShowForId(recommendedTvShow.id)
-            val recommendationId: Long = if (existingRecommendedTvShow != null) { // preserve watchlist state etc.
-                val updatedTvShow: RoomTvShow = recommendedTvShow.copy(
-                    state = existingRecommendedTvShow.state,
-                    isModelComplete = existingRecommendedTvShow.isModelComplete
-                )
-                updateTvShow(updatedTvShow)
-                updatedTvShow.id
-            } else {
-                insertTvShow(recommendedTvShow)
-            }
-
-            recommendedList.add(
+        if (recommendations != null) {
+            val tvShowIds: List<Long> = insertOrUpdateTvShows(recommendations)
+            val recommendedJoinList: List<RoomTvShowRecommendationJoin> = tvShowIds.map { recommendedTvShowId ->
                 RoomTvShowRecommendationJoin(
                     showId = tvShow.id,
-                    recommendationId = recommendationId
+                    recommendationId = recommendedTvShowId
                 )
-            )
-        }
-        if (recommendedList.isNotEmpty()) {
-            insertAllRecommendations(recommendedList)
+            }
+
+            if (recommendedJoinList.isNotEmpty()) {
+                insertAllRecommendations(recommendedJoinList)
+            }
         }
     }
 
     @Transaction
-    fun insertAllTvShowsForPlaylist(tvShows: List<RoomTvShow>, playlistName: String) {
+    fun insertAllTvShowsForPlaylist(newTvShows: List<RoomTvShow>, playlistName: String) {
 
         val playlistId: Long = getPlaylistIdForName(playlistName)
         if (playlistId != 0L) {
 
-            val tvShowIds: List<Long> = tvShows.map { playlistTvShow ->
-                val existingTvShow: RoomTvShow? = getTvShowForId(playlistTvShow.id)
-                if (existingTvShow != null) { // preserve watchlist state etc.
-                    val updatedTvShow: RoomTvShow = playlistTvShow.copy(
-                        state = existingTvShow.state,
-                        isModelComplete = existingTvShow.isModelComplete
-                    )
-                    updateTvShow(updatedTvShow)
-                    updatedTvShow.id
-                } else {
-                    insertTvShow(playlistTvShow)
-                }
-            }
+            val tvShowIds: List<Long> = insertOrUpdateTvShows(newTvShows)
 
             val tvShowPlaylistJoins: List<RoomTvShowPlaylistJoin> = tvShowIds.map { tvShowId ->
                 RoomTvShowPlaylistJoin(
@@ -94,13 +122,15 @@ interface TvShowDao {
                 )
             }
             insertAllTvShowPlaylistJoins(tvShowPlaylistJoins)
+        } else {
+            throw IllegalStateException("Invalid playlist id")
         }
     }
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertTvShow(tvShow: RoomTvShow): Long
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAllTvShows(tvShows: List<RoomTvShow>): List<Long>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -145,6 +175,11 @@ interface TvShowDao {
     @Query("SELECT * FROM tv_show WHERE id = :id")
     fun getTvShowForId(id: Long): RoomTvShow?
 
+    // we use this cut-down version of movie e.g. when preserving watchlist state as part of a movie update
+    @Transaction
+    @Query("SELECT id, is_model_complete, state_in_watchlist, state_is_watched FROM tv_show WHERE id = :id")
+    fun getMinimalTvShowForId(id: Long): RoomTvShowMinimal
+
     @Transaction
     @Query("SELECT * FROM tv_show WHERE id = :id")
     fun getFullTvShowForId(id: Long): RoomTvShowAllData?
@@ -166,6 +201,9 @@ interface TvShowDao {
 
     @Update
     fun updateTvShow(tvShow: RoomTvShow)
+
+    @Update
+    fun updateTvShows(tvShows: List<RoomTvShow>)
 
     companion object {
         const val PLAYLIST_POPULAR = "Popular"

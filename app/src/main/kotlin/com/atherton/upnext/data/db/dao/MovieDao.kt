@@ -12,11 +12,12 @@ interface MovieDao {
 
     /**
      * Function to insert a movie or update a movie if the movie already exists.
-     * If the insert returns '-1', the movie exists so we need to fetch it, copy it's watchlist state
+     * If the insert returns '-1', the movie already exists so we need to fetch it, copy it's watchlist state
      * and then update the movie in the database.
+     * Returns the id of the movie.
      */
     @Transaction
-    fun insertOrUpdate(newMovie: RoomMovie): Long {
+    fun insertOrUpdateMovie(newMovie: RoomMovie): Long {
         val id: Long = insertMovie(newMovie)
         return if (id == ROW_NOT_INSERTED) { // movie already exists, so preserve watchlist state etc.
             val existingMovie: RoomMovieMinimal = getMinimalMovieForId(newMovie.id)
@@ -43,15 +44,15 @@ interface MovieDao {
             val ids: List<Long> = insertAllMovies(newMovies)
 
             // movies that already exist, so preserve watchlist state etc.
-            val moviesTpUpdate = mutableListOf<RoomMovie>()
+            val moviesToUpdate = mutableListOf<RoomMovie>()
             ids.forEachIndexed { index, id ->
                 if (id == ROW_NOT_INSERTED) {
-                    moviesTpUpdate.add(newMovies[index])
+                    moviesToUpdate.add(newMovies[index])
                 }
             }
 
             // copy state from each existing movie to each new movie
-            val updatedMovies: List<RoomMovie> = moviesTpUpdate.map { movieToUpdate ->
+            val updatedMovies: List<RoomMovie> = moviesToUpdate.map { movieToUpdate ->
                 val existingMovie: RoomMovieMinimal = getMinimalMovieForId(movieToUpdate.id)
                 movieToUpdate.copy(
                     isModelComplete = existingMovie.isModelComplete,
@@ -80,7 +81,7 @@ interface MovieDao {
         videos: List<RoomMovieVideo>?
     ) {
 
-        insertOrUpdate(movie)
+        insertOrUpdateMovie(movie)
 
         castMembers?.let { insertAllCastMembers(it) }
         crewMembers?.let { insertAllCrewMembers(it) }
