@@ -114,14 +114,14 @@ class MoviesFragment : BaseFragment<MoviesAction, MoviesState, MoviesViewEffect,
     private fun populateListTabs(movieLists: List<MovieList>) {
         viewPagerAdapter.clear()
         movieLists.forEach { movieList ->
-            val filterName = when (movieList.name) {
+            val listName = when (movieList.name) {
                 "Watchlist" -> getString(R.string.movies_tab_watchlist)
                 "Watched" -> getString(R.string.movies_tab_watched)
                 else -> movieList.name
             }
             viewPagerAdapter.addFragment(
                 id = movieList.id,
-                title = filterName,
+                title = listName,
                 fragment = MovieListFragment.newInstance(movieList)
             )
         }
