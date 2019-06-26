@@ -20,9 +20,17 @@ interface MovieDao {
     fun insertOrUpdateMovie(newMovie: RoomMovie): Long {
         val id: Long = insertMovie(newMovie)
         return if (id == ROW_NOT_INSERTED) { // movie already exists, so preserve watchlist state etc.
+
             val existingMovie: RoomMovieMinimal = getMinimalMovieForId(newMovie.id)
+
+            // we do this so that we don't overwrite a 'true' with a 'false', e.g. when we go to movie detail,
+            // it becomes true, but then the same movie is a recommendation for another movie and is false,
+            // we still want it to be true as the movie data will still exist in the foreign tables
+            // (e.g. genre, cast).
+            val isModelComplete = newMovie.isModelComplete || existingMovie.isModelComplete
+
             val updatedMovie: RoomMovie = newMovie.copy(
-                isModelComplete = existingMovie.isModelComplete,
+                isModelComplete = isModelComplete,
                 state = existingMovie.state
             )
             updateMovie(updatedMovie)
@@ -53,9 +61,17 @@ interface MovieDao {
 
             // copy state from each existing movie to each new movie
             val updatedMovies: List<RoomMovie> = moviesToUpdate.map { movieToUpdate ->
+
                 val existingMovie: RoomMovieMinimal = getMinimalMovieForId(movieToUpdate.id)
+
+                // we do this so that we don't overwrite a 'true' with a 'false', e.g. when we go to movie detail,
+                // it becomes true, but then the same movie is a recommendation for another movie and is false,
+                // we still want it to be true as the movie data will still exist in the foreign tables
+                // (e.g. genre, cast).
+                val isModelComplete = movieToUpdate.isModelComplete || existingMovie.isModelComplete
+
                 movieToUpdate.copy(
-                    isModelComplete = existingMovie.isModelComplete,
+                    isModelComplete = isModelComplete,
                     state = existingMovie.state
                 )
             }

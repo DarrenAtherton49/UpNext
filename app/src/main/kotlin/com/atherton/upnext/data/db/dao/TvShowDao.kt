@@ -19,9 +19,17 @@ interface TvShowDao {
     fun insertOrUpdateTvShow(newTvShow: RoomTvShow): Long {
         val id: Long = insertTvShow(newTvShow)
         return if (id == ROW_NOT_INSERTED) { // tv show already exists, so preserve watchlist state etc.
+
             val existingTvShow: RoomTvShowMinimal = getMinimalTvShowForId(newTvShow.id)
+
+            // we do this so that we don't overwrite a 'true' with a 'false', e.g. when we go to tv show detail,
+            // it becomes true, but then the same tv show is a recommendation for another tv show and is false,
+            // we still want it to be true as the tv show data will still exist in the foreign tables
+            // (e.g. genre, cast).
+            val isModelComplete = newTvShow.isModelComplete || existingTvShow.isModelComplete
+
             val updatedTvShow: RoomTvShow = newTvShow.copy(
-                isModelComplete = existingTvShow.isModelComplete,
+                isModelComplete = isModelComplete,
                 state = existingTvShow.state
             )
             updateTvShow(updatedTvShow)
@@ -52,9 +60,17 @@ interface TvShowDao {
 
             // copy state from each existing tv show to each new tv show
             val updatedTvShows: List<RoomTvShow> = tvShowsToUpdate.map { tvShowToUpdate ->
+
                 val existingTvShow: RoomTvShowMinimal = getMinimalTvShowForId(tvShowToUpdate.id)
+
+                // we do this so that we don't overwrite a 'true' with a 'false', e.g. when we go to tv show detail,
+                // it becomes true, but then the same tv show is a recommendation for another tv show and is false,
+                // we still want it to be true as the tv show data will still exist in the foreign tables
+                // (e.g. genre, cast).
+                val isModelComplete = tvShowToUpdate.isModelComplete || existingTvShow.isModelComplete
+
                 tvShowToUpdate.copy(
-                    isModelComplete = existingTvShow.isModelComplete,
+                    isModelComplete = isModelComplete,
                     state = existingTvShow.state
                 )
             }
