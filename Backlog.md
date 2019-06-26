@@ -14,6 +14,7 @@
 - TV: When an episode is marked as 'watched', update the episode 'watched' flag
 - TV: Add each episode to the history list when it has been marked as watched.
 - TV: Add show to 'watched' list and update its' Boolean fields when every episode has been watched.
+- Movie/Tv detail - show 'watched' status
 - The 'up next'/'watchlist' screen should have a button so that it is 'one click' to mark the next episode as 'watched'. So you should see the episode you're currently on, be able to click 'watched' and the next episode should come up. Also add 'undo' snackbar for this action for accidental clicks.
 - [Setting] Shortcut to add to watchlist on grid screens like a long or double tap?
     + When user clicks save, check database to see if movie details are in database already. If not, then call movie/detail network call first and then perform the save.
