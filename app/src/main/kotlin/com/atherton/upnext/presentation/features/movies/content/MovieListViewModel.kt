@@ -20,7 +20,7 @@ import com.ww.roxie.BaseAction
 import com.ww.roxie.BaseState
 import com.ww.roxie.Reducer
 import io.reactivex.Observable
-import io.reactivex.Observable.merge
+import io.reactivex.Observable.mergeArray
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.plusAssign
 import kotlinx.android.parcel.Parcelize
@@ -82,7 +82,7 @@ class MovieListViewModel @Inject constructor(
 
     private fun bindActions() {
 
-        fun Observable<MovieListAction.Load>.toResultChange(): Observable<MovieListChange> {
+        fun Observable<MovieListAction.Load>.toMovieListChange(): Observable<MovieListChange> {
             return this.switchMap { action ->
                 movieRepository.getMoviesForList(action.movieList.id)
                     .map<MovieListChange> { moviesResponse ->
@@ -95,16 +95,66 @@ class MovieListViewModel @Inject constructor(
             }
         }
 
+        fun Observable<LceResponse<List<Movie>>>.toMovieListChange(): Observable<MovieListChange> {
+            return this.map<MovieListChange> { moviesResponse ->
+                    MovieListChange.Result(
+                        response = moviesResponse,
+                        config = configRepository.getConfig()
+                    )
+                }
+                .subscribeOn(schedulers.io)
+                .startWith(MovieListChange.Loading)
+        }
+
         val loadDataChange = actions.ofType<MovieListAction.Load>()
-            //.distinctUntilChanged()
-            .toResultChange()
+            .toMovieListChange()
 
         val retryButtonChange = actions.ofType<MovieListAction.RetryButtonClicked>()
             .preventMultipleClicks()
             .map { action -> MovieListAction.Load(action.movieList) }
-            .toResultChange()
+            .toMovieListChange()
 
-        val stateChanges = merge(loadDataChange, retryButtonChange)
+        val watchlistButtonChange = actions.ofType<MovieListAction.ToggleWatchlistButtonClicked>()
+            .preventMultipleClicks()
+            .switchMap { action ->
+                movieRepository.toggleMovieWatchlistStatus(action.movieId)
+                    .doOnNext { response ->
+                        if (response is LceResponse.Content) {
+                            val movie = response.data
+                            if (!movie.state.inWatchlist) {
+                                postViewEffect {
+                                    MovieListViewEffect.ShowRemovedFromListMessage(movie, action.movieList)
+                                }
+                            }
+                        }
+                    }
+                    .flatMap { movieRepository.getMoviesForList(action.movieList.id) }
+                    .toMovieListChange()
+            }
+
+        val watchedButtonChange = actions.ofType<MovieListAction.ToggleWatchedButtonClicked>()
+            .preventMultipleClicks()
+            .switchMap { action ->
+                movieRepository.toggleMovieWatchedStatus(action.movieId)
+                    .flatMap { movieRepository.getMoviesForList(action.movieList.id) }
+                    .toMovieListChange()
+            }
+
+        val addToListChange = actions.ofType<MovieListAction.AddToListButtonClicked>()
+            .preventMultipleClicks()
+            .switchMap { action ->
+                movieRepository.addMovieToList(action.movieId)
+                    .flatMap { movieRepository.getMoviesForList(action.movieList.id) }
+                    .toMovieListChange()
+            }
+
+        val stateChanges = mergeArray(
+            loadDataChange,
+            retryButtonChange,
+            watchlistButtonChange,
+            watchedButtonChange,
+            addToListChange
+        )
 
         disposables += stateChanges
             .scan(initialState, reducer)
@@ -123,6 +173,9 @@ sealed class MovieListAction : BaseAction {
     data class Load(val movieList: MovieList) : MovieListAction()
     data class RetryButtonClicked(val movieList: MovieList) : MovieListAction()
     data class MovieClicked(val movieId: Long) : MovieListAction()
+    data class ToggleWatchlistButtonClicked(val movieList: MovieList, val movieId: Long) : MovieListAction()
+    data class ToggleWatchedButtonClicked(val movieList: MovieList, val movieId: Long) : MovieListAction()
+    data class AddToListButtonClicked(val movieList: MovieList, val movieId: Long) : MovieListAction()
 }
 
 sealed class MovieListChange {
@@ -155,7 +208,9 @@ sealed class MovieListState : BaseState, Parcelable {
 }
 
 sealed class MovieListViewEffect : BaseViewEffect {
-    sealed class ShowMovieDetailScreen(val movieId: Long) : MovieListViewEffect()
+    data class ShowMovieDetailScreen(val movieId: Long) : MovieListViewEffect()
+    data class ShowRemovedFromListMessage(val movie: Movie, val movieList: MovieList) : MovieListViewEffect()
+    data class ShowAddedToListMessage(val movie: Movie, val movieList: MovieList) : MovieListViewEffect()
 }
 
 //================================================================================

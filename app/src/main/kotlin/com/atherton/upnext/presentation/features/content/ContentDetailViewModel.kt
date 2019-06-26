@@ -127,8 +127,8 @@ class ContentDetailViewModel @Inject constructor(
                 }
                 watchlistObservable
                     .subscribeOn(schedulers.io)
-                    .map<ContentDetailChange> { watchable ->
-                        ContentDetailChange.Result(watchable, configRepository.getConfig())
+                    .map<ContentDetailChange> { watchableResponse ->
+                        ContentDetailChange.Result(watchableResponse, configRepository.getConfig())
                     }
                     .startWith(ContentDetailChange.Loading)
             }

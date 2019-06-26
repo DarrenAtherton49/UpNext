@@ -6,6 +6,9 @@
     <string name="menu_action_search">Search</string>
     <string name="menu_action_toggle_view">Toggle view</string>
 
+    <!-- Generic actions (e.g. snackbar buttons) -->
+    <string name="generic_action_undo">Undo</string>
+
     <!-- Bottom navigation-->
     <string name="bottom_nav_shows">Shows</string>
     <string name="bottom_nav_movies">Movies</string>
@@ -42,8 +45,8 @@
     <string name="movies_add_movie">Add a movie</string>
 
     <!-- MovieListFragment -->
-    <string name="movie_list_item_add_to_watchlist">Add To Watchlist</string>
-    <string name="movie_list_item_remove_from_watchlist">Remove From Watchlist</string>
+    <string name="movie_list_item_removed_from_list">%1s removed from %2s</string>
+    <string name="movie_list_item_removed_from_list_no_movie_title">Removed from %1s</string>
 
     <!-- DiscoverTabsFragment -->
     <string name="discover_tabs_filter_button">Advanced</string>

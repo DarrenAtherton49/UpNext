@@ -6,6 +6,7 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.atherton.upnext.R
+import com.atherton.upnext.domain.model.Movie
 import com.atherton.upnext.domain.model.MovieList
 import com.atherton.upnext.presentation.main.MainAction
 import com.atherton.upnext.presentation.main.MainViewEffect
@@ -13,10 +14,7 @@ import com.atherton.upnext.presentation.main.MainViewModel
 import com.atherton.upnext.presentation.main.MainViewModelFactory
 import com.atherton.upnext.util.base.BaseFragment
 import com.atherton.upnext.util.base.ToolbarOptions
-import com.atherton.upnext.util.extensions.getActivityViewModel
-import com.atherton.upnext.util.extensions.getAppComponent
-import com.atherton.upnext.util.extensions.getViewModel
-import com.atherton.upnext.util.extensions.isVisible
+import com.atherton.upnext.util.extensions.*
 import com.atherton.upnext.util.glide.GlideApp
 import com.atherton.upnext.util.recyclerview.LinearSpacingItemDecoration
 import kotlinx.android.synthetic.main.error_retry_layout.*
@@ -44,7 +42,18 @@ class MovieListFragment : BaseFragment<MovieListAction, MovieListState, MovieLis
     private val recyclerViewAdapter: MovieListAdapter by lazy {
         MovieListAdapter(
             imageLoader = GlideApp.with(this),
-            onClickListener = { movieListItem -> viewModel.dispatch(MovieListAction.MovieClicked(movieListItem.movieId)) }
+            onItemClickListener = { movieListItem ->
+                viewModel.dispatch(MovieListAction.MovieClicked(movieListItem.movieId))
+            },
+            onWatchlistButtonClickListener = { movieListItem ->
+                viewModel.dispatch(MovieListAction.ToggleWatchlistButtonClicked(movieList, movieListItem.movieId))
+            },
+            onWatchedButtonClickListener = { movieListItem ->
+                viewModel.dispatch(MovieListAction.ToggleWatchedButtonClicked(movieList, movieListItem.movieId))
+            },
+            onAddToListClickListener = { movieListItem ->
+                viewModel.dispatch(MovieListAction.AddToListButtonClicked(movieList, movieListItem.movieId))
+            }
         )
     }
 
@@ -120,10 +129,29 @@ class MovieListFragment : BaseFragment<MovieListAction, MovieListState, MovieLis
             is MovieListViewEffect.ShowMovieDetailScreen -> {
                 sharedViewModel.dispatch(MainAction.MovieClicked(viewEffect.movieId))
             }
+            is MovieListViewEffect.ShowRemovedFromListMessage -> {
+                showMovieRemovedFromListMessage(viewEffect.movie, viewEffect.movieList)
+            }
         }
     }
 
     override fun processSharedViewEffects(viewEffect: MainViewEffect) {}
+
+    private fun showMovieRemovedFromListMessage(movie: Movie, movieList: MovieList) {
+        val movieTitle: String? = movie.title
+        val message = if (movieTitle != null) {
+            getString(R.string.movie_list_item_removed_from_list).format(movieTitle, movieList.name)
+        } else {
+            getString(R.string.movie_list_item_removed_from_list_no_movie_title)
+        }
+        movieListCoordinatorLayout.showLongSnackbar(
+            text = message,
+            actionText = getString(R.string.generic_action_undo),
+            onClickListener = {
+                viewModel.dispatch(MovieListAction.ToggleWatchlistButtonClicked(movieList, movie.id))
+            }
+        )
+    }
 
     private fun initRecyclerView() {
         recyclerView.apply {

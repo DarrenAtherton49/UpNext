@@ -11,4 +11,8 @@ abstract class UpNextViewModel<A : BaseAction, S : BaseState, V : BaseViewEffect
     protected val viewEffects: PublishRelay<V> = PublishRelay.create()
 
     fun viewEffects(): Observable<V> = viewEffects
+
+    protected inline fun postViewEffect(viewEffect: () -> V) {
+        viewEffects.accept(viewEffect.invoke())
+    }
 }

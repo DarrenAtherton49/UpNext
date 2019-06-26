@@ -15,7 +15,6 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
-import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -88,12 +87,28 @@ inline fun <reified T : ViewModel> AppCompatActivity.getViewModel(vmFactory: Vie
     return ViewModelProviders.of(this, vmFactory).get(T::class.java)
 }
 
-fun View.showShortSnackbar(@StringRes stringResId: Int) {
-    Snackbar.make(this, stringResId, Snackbar.LENGTH_SHORT).show()
+fun View.showShortSnackbar(
+    text: String,
+    actionText: String? = null,
+    onClickListener: (() -> Unit)? = null
+) {
+    val snackbar = Snackbar.make(this, text, Snackbar.LENGTH_SHORT)
+    if (actionText != null && onClickListener != null) {
+        snackbar.setAction(actionText) { onClickListener.invoke() }
+    }
+    snackbar.show()
 }
 
-fun View.showLongSnackbar(@StringRes stringResId: Int) {
-    Snackbar.make(this, stringResId, Snackbar.LENGTH_LONG).show()
+fun View.showLongSnackbar(
+    text: String,
+    actionText: String? = null,
+    onClickListener: (() -> Unit)? = null
+) {
+    val snackbar = Snackbar.make(this, text, Snackbar.LENGTH_LONG)
+    if (actionText != null && onClickListener != null) {
+        snackbar.setAction(actionText) { onClickListener.invoke() }
+    }
+    snackbar.show()
 }
 
 inline var View.isVisible: Boolean

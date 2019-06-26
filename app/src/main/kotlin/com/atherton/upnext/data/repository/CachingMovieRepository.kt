@@ -218,6 +218,14 @@ class CachingMovieRepository @Inject constructor(
             }
     }
 
+    override fun toggleMovieWatchedStatus(movieId: Long): Observable<LceResponse<Movie>> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun addMovieToList(movieId: Long): Observable<LceResponse<Movie>> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     private fun saveFullMovieToDatabase(movie: TmdbMovie) {
         val movieId: Long = movie.id.toLong()
 

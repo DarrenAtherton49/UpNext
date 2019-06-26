@@ -27,10 +27,6 @@ class AndroidAppStringProvider @Inject constructor(private val resources: Resour
         return resources.getString(R.string.content_detail_vote_average).format(voteAverage)
     }
 
-    override fun getAddToWatchlistString(): String = resources.getString(R.string.movie_list_item_add_to_watchlist)
-
-    override fun getRemoveFromWatchlistString(): String = resources.getString(R.string.movie_list_item_remove_from_watchlist)
-
     override fun <T : Any> generateErrorMessage(error: LceResponse.Error<T>): String {
         return when (error) {
             is LceResponse.Error.ServerError -> {
