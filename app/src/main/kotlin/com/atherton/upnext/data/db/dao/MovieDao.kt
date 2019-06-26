@@ -144,20 +144,32 @@ interface MovieDao {
     }
 
     @Transaction
-    fun toggleMovieWatchlistStatus(updatedMovie: RoomMovie, listId: Long) {
+    fun updateMovieAndToggleListStatus(updatedMovie: RoomMovie, listId: Long) {
+        updateMovie(updatedMovie)
+        toggleMovieListStatus(updatedMovie.id, listId)
+    }
+
+    /**
+     * Function to toggle whether or not a movie is joined to a list. First we try to insert a join from
+     * the movie id to the list id. If the insert fails, we can assume that the movie is in the list. Thus,
+     * 'toggle' in this instance means to delete, so we delete the join. If the insert succeeds, we can assume
+     * that 'toggle' means to add the movie to the list.
+     */
+    @Transaction
+    fun toggleMovieListStatus(movieId: Long, listId: Long) {
 
         if (listId != 0L) {
-            updateMovie(updatedMovie)
 
-            val movieWatchlistJoin = RoomMovieListJoin(
-                movieId = updatedMovie.id,
+            val movieListJoin = RoomMovieListJoin(
+                movieId = movieId,
                 listId = listId
             )
 
-            if (updatedMovie.state.inWatchlist) {
-                insertMovieListJoin(movieWatchlistJoin)
-            } else {
-                deleteMovieListJoin(movieWatchlistJoin)
+            // conflict strategy is ignore, so if it already exists then it won't insert it.
+            // which then means that movie is in list, so toggle means delete
+            val id: Long = insertMovieListJoin(movieListJoin)
+            if (id == ROW_NOT_INSERTED) {
+                deleteMovieListJoin(movieListJoin)
             }
         } else {
             throw IllegalStateException("Invalid list id")
@@ -170,8 +182,8 @@ interface MovieDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertMovie(movie: RoomMovie): Long
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertMovieListJoin(movieListJoin: RoomMovieListJoin)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertMovieListJoin(movieListJoin: RoomMovieListJoin): Long
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAllMovies(movies: List<RoomMovie>): List<Long>

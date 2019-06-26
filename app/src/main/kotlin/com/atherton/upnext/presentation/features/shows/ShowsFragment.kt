@@ -45,10 +45,6 @@ class ShowsFragment : BaseFragment<ShowsAction, ShowsState, ShowsViewEffect, Sho
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViewPager()
-
-        addShowButton.setOnClickListener {
-            sharedViewModel.dispatch(MainAction.AddShowButtonClicked)
-        }
     }
 
     override fun onMenuItemClicked(menuItem: MenuItem): Boolean {

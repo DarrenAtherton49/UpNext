@@ -1,6 +1,7 @@
 package com.atherton.upnext.data.repository
 
 import com.atherton.upnext.data.db.dao.ListDao
+import com.atherton.upnext.data.db.dao.ListDao.Companion.LIST_MOVIE_WATCHED
 import com.atherton.upnext.data.db.dao.ListDao.Companion.LIST_MOVIE_WATCHLIST
 import com.atherton.upnext.data.db.dao.MovieDao
 import com.atherton.upnext.data.db.dao.MovieDao.Companion.PLAYLIST_NOW_PLAYING
@@ -184,34 +185,54 @@ class CachingMovieRepository @Inject constructor(
             }
     }
 
-    override fun toggleMovieWatchlistStatus(movieId: Long): Observable<LceResponse<Movie>> {
-        return movieDao.getFullMovieForIdSingle(movieId)
+    override fun toggleMovieListStatus(movieId: Long, listId: Long): Observable<LceResponse<Movie>> {
+        return movieDao.getMovieForIdSingle(movieId)
             .toObservable()
             .flatMap { movieList ->
                 if (movieList.isNotEmpty()) {
-                    val roomMovieData: RoomMovieAllData = movieList[0]
-                    val dbMovie: RoomMovie? = roomMovieData.movie
-                    if (dbMovie != null) {
+                    movieDao.toggleMovieListStatus(movieId, listId)
 
-                        // toggle watchlist state
-                        val newWatchlistState: Boolean = !dbMovie.state.inWatchlist
-                        val updatedMovie = dbMovie.copy(state = dbMovie.state.copy(inWatchlist = newWatchlistState))
-                        val watchlistId = listDao.getListIdForName(LIST_MOVIE_WATCHLIST)
-                        movieDao.toggleMovieWatchlistStatus(updatedMovie, watchlistId)
+                    // return full movie
+                    val domainMovie: Movie? = getFullMovieFromDatabase(movieId)
+                    if (domainMovie != null) {
+                        Observable.fromCallable { LceResponse.Content(domainMovie) }
+                    } else {
+                        throw IllegalStateException("Movie should be in database before toggling list status.")
+                    }
+                } else {
+                    val errorMessage = "Cannot toggle movie list status if movie is not in database. If trying " +
+                        "to add a movie on search screen to a list, we must first convert search results to " +
+                        "be saved in the movie table instead of just it's own table."
+                    throw IllegalStateException(errorMessage)
+                }
+            }
+    }
 
-                        // return full movie
-                        val domainMovie: Movie? = getFullMovieFromDatabase(movieId)
-                        if (domainMovie != null) {
-                            Observable.fromCallable { LceResponse.Content(domainMovie) }
-                        } else {
-                            throw IllegalStateException("Movie should be in database before toggling watchlist status.")
-                        }
+    override fun toggleMovieWatchlistStatus(movieId: Long): Observable<LceResponse<Movie>> {
+        return movieDao.getMovieForIdSingle(movieId)
+            .toObservable()
+            .flatMap { movieList ->
+                if (movieList.isNotEmpty()) {
+                    val dbMovie: RoomMovie = movieList[0]
+
+                    // toggle watchlist state
+                    val newWatchlistState: Boolean = !dbMovie.state.inWatchlist
+                    val updatedMovie = dbMovie.copy(state = dbMovie.state.copy(inWatchlist = newWatchlistState))
+
+                    val watchlistId = listDao.getListIdForName(LIST_MOVIE_WATCHLIST)
+
+                    movieDao.updateMovieAndToggleListStatus(updatedMovie, watchlistId)
+
+                    // return full movie
+                    val domainMovie: Movie? = getFullMovieFromDatabase(movieId)
+                    if (domainMovie != null) {
+                        Observable.fromCallable { LceResponse.Content(domainMovie) }
                     } else {
                         throw IllegalStateException("Movie should be in database before toggling watchlist status.")
                     }
                 } else {
                     val errorMessage = "Cannot toggle movie watchlist status if movie is not in database. If trying " +
-                        "to add a movie found on search screen to watchlist, we must first convert search results to " +
+                        "to add a movie on search screen to watchlist, we must first convert search results to " +
                         "be saved in the movie table instead of just it's own table."
                     throw IllegalStateException(errorMessage)
                 }
@@ -219,7 +240,34 @@ class CachingMovieRepository @Inject constructor(
     }
 
     override fun toggleMovieWatchedStatus(movieId: Long): Observable<LceResponse<Movie>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return movieDao.getMovieForIdSingle(movieId)
+            .toObservable()
+            .flatMap { movieList ->
+                if (movieList.isNotEmpty()) {
+                    val dbMovie: RoomMovie = movieList[0]
+
+                    // toggle watched state
+                    val newWatchedState: Boolean = !dbMovie.state.isWatched
+                    val updatedMovie = dbMovie.copy(state = dbMovie.state.copy(isWatched = newWatchedState))
+
+                    val watchedListId = listDao.getListIdForName(LIST_MOVIE_WATCHED)
+
+                    movieDao.updateMovieAndToggleListStatus(updatedMovie, watchedListId)
+
+                    // return full movie
+                    val domainMovie: Movie? = getFullMovieFromDatabase(movieId)
+                    if (domainMovie != null) {
+                        Observable.fromCallable { LceResponse.Content(domainMovie) }
+                    } else {
+                        throw IllegalStateException("Movie should be in database before toggling watched status.")
+                    }
+                } else {
+                    val errorMessage = "Cannot toggle movie watched status if movie is not in database. If trying " +
+                        "to add a movie on search screen to watched, we must first convert search results to " +
+                        "be saved in the movie table instead of just it's own table."
+                    throw IllegalStateException(errorMessage)
+                }
+            }
     }
 
     override fun addMovieToList(movieId: Long): Observable<LceResponse<Movie>> {
@@ -242,6 +290,7 @@ class CachingMovieRepository @Inject constructor(
         )
     }
 
+    //todo can we make this return non-null Movie instead? E.g. by otherwise throwing an exception
     private fun getFullMovieFromDatabase(id: Long): Movie? {
         val dbMovieData: RoomMovieAllData? = movieDao.getFullMovieForId(id)
         return if (dbMovieData != null) {

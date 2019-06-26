@@ -43,16 +43,6 @@ class MainViewModel @Inject constructor(
             .subscribeOn(schedulers.io)
             .map { MainViewEffect.Navigation.ShowSearchScreen }
 
-        val addTvShowClickedViewEffect = actions.ofType<MainAction.AddShowButtonClicked>()
-            .preventMultipleClicks()
-            .subscribeOn(schedulers.io)
-            .map { MainViewEffect.Navigation.ShowSearchScreen }
-
-        val addMovieClickedViewEffect = actions.ofType<MainAction.AddMovieButtonClicked>()
-            .preventMultipleClicks()
-            .subscribeOn(schedulers.io)
-            .map { MainViewEffect.Navigation.ShowSearchScreen }
-
         val tvShowClickedViewEffect = actions.ofType<MainAction.TvShowClicked>()
             .subscribeOn(schedulers.io)
             .map { action -> MainViewEffect.Navigation.ShowTvDetailScreen(action.tvShowId) }
@@ -88,8 +78,6 @@ class MainViewModel @Inject constructor(
         val viewEffectChanges = mergeArray(
             searchActionClickedViewEffect,
             viewModeToggleChangedViewEffect,
-            addTvShowClickedViewEffect,
-            addMovieClickedViewEffect,
             tvShowClickedViewEffect,
             movieClickedViewEffect,
             personClickedViewEffect,
@@ -112,8 +100,6 @@ class MainViewModel @Inject constructor(
 sealed class MainAction : BaseAction {
     object SearchActionClicked : MainAction()
     data class ViewModeToggled(val viewMode: GridViewMode) : MainAction()
-    object AddShowButtonClicked : MainAction()
-    object AddMovieButtonClicked : MainAction()
     data class TvShowClicked(val tvShowId: Long) : MainAction()
     data class MovieClicked(val movieId: Long) : MainAction()
     data class PersonClicked(val personId: Long) : MainAction()

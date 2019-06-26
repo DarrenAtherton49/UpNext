@@ -48,10 +48,6 @@ class MoviesFragment : BaseFragment<MoviesAction, MoviesState, MoviesViewEffect,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        addMovieButton.setOnClickListener {
-            sharedViewModel.dispatch(MainAction.AddMovieButtonClicked)
-        }
-
         if (savedInstanceState == null) {
             viewModel.dispatch(MoviesAction.Load)
         }
