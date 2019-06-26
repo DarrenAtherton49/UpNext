@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.atherton.upnext.util.extensions.observe
 import com.ww.roxie.BaseAction
 import com.ww.roxie.BaseState
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 
@@ -40,9 +41,12 @@ abstract class BaseActivity<Action : BaseAction,
 
     override fun onResume() {
         super.onResume()
-        disposables += sharedViewModel.viewEffects().subscribe {
-            processViewEffects(it)
-        }
+
+        disposables += sharedViewModel.viewEffects()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                processViewEffects(it)
+            }
     }
 
     override fun onPause() {

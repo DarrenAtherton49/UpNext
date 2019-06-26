@@ -16,6 +16,7 @@ import com.atherton.upnext.presentation.main.MainViewModel
 import com.atherton.upnext.util.extensions.observe
 import com.ww.roxie.BaseAction
 import com.ww.roxie.BaseState
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 
@@ -66,12 +67,18 @@ abstract class BaseFragment<Action : BaseAction,
 
     override fun onResume() {
         super.onResume()
-        disposables += viewModel.viewEffects().subscribe {
-            processViewEffects(it)
-        }
-        disposables += sharedViewModel.viewEffects().subscribe {
-            processSharedViewEffects(it)
-        }
+
+        disposables += viewModel.viewEffects()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                processViewEffects(it)
+            }
+
+        disposables += sharedViewModel.viewEffects()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                processSharedViewEffects(it)
+            }
     }
 
     override fun onPause() {

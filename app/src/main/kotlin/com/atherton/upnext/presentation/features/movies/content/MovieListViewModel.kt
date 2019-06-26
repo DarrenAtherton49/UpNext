@@ -148,6 +148,15 @@ class MovieListViewModel @Inject constructor(
                     .toMovieListChange()
             }
 
+        val movieClickedViewEffect = actions.ofType<MovieListAction.MovieClicked>()
+            .preventMultipleClicks()
+            .subscribeOn(schedulers.io)
+            .map { action -> MovieListViewEffect.ShowMovieDetailScreen(action.movieId) }
+
+        disposables += movieClickedViewEffect
+            .observeOn(schedulers.main)
+            .subscribe(viewEffects::accept, Timber::e)
+
         val stateChanges = mergeArray(
             loadDataChange,
             retryButtonChange,
