@@ -52,7 +52,7 @@ class MovieListFragment : BaseFragment<MovieListAction, MovieListState, MovieLis
                 viewModel.dispatch(MovieListAction.ToggleWatchedButtonClicked(movieList, movieListItem.movieId))
             },
             onAddToListClickListener = { movieListItem ->
-                viewModel.dispatch(MovieListAction.AddToListButtonClicked(movieList, movieListItem.movieId))
+                viewModel.dispatch(MovieListAction.AddToListButtonClicked(movieListItem.movieId))
             }
         )
     }
@@ -128,6 +128,9 @@ class MovieListFragment : BaseFragment<MovieListAction, MovieListState, MovieLis
         when (viewEffect) {
             is MovieListViewEffect.ShowMovieDetailScreen -> {
                 sharedViewModel.dispatch(MainAction.MovieClicked(viewEffect.movieId))
+            }
+            is MovieListViewEffect.ShowAddToListMenu -> {
+                navigator.showMovieAddToListsMenu(viewEffect.movieId, childFragmentManager)
             }
             is MovieListViewEffect.ShowRemovedFromListMessage -> {
                 showMovieRemovedFromListMessage(viewEffect.movie, viewEffect.movieList)

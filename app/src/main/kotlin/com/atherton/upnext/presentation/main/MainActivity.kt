@@ -28,7 +28,7 @@ class MainActivity : BaseActivity<MainAction, MainState, MainViewEffect, MainVie
 
     override val sharedViewModel: MainViewModel by lazy { getViewModel<MainViewModel>(vmFactory) }
     val navController: NavController by lazy { findNavController(R.id.navHostFragment) }
-    private val navigator: Navigator by lazy { AndroidNavigator(navController, this) }
+    internal val navigator: Navigator by lazy { AndroidNavigator(navController, this) }
 
     private val topLevelDestinationIds = setOf(R.id.moviesFragment, R.id.showsFragment, R.id.discoverFragment)
     val appBarConfiguration: AppBarConfiguration by lazy {
@@ -56,6 +56,8 @@ class MainActivity : BaseActivity<MainAction, MainState, MainViewEffect, MainVie
             is MainViewEffect.Navigation.ShowLicenseInBrowser -> navigator.showUrlInBrowser(viewEffect.url)
         }
     }
+
+
 
     private fun setupNavigation() {
         bottomNavigation.setupWithNavController(navController)

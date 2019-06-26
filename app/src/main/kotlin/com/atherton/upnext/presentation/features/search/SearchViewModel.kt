@@ -169,16 +169,16 @@ class SearchViewModel @Inject constructor(
             settingsActionClickedViewEffect
         )
 
-        disposables += viewEffectChanges
-            .observeOn(schedulers.main)
-            .subscribe(viewEffects::accept, Timber::e)
-
         disposables += stateChanges
             .scan(initialState, reducer)
             .filter { it !is SearchState.Idle }
             .distinctUntilChanged()
             .observeOn(schedulers.main)
             .subscribe(state::setValue, Timber::e)
+
+        disposables += viewEffectChanges
+            .observeOn(schedulers.main)
+            .subscribe(viewEffects::accept, Timber::e)
     }
 }
 

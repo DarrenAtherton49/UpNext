@@ -20,6 +20,7 @@ import com.ww.roxie.BaseAction
 import com.ww.roxie.BaseState
 import com.ww.roxie.Reducer
 import io.reactivex.Observable
+import io.reactivex.Observable.merge
 import io.reactivex.Observable.mergeArray
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.plusAssign
@@ -140,30 +141,24 @@ class MovieListViewModel @Inject constructor(
                     .toMovieListChange()
             }
 
-        val addToListChange = actions.ofType<MovieListAction.AddToListButtonClicked>()
-            .preventMultipleClicks()
-            .switchMap { action ->
-                movieRepository.addMovieToList(action.movieId)
-                    .flatMap { movieRepository.getMoviesForList(action.movieList.id) }
-                    .toMovieListChange()
-            }
-
         val movieClickedViewEffect = actions.ofType<MovieListAction.MovieClicked>()
             .preventMultipleClicks()
             .subscribeOn(schedulers.io)
             .map { action -> MovieListViewEffect.ShowMovieDetailScreen(action.movieId) }
 
-        disposables += movieClickedViewEffect
-            .observeOn(schedulers.main)
-            .subscribe(viewEffects::accept, Timber::e)
+        val addToListViewEffect = actions.ofType<MovieListAction.AddToListButtonClicked>()
+            .preventMultipleClicks()
+            .subscribeOn(schedulers.io)
+            .map { action -> MovieListViewEffect.ShowAddToListMenu(action.movieId) }
 
         val stateChanges = mergeArray(
             loadDataChange,
             retryButtonChange,
             watchlistButtonChange,
-            watchedButtonChange,
-            addToListChange
+            watchedButtonChange
         )
+
+        val viewEffectChanges = merge(movieClickedViewEffect, addToListViewEffect)
 
         disposables += stateChanges
             .scan(initialState, reducer)
@@ -171,6 +166,10 @@ class MovieListViewModel @Inject constructor(
             .distinctUntilChanged()
             .observeOn(schedulers.main)
             .subscribe(state::setValue, Timber::e)
+
+        disposables += viewEffectChanges
+            .observeOn(schedulers.main)
+            .subscribe(viewEffects::accept, Timber::e)
     }
 }
 
@@ -184,7 +183,7 @@ sealed class MovieListAction : BaseAction {
     data class MovieClicked(val movieId: Long) : MovieListAction()
     data class ToggleWatchlistButtonClicked(val movieList: MovieList, val movieId: Long) : MovieListAction()
     data class ToggleWatchedButtonClicked(val movieList: MovieList, val movieId: Long) : MovieListAction()
-    data class AddToListButtonClicked(val movieList: MovieList, val movieId: Long) : MovieListAction()
+    data class AddToListButtonClicked(val movieId: Long) : MovieListAction()
 }
 
 sealed class MovieListChange {
@@ -218,6 +217,7 @@ sealed class MovieListState : BaseState, Parcelable {
 
 sealed class MovieListViewEffect : BaseViewEffect {
     data class ShowMovieDetailScreen(val movieId: Long) : MovieListViewEffect()
+    data class ShowAddToListMenu(val movieId: Long) : MovieListViewEffect()
     data class ShowRemovedFromListMessage(val movie: Movie, val movieList: MovieList) : MovieListViewEffect()
     data class ShowAddedToListMessage(val movie: Movie, val movieList: MovieList) : MovieListViewEffect()
 }

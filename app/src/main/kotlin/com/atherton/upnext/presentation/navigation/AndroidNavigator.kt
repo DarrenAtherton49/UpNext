@@ -4,12 +4,11 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
 import com.atherton.upnext.presentation.features.content.ContentDetailFragmentDirections
 import com.atherton.upnext.presentation.features.content.ContentType
-
-
-
+import com.atherton.upnext.presentation.features.movies.MovieAddToListsDialogFragment
 
 class AndroidNavigator(private val navController: NavController, val context: Context) : Navigator {
 
@@ -53,5 +52,14 @@ class AndroidNavigator(private val navController: NavController, val context: Co
     override fun showUrlInBrowser(url: String) {
         val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
         context.startActivity(browserIntent)
+    }
+
+    override fun showMovieAddToListsMenu(movieId: Long, childFragmentManager: FragmentManager) {
+        val fragment = MovieAddToListsDialogFragment.newInstance(movieId = movieId)
+        fragment.show(childFragmentManager, FRAGMENT_TAG_MOVIE_ADD_TO_LISTS)
+    }
+
+    companion object {
+        private const val FRAGMENT_TAG_MOVIE_ADD_TO_LISTS = "fragment_movie_add_to_lists"
     }
 }

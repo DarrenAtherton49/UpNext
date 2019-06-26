@@ -13,6 +13,7 @@ import com.atherton.upnext.presentation.main.MainActivity
 import com.atherton.upnext.presentation.main.MainModule
 import com.atherton.upnext.presentation.main.MainViewEffect
 import com.atherton.upnext.presentation.main.MainViewModel
+import com.atherton.upnext.presentation.navigation.Navigator
 import com.atherton.upnext.util.extensions.observe
 import com.ww.roxie.BaseAction
 import com.ww.roxie.BaseState
@@ -32,6 +33,8 @@ abstract class BaseFragment<Action : BaseAction,
     protected abstract val stateBundleKey: String
     protected abstract val viewModel: ViewModel
     protected abstract val sharedViewModel: MainViewModel
+
+    protected val navigator: Navigator by lazy { mainActivity.navigator }
 
     protected abstract val toolbarOptions: ToolbarOptions?
     private var toolbar: Toolbar? = null

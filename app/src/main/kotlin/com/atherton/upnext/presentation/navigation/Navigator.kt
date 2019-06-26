@@ -1,5 +1,7 @@
 package com.atherton.upnext.presentation.navigation
 
+import androidx.fragment.app.FragmentManager
+
 interface Navigator {
 
     fun showSearchScreen()
@@ -10,4 +12,5 @@ interface Navigator {
     fun showSettingsScreen()
     fun showLicensesScreen()
     fun showUrlInBrowser(url: String)
+    fun showMovieAddToListsMenu(movieId: Long, childFragmentManager: FragmentManager)
 }
