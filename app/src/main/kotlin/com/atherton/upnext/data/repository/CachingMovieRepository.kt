@@ -161,8 +161,8 @@ class CachingMovieRepository @Inject constructor(
     }
 
     override fun getMovieLists(): Observable<LceResponse<List<MovieList>>> {
-        return listDao.getMovieListsSingle()
-            .toObservable()
+        return listDao.getMovieListsObservable()
+            .distinctUntilChanged()
             .map { movieLists ->
                 if (movieLists.isNotEmpty()) {
                     LceResponse.Content(data = movieLists.toDomainMovieLists())
@@ -173,8 +173,8 @@ class CachingMovieRepository @Inject constructor(
     }
 
     override fun getMoviesForList(listId: Long): Observable<LceResponse<List<Movie>>> {
-        return listDao.getMoviesForListSingle(listId)
-            .toObservable()
+        return listDao.getMoviesForListObservable(listId)
+            .distinctUntilChanged()
             .map { movieDataList ->
                 val domainMovies = movieDataList.toDomainMovies()
                 if (domainMovies.isNotEmpty()) {
