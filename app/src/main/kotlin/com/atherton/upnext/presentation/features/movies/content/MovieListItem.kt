@@ -1,11 +1,12 @@
 package com.atherton.upnext.presentation.features.movies.content
 
 import android.os.Parcelable
+import androidx.annotation.DrawableRes
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class MovieListItem(
-    val addToListButtonResId: Int,
+    @DrawableRes val addToListButtonResId: Int,
     val genresString: String?,
     val movieId: Long,
     val posterPath: String?,
@@ -13,6 +14,6 @@ data class MovieListItem(
     val runtime: String?,
     val title: String?,
     val voteAverage: String?,
-    val watchedButtonResId: Int,
-    val watchlistButtonResId: Int
+    @DrawableRes val watchedButtonResId: Int,
+    @DrawableRes val watchlistButtonResId: Int
 ) : Parcelable
