@@ -4,9 +4,9 @@ import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.domain.model.Config
+import com.atherton.upnext.domain.model.ContentList
 import com.atherton.upnext.domain.model.LceResponse
 import com.atherton.upnext.domain.model.Movie
-import com.atherton.upnext.domain.model.MovieList
 import com.atherton.upnext.domain.repository.ConfigRepository
 import com.atherton.upnext.domain.repository.MovieRepository
 import com.atherton.upnext.presentation.common.searchmodel.formattedForMovieList
@@ -178,11 +178,11 @@ class MovieListViewModel @Inject constructor(
 //================================================================================
 
 sealed class MovieListAction : BaseAction {
-    data class Load(val movieList: MovieList) : MovieListAction()
-    data class RetryButtonClicked(val movieList: MovieList) : MovieListAction()
+    data class Load(val movieList: ContentList) : MovieListAction()
+    data class RetryButtonClicked(val movieList: ContentList) : MovieListAction()
     data class MovieClicked(val movieId: Long) : MovieListAction()
-    data class ToggleWatchlistButtonClicked(val movieList: MovieList, val movieId: Long) : MovieListAction()
-    data class ToggleWatchedButtonClicked(val movieList: MovieList, val movieId: Long) : MovieListAction()
+    data class ToggleWatchlistButtonClicked(val movieList: ContentList, val movieId: Long) : MovieListAction()
+    data class ToggleWatchedButtonClicked(val movieList: ContentList, val movieId: Long) : MovieListAction()
     data class AddToListButtonClicked(val movieId: Long) : MovieListAction()
 }
 
@@ -218,8 +218,8 @@ sealed class MovieListState : BaseState, Parcelable {
 sealed class MovieListViewEffect : BaseViewEffect {
     data class ShowMovieDetailScreen(val movieId: Long) : MovieListViewEffect()
     data class ShowAddToListMenu(val movieId: Long) : MovieListViewEffect()
-    data class ShowRemovedFromListMessage(val movie: Movie, val movieList: MovieList) : MovieListViewEffect()
-    data class ShowAddedToListMessage(val movie: Movie, val movieList: MovieList) : MovieListViewEffect()
+    data class ShowRemovedFromListMessage(val movie: Movie, val movieList: ContentList) : MovieListViewEffect()
+    data class ShowAddedToListMessage(val movie: Movie, val movieList: ContentList) : MovieListViewEffect()
 }
 
 //================================================================================

@@ -14,7 +14,7 @@ import com.atherton.upnext.presentation.main.MainModule
 import com.atherton.upnext.presentation.main.MainViewEffect
 import com.atherton.upnext.presentation.main.MainViewModel
 import com.atherton.upnext.presentation.navigation.Navigator
-import com.atherton.upnext.util.extensions.observe
+import com.atherton.upnext.util.extensions.observeLiveData
 import com.ww.roxie.BaseAction
 import com.ww.roxie.BaseState
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -63,7 +63,7 @@ abstract class BaseFragment<Action : BaseAction,
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel.observableState.observe(viewLifecycleOwner) { state ->
+        viewModel.observableState.observeLiveData(viewLifecycleOwner) { state ->
             state?.let { renderState(state) }
         }
     }

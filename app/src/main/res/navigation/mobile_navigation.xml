@@ -40,7 +40,7 @@
             />
         <argument
             android:name="contentType"
-            app:argType="com.atherton.upnext.presentation.features.content.ContentType"/>
+            app:argType="com.atherton.upnext.presentation.features.content.ContentDetailContentType"/>
     </fragment>
 
     <fragment

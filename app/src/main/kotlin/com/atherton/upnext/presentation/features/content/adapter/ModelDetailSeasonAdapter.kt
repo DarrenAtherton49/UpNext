@@ -24,7 +24,7 @@ class ModelDetailSeasonAdapter(
     override fun onBindViewHolder(holder: ModelDetailScrollingViewHolder, position: Int) {
         val season = getItem(position)
 
-        holder.firstRowTextView.text = season.name
+        holder.seasonNameTextView.text = season.name
     }
 
     companion object {

@@ -86,19 +86,19 @@ class ContentDetailViewModel @Inject constructor(
         fun Observable<ContentDetailAction.Load>.toResultChange(): Observable<ContentDetailChange> {
             return this.switchMap { action ->
                 val contentObservable = when (action.contentType) {
-                    is ContentType.TvShow -> {
+                    is ContentDetailContentType.TvShow -> {
                         tvShowRepository.getTvShow(action.contentId)
                             .map<LceResponse<Watchable>> { it }
                     }
-                    is ContentType.Movie -> {
+                    is ContentDetailContentType.Movie -> {
                         movieRepository.getMovie(action.contentId)
                             .map<LceResponse<Watchable>> { it }
                     }
                 }
                 contentObservable
                     .subscribeOn(schedulers.io)
-                    .map<ContentDetailChange> { watchable ->
-                        ContentDetailChange.Result(watchable, configRepository.getConfig())
+                    .map<ContentDetailChange> { watchableResponse ->
+                        ContentDetailChange.Result(watchableResponse, configRepository.getConfig())
                     }
                     .startWith(ContentDetailChange.Loading)
             }
@@ -116,11 +116,11 @@ class ContentDetailViewModel @Inject constructor(
             .preventMultipleClicks()
             .switchMap { action ->
                 val watchlistObservable = when (action.contentType) {
-                    is ContentType.TvShow -> {
+                    is ContentDetailContentType.TvShow -> {
                         tvShowRepository.toggleTvShowWatchlistStatus(action.contentId)
                             .map<LceResponse<Watchable>> { it }
                     }
-                    is ContentType.Movie -> {
+                    is ContentDetailContentType.Movie -> {
                         movieRepository.toggleMovieWatchlistStatus(action.contentId)
                             .map<LceResponse<Watchable>> { it }
                     }
@@ -213,9 +213,9 @@ class ContentDetailViewModel @Inject constructor(
 //================================================================================
 
 sealed class ContentDetailAction : BaseAction {
-    data class Load(val contentId: Long, val contentType: ContentType) : ContentDetailAction()
-    data class RetryButtonClicked(val contentId: Long, val contentType: ContentType) : ContentDetailAction()
-    data class WatchlistButtonClicked(val contentId: Long, val contentType: ContentType) : ContentDetailAction()
+    data class Load(val contentId: Long, val contentType: ContentDetailContentType) : ContentDetailAction()
+    data class RetryButtonClicked(val contentId: Long, val contentType: ContentDetailContentType) : ContentDetailAction()
+    data class WatchlistButtonClicked(val contentId: Long, val contentType: ContentDetailContentType) : ContentDetailAction()
     data class SeasonClicked(val season: TvSeason) : ContentDetailAction()
     data class CastMemberClicked(val castMember: CastMember) : ContentDetailAction()
     data class CrewMemberClicked(val crewMember: CrewMember) : ContentDetailAction()
@@ -263,9 +263,9 @@ sealed class ContentDetailViewEffect : BaseViewEffect {
 // Screen-specific view data/functions
 //================================================================================
 
-sealed class ContentType : Parcelable {
-    @Parcelize object TvShow : ContentType()
-    @Parcelize object Movie : ContentType()
+sealed class ContentDetailContentType : Parcelable {
+    @Parcelize object TvShow : ContentDetailContentType()
+    @Parcelize object Movie : ContentDetailContentType()
 }
 
 //================================================================================

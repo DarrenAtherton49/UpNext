@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:orientation="horizontal"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?attr/selectableItemBackground">
+
+    <com.google.android.material.checkbox.MaterialCheckBox
+        style="@style/TextAppearance.MaterialComponents.Subtitle2"
+        android:id="@+id/addToListsCheckBox"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/keyline"
+        android:layout_marginEnd="@dimen/keyline"
+        android:drawablePadding="@dimen/keyline_2x"/>
+
+</LinearLayout>

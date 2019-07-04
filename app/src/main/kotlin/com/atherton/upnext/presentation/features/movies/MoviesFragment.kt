@@ -6,7 +6,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.R
-import com.atherton.upnext.domain.model.MovieList
+import com.atherton.upnext.domain.model.ContentList
 import com.atherton.upnext.presentation.features.movies.content.MovieListFragment
 import com.atherton.upnext.presentation.main.MainAction
 import com.atherton.upnext.presentation.main.MainViewEffect
@@ -111,7 +111,7 @@ class MoviesFragment : BaseFragment<MoviesAction, MoviesState, MoviesViewEffect,
         tabLayout.setupWithViewPager(viewPager)
     }
 
-    private fun populateListTabs(movieLists: List<MovieList>) {
+    private fun populateListTabs(movieLists: List<ContentList>) {
         viewPagerAdapter.clear()
         movieLists.forEach { movieList ->
             val listName = when (movieList.name) {

@@ -11,6 +11,7 @@ import com.atherton.upnext.data.mapper.*
 import com.atherton.upnext.data.network.model.NetworkResponse
 import com.atherton.upnext.data.network.model.TmdbTvShow
 import com.atherton.upnext.data.network.service.TmdbTvShowService
+import com.atherton.upnext.domain.model.ContentList
 import com.atherton.upnext.domain.model.LceResponse
 import com.atherton.upnext.domain.model.TvShow
 import com.atherton.upnext.domain.repository.TvShowRepository
@@ -155,7 +156,15 @@ class CachingTvShowRepository @Inject constructor(
             }
     }
 
+    override fun getTvShowLists(): Observable<LceResponse<List<ContentList>>> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun toggleTvShowWatchlistStatus(tvShowId: Long): Observable<LceResponse<TvShow>> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun toggleTvShowListStatus(tvShowId: Long, listId: Long): Observable<LceResponse<TvShow>> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

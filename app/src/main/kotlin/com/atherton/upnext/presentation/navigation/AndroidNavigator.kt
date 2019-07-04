@@ -6,9 +6,10 @@ import android.content.Intent
 import android.net.Uri
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
+import com.atherton.upnext.presentation.common.addtolists.AddToListsContentType
+import com.atherton.upnext.presentation.common.addtolists.AddToListsDialogFragment
+import com.atherton.upnext.presentation.features.content.ContentDetailContentType
 import com.atherton.upnext.presentation.features.content.ContentDetailFragmentDirections
-import com.atherton.upnext.presentation.features.content.ContentType
-import com.atherton.upnext.presentation.features.movies.MovieAddToListsDialogFragment
 
 class AndroidNavigator(private val navController: NavController, val context: Context) : Navigator {
 
@@ -17,12 +18,18 @@ class AndroidNavigator(private val navController: NavController, val context: Co
     }
 
     override fun showMovieDetailScreen(movieId: Long) {
-        val action = ContentDetailFragmentDirections.actionSharedGoToContentDetail(movieId, ContentType.Movie)
+        val action = ContentDetailFragmentDirections.actionSharedGoToContentDetail(
+            contentId = movieId,
+            contentType = ContentDetailContentType.Movie
+        )
         navController.navigate(action)
     }
 
     override fun showTvShowDetailScreen(tvShowId: Long) {
-        val action = ContentDetailFragmentDirections.actionSharedGoToContentDetail(tvShowId, ContentType.TvShow)
+        val action = ContentDetailFragmentDirections.actionSharedGoToContentDetail(
+            contentId = tvShowId,
+            contentType = ContentDetailContentType.TvShow
+        )
         navController.navigate(action)
     }
 
@@ -54,12 +61,12 @@ class AndroidNavigator(private val navController: NavController, val context: Co
         context.startActivity(browserIntent)
     }
 
-    override fun showMovieAddToListsMenu(movieId: Long, childFragmentManager: FragmentManager) {
-        val fragment = MovieAddToListsDialogFragment.newInstance(movieId = movieId)
-        fragment.show(childFragmentManager, FRAGMENT_TAG_MOVIE_ADD_TO_LISTS)
-    }
-
-    companion object {
-        private const val FRAGMENT_TAG_MOVIE_ADD_TO_LISTS = "fragment_movie_add_to_lists"
+    override fun showAddToListsMenu(
+        contentId: Long,
+        contentType: AddToListsContentType,
+        childFragmentManager: FragmentManager
+    ) {
+        val fragment = AddToListsDialogFragment.newInstance(contentId = contentId, contentType = contentType)
+        fragment.show(childFragmentManager, AddToListsDialogFragment.FRAGMENT_TAG)
     }
 }

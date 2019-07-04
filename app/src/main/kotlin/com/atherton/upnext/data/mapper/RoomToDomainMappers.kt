@@ -484,9 +484,9 @@ fun List<RoomPersonCredit>.toDomainPersonCredits(predicate: (RoomPersonCredit) -
     }
 }
 
-fun List<RoomMovieList>.toDomainMovieLists(): List<MovieList> {
+fun List<RoomMovieList>.toDomainMovieLists(): List<ContentList> {
     return this.map { movieList ->
-        MovieList(
+        ContentList(
             id = movieList.id,
             name = movieList.name,
             sortOrder = movieList.sortOrder
@@ -494,9 +494,9 @@ fun List<RoomMovieList>.toDomainMovieLists(): List<MovieList> {
     }
 }
 
-fun List<RoomTvShowList>.toDomainTvShowLists(): List<TvShowList> {
+fun List<RoomTvShowList>.toDomainTvShowLists(): List<ContentList> {
     return this.map { tvShowList ->
-        TvShowList(
+        ContentList(
             id = tvShowList.id,
             name = tvShowList.name,
             sortOrder = tvShowList.sortOrder

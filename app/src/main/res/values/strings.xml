@@ -7,6 +7,7 @@
     <string name="menu_action_toggle_view">Toggle view</string>
 
     <!-- Generic actions (e.g. snackbar buttons) -->
+    <string name="generic_action_done">Done</string>
     <string name="generic_action_undo">Undo</string>
 
     <!-- Bottom navigation-->
@@ -46,7 +47,7 @@
     <string name="movies_add_movie">Add a movie</string>
 
     <!-- MovieListFragment -->
-    <string name="movie_list_item_removed_from_list">%1s removed from %2s</string>
+    <string name="movie_list_item_removed_from_list">%1$s removed from %2$s</string>
     <string name="movie_list_item_removed_from_list_no_movie_title">Removed from %1s</string>
 
     <!-- DiscoverTabsFragment -->
@@ -68,8 +69,8 @@
     <string name="content_detail_add_to_watchlist">Add To Watchlist</string>
     <string name="content_detail_remove_from_watchlist">Remove From Watchlist</string>
     <string name="content_detail_add_to_list">Add To List</string>
-    <string name="content_detail_runtime_mins">%1s mins</string>
-    <string name="content_detail_vote_average">%1s/10</string>
+    <string name="content_detail_runtime_mins">%1$s mins</string>
+    <string name="content_detail_vote_average">%1$s/10</string>
     <string name="content_detail_seasons_header">Seasons</string>
     <string name="content_detail_videos_header">Videos</string>
     <string name="content_detail_photos_header">Photos</string>
@@ -84,9 +85,14 @@
     <!-- LicensesFragment -->
     <string name="licenses_view_license">View License</string>
 
+    <!-- AddToListsDialogFragment -->
+    <string name="add_to_lists_save_show_title">Save show to…</string>
+    <string name="add_to_lists_save_movie_title">Save movie to…</string>
+    <string name="add_to_lists_new_list">+ New List</string>
+
     <!-- Error messages -->
-    <string name="error_message_server">Server encountered a %d error, please try again later</string>
-    <string name="error_message_server_with_error">Server encountered a %1d error, please try again later (status code: %2d)</string>
+    <string name="error_message_server">Server encountered a %$d error, please try again later</string>
+    <string name="error_message_server_with_error">Server encountered a %1$d error, please try again later (status code: %2$d)</string>
     <string name="error_message_no_internet">Device is offline - please connect to a network and try again</string>
     <string name="error_no_internet_try_again_button">Try again</string>
     <string name="error_no_results_found">No results found</string>

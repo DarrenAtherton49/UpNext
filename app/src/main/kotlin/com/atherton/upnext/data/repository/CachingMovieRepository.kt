@@ -14,9 +14,9 @@ import com.atherton.upnext.data.mapper.*
 import com.atherton.upnext.data.network.model.NetworkResponse
 import com.atherton.upnext.data.network.model.TmdbMovie
 import com.atherton.upnext.data.network.service.TmdbMovieService
+import com.atherton.upnext.domain.model.ContentList
 import com.atherton.upnext.domain.model.LceResponse
 import com.atherton.upnext.domain.model.Movie
-import com.atherton.upnext.domain.model.MovieList
 import com.atherton.upnext.domain.repository.MovieRepository
 import io.reactivex.Observable
 import javax.inject.Inject
@@ -160,7 +160,7 @@ class CachingMovieRepository @Inject constructor(
             }
     }
 
-    override fun getMovieLists(): Observable<LceResponse<List<MovieList>>> {
+    override fun getMovieLists(): Observable<LceResponse<List<ContentList>>> {
         return listDao.getMovieListsObservable()
             .distinctUntilChanged()
             .map { movieLists ->
@@ -268,10 +268,6 @@ class CachingMovieRepository @Inject constructor(
                     throw IllegalStateException(errorMessage)
                 }
             }
-    }
-
-    override fun addMovieToList(movieId: Long): Observable<LceResponse<Movie>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     private fun saveFullMovieToDatabase(movie: TmdbMovie) {

@@ -71,7 +71,7 @@ inline operator fun <reified T : Any> SharedPreferences.get(key: String, default
     }
 }
 
-fun <T> LiveData<T>.observe(owner: LifecycleOwner, observer: (T?) -> Unit) {
+fun <T> LiveData<T>.observeLiveData(owner: LifecycleOwner, observer: (T?) -> Unit) {
     this.observe(owner, Observer(observer))
 }
 

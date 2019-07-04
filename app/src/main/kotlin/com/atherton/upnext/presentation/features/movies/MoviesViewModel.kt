@@ -4,7 +4,7 @@ import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.domain.model.LceResponse
-import com.atherton.upnext.domain.model.MovieList
+import com.atherton.upnext.domain.model.ContentList
 import com.atherton.upnext.domain.repository.MovieRepository
 import com.atherton.upnext.presentation.util.AppStringProvider
 import com.atherton.upnext.util.base.BaseViewEffect
@@ -104,7 +104,7 @@ sealed class MoviesChange {
     object Loading : MoviesChange()
 
     data class Result(
-        val response: LceResponse<List<MovieList>>
+        val response: LceResponse<List<ContentList>>
     ) : MoviesChange()
 }
 
@@ -114,10 +114,10 @@ sealed class MoviesState: BaseState, Parcelable {
     object Idle : MoviesState()
 
     @Parcelize
-    data class Loading(val results: List<MovieList>?) : MoviesState()
+    data class Loading(val results: List<ContentList>?) : MoviesState()
 
     @Parcelize
-    data class Content(val results: List<MovieList>) : MoviesState()
+    data class Content(val results: List<ContentList>) : MoviesState()
 
     @Parcelize
     data class Error(val message: String, val canRetry: Boolean) : MoviesState()

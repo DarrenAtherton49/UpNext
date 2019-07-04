@@ -6,8 +6,9 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.atherton.upnext.R
+import com.atherton.upnext.domain.model.ContentList
 import com.atherton.upnext.domain.model.Movie
-import com.atherton.upnext.domain.model.MovieList
+import com.atherton.upnext.presentation.common.addtolists.AddToListsContentType
 import com.atherton.upnext.presentation.main.MainAction
 import com.atherton.upnext.presentation.main.MainViewEffect
 import com.atherton.upnext.presentation.main.MainViewModel
@@ -26,7 +27,7 @@ class MovieListFragment : BaseFragment<MovieListAction, MovieListState, MovieLis
 
     override val layoutResId: Int = R.layout.fragment_movie_list
     override val stateBundleKey: String by lazy { "bundle_key_movie_list_${movieList.id}_state" }
-    private val movieList: MovieList by lazy { arguments?.getParcelable(BUNDLE_KEY_MOVIE_LIST) as MovieList }
+    private val movieList: ContentList by lazy { arguments?.getParcelable(BUNDLE_KEY_MOVIE_LIST) as ContentList }
 
     @Inject @field:Named(MainViewModelFactory.NAME)
     lateinit var mainVmFactory: ViewModelProvider.Factory
@@ -130,7 +131,11 @@ class MovieListFragment : BaseFragment<MovieListAction, MovieListState, MovieLis
                 sharedViewModel.dispatch(MainAction.MovieClicked(viewEffect.movieId))
             }
             is MovieListViewEffect.ShowAddToListMenu -> {
-                navigator.showMovieAddToListsMenu(viewEffect.movieId, childFragmentManager)
+                navigator.showAddToListsMenu(
+                    contentId = viewEffect.movieId,
+                    contentType = AddToListsContentType.Movie,
+                    childFragmentManager = childFragmentManager
+                )
             }
             is MovieListViewEffect.ShowRemovedFromListMessage -> {
                 showMovieRemovedFromListMessage(viewEffect.movie, viewEffect.movieList)
@@ -140,7 +145,7 @@ class MovieListFragment : BaseFragment<MovieListAction, MovieListState, MovieLis
 
     override fun processSharedViewEffects(viewEffect: MainViewEffect) {}
 
-    private fun showMovieRemovedFromListMessage(movie: Movie, movieList: MovieList) {
+    private fun showMovieRemovedFromListMessage(movie: Movie, movieList: ContentList) {
         val movieTitle: String? = movie.title
         val message = if (movieTitle != null) {
             getString(R.string.movie_list_item_removed_from_list).format(movieTitle, movieList.name)
@@ -180,7 +185,7 @@ class MovieListFragment : BaseFragment<MovieListAction, MovieListState, MovieLis
     companion object {
         private const val BUNDLE_KEY_MOVIE_LIST = "movie_list_bundle_key_movie_list"
 
-        fun newInstance(movieList: MovieList): MovieListFragment {
+        fun newInstance(movieList: ContentList): MovieListFragment {
             return MovieListFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable(BUNDLE_KEY_MOVIE_LIST, movieList)

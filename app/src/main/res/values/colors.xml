@@ -17,6 +17,8 @@
     <color name="colorOnBackground">@color/white</color>
     <color name="colorStatusBar">@color/colorBase</color>
     <color name="colorNavigationBar">@color/colorBase</color>
+    
+    <color name="bottom_sheet_separator">#805F5F5F</color>
 
     <color name="ic_launcher_background">@color/colorBase</color>
 

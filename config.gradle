@@ -12,7 +12,7 @@ ext {
     ]
 
     // dependency versions
-    appCompatVersion = '1.1.0-beta01'
+    appCompatVersion = '1.1.0-rc01'
     constraintLayoutVersion = '2.0.0-alpha3'
     daggerVersion = '2.17'
     espressoVersion = '3.1.1'

@@ -29,9 +29,6 @@
 - Implement Shows Screen
     + Watchlist
     + Watch history/Watched
-- Implement Movies Screen
-    + Watchlist
-    + Watch history/Watched
 - Implement remaining sections on detail screen such as 'seasons'
 - TV show/movie lists
     + Have option to sort the list items, e.g.

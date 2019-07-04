@@ -17,7 +17,7 @@
         android:paddingTop="@dimen/keyline_2x"
         android:paddingStart="@dimen/keyline_2x"
         android:paddingEnd="@dimen/keyline_2x"
-        android:paddingBottom="@dimen/keyline_8x"
+        android:paddingBottom="@dimen/keyline_2x"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:scrollbars="none"
         android:clipToPadding="false"

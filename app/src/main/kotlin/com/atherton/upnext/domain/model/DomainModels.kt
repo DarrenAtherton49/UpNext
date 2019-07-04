@@ -16,10 +16,10 @@ data class ApiError(val statusMessage: String, val statusCode: Int): Parcelable
  */
 sealed class Watchable(
     open val backdropPath: String?,
-    open val title: String?,
     open val id: Long,
     open val posterPath: String?,
-    open val state: State
+    open val state: State,
+    open val title: String?
 ) : Parcelable {
 
     @Parcelize
@@ -54,10 +54,10 @@ data class TvShow(
     val voteCount: Int?
 ) : Watchable(
     backdropPath = backdropPath,
-    title = name,
     id = id,
     posterPath = posterPath,
-    state = state
+    state = state,
+    title = name
 ), Searchable {
 
     @Parcelize
@@ -103,10 +103,10 @@ data class Movie(
     val voteCount: Int?
 ) : Watchable(
     backdropPath = backdropPath,
-    title = title,
     id = id,
     posterPath = posterPath,
-    state = state
+    state = state,
+    title = title
 ), Searchable {
 
     @Parcelize
@@ -317,8 +317,6 @@ sealed class DiscoverFilter(open val id: Long) : Parcelable {
     sealed class Custom(id: Long, val name: String) : DiscoverFilter(id)
 }
 
+// used to store both movie and tv show lists
 @Parcelize
-data class MovieList(val id: Long, val name: String, val sortOrder: Int) : Parcelable
-
-@Parcelize
-data class TvShowList(val id: Long, val name: String, val sortOrder: Int) : Parcelable
+data class ContentList(val id: Long, val name: String, val sortOrder: Int) : Parcelable
