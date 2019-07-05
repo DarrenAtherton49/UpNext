@@ -82,6 +82,7 @@
 
     <TextView
         style="@style/TextAppearance.MaterialComponents.Subtitle2"
+        android:id="@+id/addToListsDoneButton"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:gravity="center_vertical"

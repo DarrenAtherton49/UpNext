@@ -53,6 +53,7 @@ class AddToListsDialogFragment
         super.onViewCreated(view, savedInstanceState)
 
         initTitleText()
+        initClickListeners()
         initRecyclerView()
 
         if (savedInstanceState == null) {
@@ -103,7 +104,11 @@ class AddToListsDialogFragment
         }
     }
 
-    override fun processViewEffects(viewEffect: AddToListsViewEffect) {}
+    override fun processViewEffects(viewEffect: AddToListsViewEffect) {
+        when (viewEffect) {
+            is AddToListsViewEffect.CloseScreen -> dismiss()
+        }
+    }
 
     private fun initTitleText() {
         val title = when (contentType) {
@@ -111,6 +116,14 @@ class AddToListsDialogFragment
             is AddToListsContentType.Movie -> getString(R.string.add_to_lists_save_movie_title)
         }
         addToListsSaveToTitleTextView.text = title
+    }
+
+    private fun initClickListeners() {
+        addToListsDoneButton.setOnClickListener {
+            viewModel.dispatch(AddToListsAction.DoneClicked)
+        }
+
+
     }
 
     private fun initRecyclerView() {

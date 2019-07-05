@@ -106,6 +106,11 @@ class AddToListsViewModel @Inject constructor(
                 }
             }
 
+        val doneClickedViewEffect = actions.ofType<AddToListsAction.DoneClicked>()
+            .preventMultipleClicks()
+            .subscribeOn(schedulers.io)
+            .map { AddToListsViewEffect.CloseScreen }
+
         val stateChanges = merge(
             loadDataChange,
             toggleContentListStatusChange
@@ -117,6 +122,10 @@ class AddToListsViewModel @Inject constructor(
             .distinctUntilChanged()
             .observeOn(schedulers.main)
             .subscribe(state::setValue, Timber::e)
+
+        disposables += doneClickedViewEffect
+            .observeOn(schedulers.main)
+            .subscribe(viewEffects::accept, Timber::e)
     }
 }
 
@@ -142,6 +151,8 @@ sealed class AddToListsAction : BaseAction {
         val contentType: AddToListsContentType,
         val listId: Long
     ) : AddToListsAction()
+
+    object DoneClicked : AddToListsAction()
 }
 
 sealed class AddToListsChange {
@@ -168,7 +179,9 @@ sealed class AddToListsState : BaseState, Parcelable {
     ) : AddToListsState()
 }
 
-sealed class AddToListsViewEffect : BaseViewEffect
+sealed class AddToListsViewEffect : BaseViewEffect {
+    object CloseScreen : AddToListsViewEffect()
+}
 
 //================================================================================
 // Factory
