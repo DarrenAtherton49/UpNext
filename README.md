@@ -3,6 +3,9 @@
 ## Backlog/Features
 The project backlog is currently split into phases:
 1. [Alpha](https://github.com/DarrenAtherton49/UpNext/projects/3)
+2. [Beta](https://github.com/DarrenAtherton49/UpNext/projects/5)
+3. [Release](https://github.com/DarrenAtherton49/UpNext/projects/6)
+4. [Testing](https://github.com/DarrenAtherton49/UpNext/projects/4)
 
 ## Licence
 ```
