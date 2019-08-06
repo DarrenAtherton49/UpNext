@@ -1,5 +1,9 @@
 # UpNext App for Android
 
+## Backlog/Features
+The project backlog is currently split into phases:
+1. [Alpha](https://github.com/DarrenAtherton49/UpNext/projects/3)
+
 ## Licence
 ```
 Copyright 2019 Darren Atherton
