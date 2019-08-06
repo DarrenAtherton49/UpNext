@@ -24,7 +24,7 @@
 - Make genre chips clickable - goes to discover filter
 - Caching
     - Look at TMDB 'changes' api calls - could incorporate this into caching
-- Add an 'Add to list' button on the detail screen which brings up the users lists. Use PopupMenu.
+- Implement 'new list' screen
 - Implement Person detail screen
 - Implement Shows Screen
     + Watchlist
@@ -39,7 +39,7 @@
         * Episodes left to watch
 - Add genres tab to the discover screen tabs to easily look at genre (as well as in the advanced filter)
 - [Setting] Add setting to show all runtimes for episodes instead of just one (show one by default).
-- [Setting] Add setting to navigate to 
+- [Setting] Add setting to navigate to show or movie watch list etc after adding it on the detail screen
 - Add ability to follow a person as well as a tv show and movie so you can go through and watch someone's filmography.
 - Advanced search/filters. E.g. by genre (using Discover API)
 - Figure out when to invalidate data, e.g. stored movies, tv shows and people.
