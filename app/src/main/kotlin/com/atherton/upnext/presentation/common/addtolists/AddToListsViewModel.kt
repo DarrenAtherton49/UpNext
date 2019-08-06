@@ -152,6 +152,8 @@ sealed class AddToListsAction : BaseAction {
         val listId: Long
     ) : AddToListsAction()
 
+    data class NewListClicked(val contentType: AddToListsContentType) : AddToListsAction()
+
     object DoneClicked : AddToListsAction()
 }
 

@@ -123,7 +123,9 @@ class AddToListsDialogFragment
             viewModel.dispatch(AddToListsAction.DoneClicked)
         }
 
-
+        addToListsNewListButton.setOnClickListener {
+            viewModel.dispatch(AddToListsAction.NewListClicked(contentType))
+        }
     }
 
     private fun initRecyclerView() {
