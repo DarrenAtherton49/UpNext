@@ -1,5 +1,9 @@
 # UpNext App for Android
 
+An Android app to track your favourite movies and TV shows.
+
+<img src="screenshots/phone-movies.png" height="375"/>
+
 ## Backlog/Features
 The project backlog is currently split into phases:
 1. [Alpha](https://github.com/DarrenAtherton49/UpNext/projects/3)
