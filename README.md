@@ -4,12 +4,20 @@ An Android app to track your favourite movies and TV shows.
 
 <img src="screenshots/phone-movies.png" height="375"/>
 
-## Backlog/Features
+## Features
+- Browse movies and TV shows and add them to your watchlist, custom lists and mark them as 'watched'.
+- Works offline via caching, including past searches.
+
+## Backlog
 The project backlog is currently split into phases:
 1. [Alpha](https://github.com/DarrenAtherton49/UpNext/projects/3)
 2. [Beta](https://github.com/DarrenAtherton49/UpNext/projects/5)
 3. [Release](https://github.com/DarrenAtherton49/UpNext/projects/6)
 4. [Testing](https://github.com/DarrenAtherton49/UpNext/projects/4)
+
+NOTE: Each time an item in the backlog is completed, it should be written down as a feature if appropriate.
+
+NOTE: Each time a dependency is added to the project, it must also be added to `LicensesList.kt`
 
 ## Licence
 ```
