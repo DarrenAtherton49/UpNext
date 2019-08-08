@@ -15,9 +15,9 @@ The project backlog is currently split into phases:
 3. [Release](https://github.com/DarrenAtherton49/UpNext/projects/6)
 4. [Testing](https://github.com/DarrenAtherton49/UpNext/projects/4)
 
-NOTE: Each time an item in the backlog is completed, it should be written down as a feature if appropriate.
-
-NOTE: Each time a dependency is added to the project, it must also be added to `LicensesList.kt`
+NOTE: 
+- Each time an item in the backlog is completed, it should be written down as a feature if appropriate.
+- Each time a dependency is added to the project, it must also be added to `LicensesList.kt`
 
 ## Licence
 ```
