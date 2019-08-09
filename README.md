@@ -6,6 +6,7 @@ An Android app to track your favourite movies and TV shows.
 
 ## Features
 - Browse movies and TV shows and add them to your watchlist, custom lists and mark them as 'watched'.
+- No sign-in required.
 - Works offline via caching, including past searches.
 
 ## Backlog
