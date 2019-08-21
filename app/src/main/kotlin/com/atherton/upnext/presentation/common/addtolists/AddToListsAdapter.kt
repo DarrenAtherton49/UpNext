@@ -10,6 +10,7 @@ import com.atherton.upnext.domain.model.ContentList
 import com.atherton.upnext.util.extensions.inflateLayout
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_add_to_lists.*
+import kotlinx.android.synthetic.main.item_add_to_lists.view.*
 
 class AddToListsAdapter(
     private val onListClickListener: (ContentList) -> Unit
@@ -17,7 +18,9 @@ class AddToListsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(parent.inflateLayout(R.layout.item_add_to_lists)).apply {
-            itemView.setOnClickListener { onListClickListener.invoke(getItem(adapterPosition)) }
+            itemView.addToListsCheckBox.setOnClickListener {
+                onListClickListener.invoke(getItem(adapterPosition))
+            }
         }
     }
 
@@ -30,8 +33,9 @@ class AddToListsAdapter(
     ) : RecyclerView.ViewHolder(containerView),
         LayoutContainer {
 
-        fun bind(contentList: ContentList) {
-            addToListsCheckBox.text = contentList.name
+        fun bind(listItem: ContentList) {
+            //addToListsCheckBox.isChecked = listItem.isChecked
+            addToListsCheckBox.text = listItem.name
         }
     }
 

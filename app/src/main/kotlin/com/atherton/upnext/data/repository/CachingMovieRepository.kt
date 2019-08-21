@@ -1,8 +1,8 @@
 package com.atherton.upnext.data.repository
 
 import com.atherton.upnext.data.db.dao.ListDao
-import com.atherton.upnext.data.db.dao.ListDao.Companion.LIST_MOVIE_WATCHED
-import com.atherton.upnext.data.db.dao.ListDao.Companion.LIST_MOVIE_WATCHLIST
+import com.atherton.upnext.data.db.dao.ListDao.Companion.LIST_ID_MOVIE_WATCHED
+import com.atherton.upnext.data.db.dao.ListDao.Companion.LIST_ID_MOVIE_WATCHLIST
 import com.atherton.upnext.data.db.dao.MovieDao
 import com.atherton.upnext.data.db.dao.MovieDao.Companion.PLAYLIST_NOW_PLAYING
 import com.atherton.upnext.data.db.dao.MovieDao.Companion.PLAYLIST_POPULAR
@@ -196,9 +196,7 @@ class CachingMovieRepository @Inject constructor(
                     val newWatchlistState: Boolean = !dbMovie.state.inWatchlist
                     val updatedMovie = dbMovie.copy(state = dbMovie.state.copy(inWatchlist = newWatchlistState))
 
-                    val watchlistId = listDao.getListIdForName(LIST_MOVIE_WATCHLIST)
-
-                    movieDao.updateMovieAndToggleListStatus(updatedMovie, watchlistId)
+                    movieDao.updateMovieAndToggleListStatus(updatedMovie, LIST_ID_MOVIE_WATCHLIST)
 
                     // return full movie
                     val domainMovie: Movie? = getFullMovieFromDatabase(movieId)
@@ -227,9 +225,7 @@ class CachingMovieRepository @Inject constructor(
                     val newWatchedState: Boolean = !dbMovie.state.isWatched
                     val updatedMovie = dbMovie.copy(state = dbMovie.state.copy(isWatched = newWatchedState))
 
-                    val watchedListId = listDao.getListIdForName(LIST_MOVIE_WATCHED)
-
-                    movieDao.updateMovieAndToggleListStatus(updatedMovie, watchedListId)
+                    movieDao.updateMovieAndToggleListStatus(updatedMovie, LIST_ID_MOVIE_WATCHED)
 
                     // return full movie
                     val domainMovie: Movie? = getFullMovieFromDatabase(movieId)
@@ -252,7 +248,22 @@ class CachingMovieRepository @Inject constructor(
             .toObservable()
             .flatMap { movieList ->
                 if (movieList.isNotEmpty()) {
-                    movieDao.toggleMovieListStatus(movieId, listId)
+
+                    when (listId) {
+                        LIST_ID_MOVIE_WATCHLIST -> { // toggle watchlist state on movie object too
+                            val dbMovie: RoomMovie = movieList[0]
+                            val newWatchlistState: Boolean = !dbMovie.state.inWatchlist
+                            val updatedMovie = dbMovie.copy(state = dbMovie.state.copy(inWatchlist = newWatchlistState))
+                            movieDao.updateMovieAndToggleListStatus(updatedMovie, listId)
+                        }
+                        LIST_ID_MOVIE_WATCHED -> { // toggle watched state on movie object too
+                            val dbMovie: RoomMovie = movieList[0]
+                            val newWatchedState: Boolean = !dbMovie.state.isWatched
+                            val updatedMovie = dbMovie.copy(state = dbMovie.state.copy(isWatched = newWatchedState))
+                            movieDao.updateMovieAndToggleListStatus(updatedMovie, listId)
+                        }
+                        else -> movieDao.toggleMovieListStatus(movieId, listId)
+                    }
 
                     // return full movie
                     val domainMovie: Movie? = getFullMovieFromDatabase(movieId)

@@ -22,9 +22,6 @@ interface ListDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAllTvShowLists(tvShowLists: List<RoomTvShowList>)
 
-    @Query("SELECT id from movie_list WHERE name = :listName")
-    fun getListIdForName(listName: String): Long
-
     @Query("SELECT * from movie_list ORDER BY sort_order")
     fun getMovieListsObservable(): Observable<List<RoomMovieList>>
 
@@ -36,11 +33,16 @@ interface ListDao {
     fun getMoviesForListObservable(listId: Long): Observable<List<RoomMovieAllData>>
 
     companion object {
-        const val LIST_MOVIE_WATCHLIST = "Watchlist"
-        const val LIST_MOVIE_WATCHED = "Watched"
+        const val LIST_ID_MOVIE_WATCHLIST = 1L
+        const val LIST_ID_MOVIE_WATCHED = 2L
+        const val LIST_NAME_MOVIE_WATCHLIST = "Watchlist"
+        const val LIST_NAME_MOVIE_WATCHED = "Watched"
 
-        const val LIST_TV_WATCHLIST = "Watchlist"
-        const val LIST_TV_WATCHED = "Watched"
-        const val LIST_TV_HISTORY = "History"
+        const val LIST_ID_TV_WATCHLIST = 1L
+        const val LIST_ID_TV_WATCHED = 2L
+        const val LIST_ID_TV_HISTORY = 3L
+        const val LIST_NAME_TV_WATCHLIST = "Watchlist"
+        const val LIST_NAME_TV_WATCHED = "Watched"
+        const val LIST_NAME_TV_HISTORY = "History"
     }
 }

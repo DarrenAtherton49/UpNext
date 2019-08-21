@@ -7,11 +7,16 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.atherton.upnext.data.db.dao.*
-import com.atherton.upnext.data.db.dao.ListDao.Companion.LIST_MOVIE_WATCHED
-import com.atherton.upnext.data.db.dao.ListDao.Companion.LIST_MOVIE_WATCHLIST
-import com.atherton.upnext.data.db.dao.ListDao.Companion.LIST_TV_HISTORY
-import com.atherton.upnext.data.db.dao.ListDao.Companion.LIST_TV_WATCHED
-import com.atherton.upnext.data.db.dao.ListDao.Companion.LIST_TV_WATCHLIST
+import com.atherton.upnext.data.db.dao.ListDao.Companion.LIST_ID_MOVIE_WATCHED
+import com.atherton.upnext.data.db.dao.ListDao.Companion.LIST_ID_MOVIE_WATCHLIST
+import com.atherton.upnext.data.db.dao.ListDao.Companion.LIST_ID_TV_HISTORY
+import com.atherton.upnext.data.db.dao.ListDao.Companion.LIST_ID_TV_WATCHED
+import com.atherton.upnext.data.db.dao.ListDao.Companion.LIST_ID_TV_WATCHLIST
+import com.atherton.upnext.data.db.dao.ListDao.Companion.LIST_NAME_MOVIE_WATCHED
+import com.atherton.upnext.data.db.dao.ListDao.Companion.LIST_NAME_MOVIE_WATCHLIST
+import com.atherton.upnext.data.db.dao.ListDao.Companion.LIST_NAME_TV_HISTORY
+import com.atherton.upnext.data.db.dao.ListDao.Companion.LIST_NAME_TV_WATCHED
+import com.atherton.upnext.data.db.dao.ListDao.Companion.LIST_NAME_TV_WATCHLIST
 import com.atherton.upnext.data.db.model.config.RoomConfig
 import com.atherton.upnext.data.db.model.list.RoomMovieList
 import com.atherton.upnext.data.db.model.list.RoomMovieListJoin
@@ -129,16 +134,16 @@ abstract class RoomDb : RoomDatabase() {
 
         private val PREPOPULATE_MOVIE_CUSTOM_LISTS by lazy {
             listOf(
-                RoomMovieList(name = LIST_MOVIE_WATCHLIST, sortOrder = 1),
-                RoomMovieList(name = LIST_MOVIE_WATCHED, sortOrder = 2)
+                RoomMovieList(id = LIST_ID_MOVIE_WATCHLIST, name = LIST_NAME_MOVIE_WATCHLIST, sortOrder = 1),
+                RoomMovieList(id = LIST_ID_MOVIE_WATCHED, name = LIST_NAME_MOVIE_WATCHED, sortOrder = 2)
             )
         }
 
         private val PREPOPULATE_TV_SHOW_CUSTOM_LISTS by lazy {
             listOf(
-                RoomTvShowList(name = LIST_TV_WATCHLIST, sortOrder = 1),
-                RoomTvShowList(name = LIST_TV_WATCHED, sortOrder = 2),
-                RoomTvShowList(name = LIST_TV_HISTORY, sortOrder = 3)
+                RoomTvShowList(id = LIST_ID_TV_WATCHLIST, name = LIST_NAME_TV_WATCHLIST, sortOrder = 1),
+                RoomTvShowList(id = LIST_ID_TV_WATCHED, name = LIST_NAME_TV_WATCHED, sortOrder = 2),
+                RoomTvShowList(id = LIST_ID_TV_HISTORY, name = LIST_NAME_TV_HISTORY, sortOrder = 3)
             )
         }
     }
