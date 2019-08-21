@@ -4,6 +4,13 @@ An Android app to track your favourite movies and TV shows.
 
 <img src="screenshots/phone-movies.png" height="375"/>
 
+## Getting Started
+To run the app, you will need to add your own [TMDB API key](https://www.themoviedb.org/documentation/api) 
+to the project as a property in your local `gradle.properties` file in the format:
+```
+tmdb_api_key="your_api_key"
+```
+
 ## Features
 - Browse movies and TV shows and add them to your watchlist, custom lists and mark them as 'watched'.
 - No sign-in required.
