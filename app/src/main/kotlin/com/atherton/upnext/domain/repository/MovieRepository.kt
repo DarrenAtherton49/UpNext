@@ -1,6 +1,7 @@
 package com.atherton.upnext.domain.repository
 
 import com.atherton.upnext.domain.model.ContentList
+import com.atherton.upnext.domain.model.ContentListStatus
 import com.atherton.upnext.domain.model.LceResponse
 import com.atherton.upnext.domain.model.Movie
 import io.reactivex.Observable
@@ -12,6 +13,7 @@ interface MovieRepository {
     fun getUpcoming(): Observable<LceResponse<List<Movie>>>
     fun getTopRated(): Observable<LceResponse<List<Movie>>>
     fun getNowPlaying(): Observable<LceResponse<List<Movie>>>
+    fun getMovieListsForMovie(movieId: Long): Observable<LceResponse<List<ContentListStatus>>>
     fun getMovieLists(): Observable<LceResponse<List<ContentList>>>
     fun getMoviesForList(listId: Long): Observable<LceResponse<List<Movie>>>
     fun toggleMovieWatchlistStatus(movieId: Long): Observable<LceResponse<Movie>>

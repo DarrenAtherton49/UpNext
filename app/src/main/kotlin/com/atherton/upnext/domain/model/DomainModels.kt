@@ -321,11 +321,12 @@ sealed class DiscoverFilter(open val id: Long) : Parcelable {
 @Parcelize
 data class ContentList(val id: Long, val name: String, val sortOrder: Int) : Parcelable
 
-// used to store a content list and it's status (whether it belongs to a given movie or tv show)
+// used to store a content list and it's status (whether a given movie or tv show has been added to the list)
 @Parcelize
 data class ContentListStatus(
     val listId: Long,
     val listName: String,
     val listSortOrder: Int,
-    val isChecked: Boolean
+    val contentId: Long, // either a movie id or tv show id
+    val contentIsInList: Boolean
 ) : Parcelable

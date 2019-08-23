@@ -28,6 +28,9 @@ interface ListDao {
     @Query("SELECT * from tv_show_list ORDER BY sort_order")
     fun getTvShowListsSingle(): Single<List<RoomTvShowList>>
 
+    @Query("SELECT l.* from movie_list_join mlj INNER JOIN movie m on mlj.movie_id = m.id INNER JOIN movie_list l ON mlj.list_id = l.id WHERE m.id = :movieId")
+    fun getListsForMovieObservable(movieId: Long): Observable<List<RoomMovieList>>
+
     @Transaction
     @Query("SELECT m.* FROM movie_list_join mlj INNER JOIN movie m on mlj.movie_id = m.id INNER JOIN movie_list l ON mlj.list_id = l.id WHERE l.id = :listId")
     fun getMoviesForListObservable(listId: Long): Observable<List<RoomMovieAllData>>

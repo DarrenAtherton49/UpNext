@@ -6,15 +6,15 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.atherton.upnext.R
-import com.atherton.upnext.domain.model.ContentList
+import com.atherton.upnext.domain.model.ContentListStatus
 import com.atherton.upnext.util.extensions.inflateLayout
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_add_to_lists.*
 import kotlinx.android.synthetic.main.item_add_to_lists.view.*
 
 class AddToListsAdapter(
-    private val onListClickListener: (ContentList) -> Unit
-) : ListAdapter<ContentList, AddToListsAdapter.ViewHolder>(DiffCallback) {
+    private val onListClickListener: (ContentListStatus) -> Unit
+) : ListAdapter<ContentListStatus, AddToListsAdapter.ViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(parent.inflateLayout(R.layout.item_add_to_lists)).apply {
@@ -33,20 +33,20 @@ class AddToListsAdapter(
     ) : RecyclerView.ViewHolder(containerView),
         LayoutContainer {
 
-        fun bind(listItem: ContentList) {
-            //addToListsCheckBox.isChecked = listItem.isChecked
-            addToListsCheckBox.text = listItem.name
+        fun bind(listItem: ContentListStatus) {
+            addToListsCheckBox.isChecked = listItem.contentIsInList
+            addToListsCheckBox.text = listItem.listName
         }
     }
 
     companion object {
-        private object DiffCallback : DiffUtil.ItemCallback<ContentList>() {
+        private object DiffCallback : DiffUtil.ItemCallback<ContentListStatus>() {
 
-            override fun areItemsTheSame(oldItem: ContentList, newItem: ContentList): Boolean {
-                return oldItem.id == newItem.id
+            override fun areItemsTheSame(oldItem: ContentListStatus, newItem: ContentListStatus): Boolean {
+                return oldItem.listId == newItem.listId
             }
 
-            override fun areContentsTheSame(oldItem: ContentList, newItem: ContentList): Boolean {
+            override fun areContentsTheSame(oldItem: ContentListStatus, newItem: ContentListStatus): Boolean {
                 return oldItem == newItem
             }
         }

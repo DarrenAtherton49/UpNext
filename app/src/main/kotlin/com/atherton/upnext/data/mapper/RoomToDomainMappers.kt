@@ -504,6 +504,19 @@ fun List<RoomTvShowList>.toDomainTvShowLists(): List<ContentList> {
     }
 }
 
+fun RoomMovieList.toDomainContentListStatus(
+    contentId: Long,
+    contentIsInList: Boolean
+): ContentListStatus {
+    return ContentListStatus(
+        listId = id,
+        listName = name,
+        listSortOrder = sortOrder,
+        contentId = contentId,
+        contentIsInList = contentIsInList
+    )
+}
+
 private fun RoomMovieState.toDomainWatchableState(): Watchable.State {
     return Watchable.State(
         inWatchlist = inWatchlist,

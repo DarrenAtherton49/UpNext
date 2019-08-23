@@ -15,10 +15,12 @@ import com.atherton.upnext.data.network.model.NetworkResponse
 import com.atherton.upnext.data.network.model.TmdbMovie
 import com.atherton.upnext.data.network.service.TmdbMovieService
 import com.atherton.upnext.domain.model.ContentList
+import com.atherton.upnext.domain.model.ContentListStatus
 import com.atherton.upnext.domain.model.LceResponse
 import com.atherton.upnext.domain.model.Movie
 import com.atherton.upnext.domain.repository.MovieRepository
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.Observables.zip
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -158,6 +160,25 @@ class CachingMovieRepository @Inject constructor(
                         }
                 }
             }
+    }
+
+    override fun getMovieListsForMovie(movieId: Long): Observable<LceResponse<List<ContentListStatus>>> {
+        return zip(
+            listDao.getMovieListsObservable()
+                .distinctUntilChanged(),
+            listDao.getListsForMovieObservable(movieId = movieId)
+                .distinctUntilChanged()
+        ) { allLists, listsForMovie ->
+            if (allLists.isNotEmpty()) {
+                val data = allLists.map { roomMovieList ->
+                    val listContainsMovie: Boolean = listsForMovie.contains(roomMovieList)
+                    roomMovieList.toDomainContentListStatus(movieId, listContainsMovie)
+                }
+                LceResponse.Content(data = data)
+            } else {
+                LceResponse.Content(data = emptyList())
+            }
+        }
     }
 
     override fun getMovieLists(): Observable<LceResponse<List<ContentList>>> {

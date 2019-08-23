@@ -42,7 +42,7 @@ class AddToListsDialogFragment
                     AddToListsAction.ToggleContentListStatus(
                         contentId = contentId,
                         contentType = contentType,
-                        listId = contentList.id
+                        listId = contentList.listId
                     )
                 )
             }
@@ -57,7 +57,7 @@ class AddToListsDialogFragment
         initRecyclerView()
 
         if (savedInstanceState == null) {
-            viewModel.dispatch(AddToListsAction.Load(contentType))
+            viewModel.dispatch(AddToListsAction.Load(contentId, contentType))
         }
     }
 

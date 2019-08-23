@@ -3,7 +3,7 @@ package com.atherton.upnext.presentation.common.addtolists
 import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.atherton.upnext.domain.model.ContentList
+import com.atherton.upnext.domain.model.ContentListStatus
 import com.atherton.upnext.domain.model.LceResponse
 import com.atherton.upnext.domain.model.Watchable
 import com.atherton.upnext.domain.repository.MovieRepository
@@ -69,10 +69,13 @@ class AddToListsViewModel @Inject constructor(
 
     private fun bindActions() {
 
-        fun getContentListsObservable(contentType: AddToListsContentType): Observable<AddToListsChange> {
+        fun getContentListsObservable(
+            contentId: Long,
+            contentType: AddToListsContentType
+        ): Observable<AddToListsChange> {
             val listsObservable = when (contentType) {
-                is AddToListsContentType.TvShow -> tvShowRepository.getTvShowLists()
-                is AddToListsContentType.Movie -> movieRepository.getMovieLists()
+                is AddToListsContentType.TvShow -> TODO()
+                is AddToListsContentType.Movie -> movieRepository.getMovieListsForMovie(contentId)
             }
             return listsObservable
                 .map<AddToListsChange> { listsResponse -> AddToListsChange.Result(listsResponse) }
@@ -81,7 +84,7 @@ class AddToListsViewModel @Inject constructor(
         }
 
         val loadDataChange = actions.ofType<AddToListsAction.Load>()
-            .switchMap { action -> getContentListsObservable(action.contentType) }
+            .switchMap { action -> getContentListsObservable(action.contentId, action.contentType) }
 
         val toggleContentListStatusChange = actions.ofType<AddToListsAction.ToggleContentListStatus>()
             .preventMultipleClicks()
@@ -102,7 +105,7 @@ class AddToListsViewModel @Inject constructor(
                             .subscribeOn(schedulers.io)
                     }
                 }.flatMap {
-                    getContentListsObservable(action.contentType)
+                    getContentListsObservable(action.contentId, action.contentType)
                 }
             }
 
@@ -144,7 +147,7 @@ sealed class AddToListsContentType : Parcelable {
 
 sealed class AddToListsAction : BaseAction {
 
-    data class Load(val contentType: AddToListsContentType) : AddToListsAction()
+    data class Load(val contentId: Long, val contentType: AddToListsContentType) : AddToListsAction()
 
     data class ToggleContentListStatus(
         val contentId: Long,
@@ -159,7 +162,7 @@ sealed class AddToListsAction : BaseAction {
 
 sealed class AddToListsChange {
     object Loading : AddToListsChange()
-    data class Result(val response: LceResponse<List<ContentList>>) : AddToListsChange()
+    data class Result(val response: LceResponse<List<ContentListStatus>>) : AddToListsChange()
 }
 
 sealed class AddToListsState : BaseState, Parcelable {
@@ -168,16 +171,16 @@ sealed class AddToListsState : BaseState, Parcelable {
     object Idle : AddToListsState()
 
     @Parcelize
-    data class Loading(val results: List<ContentList>?) : AddToListsState()
+    data class Loading(val results: List<ContentListStatus>?) : AddToListsState()
 
     @Parcelize
-    data class Content(val results: List<ContentList>) : AddToListsState()
+    data class Content(val results: List<ContentListStatus>) : AddToListsState()
 
     @Parcelize
     data class Error(
         val message: String,
         val canRetry: Boolean,
-        val fallbackResults: List<ContentList>?
+        val fallbackResults: List<ContentListStatus>?
     ) : AddToListsState()
 }
 
