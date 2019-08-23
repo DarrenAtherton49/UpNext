@@ -1,7 +1,7 @@
 package com.atherton.upnext.presentation.navigation
 
 import androidx.fragment.app.FragmentManager
-import com.atherton.upnext.presentation.common.addtolists.AddToListsContentType
+import com.atherton.upnext.presentation.common.ContentType
 
 interface Navigator {
 
@@ -13,5 +13,5 @@ interface Navigator {
     fun showSettingsScreen()
     fun showLicensesScreen()
     fun showUrlInBrowser(url: String)
-    fun showAddToListsMenu(contentId: Long, contentType: AddToListsContentType, childFragmentManager: FragmentManager)
+    fun showAddToListsMenu(contentId: Long, contentType: ContentType, childFragmentManager: FragmentManager)
 }

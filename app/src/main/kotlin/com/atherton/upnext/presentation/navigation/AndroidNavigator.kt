@@ -6,9 +6,8 @@ import android.content.Intent
 import android.net.Uri
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
-import com.atherton.upnext.presentation.common.addtolists.AddToListsContentType
+import com.atherton.upnext.presentation.common.ContentType
 import com.atherton.upnext.presentation.common.addtolists.AddToListsDialogFragment
-import com.atherton.upnext.presentation.features.content.ContentDetailContentType
 import com.atherton.upnext.presentation.features.content.ContentDetailFragmentDirections
 
 class AndroidNavigator(private val navController: NavController, val context: Context) : Navigator {
@@ -20,7 +19,7 @@ class AndroidNavigator(private val navController: NavController, val context: Co
     override fun showMovieDetailScreen(movieId: Long) {
         val action = ContentDetailFragmentDirections.actionSharedGoToContentDetail(
             contentId = movieId,
-            contentType = ContentDetailContentType.Movie
+            contentType = ContentType.Movie
         )
         navController.navigate(action)
     }
@@ -28,7 +27,7 @@ class AndroidNavigator(private val navController: NavController, val context: Co
     override fun showTvShowDetailScreen(tvShowId: Long) {
         val action = ContentDetailFragmentDirections.actionSharedGoToContentDetail(
             contentId = tvShowId,
-            contentType = ContentDetailContentType.TvShow
+            contentType = ContentType.TvShow
         )
         navController.navigate(action)
     }
@@ -63,7 +62,7 @@ class AndroidNavigator(private val navController: NavController, val context: Co
 
     override fun showAddToListsMenu(
         contentId: Long,
-        contentType: AddToListsContentType,
+        contentType: ContentType,
         childFragmentManager: FragmentManager
     ) {
         val fragment = AddToListsDialogFragment.newInstance(contentId = contentId, contentType = contentType)

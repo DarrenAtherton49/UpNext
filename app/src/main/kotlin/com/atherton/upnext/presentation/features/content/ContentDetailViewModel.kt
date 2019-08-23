@@ -7,6 +7,7 @@ import com.atherton.upnext.domain.model.*
 import com.atherton.upnext.domain.repository.ConfigRepository
 import com.atherton.upnext.domain.repository.MovieRepository
 import com.atherton.upnext.domain.repository.TvShowRepository
+import com.atherton.upnext.presentation.common.ContentType
 import com.atherton.upnext.presentation.util.AppStringProvider
 import com.atherton.upnext.util.base.BaseViewEffect
 import com.atherton.upnext.util.base.UpNextViewModel
@@ -86,11 +87,11 @@ class ContentDetailViewModel @Inject constructor(
         fun Observable<ContentDetailAction.Load>.toResultChange(): Observable<ContentDetailChange> {
             return this.switchMap { action ->
                 val contentObservable = when (action.contentType) {
-                    is ContentDetailContentType.TvShow -> {
+                    is ContentType.TvShow -> {
                         tvShowRepository.getTvShow(action.contentId)
                             .map<LceResponse<Watchable>> { it }
                     }
-                    is ContentDetailContentType.Movie -> {
+                    is ContentType.Movie -> {
                         movieRepository.getMovie(action.contentId)
                             .map<LceResponse<Watchable>> { it }
                     }
@@ -116,11 +117,11 @@ class ContentDetailViewModel @Inject constructor(
             .preventMultipleClicks()
             .switchMap { action ->
                 val watchlistObservable = when (action.contentType) {
-                    is ContentDetailContentType.TvShow -> {
+                    is ContentType.TvShow -> {
                         tvShowRepository.toggleTvShowWatchlistStatus(action.contentId)
                             .map<LceResponse<Watchable>> { it }
                     }
-                    is ContentDetailContentType.Movie -> {
+                    is ContentType.Movie -> {
                         movieRepository.toggleMovieWatchlistStatus(action.contentId)
                             .map<LceResponse<Watchable>> { it }
                     }
@@ -175,6 +176,11 @@ class ContentDetailViewModel @Inject constructor(
                 }
             }
 
+        val addToListViewEffect = actions.ofType<ContentDetailAction.AddToListButtonClicked>()
+            .preventMultipleClicks()
+            .subscribeOn(schedulers.io)
+            .map { action -> ContentDetailViewEffect.ShowAddToListMenu(action.contentId, action.contentType) }
+
         val settingsActionClickedViewEffect = actions.ofType<ContentDetailAction.SettingsActionClicked>()
             .preventMultipleClicks()
             .subscribeOn(schedulers.io)
@@ -192,6 +198,7 @@ class ContentDetailViewModel @Inject constructor(
             crewMemberClickedViewEffect,
             videoClickedViewEffect,
             recommendedContentClickedViewEffect,
+            addToListViewEffect,
             settingsActionClickedViewEffect
         )
 
@@ -213,14 +220,15 @@ class ContentDetailViewModel @Inject constructor(
 //================================================================================
 
 sealed class ContentDetailAction : BaseAction {
-    data class Load(val contentId: Long, val contentType: ContentDetailContentType) : ContentDetailAction()
-    data class RetryButtonClicked(val contentId: Long, val contentType: ContentDetailContentType) : ContentDetailAction()
-    data class WatchlistButtonClicked(val contentId: Long, val contentType: ContentDetailContentType) : ContentDetailAction()
+    data class Load(val contentId: Long, val contentType: ContentType) : ContentDetailAction()
+    data class RetryButtonClicked(val contentId: Long, val contentType: ContentType) : ContentDetailAction()
+    data class WatchlistButtonClicked(val contentId: Long, val contentType: ContentType) : ContentDetailAction()
     data class SeasonClicked(val season: TvSeason) : ContentDetailAction()
     data class CastMemberClicked(val castMember: CastMember) : ContentDetailAction()
     data class CrewMemberClicked(val crewMember: CrewMember) : ContentDetailAction()
     data class YouTubeVideoClicked(val video: Video) : ContentDetailAction()
     data class RecommendedContentClicked(val watchable: Watchable) : ContentDetailAction()
+    data class AddToListButtonClicked(val contentId: Long, val contentType: ContentType) : ContentDetailAction()
     object SettingsActionClicked : ContentDetailAction()
 }
 
@@ -256,16 +264,8 @@ sealed class ContentDetailViewEffect : BaseViewEffect {
     data class ShowPersonDetailScreen(val personId: Long) : ContentDetailViewEffect()
     data class PlayYoutubeVideo(val videoKey: String) : ContentDetailViewEffect()
     data class ShowSeasonDetailScreen(val seasonId: Long) : ContentDetailViewEffect()
+    data class ShowAddToListMenu(val contentId: Long, val contentType: ContentType) : ContentDetailViewEffect()
     object ShowSettingsScreen : ContentDetailViewEffect()
-}
-
-//================================================================================
-// Screen-specific view data/functions
-//================================================================================
-
-sealed class ContentDetailContentType : Parcelable {
-    @Parcelize object TvShow : ContentDetailContentType()
-    @Parcelize object Movie : ContentDetailContentType()
 }
 
 //================================================================================

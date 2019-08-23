@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.atherton.upnext.R
 import com.atherton.upnext.domain.model.ContentList
 import com.atherton.upnext.domain.model.Movie
-import com.atherton.upnext.presentation.common.addtolists.AddToListsContentType
+import com.atherton.upnext.presentation.common.ContentType
 import com.atherton.upnext.presentation.main.MainAction
 import com.atherton.upnext.presentation.main.MainViewEffect
 import com.atherton.upnext.presentation.main.MainViewModel
@@ -133,7 +133,7 @@ class MovieListFragment : BaseFragment<MovieListAction, MovieListState, MovieLis
             is MovieListViewEffect.ShowAddToListMenu -> {
                 navigator.showAddToListsMenu(
                     contentId = viewEffect.movieId,
-                    contentType = AddToListsContentType.Movie,
+                    contentType = ContentType.Movie,
                     childFragmentManager = childFragmentManager
                 )
             }

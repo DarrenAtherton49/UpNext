@@ -5,6 +5,7 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.atherton.upnext.R
+import com.atherton.upnext.presentation.common.ContentType
 import com.atherton.upnext.util.extensions.getAppComponent
 import com.atherton.upnext.util.extensions.getViewModel
 import com.atherton.upnext.util.extensions.isVisible
@@ -26,8 +27,8 @@ class AddToListsDialogFragment
         arguments?.getLong(BUNDLE_CONTENT_ID) as Long
     }
 
-    private val contentType: AddToListsContentType by lazy {
-        arguments?.getParcelable(BUNDLE_CONTENT_TYPE) as AddToListsContentType
+    private val contentType: ContentType by lazy {
+        arguments?.getParcelable(BUNDLE_CONTENT_TYPE) as ContentType
     }
 
     @Inject @field:Named(AddToListsViewModelFactory.NAME)
@@ -112,8 +113,8 @@ class AddToListsDialogFragment
 
     private fun initTitleText() {
         val title = when (contentType) {
-            is AddToListsContentType.TvShow -> getString(R.string.add_to_lists_save_show_title)
-            is AddToListsContentType.Movie -> getString(R.string.add_to_lists_save_movie_title)
+            is ContentType.TvShow -> getString(R.string.add_to_lists_save_show_title)
+            is ContentType.Movie -> getString(R.string.add_to_lists_save_movie_title)
         }
         addToListsSaveToTitleTextView.text = title
     }
@@ -146,7 +147,7 @@ class AddToListsDialogFragment
     }
 
     companion object {
-        fun newInstance(contentId: Long, contentType: AddToListsContentType): AddToListsDialogFragment {
+        fun newInstance(contentId: Long, contentType: ContentType): AddToListsDialogFragment {
             return AddToListsDialogFragment().apply {
                 arguments = Bundle().apply {
                     putLong(BUNDLE_CONTENT_ID, contentId)

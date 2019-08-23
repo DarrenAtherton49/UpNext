@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.atherton.upnext.R
 import com.atherton.upnext.domain.model.Watchable
+import com.atherton.upnext.presentation.common.ContentType
 import com.atherton.upnext.presentation.features.content.adapter.ModelDetailAdapter
 import com.atherton.upnext.presentation.main.MainAction
 import com.atherton.upnext.presentation.main.MainViewEffect
@@ -67,15 +68,9 @@ class ContentDetailFragment : BaseFragment<ContentDetailAction, ContentDetailSta
         arguments?.let {
             val args = ContentDetailFragmentArgs.fromBundle(it)
             val contentId: Long = args.contentId
-            val contentType: ContentDetailContentType = args.contentType
+            val contentType: ContentType = args.contentType
 
-            retryButton.setOnClickListener {
-                viewModel.dispatch(ContentDetailAction.RetryButtonClicked(contentId, contentType))
-            }
-
-            watchlistButton.setOnClickListener {
-                viewModel.dispatch(ContentDetailAction.WatchlistButtonClicked(contentId, contentType))
-            }
+            initClickListeners(contentId, contentType)
 
             if (savedInstanceState == null) {
                 viewModel.dispatch(ContentDetailAction.Load(contentId, contentType))
@@ -177,6 +172,13 @@ class ContentDetailFragment : BaseFragment<ContentDetailAction, ContentDetailSta
             is ContentDetailViewEffect.PlayYoutubeVideo -> {
                 sharedViewModel.dispatch(MainAction.YouTubeVideoClicked(viewEffect.videoKey))
             }
+            is ContentDetailViewEffect.ShowAddToListMenu -> {
+                navigator.showAddToListsMenu(
+                    contentId = viewEffect.contentId,
+                    contentType = viewEffect.contentType,
+                    childFragmentManager = childFragmentManager
+                )
+            }
             is ContentDetailViewEffect.ShowSettingsScreen -> {
                 sharedViewModel.dispatch(MainAction.SettingsActionClicked)
             }
@@ -184,6 +186,20 @@ class ContentDetailFragment : BaseFragment<ContentDetailAction, ContentDetailSta
     }
 
     override fun processSharedViewEffects(viewEffect: MainViewEffect) {}
+
+    private fun initClickListeners(contentId: Long, contentType: ContentType) {
+        retryButton.setOnClickListener {
+            viewModel.dispatch(ContentDetailAction.RetryButtonClicked(contentId, contentType))
+        }
+
+        watchlistButton.setOnClickListener {
+            viewModel.dispatch(ContentDetailAction.WatchlistButtonClicked(contentId, contentType))
+        }
+
+        addToListButton.setOnClickListener {
+            viewModel.dispatch(ContentDetailAction.AddToListButtonClicked(contentId, contentType))
+        }
+    }
 
     private fun initRecyclerView() {
         recyclerView.apply {

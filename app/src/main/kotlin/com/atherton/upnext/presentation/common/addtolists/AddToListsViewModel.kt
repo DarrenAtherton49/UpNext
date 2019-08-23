@@ -8,6 +8,7 @@ import com.atherton.upnext.domain.model.LceResponse
 import com.atherton.upnext.domain.model.Watchable
 import com.atherton.upnext.domain.repository.MovieRepository
 import com.atherton.upnext.domain.repository.TvShowRepository
+import com.atherton.upnext.presentation.common.ContentType
 import com.atherton.upnext.presentation.util.AppStringProvider
 import com.atherton.upnext.util.base.BaseViewEffect
 import com.atherton.upnext.util.base.UpNextViewModel
@@ -71,11 +72,11 @@ class AddToListsViewModel @Inject constructor(
 
         fun getContentListsObservable(
             contentId: Long,
-            contentType: AddToListsContentType
+            contentType: ContentType
         ): Observable<AddToListsChange> {
             val listsObservable = when (contentType) {
-                is AddToListsContentType.TvShow -> TODO()
-                is AddToListsContentType.Movie -> movieRepository.getMovieListsForMovie(contentId)
+                is ContentType.TvShow -> TODO()
+                is ContentType.Movie -> movieRepository.getMovieListsForMovie(contentId)
             }
             return listsObservable
                 .map<AddToListsChange> { listsResponse -> AddToListsChange.Result(listsResponse) }
@@ -90,14 +91,14 @@ class AddToListsViewModel @Inject constructor(
             .preventMultipleClicks()
             .switchMap { action ->
                 when (action.contentType) {
-                    is AddToListsContentType.TvShow -> {
+                    is ContentType.TvShow -> {
                         tvShowRepository.toggleTvShowListStatus(
                             tvShowId = action.contentId,
                             listId = action.listId)
                             .map<LceResponse<Watchable>> { it }
                             .subscribeOn(schedulers.io)
                     }
-                    is AddToListsContentType.Movie -> {
+                    is ContentType.Movie -> {
                         movieRepository.toggleMovieListStatus(
                             movieId = action.contentId,
                             listId = action.listId)
@@ -133,29 +134,20 @@ class AddToListsViewModel @Inject constructor(
 }
 
 //================================================================================
-// Screen-specific view data/functions
-//================================================================================
-
-sealed class AddToListsContentType : Parcelable {
-    @Parcelize object TvShow : AddToListsContentType()
-    @Parcelize object Movie : AddToListsContentType()
-}
-
-//================================================================================
 // MVI
 //================================================================================
 
 sealed class AddToListsAction : BaseAction {
 
-    data class Load(val contentId: Long, val contentType: AddToListsContentType) : AddToListsAction()
+    data class Load(val contentId: Long, val contentType: ContentType) : AddToListsAction()
 
     data class ToggleContentListStatus(
         val contentId: Long,
-        val contentType: AddToListsContentType,
+        val contentType: ContentType,
         val listId: Long
     ) : AddToListsAction()
 
-    data class NewListClicked(val contentType: AddToListsContentType) : AddToListsAction()
+    data class NewListClicked(val contentType: ContentType) : AddToListsAction()
 
     object DoneClicked : AddToListsAction()
 }
