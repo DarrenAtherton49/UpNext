@@ -6,9 +6,11 @@
     <string name="menu_action_search">Search</string>
     <string name="menu_action_toggle_view">Toggle view</string>
 
-    <!-- Generic actions (e.g. snackbar buttons) -->
+    <!-- Generic actions (e.g. snackbar or dialog buttons) -->
     <string name="generic_action_done">Done</string>
     <string name="generic_action_undo">Undo</string>
+    <string name="generic_action_cancel">Cancel</string>
+    <string name="generic_action_create">Create</string>
 
     <!-- Bottom navigation-->
     <string name="bottom_nav_shows">Shows</string>
@@ -90,7 +92,15 @@
     <string name="add_to_lists_save_movie_title">Save movie to…</string>
     <string name="add_to_lists_new_list">+ New List</string>
 
+    <!-- NewListDialogFragment -->
+    <string name="new_list_header">New list</string>
+    <string name="new_list_title">Title</string>
+    <string name="new_list_title_untitled">Untitled</string>
+    <string name="new_list_created">List \'%1$s\' created</string>
+    <string name="new_list_created_action">See list</string>
+
     <!-- Error messages -->
+    <string name="error_message_generic">UpNext encountered an error, please try again later</string>
     <string name="error_message_server">Server encountered a %$d error, please try again later</string>
     <string name="error_message_server_with_error">Server encountered a %1$d error, please try again later (status code: %2$d)</string>
     <string name="error_message_no_internet">Device is offline - please connect to a network and try again</string>

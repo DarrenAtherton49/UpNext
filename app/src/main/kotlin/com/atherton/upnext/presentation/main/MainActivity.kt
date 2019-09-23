@@ -8,12 +8,13 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
 import com.atherton.upnext.R
+import com.atherton.upnext.presentation.base.BaseActivity
 import com.atherton.upnext.presentation.navigation.AndroidNavigator
 import com.atherton.upnext.presentation.navigation.Navigator
-import com.atherton.upnext.util.base.BaseActivity
-import com.atherton.upnext.util.extensions.getAppComponent
-import com.atherton.upnext.util.extensions.getViewModel
-import com.atherton.upnext.util.extensions.isVisible
+import com.atherton.upnext.util.extension.getAppComponent
+import com.atherton.upnext.util.extension.getViewModel
+import com.atherton.upnext.util.extension.isVisible
+import com.atherton.upnext.util.extension.showLongSnackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 import javax.inject.Named
@@ -54,10 +55,28 @@ class MainActivity : BaseActivity<MainAction, MainState, MainViewEffect, MainVie
             is MainViewEffect.Navigation.ShowSettingsScreen -> navigator.showSettingsScreen()
             is MainViewEffect.Navigation.Settings.ShowLicensesScreen -> navigator.showLicensesScreen()
             is MainViewEffect.Navigation.ShowLicenseInBrowser -> navigator.showUrlInBrowser(viewEffect.url)
+            is MainViewEffect.Navigation.ShowTvShowsScreen -> navigator.showTvShowsScreen(viewEffect.initialListId)
+            is MainViewEffect.Navigation.ShowMoviesScreen -> navigator.showMoviesScreen(viewEffect.initialListId)
+            is MainViewEffect.Message.ShowTvShowListCreatedMessage -> {
+                mainCoordinatorLayout.showLongSnackbar(
+                    text = viewEffect.message,
+                    actionText = getString(R.string.new_list_created_action),
+                    onClick = {
+                        sharedViewModel.dispatch(MainAction.SeeTvShowListClicked(viewEffect.listId))
+                    }
+                )
+            }
+            is MainViewEffect.Message.ShowMovieListCreatedMessage -> {
+                mainCoordinatorLayout.showLongSnackbar(
+                    text = viewEffect.message,
+                    actionText = getString(R.string.new_list_created_action),
+                    onClick = {
+                        sharedViewModel.dispatch(MainAction.SeeMovieListClicked(viewEffect.listId))
+                    }
+                )
+            }
         }
     }
-
-
 
     private fun setupNavigation() {
         bottomNavigation.setupWithNavController(navController)

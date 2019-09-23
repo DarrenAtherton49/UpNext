@@ -3,8 +3,8 @@ package com.atherton.upnext.presentation.features.shows
 import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.atherton.upnext.util.base.BaseViewEffect
-import com.atherton.upnext.util.base.UpNextViewModel
+import com.atherton.upnext.presentation.base.BaseViewEffect
+import com.atherton.upnext.presentation.base.UpNextViewModel
 import com.atherton.upnext.util.injection.PerView
 import com.atherton.upnext.util.threading.RxSchedulers
 import com.ww.roxie.BaseAction

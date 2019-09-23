@@ -8,11 +8,11 @@ import com.atherton.upnext.domain.repository.ConfigRepository
 import com.atherton.upnext.domain.repository.SearchRepository
 import com.atherton.upnext.domain.repository.SettingsRepository
 import com.atherton.upnext.domain.usecase.GetPopularMoviesTvUseCase
+import com.atherton.upnext.presentation.base.BaseViewEffect
+import com.atherton.upnext.presentation.base.UpNextViewModel
 import com.atherton.upnext.presentation.common.searchmodel.withSearchModelListImageUrls
 import com.atherton.upnext.presentation.util.AppStringProvider
-import com.atherton.upnext.util.base.BaseViewEffect
-import com.atherton.upnext.util.base.UpNextViewModel
-import com.atherton.upnext.util.extensions.preventMultipleClicks
+import com.atherton.upnext.presentation.util.extension.preventMultipleClicks
 import com.atherton.upnext.util.injection.PerView
 import com.atherton.upnext.util.threading.RxSchedulers
 import com.ww.roxie.BaseAction

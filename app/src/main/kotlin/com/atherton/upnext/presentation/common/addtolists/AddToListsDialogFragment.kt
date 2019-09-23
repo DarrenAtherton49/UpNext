@@ -5,22 +5,22 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.atherton.upnext.R
+import com.atherton.upnext.presentation.base.RoundedBottomSheetDialogFragment
 import com.atherton.upnext.presentation.common.ContentType
-import com.atherton.upnext.util.extensions.getAppComponent
-import com.atherton.upnext.util.extensions.getViewModel
-import com.atherton.upnext.util.extensions.isVisible
-import com.atherton.upnext.util.view.RoundedBottomSheetDialogFragment
+import com.atherton.upnext.util.extension.getAppComponent
+import com.atherton.upnext.util.extension.getViewModel
+import com.atherton.upnext.util.extension.isVisible
+import kotlinx.android.synthetic.main.dialog_add_to_lists.*
 import kotlinx.android.synthetic.main.error_retry_layout.*
 import kotlinx.android.synthetic.main.fragment_discover_content.progressBar
 import kotlinx.android.synthetic.main.fragment_discover_content.recyclerView
-import kotlinx.android.synthetic.main.fragment_modal_add_to_lists.*
 import javax.inject.Inject
 import javax.inject.Named
 
 class AddToListsDialogFragment
     : RoundedBottomSheetDialogFragment<AddToListsAction, AddToListsState, AddToListsViewEffect, AddToListsViewModel>() {
 
-    override val layoutResId: Int = R.layout.fragment_modal_add_to_lists
+    override val layoutResId: Int = R.layout.dialog_add_to_lists
     override val stateBundleKey: String by lazy { "bundle_key_add_to_lists_${contentType}_state" }
 
     private val contentId: Long by lazy {
@@ -94,7 +94,6 @@ class AddToListsDialogFragment
                 if (state.fallbackResults != null && state.fallbackResults.isNotEmpty()) {
                     recyclerView.isVisible = true
                     recyclerViewAdapter.submitList(state.fallbackResults)
-                    //todo show device is offline/data is stale message?
                 } else {
                     recyclerView.isVisible = false
                     errorLayout.isVisible = true
@@ -108,6 +107,16 @@ class AddToListsDialogFragment
     override fun processViewEffects(viewEffect: AddToListsViewEffect) {
         when (viewEffect) {
             is AddToListsViewEffect.CloseScreen -> dismiss()
+            is AddToListsViewEffect.ShowNewListScreen -> {
+                fragmentManager?.let { manager ->
+                    navigator.showNewListScreen(
+                        contentId = viewEffect.contentId,
+                        contentType = viewEffect.contentType,
+                        fragmentManager = manager
+                    )
+                    dismiss()
+                }
+            }
         }
     }
 
@@ -125,7 +134,7 @@ class AddToListsDialogFragment
         }
 
         addToListsNewListButton.setOnClickListener {
-            viewModel.dispatch(AddToListsAction.NewListClicked(contentType))
+            viewModel.dispatch(AddToListsAction.NewListClicked(contentId, contentType))
         }
     }
 

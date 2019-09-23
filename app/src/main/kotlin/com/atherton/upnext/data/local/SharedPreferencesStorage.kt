@@ -1,8 +1,8 @@
 package com.atherton.upnext.data.local
 
 import android.content.SharedPreferences
-import com.atherton.upnext.util.extensions.get
-import com.atherton.upnext.util.extensions.set
+import com.atherton.upnext.util.extension.get
+import com.atherton.upnext.util.extension.set
 import javax.inject.Inject
 import javax.inject.Singleton
 

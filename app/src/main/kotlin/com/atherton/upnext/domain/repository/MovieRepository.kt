@@ -19,4 +19,5 @@ interface MovieRepository {
     fun toggleMovieWatchlistStatus(movieId: Long): Observable<LceResponse<Movie>>
     fun toggleMovieWatchedStatus(movieId: Long): Observable<LceResponse<Movie>>
     fun toggleMovieListStatus(movieId: Long, listId: Long): Observable<LceResponse<Movie>>
+    fun createMovieList(movieId: Long?, listTitle: String): Observable<LceResponse<Long>>
 }

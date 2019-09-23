@@ -21,7 +21,7 @@ ext {
     junitVersion = '4.12'
     leakCanaryVersion = '1.6.3'
     lifecycleVersion = '2.0.0'
-    materialVersion = '1.1.0-alpha04'
+    materialComponentsVersion = '1.1.0-alpha10'
     mockitoVersion = '1.10.19'
     moshiVersion = '1.8.0'
     navigationVersion = '2.1.0-alpha05'
@@ -53,7 +53,7 @@ ext {
         leakCanaryNoOp:            "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion",
         lifecycleCompiler:         "androidx.lifecycle:lifecycle-compiler:$lifecycleVersion",
         lifecycleExtensions:       "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion",
-        material:                  "com.google.android.material:material:$materialVersion",
+        materialComponents:        "com.google.android.material:material:$materialComponentsVersion",
         moshi:                     "com.squareup.moshi:moshi:$moshiVersion",
         moshiKotlin:               "com.squareup.moshi:moshi-kotlin:$moshiVersion",
         navigationFragmentKTX:     "androidx.navigation:navigation-fragment-ktx:$navigationVersion",

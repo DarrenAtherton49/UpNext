@@ -6,8 +6,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.atherton.upnext.R
 import com.atherton.upnext.domain.model.*
-import com.atherton.upnext.util.extensions.inflateLayout
-import com.atherton.upnext.util.glide.GlideRequests
+import com.atherton.upnext.util.extension.inflateLayout
+import com.atherton.upnext.presentation.util.glide.GlideRequests
 
 //todo preload some images when scrolling https://bumptech.github.io/glide/int/recyclerview.html
 class SearchModelAdapter(

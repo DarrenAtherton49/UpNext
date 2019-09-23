@@ -10,13 +10,23 @@
         android:id="@+id/showsFragment"
         android:name="com.atherton.upnext.presentation.features.shows.ShowsFragment"
         android:label="@string/fragment_label_shows"
-        tools:layout="@layout/fragment_shows"/>
+        tools:layout="@layout/fragment_shows">
+        <argument
+            android:name="initialListId"
+            app:argType="long"
+            android:defaultValue="0L" />
+    </fragment>
 
     <fragment
         android:id="@+id/moviesFragment"
         android:name="com.atherton.upnext.presentation.features.movies.MoviesFragment"
         android:label="@string/fragment_label_movies"
-        tools:layout="@layout/fragment_movies"/>
+        tools:layout="@layout/fragment_movies">
+        <argument
+            android:name="initialListId"
+            app:argType="long"
+            android:defaultValue="0L" />
+    </fragment>
 
     <fragment
         android:id="@+id/discoverFragment"
@@ -36,8 +46,7 @@
         tools:layout="@layout/fragment_content_detail">
         <argument
             android:name="contentId"
-            app:argType="long"
-            />
+            app:argType="long"/>
         <argument
             android:name="contentType"
             app:argType="com.atherton.upnext.presentation.common.ContentType"/>
@@ -82,6 +91,22 @@
     <action
         android:id="@+id/actionSharedGoToLicenses"
         app:destination="@+id/licensesFragment"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim"
+        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+        app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+
+    <action
+        android:id="@+id/actionSharedGoToShows"
+        app:destination="@+id/showsFragment"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim"
+        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+        app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+
+    <action
+        android:id="@+id/actionSharedGoToMovies"
+        app:destination="@+id/moviesFragment"
         app:enterAnim="@anim/nav_default_enter_anim"
         app:exitAnim="@anim/nav_default_exit_anim"
         app:popEnterAnim="@anim/nav_default_pop_enter_anim"

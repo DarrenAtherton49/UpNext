@@ -15,4 +15,5 @@ interface TvShowRepository {
     fun getTvShowLists(): Observable<LceResponse<List<ContentList>>>
     fun toggleTvShowWatchlistStatus(tvShowId: Long): Observable<LceResponse<TvShow>>
     fun toggleTvShowListStatus(tvShowId: Long, listId: Long): Observable<LceResponse<TvShow>>
+    fun createTvShowList(tvShowId: Long?, listTitle: String): Observable<LceResponse<Long>>
 }

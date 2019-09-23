@@ -28,7 +28,7 @@ import com.atherton.upnext.data.db.model.person.RoomPersonCredit
 import com.atherton.upnext.data.db.model.search.RoomSearchResult
 import com.atherton.upnext.data.db.model.search.RoomSearchTerm
 import com.atherton.upnext.data.db.model.tv.*
-import com.atherton.upnext.util.extensions.ioThread
+import com.atherton.upnext.util.extension.ioThread
 
 @Database(
     entities = [

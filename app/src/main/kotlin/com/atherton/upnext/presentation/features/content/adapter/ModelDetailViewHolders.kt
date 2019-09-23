@@ -10,10 +10,10 @@ import com.atherton.upnext.domain.model.CrewMember
 import com.atherton.upnext.domain.model.Video
 import com.atherton.upnext.domain.model.Watchable
 import com.atherton.upnext.presentation.features.content.ModelDetailSection
-import com.atherton.upnext.util.extensions.isVisible
-import com.atherton.upnext.util.extensions.setTextOrHide
-import com.atherton.upnext.util.glide.GlideRequests
-import com.atherton.upnext.util.recyclerview.LinearSpacingItemDecoration
+import com.atherton.upnext.util.extension.isVisible
+import com.atherton.upnext.util.extension.setTextOrHide
+import com.atherton.upnext.presentation.util.glide.GlideRequests
+import com.atherton.upnext.presentation.util.recyclerview.LinearSpacingItemDecoration
 import com.google.android.material.chip.Chip
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_detail_genres.*

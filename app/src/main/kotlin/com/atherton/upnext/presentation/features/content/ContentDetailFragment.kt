@@ -8,20 +8,20 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.atherton.upnext.R
 import com.atherton.upnext.domain.model.Watchable
+import com.atherton.upnext.presentation.base.BaseFragment
 import com.atherton.upnext.presentation.common.ContentType
 import com.atherton.upnext.presentation.features.content.adapter.ModelDetailAdapter
 import com.atherton.upnext.presentation.main.MainAction
 import com.atherton.upnext.presentation.main.MainViewEffect
 import com.atherton.upnext.presentation.main.MainViewModel
 import com.atherton.upnext.presentation.main.MainViewModelFactory
-import com.atherton.upnext.util.base.BaseFragment
-import com.atherton.upnext.util.base.ToolbarOptions
-import com.atherton.upnext.util.extensions.getActivityViewModel
-import com.atherton.upnext.util.extensions.getAppComponent
-import com.atherton.upnext.util.extensions.getViewModel
-import com.atherton.upnext.util.extensions.isVisible
-import com.atherton.upnext.util.glide.GlideApp
-import com.atherton.upnext.util.glide.UpNextAppGlideModule
+import com.atherton.upnext.presentation.util.glide.GlideApp
+import com.atherton.upnext.presentation.util.glide.UpNextAppGlideModule
+import com.atherton.upnext.presentation.util.toolbar.ToolbarOptions
+import com.atherton.upnext.util.extension.getActivityViewModel
+import com.atherton.upnext.util.extension.getAppComponent
+import com.atherton.upnext.util.extension.getViewModel
+import com.atherton.upnext.util.extension.isVisible
 import kotlinx.android.synthetic.main.detail_screen_appbar.*
 import kotlinx.android.synthetic.main.error_retry_layout.*
 import kotlinx.android.synthetic.main.fragment_content_detail.*
@@ -176,7 +176,7 @@ class ContentDetailFragment : BaseFragment<ContentDetailAction, ContentDetailSta
                 navigator.showAddToListsMenu(
                     contentId = viewEffect.contentId,
                     contentType = viewEffect.contentType,
-                    childFragmentManager = childFragmentManager
+                    fragmentManager = childFragmentManager
                 )
             }
             is ContentDetailViewEffect.ShowSettingsScreen -> {

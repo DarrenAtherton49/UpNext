@@ -11,5 +11,6 @@ interface AppStringProvider {
     fun getRecommendedContentHeader(): String
     fun getRuntimeString(runtime: String): String
     fun getVoteAverageString(voteAverage: String): String
+    fun generateListCreatedMessage(listTitle: String): String
     fun <T : Any> generateErrorMessage(error: LceResponse.Error<T>): String
 }

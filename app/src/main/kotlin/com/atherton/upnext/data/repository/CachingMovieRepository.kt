@@ -8,6 +8,7 @@ import com.atherton.upnext.data.db.dao.MovieDao.Companion.PLAYLIST_NOW_PLAYING
 import com.atherton.upnext.data.db.dao.MovieDao.Companion.PLAYLIST_POPULAR
 import com.atherton.upnext.data.db.dao.MovieDao.Companion.PLAYLIST_TOP_RATED
 import com.atherton.upnext.data.db.dao.MovieDao.Companion.PLAYLIST_UPCOMING
+import com.atherton.upnext.data.db.model.list.RoomMovieList
 import com.atherton.upnext.data.db.model.movie.RoomMovie
 import com.atherton.upnext.data.db.model.movie.RoomMovieAllData
 import com.atherton.upnext.data.mapper.*
@@ -20,7 +21,6 @@ import com.atherton.upnext.domain.model.LceResponse
 import com.atherton.upnext.domain.model.Movie
 import com.atherton.upnext.domain.repository.MovieRepository
 import io.reactivex.Observable
-import io.reactivex.rxkotlin.Observables.zip
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -163,27 +163,23 @@ class CachingMovieRepository @Inject constructor(
     }
 
     override fun getMovieListsForMovie(movieId: Long): Observable<LceResponse<List<ContentListStatus>>> {
-        return zip(
-            listDao.getMovieListsObservable()
-                .distinctUntilChanged(),
-            listDao.getListsForMovieObservable(movieId = movieId)
-                .distinctUntilChanged()
-        ) { allLists, listsForMovie ->
-            if (allLists.isNotEmpty()) {
-                val data = allLists.map { roomMovieList ->
-                    val listContainsMovie: Boolean = listsForMovie.contains(roomMovieList)
-                    roomMovieList.toDomainContentListStatus(movieId, listContainsMovie)
+        return listDao.getMovieListsObservable()
+            .map { allLists ->
+                val listsForMovie: List<RoomMovieList> = listDao.getListsForMovie(movieId = movieId)
+                if (allLists.isNotEmpty()) {
+                    val data = allLists.map { roomMovieList ->
+                        val listContainsMovie: Boolean = listsForMovie.contains(roomMovieList)
+                        roomMovieList.toDomainContentListStatus(movieId, listContainsMovie)
+                    }
+                    LceResponse.Content(data = data)
+                } else {
+                    LceResponse.Content(data = emptyList())
                 }
-                LceResponse.Content(data = data)
-            } else {
-                LceResponse.Content(data = emptyList())
             }
-        }
     }
 
     override fun getMovieLists(): Observable<LceResponse<List<ContentList>>> {
         return listDao.getMovieListsObservable()
-            .distinctUntilChanged()
             .map { movieLists ->
                 if (movieLists.isNotEmpty()) {
                     LceResponse.Content(data = movieLists.toDomainMovieLists())
@@ -283,6 +279,7 @@ class CachingMovieRepository @Inject constructor(
                             val updatedMovie = dbMovie.copy(state = dbMovie.state.copy(isWatched = newWatchedState))
                             movieDao.updateMovieAndToggleListStatus(updatedMovie, listId)
                         }
+                        //todo move this to the top of the function so we don't have to fetch movie when we don't need it here
                         else -> movieDao.toggleMovieListStatus(movieId, listId)
                     }
 
@@ -299,6 +296,20 @@ class CachingMovieRepository @Inject constructor(
                         "be saved in the movie table instead of just it's own table."
                     throw IllegalStateException(errorMessage)
                 }
+            }
+    }
+
+    override fun createMovieList(movieId: Long?, listTitle: String): Observable<LceResponse<Long>> {
+        return listDao.getHighestMovieListOrderSingle()
+            .flatMapObservable { currentHighestOrder ->
+                val movieList = RoomMovieList(name = listTitle, sortOrder = currentHighestOrder + 1)
+                val listId: Long = listDao.insertMovieList(movieList)
+
+                if (movieId != null) {
+                    movieDao.toggleMovieListStatus(movieId, listId)
+                }
+
+                Observable.fromCallable { LceResponse.Content(listId) }
             }
     }
 

@@ -8,16 +8,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.atherton.upnext.R
 import com.atherton.upnext.domain.model.ContentList
 import com.atherton.upnext.domain.model.Movie
+import com.atherton.upnext.presentation.base.BaseFragment
 import com.atherton.upnext.presentation.common.ContentType
 import com.atherton.upnext.presentation.main.MainAction
 import com.atherton.upnext.presentation.main.MainViewEffect
 import com.atherton.upnext.presentation.main.MainViewModel
 import com.atherton.upnext.presentation.main.MainViewModelFactory
-import com.atherton.upnext.util.base.BaseFragment
-import com.atherton.upnext.util.base.ToolbarOptions
-import com.atherton.upnext.util.extensions.*
-import com.atherton.upnext.util.glide.GlideApp
-import com.atherton.upnext.util.recyclerview.LinearSpacingItemDecoration
+import com.atherton.upnext.presentation.util.glide.GlideApp
+import com.atherton.upnext.presentation.util.recyclerview.LinearSpacingItemDecoration
+import com.atherton.upnext.presentation.util.toolbar.ToolbarOptions
+import com.atherton.upnext.util.extension.*
 import kotlinx.android.synthetic.main.error_retry_layout.*
 import kotlinx.android.synthetic.main.fragment_movie_list.*
 import javax.inject.Inject
@@ -134,7 +134,7 @@ class MovieListFragment : BaseFragment<MovieListAction, MovieListState, MovieLis
                 navigator.showAddToListsMenu(
                     contentId = viewEffect.movieId,
                     contentType = ContentType.Movie,
-                    childFragmentManager = childFragmentManager
+                    fragmentManager = childFragmentManager
                 )
             }
             is MovieListViewEffect.ShowRemovedFromListMessage -> {
@@ -145,8 +145,10 @@ class MovieListFragment : BaseFragment<MovieListAction, MovieListState, MovieLis
 
     override fun processSharedViewEffects(viewEffect: MainViewEffect) {}
 
+    //todo show snackbar in movie activity instead via MainViewEffect
     private fun showMovieRemovedFromListMessage(movie: Movie, movieList: ContentList) {
         val movieTitle: String? = movie.title
+        //todo movie this login into ViewModel (via mapper function or appStringProvider)
         val message = if (movieTitle != null) {
             getString(R.string.movie_list_item_removed_from_list).format(movieTitle, movieList.name)
         } else {
@@ -155,7 +157,7 @@ class MovieListFragment : BaseFragment<MovieListAction, MovieListState, MovieLis
         movieListCoordinatorLayout.showLongSnackbar(
             text = message,
             actionText = getString(R.string.generic_action_undo),
-            onClickListener = {
+            onClick = {
                 viewModel.dispatch(MovieListAction.ToggleWatchlistButtonClicked(movieList, movie.id))
             }
         )

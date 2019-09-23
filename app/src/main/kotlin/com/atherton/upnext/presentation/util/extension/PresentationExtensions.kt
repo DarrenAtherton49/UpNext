@@ -1,4 +1,4 @@
-package com.atherton.upnext.util.extensions
+package com.atherton.upnext.presentation.util.extension
 
 import android.view.GestureDetector
 import android.view.MotionEvent

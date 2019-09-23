@@ -11,7 +11,7 @@ import com.atherton.upnext.data.network.model.TmdbConfiguration
 import com.atherton.upnext.data.network.service.TmdbConfigService
 import com.atherton.upnext.domain.model.Config
 import com.atherton.upnext.domain.repository.ConfigRepository
-import com.atherton.upnext.util.extensions.ioThread
+import com.atherton.upnext.util.extension.ioThread
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

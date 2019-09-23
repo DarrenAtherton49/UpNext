@@ -1,4 +1,4 @@
-package com.atherton.upnext.util.glide
+package com.atherton.upnext.presentation.util.glide
 
 import com.atherton.upnext.R
 import com.bumptech.glide.annotation.GlideModule

@@ -1,9 +1,9 @@
-package com.atherton.upnext.util.base
+package com.atherton.upnext.presentation.base
 
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.appcompat.app.AppCompatActivity
-import com.atherton.upnext.util.extensions.observeLiveData
+import com.atherton.upnext.util.extension.observeLiveData
 import com.ww.roxie.BaseAction
 import com.ww.roxie.BaseState
 import io.reactivex.android.schedulers.AndroidSchedulers

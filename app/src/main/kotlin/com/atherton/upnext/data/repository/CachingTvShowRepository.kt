@@ -1,10 +1,12 @@
 package com.atherton.upnext.data.repository
 
+import com.atherton.upnext.data.db.dao.ListDao
 import com.atherton.upnext.data.db.dao.TvShowDao
 import com.atherton.upnext.data.db.dao.TvShowDao.Companion.PLAYLIST_AIRING_TODAY
 import com.atherton.upnext.data.db.dao.TvShowDao.Companion.PLAYLIST_ON_THE_AIR
 import com.atherton.upnext.data.db.dao.TvShowDao.Companion.PLAYLIST_POPULAR
 import com.atherton.upnext.data.db.dao.TvShowDao.Companion.PLAYLIST_TOP_RATED
+import com.atherton.upnext.data.db.model.list.RoomTvShowList
 import com.atherton.upnext.data.db.model.tv.RoomTvShow
 import com.atherton.upnext.data.db.model.tv.RoomTvShowAllData
 import com.atherton.upnext.data.mapper.*
@@ -22,6 +24,7 @@ import javax.inject.Singleton
 @Singleton
 class CachingTvShowRepository @Inject constructor(
     private val tvShowDao: TvShowDao,
+    private val listDao: ListDao,
     private val tvShowService: TmdbTvShowService
 ) : TvShowRepository {
 
@@ -166,6 +169,20 @@ class CachingTvShowRepository @Inject constructor(
 
     override fun toggleTvShowListStatus(tvShowId: Long, listId: Long): Observable<LceResponse<TvShow>> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun createTvShowList(tvShowId: Long?, listTitle: String): Observable<LceResponse<Long>> {
+        return listDao.getHighestTvShowListOrderSingle()
+            .flatMapObservable { currentHighestOrder ->
+                val tvShowList = RoomTvShowList(name = listTitle, sortOrder = currentHighestOrder + 1)
+                val listId: Long = listDao.insertTvShowList(tvShowList)
+
+                if (tvShowId != null) {
+                    tvShowDao.toggleTvShowListStatus(tvShowId, listId)
+                }
+
+                Observable.fromCallable { LceResponse.Content(listId) }
+            }
     }
 
     private fun saveFullTvShowToDatabase(tvShow: TmdbTvShow) {

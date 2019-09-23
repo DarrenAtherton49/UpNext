@@ -1,6 +1,7 @@
 package com.atherton.upnext.data.db.dao
 
 import androidx.room.*
+import com.atherton.upnext.data.db.model.list.RoomTvShowListJoin
 import com.atherton.upnext.data.db.model.tv.*
 import io.reactivex.Single
 
@@ -143,8 +144,41 @@ interface TvShowDao {
         }
     }
 
+    /**
+     * Function to toggle whether or not a tv show is joined to a list. First we try to insert a join from
+     * the show id to the list id. If the insert fails, we can assume that the show is in the list. Thus,
+     * 'toggle' in this instance means to delete, so we delete the join. If the insert succeeds, we can assume
+     * that 'toggle' means to add the tv show to the list.
+     */
+    @Transaction
+    fun toggleTvShowListStatus(showId: Long, listId: Long) {
+
+        if (listId != 0L) {
+
+            val tvShowListJoin = RoomTvShowListJoin(
+                showId = showId,
+                listId = listId
+            )
+
+            // conflict strategy is ignore, so if it already exists then it won't insert it.
+            // which then means that movie is in list, so toggle means delete
+            val id: Long = insertTvShowListJoin(tvShowListJoin)
+            if (id == ROW_NOT_INSERTED) {
+                deleteTvShowListJoin(tvShowListJoin)
+            }
+        } else {
+            throw IllegalStateException("Invalid list id")
+        }
+    }
+
+    @Delete
+    fun deleteTvShowListJoin(tvShowListJoin: RoomTvShowListJoin)
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertTvShow(tvShow: RoomTvShow): Long
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertTvShowListJoin(tvShowListJoin: RoomTvShowListJoin): Long
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAllTvShows(tvShows: List<RoomTvShow>): List<Long>

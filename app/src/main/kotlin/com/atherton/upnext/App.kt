@@ -1,8 +1,8 @@
 package com.atherton.upnext
 
 import android.app.Application
-import com.atherton.upnext.util.extensions.ioThread
-import com.atherton.upnext.util.extensions.onAndroidPieOrLater
+import com.atherton.upnext.util.extension.ioThread
+import com.atherton.upnext.util.extension.onAndroidPieOrLater
 import com.atherton.upnext.util.injection.AppComponent
 import com.atherton.upnext.util.injection.AppModule
 import com.atherton.upnext.util.injection.DaggerAppComponent

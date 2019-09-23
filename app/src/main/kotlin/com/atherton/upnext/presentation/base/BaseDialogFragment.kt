@@ -1,39 +1,35 @@
-package com.atherton.upnext.util.view
+package com.atherton.upnext.presentation.base
 
-import android.app.Dialog
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.atherton.upnext.R
+import androidx.fragment.app.DialogFragment
 import com.atherton.upnext.presentation.main.MainModule
-import com.atherton.upnext.util.base.BaseViewEffect
-import com.atherton.upnext.util.base.UpNextViewModel
-import com.atherton.upnext.util.extensions.observeLiveData
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.atherton.upnext.presentation.main.MainViewEffect
+import com.atherton.upnext.presentation.main.MainViewModel
+import com.atherton.upnext.util.extension.observeLiveData
 import com.ww.roxie.BaseAction
 import com.ww.roxie.BaseState
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 
-abstract class RoundedBottomSheetDialogFragment <Action : BaseAction,
+abstract class BaseDialogFragment<Action : BaseAction,
     State,
     ViewEffect : BaseViewEffect,
     ViewModel : UpNextViewModel<Action, State, ViewEffect>>
-    : BottomSheetDialogFragment()
+    : DialogFragment()
     where State : BaseState,
           State : Parcelable {
 
     protected abstract val layoutResId: Int
     protected abstract val stateBundleKey: String
     protected abstract val viewModel: ViewModel
+    protected abstract val sharedViewModel: MainViewModel
 
     private val disposables: CompositeDisposable = CompositeDisposable()
-
-    override fun getTheme() = R.style.BottomSheetDialogTheme
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // support process death by re-supplying last state to ViewModel
@@ -41,10 +37,6 @@ abstract class RoundedBottomSheetDialogFragment <Action : BaseAction,
         initInjection(lastState)
 
         super.onCreate(savedInstanceState)
-    }
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return BottomSheetDialog(requireContext(), theme)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -67,6 +59,12 @@ abstract class RoundedBottomSheetDialogFragment <Action : BaseAction,
             .subscribe {
                 processViewEffects(it)
             }
+
+        disposables += sharedViewModel.viewEffects()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                processSharedViewEffects(it)
+            }
     }
 
     override fun onPause() {
@@ -83,6 +81,8 @@ abstract class RoundedBottomSheetDialogFragment <Action : BaseAction,
     protected abstract fun initInjection(initialState: State?)
 
     protected abstract fun renderState(state: State)
+
+    protected abstract fun processSharedViewEffects(viewEffect: MainViewEffect)
 
     protected abstract fun processViewEffects(viewEffect: ViewEffect)
 

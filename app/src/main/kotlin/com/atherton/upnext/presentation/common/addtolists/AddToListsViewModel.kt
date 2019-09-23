@@ -8,11 +8,11 @@ import com.atherton.upnext.domain.model.LceResponse
 import com.atherton.upnext.domain.model.Watchable
 import com.atherton.upnext.domain.repository.MovieRepository
 import com.atherton.upnext.domain.repository.TvShowRepository
+import com.atherton.upnext.presentation.base.BaseViewEffect
+import com.atherton.upnext.presentation.base.UpNextViewModel
 import com.atherton.upnext.presentation.common.ContentType
 import com.atherton.upnext.presentation.util.AppStringProvider
-import com.atherton.upnext.util.base.BaseViewEffect
-import com.atherton.upnext.util.base.UpNextViewModel
-import com.atherton.upnext.util.extensions.preventMultipleClicks
+import com.atherton.upnext.presentation.util.extension.preventMultipleClicks
 import com.atherton.upnext.util.injection.PerView
 import com.atherton.upnext.util.threading.RxSchedulers
 import com.ww.roxie.BaseAction
@@ -112,13 +112,15 @@ class AddToListsViewModel @Inject constructor(
 
         val doneClickedViewEffect = actions.ofType<AddToListsAction.DoneClicked>()
             .preventMultipleClicks()
-            .subscribeOn(schedulers.io)
             .map { AddToListsViewEffect.CloseScreen }
 
-        val stateChanges = merge(
-            loadDataChange,
-            toggleContentListStatusChange
-        )
+        val newListClickedViewEffect = actions.ofType<AddToListsAction.NewListClicked>()
+            .preventMultipleClicks()
+            .map { action -> AddToListsViewEffect.ShowNewListScreen(action.contentId, action.contentType) }
+
+        val stateChanges = merge(loadDataChange, toggleContentListStatusChange)
+
+        val viewEffectChanges = merge(doneClickedViewEffect, newListClickedViewEffect)
 
         disposables += stateChanges
             .scan(initialState, reducer)
@@ -127,7 +129,7 @@ class AddToListsViewModel @Inject constructor(
             .observeOn(schedulers.main)
             .subscribe(state::setValue, Timber::e)
 
-        disposables += doneClickedViewEffect
+        disposables += viewEffectChanges
             .observeOn(schedulers.main)
             .subscribe(viewEffects::accept, Timber::e)
     }
@@ -147,7 +149,7 @@ sealed class AddToListsAction : BaseAction {
         val listId: Long
     ) : AddToListsAction()
 
-    data class NewListClicked(val contentType: ContentType) : AddToListsAction()
+    data class NewListClicked(val contentId: Long, val contentType: ContentType) : AddToListsAction()
 
     object DoneClicked : AddToListsAction()
 }
@@ -178,6 +180,7 @@ sealed class AddToListsState : BaseState, Parcelable {
 
 sealed class AddToListsViewEffect : BaseViewEffect {
     object CloseScreen : AddToListsViewEffect()
+    data class ShowNewListScreen(val contentId: Long, val contentType: ContentType) : AddToListsViewEffect()
 }
 
 //================================================================================

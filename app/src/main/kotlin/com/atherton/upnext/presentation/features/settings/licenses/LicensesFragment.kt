@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.atherton.upnext.R
 import com.atherton.upnext.presentation.main.*
-import com.atherton.upnext.util.extensions.getActivityViewModel
-import com.atherton.upnext.util.extensions.getAppComponent
+import com.atherton.upnext.util.extension.getActivityViewModel
+import com.atherton.upnext.util.extension.getAppComponent
 import kotlinx.android.synthetic.main.base_app_bar.*
 import kotlinx.android.synthetic.main.fragment_settings.*
 import javax.inject.Inject

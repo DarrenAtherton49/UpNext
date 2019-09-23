@@ -11,10 +11,10 @@ import io.reactivex.Single
 interface ListDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertMovieList(movieList: RoomMovieList)
+    fun insertMovieList(movieList: RoomMovieList): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertTvShowList(tvShowList: RoomTvShowList)
+    fun insertTvShowList(tvShowList: RoomTvShowList): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAllMovieLists(movieLists: List<RoomMovieList>)
@@ -22,14 +22,20 @@ interface ListDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAllTvShowLists(tvShowLists: List<RoomTvShowList>)
 
+    @Query("SELECT MAX(sort_order) FROM movie_list")
+    fun getHighestMovieListOrderSingle(): Single<Int>
+
+    @Query("SELECT MAX(sort_order) FROM tv_show_list")
+    fun getHighestTvShowListOrderSingle(): Single<Int>
+
     @Query("SELECT * from movie_list ORDER BY sort_order")
     fun getMovieListsObservable(): Observable<List<RoomMovieList>>
 
     @Query("SELECT * from tv_show_list ORDER BY sort_order")
-    fun getTvShowListsSingle(): Single<List<RoomTvShowList>>
+    fun getTvShowListsObservable(): Observable<List<RoomTvShowList>>
 
     @Query("SELECT l.* from movie_list_join mlj INNER JOIN movie m on mlj.movie_id = m.id INNER JOIN movie_list l ON mlj.list_id = l.id WHERE m.id = :movieId")
-    fun getListsForMovieObservable(movieId: Long): Observable<List<RoomMovieList>>
+    fun getListsForMovie(movieId: Long): List<RoomMovieList>
 
     @Transaction
     @Query("SELECT m.* FROM movie_list_join mlj INNER JOIN movie m on mlj.movie_id = m.id INNER JOIN movie_list l ON mlj.list_id = l.id WHERE l.id = :listId")

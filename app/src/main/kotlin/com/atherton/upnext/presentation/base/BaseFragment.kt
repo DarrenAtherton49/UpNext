@@ -1,4 +1,4 @@
-package com.atherton.upnext.util.base
+package com.atherton.upnext.presentation.base
 
 import android.os.Bundle
 import android.os.Parcelable
@@ -14,7 +14,8 @@ import com.atherton.upnext.presentation.main.MainModule
 import com.atherton.upnext.presentation.main.MainViewEffect
 import com.atherton.upnext.presentation.main.MainViewModel
 import com.atherton.upnext.presentation.navigation.Navigator
-import com.atherton.upnext.util.extensions.observeLiveData
+import com.atherton.upnext.presentation.util.toolbar.ToolbarOptions
+import com.atherton.upnext.util.extension.observeLiveData
 import com.ww.roxie.BaseAction
 import com.ww.roxie.BaseState
 import io.reactivex.android.schedulers.AndroidSchedulers

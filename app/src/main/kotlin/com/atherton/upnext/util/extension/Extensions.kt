@@ -1,4 +1,4 @@
-package com.atherton.upnext.util.extensions
+package com.atherton.upnext.util.extension
 
 import android.app.Application
 import android.content.Context
@@ -102,11 +102,11 @@ fun View.showShortSnackbar(
 fun View.showLongSnackbar(
     text: String,
     actionText: String? = null,
-    onClickListener: (() -> Unit)? = null
+    onClick: (() -> Unit)? = null
 ) {
     val snackbar = Snackbar.make(this, text, Snackbar.LENGTH_LONG)
-    if (actionText != null && onClickListener != null) {
-        snackbar.setAction(actionText) { onClickListener.invoke() }
+    if (actionText != null && onClick != null) {
+        snackbar.setAction(actionText) { onClick.invoke() }
     }
     snackbar.show()
 }

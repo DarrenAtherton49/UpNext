@@ -2,6 +2,7 @@
 
     <dimen name="keyline">8dp</dimen>
     <dimen name="keyline_2x">16dp</dimen>
+    <dimen name="keyline_3x">24dp</dimen>
     <dimen name="keyline_4x">32dp</dimen>
     <dimen name="keyline_6x">48dp</dimen>
     <dimen name="keyline_7x">56dp</dimen>

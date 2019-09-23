@@ -3,13 +3,13 @@ package com.atherton.upnext.presentation.features.movies
 import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.atherton.upnext.domain.model.LceResponse
 import com.atherton.upnext.domain.model.ContentList
+import com.atherton.upnext.domain.model.LceResponse
 import com.atherton.upnext.domain.repository.MovieRepository
+import com.atherton.upnext.presentation.base.BaseViewEffect
+import com.atherton.upnext.presentation.base.UpNextViewModel
 import com.atherton.upnext.presentation.util.AppStringProvider
-import com.atherton.upnext.util.base.BaseViewEffect
-import com.atherton.upnext.util.base.UpNextViewModel
-import com.atherton.upnext.util.extensions.preventMultipleClicks
+import com.atherton.upnext.presentation.util.extension.preventMultipleClicks
 import com.atherton.upnext.util.injection.PerView
 import com.atherton.upnext.util.threading.RxSchedulers
 import com.ww.roxie.BaseAction
@@ -100,12 +100,8 @@ sealed class MoviesAction : BaseAction {
 }
 
 sealed class MoviesChange {
-
     object Loading : MoviesChange()
-
-    data class Result(
-        val response: LceResponse<List<ContentList>>
-    ) : MoviesChange()
+    data class Result(val response: LceResponse<List<ContentList>>) : MoviesChange()
 }
 
 sealed class MoviesState: BaseState, Parcelable {

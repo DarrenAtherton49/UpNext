@@ -1,4 +1,4 @@
-package com.atherton.upnext.util.base
+package com.atherton.upnext.presentation.base
 
 /**
  * To be implemented by all view effects

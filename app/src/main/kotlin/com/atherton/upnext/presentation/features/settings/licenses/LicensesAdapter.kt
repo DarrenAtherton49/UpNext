@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.atherton.upnext.R
-import com.atherton.upnext.util.extensions.inflateLayout
+import com.atherton.upnext.util.extension.inflateLayout
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_open_source_license.*
 import kotlinx.android.synthetic.main.item_open_source_license.view.*

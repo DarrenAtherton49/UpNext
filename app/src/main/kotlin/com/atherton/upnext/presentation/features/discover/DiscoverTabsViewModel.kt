@@ -9,9 +9,9 @@ import com.atherton.upnext.domain.model.LceResponse
 import com.atherton.upnext.domain.repository.FilterRepository
 import com.atherton.upnext.domain.repository.SettingsRepository
 import com.atherton.upnext.presentation.util.AppStringProvider
-import com.atherton.upnext.util.base.BaseViewEffect
-import com.atherton.upnext.util.base.UpNextViewModel
-import com.atherton.upnext.util.extensions.preventMultipleClicks
+import com.atherton.upnext.presentation.base.BaseViewEffect
+import com.atherton.upnext.presentation.base.UpNextViewModel
+import com.atherton.upnext.presentation.util.extension.preventMultipleClicks
 import com.atherton.upnext.util.injection.PerView
 import com.atherton.upnext.util.threading.RxSchedulers
 import com.ww.roxie.BaseAction

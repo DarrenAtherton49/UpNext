@@ -13,5 +13,8 @@ interface Navigator {
     fun showSettingsScreen()
     fun showLicensesScreen()
     fun showUrlInBrowser(url: String)
-    fun showAddToListsMenu(contentId: Long, contentType: ContentType, childFragmentManager: FragmentManager)
+    fun showTvShowsScreen(initialListId: Long?)
+    fun showMoviesScreen(initialListId: Long?)
+    fun showAddToListsMenu(contentId: Long, contentType: ContentType, fragmentManager: FragmentManager)
+    fun showNewListScreen(contentId: Long, contentType: ContentType, fragmentManager: FragmentManager)
 }

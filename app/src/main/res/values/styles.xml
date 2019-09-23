@@ -17,7 +17,7 @@
         <item name="android:statusBarColor">@color/colorStatusBar</item>
         <item name="android:navigationBarColor">@color/colorNavigationBar</item>
         <item name="textInputStyle">@style/AppTextInputLayout</item>
-        <item name="editTextStyle">@style/SearchEditText</item>
+        <item name="editTextStyle">@style/AppEditText</item>
         <item name="fontFamily">@font/open_sans</item>
         <item name="android:fontFamily">@font/open_sans</item>
     </style>
@@ -45,7 +45,7 @@
         <item name="boxStrokeColor">@color/text_input_layout_stroke</item>
     </style>
 
-    <style name="SearchEditText" parent="Widget.MaterialComponents.TextInputEditText.OutlinedBox">
+    <style name="AppEditText" parent="Widget.MaterialComponents.TextInputEditText.OutlinedBox">
         <item name="android:textCursorDrawable">@null</item> <!-- forces cursor to be same color as query -->
     </style>
 

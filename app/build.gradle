@@ -86,7 +86,7 @@ dependencies {
     implementation dependencies.kotlin
     implementation dependencies.kotlinReflect
     implementation dependencies.lifecycleExtensions
-    implementation dependencies.material
+    implementation dependencies.materialComponents
     implementation dependencies.moshi
     implementation dependencies.moshiKotlin
     implementation dependencies.navigationFragmentKTX

@@ -4,10 +4,11 @@ import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.atherton.upnext.domain.model.GridViewMode
+import com.atherton.upnext.presentation.base.BaseViewEffect
+import com.atherton.upnext.presentation.base.UpNextViewModel
+import com.atherton.upnext.presentation.common.ContentType
 import com.atherton.upnext.presentation.features.settings.licenses.License
-import com.atherton.upnext.util.base.BaseViewEffect
-import com.atherton.upnext.util.base.UpNextViewModel
-import com.atherton.upnext.util.extensions.preventMultipleClicks
+import com.atherton.upnext.presentation.util.extension.preventMultipleClicks
 import com.atherton.upnext.util.injection.PerView
 import com.atherton.upnext.util.threading.RxSchedulers
 import com.ww.roxie.BaseAction
@@ -71,9 +72,30 @@ class MainViewModel @Inject constructor(
         val licenseClickedViewEffect = actions.ofType<MainAction.LicenseClicked>()
             .subscribeOn(schedulers.io)
             .preventMultipleClicks()
+            .map { action -> MainViewEffect.Navigation.ShowLicenseInBrowser(action.license.url) }
+
+        val listCreatedViewEffect = actions.ofType<MainAction.ListCreated>()
+            .subscribeOn(schedulers.io)
             .map { action ->
-                MainViewEffect.Navigation.ShowLicenseInBrowser(action.license.url)
+                when (action.contentType) {
+                    is ContentType.TvShow -> {
+                        MainViewEffect.Message.ShowTvShowListCreatedMessage(action.message, action.listId)
+                    }
+                    is ContentType.Movie -> {
+                        MainViewEffect.Message.ShowMovieListCreatedMessage(action.message, action.listId)
+                    }
+                }
             }
+
+        val seeTvShowListClickedViewEffect = actions.ofType<MainAction.SeeTvShowListClicked>()
+            .preventMultipleClicks()
+            .subscribeOn(schedulers.io)
+            .map { action -> MainViewEffect.Navigation.ShowTvShowsScreen(action.listId) }
+
+        val seeMovieListClickedViewEffect = actions.ofType<MainAction.SeeMovieListClicked>()
+            .preventMultipleClicks()
+            .subscribeOn(schedulers.io)
+            .map { action -> MainViewEffect.Navigation.ShowMoviesScreen(action.listId) }
 
         val viewEffectChanges = mergeArray(
             searchActionClickedViewEffect,
@@ -84,7 +106,10 @@ class MainViewModel @Inject constructor(
             youtubeVideoClickedViewEffect,
             settingsActionClickedViewEffect,
             openSourceLicensesClickedViewEffect,
-            licenseClickedViewEffect
+            licenseClickedViewEffect,
+            listCreatedViewEffect,
+            seeTvShowListClickedViewEffect,
+            seeMovieListClickedViewEffect
         )
 
         disposables += viewEffectChanges
@@ -109,10 +134,9 @@ sealed class MainAction : BaseAction {
         object OpenSourceLicensesClicked : SettingsAction()
     }
     data class LicenseClicked(val license: License) : MainAction()
-}
-
-sealed class MainChange {
-    object Loading : MainChange() //todo maybe remove
+    data class ListCreated(val message: String, val listId: Long, val contentType: ContentType) : MainAction()
+    data class SeeTvShowListClicked(val listId: Long) : MainAction()
+    data class SeeMovieListClicked(val listId: Long) : MainAction()
 }
 
 @Parcelize
@@ -130,6 +154,12 @@ sealed class MainViewEffect : BaseViewEffect {
             object ShowLicensesScreen : Settings()
         }
         data class ShowLicenseInBrowser(val url: String) : Navigation()
+        data class ShowTvShowsScreen(val initialListId: Long) : Navigation()
+        data class ShowMoviesScreen(val initialListId: Long) : Navigation()
+    }
+    sealed class Message : MainViewEffect() {
+        data class ShowTvShowListCreatedMessage(val message: String, val listId: Long) : Message()
+        data class ShowMovieListCreatedMessage(val message: String, val listId: Long) : Message()
     }
     data class ToggleViewMode(val viewMode: GridViewMode) : MainViewEffect()
 }

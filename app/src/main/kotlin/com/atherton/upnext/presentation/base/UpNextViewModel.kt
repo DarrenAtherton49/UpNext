@@ -1,4 +1,4 @@
-package com.atherton.upnext.util.base
+package com.atherton.upnext.presentation.base
 
 import com.jakewharton.rxrelay2.PublishRelay
 import com.ww.roxie.BaseAction

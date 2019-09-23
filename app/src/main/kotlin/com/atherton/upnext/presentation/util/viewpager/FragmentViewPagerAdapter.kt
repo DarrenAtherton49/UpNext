@@ -1,4 +1,4 @@
-package com.atherton.upnext.util.viewpager
+package com.atherton.upnext.presentation.util.viewpager
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -20,6 +20,7 @@ class FragmentViewPagerAdapter(fragmentManager: FragmentManager) : FragmentPager
 
     override fun getItemPosition(item: Any): Int = fragmentList.indexOf(item)
 
+    //todo cache fragments here?
     fun addFragment(id: Long, title: String, fragment: Fragment) {
         fragmentIdList.add(id)
         fragmentTitleList.add(title)
@@ -33,6 +34,7 @@ class FragmentViewPagerAdapter(fragmentManager: FragmentManager) : FragmentPager
     }
 
     fun clear() {
+        fragmentIdList.clear()
         fragmentTitleList.clear()
         fragmentList.clear()
     }

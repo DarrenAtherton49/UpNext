@@ -1,4 +1,4 @@
-package com.atherton.upnext.util.recyclerview
+package com.atherton.upnext.presentation.util.recyclerview
 
 import android.graphics.Rect
 import android.view.View

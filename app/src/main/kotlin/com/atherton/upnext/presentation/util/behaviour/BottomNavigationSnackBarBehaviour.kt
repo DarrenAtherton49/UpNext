@@ -1,4 +1,4 @@
-package com.atherton.upnext.util.behaviours
+package com.atherton.upnext.presentation.util.behaviour
 
 import android.content.Context
 import android.util.AttributeSet

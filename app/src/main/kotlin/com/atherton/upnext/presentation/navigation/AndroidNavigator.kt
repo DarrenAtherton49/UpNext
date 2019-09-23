@@ -6,8 +6,10 @@ import android.content.Intent
 import android.net.Uri
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
+import com.atherton.upnext.MobileNavigationDirections
 import com.atherton.upnext.presentation.common.ContentType
 import com.atherton.upnext.presentation.common.addtolists.AddToListsDialogFragment
+import com.atherton.upnext.presentation.common.newlist.NewListDialogFragment
 import com.atherton.upnext.presentation.features.content.ContentDetailFragmentDirections
 
 class AndroidNavigator(private val navController: NavController, val context: Context) : Navigator {
@@ -60,12 +62,31 @@ class AndroidNavigator(private val navController: NavController, val context: Co
         context.startActivity(browserIntent)
     }
 
+    override fun showTvShowsScreen(initialListId: Long?) {
+        val action = MobileNavigationDirections.actionSharedGoToShows(initialListId = initialListId ?: 0L)
+        navController.navigate(action)
+    }
+
+    override fun showMoviesScreen(initialListId: Long?) {
+        val action = MobileNavigationDirections.actionSharedGoToMovies(initialListId = initialListId ?: 0L)
+        navController.navigate(action)
+    }
+
     override fun showAddToListsMenu(
         contentId: Long,
         contentType: ContentType,
-        childFragmentManager: FragmentManager
+        fragmentManager: FragmentManager
     ) {
         val fragment = AddToListsDialogFragment.newInstance(contentId = contentId, contentType = contentType)
-        fragment.show(childFragmentManager, AddToListsDialogFragment.FRAGMENT_TAG)
+        fragment.show(fragmentManager, AddToListsDialogFragment.FRAGMENT_TAG)
+    }
+
+    override fun showNewListScreen(
+        contentId: Long,
+        contentType: ContentType,
+        fragmentManager: FragmentManager
+    ) {
+        val fragment = NewListDialogFragment.newInstance(contentId = contentId, contentType = contentType)
+        fragment.show(fragmentManager, NewListDialogFragment.FRAGMENT_TAG)
     }
 }

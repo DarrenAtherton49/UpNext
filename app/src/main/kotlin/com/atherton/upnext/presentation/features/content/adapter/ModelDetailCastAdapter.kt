@@ -4,9 +4,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import com.atherton.upnext.R
 import com.atherton.upnext.domain.model.CastMember
-import com.atherton.upnext.util.extensions.inflateLayout
-import com.atherton.upnext.util.glide.GlideRequests
-import com.atherton.upnext.util.glide.UpNextAppGlideModule
+import com.atherton.upnext.util.extension.inflateLayout
+import com.atherton.upnext.presentation.util.glide.GlideRequests
+import com.atherton.upnext.presentation.util.glide.UpNextAppGlideModule
 import kotlinx.android.synthetic.main.item_detail_scrolling_item.*
 
 class ModelDetailCastAdapter(

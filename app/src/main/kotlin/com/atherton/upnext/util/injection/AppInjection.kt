@@ -134,9 +134,10 @@ class RepositoryModule {
     @Provides
     @Singleton internal fun provideTvShowRepository(
         tvShowDao: TvShowDao,
+        listDao: ListDao,
         tvShowService: TmdbTvShowService
     ): TvShowRepository {
-        return CachingTvShowRepository(tvShowDao, tvShowService)
+        return CachingTvShowRepository(tvShowDao, listDao, tvShowService)
     }
 
     @Provides

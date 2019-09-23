@@ -12,10 +12,10 @@ import com.atherton.upnext.presentation.main.MainAction
 import com.atherton.upnext.presentation.main.MainViewEffect
 import com.atherton.upnext.presentation.main.MainViewModel
 import com.atherton.upnext.presentation.main.MainViewModelFactory
-import com.atherton.upnext.util.base.BaseFragment
-import com.atherton.upnext.util.base.ToolbarOptions
-import com.atherton.upnext.util.extensions.*
-import com.atherton.upnext.util.viewpager.FragmentViewPagerAdapter
+import com.atherton.upnext.presentation.base.BaseFragment
+import com.atherton.upnext.presentation.util.toolbar.ToolbarOptions
+import com.atherton.upnext.util.extension.*
+import com.atherton.upnext.presentation.util.viewpager.FragmentViewPagerAdapter
 import kotlinx.android.synthetic.main.fragment_discover_tabs.*
 import javax.inject.Inject
 import javax.inject.Named

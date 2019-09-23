@@ -6,9 +6,9 @@ import com.atherton.upnext.domain.model.Movie
 import com.atherton.upnext.domain.model.Person
 import com.atherton.upnext.domain.model.TvShow
 import com.atherton.upnext.presentation.features.content.formatVoteAverage
-import com.atherton.upnext.util.extensions.isVisible
-import com.atherton.upnext.util.glide.GlideRequests
-import com.atherton.upnext.util.glide.UpNextAppGlideModule
+import com.atherton.upnext.util.extension.isVisible
+import com.atherton.upnext.presentation.util.glide.GlideRequests
+import com.atherton.upnext.presentation.util.glide.UpNextAppGlideModule
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_search_model_grid.*
 
