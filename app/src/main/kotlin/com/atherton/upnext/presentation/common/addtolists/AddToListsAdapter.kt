@@ -16,6 +16,10 @@ class AddToListsAdapter(
     private val onListClickListener: (ContentListStatus) -> Unit
 ) : ListAdapter<ContentListStatus, AddToListsAdapter.ViewHolder>(DiffCallback) {
 
+    init {
+        setHasStableIds(true)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(parent.inflateLayout(R.layout.item_add_to_lists)).apply {
             itemView.addToListsCheckBox.setOnClickListener {
@@ -27,6 +31,8 @@ class AddToListsAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
+
+    override fun getItemId(position: Int): Long = getItem(position).listId
 
     class ViewHolder(
         override val containerView: View
