@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.atherton.upnext.R
 import com.atherton.upnext.domain.model.ContentList
-import com.atherton.upnext.domain.model.Movie
 import com.atherton.upnext.presentation.base.BaseFragment
 import com.atherton.upnext.presentation.common.ContentType
 import com.atherton.upnext.presentation.main.MainAction
@@ -138,27 +137,19 @@ class MovieListFragment : BaseFragment<MovieListAction, MovieListState, MovieLis
                 )
             }
             is MovieListViewEffect.ShowRemovedFromListMessage -> {
-                showMovieRemovedFromListMessage(viewEffect.movie, viewEffect.movieList)
+                showMovieRemovedFromListMessage(viewEffect.message, viewEffect.movieId)
             }
         }
     }
 
     override fun processSharedViewEffects(viewEffect: MainViewEffect) {}
 
-    //todo show snackbar in movie activity instead via MainViewEffect
-    private fun showMovieRemovedFromListMessage(movie: Movie, movieList: ContentList) {
-        val movieTitle: String? = movie.title
-        //todo movie this login into ViewModel (via mapper function or appStringProvider)
-        val message = if (movieTitle != null) {
-            getString(R.string.movie_list_item_removed_from_list).format(movieTitle, movieList.name)
-        } else {
-            getString(R.string.movie_list_item_removed_from_list_no_movie_title)
-        }
+    private fun showMovieRemovedFromListMessage(message: String, movieId: Long) {
         movieListCoordinatorLayout.showLongSnackbar(
             text = message,
             actionText = getString(R.string.generic_action_undo),
             onClick = {
-                viewModel.dispatch(MovieListAction.ToggleWatchlistButtonClicked(movieList, movie.id))
+                viewModel.dispatch(MovieListAction.ToggleWatchlistButtonClicked(movieList, movieId))
             }
         )
     }

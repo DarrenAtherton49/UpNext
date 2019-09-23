@@ -124,7 +124,13 @@ class MovieListViewModel @Inject constructor(
                             val movie = response.data
                             if (!movie.state.inWatchlist) {
                                 postViewEffect {
-                                    MovieListViewEffect.ShowRemovedFromListMessage(movie, action.movieList)
+                                    MovieListViewEffect.ShowRemovedFromListMessage(
+                                        message = appStringProvider.generateMovieRemovedFromListMessage(
+                                            movie.title,
+                                            action.movieList.name
+                                        ),
+                                        movieId = movie.id
+                                    )
                                 }
                             }
                         }
@@ -218,8 +224,7 @@ sealed class MovieListState : BaseState, Parcelable {
 sealed class MovieListViewEffect : BaseViewEffect {
     data class ShowMovieDetailScreen(val movieId: Long) : MovieListViewEffect()
     data class ShowAddToListMenu(val movieId: Long) : MovieListViewEffect()
-    data class ShowRemovedFromListMessage(val movie: Movie, val movieList: ContentList) : MovieListViewEffect()
-    data class ShowAddedToListMessage(val movie: Movie, val movieList: ContentList) : MovieListViewEffect()
+    data class ShowRemovedFromListMessage(val message: String, val movieId: Long) : MovieListViewEffect()
 }
 
 //================================================================================
