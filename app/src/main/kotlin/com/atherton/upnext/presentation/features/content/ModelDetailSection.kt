@@ -37,7 +37,7 @@ sealed class ModelDetailSection(val viewType: Int, val hasScrollingChildAdapter:
         val videos: List<Video>
     ) : ModelDetailSection(VIDEOS, true)
 
-    @Parcelize data class Photos(val photos: List<String>) : ModelDetailSection(PHOTOS, true)
+    @Parcelize data class Photos(val photos: List<String>) : ModelDetailSection(PHOTOS, true) //todo see if we can use stable id's
     @Parcelize data class Reviews(val reviews: List<String>) : ModelDetailSection(REVIEWS, false)
     @Parcelize data class Comments(val comments: List<String>) : ModelDetailSection(COMMENTS, false)
 

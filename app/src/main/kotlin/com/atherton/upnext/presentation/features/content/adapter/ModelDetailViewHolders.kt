@@ -125,12 +125,12 @@ class ModelDetailVideosViewHolder(
     override val containerView: View,
     recycledViewPool: RecyclerView.RecycledViewPool?,
     itemSpacingPx: Int
-) : ModelDetailScrollableViewHolder<ModelDetailSection.Videos, Video, ModelDetailVideosAdapter>(
+) : ModelDetailScrollableViewHolder<ModelDetailSection.Videos, Video, ModelDetailVideoAdapter>(
     containerView,
     recycledViewPool,
     itemSpacingPx
 ) {
-    override fun bind(section: ModelDetailSection.Videos, childAdapter: ModelDetailVideosAdapter) {
+    override fun bind(section: ModelDetailSection.Videos, childAdapter: ModelDetailVideoAdapter) {
         sectionHeaderTextView.text = section.sectionTitle
         childAdapter.submitList(section.videos)
     }

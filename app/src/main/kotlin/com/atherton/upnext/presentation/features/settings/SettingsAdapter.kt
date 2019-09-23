@@ -16,6 +16,10 @@ class SettingsAdapter(
     private val onClickListener: (Setting) -> Unit
 ) : ListAdapter<Setting, SettingsAdapter.ViewHolder>(SettingsDiffCallback) {
 
+    init {
+        setHasStableIds(true)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View = parent.inflateLayout(R.layout.item_setting)
         val viewHolder = ViewHolder(view, imageLoader)
@@ -28,6 +32,8 @@ class SettingsAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
+
+    override fun getItemId(position: Int): Long = getItem(position).id
 
     override fun onViewRecycled(holder: ViewHolder) {
         super.onViewRecycled(holder)

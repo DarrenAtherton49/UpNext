@@ -113,7 +113,7 @@ class ModelDetailAdapter(
             )
             is ModelDetailVideosViewHolder -> holder.bindHorizontalAdapter(
                 section as ModelDetailSection.Videos,
-                childAdapters[section.viewType] as ModelDetailVideosAdapter,
+                childAdapters[section.viewType] as ModelDetailVideoAdapter,
                 childAdapterStates[section.viewType]
             )
             is ModelDetailPhotosViewHolder -> holder.bindHorizontalAdapter(
@@ -167,7 +167,7 @@ class ModelDetailAdapter(
                 is ModelDetailSection.Seasons -> ModelDetailSeasonAdapter(imageLoader, onSeasonClickListener)
                 is ModelDetailSection.Cast -> ModelDetailCastAdapter(imageLoader, onCastMemberClickListener)
                 is ModelDetailSection.Crew -> ModelDetailCrewAdapter(imageLoader, onCrewMemberClickListener)
-                is ModelDetailSection.Videos -> ModelDetailVideosAdapter(imageLoader, onVideoClickListener)
+                is ModelDetailSection.Videos -> ModelDetailVideoAdapter(imageLoader, onVideoClickListener)
                 is ModelDetailSection.Photos -> ModelDetailPhotosAdapter(imageLoader)
                 is ModelDetailSection.RecommendedItems -> ModelDetailRecommendedItemsAdapter(imageLoader, onRecommendedItemClickListener)
                 else -> null
