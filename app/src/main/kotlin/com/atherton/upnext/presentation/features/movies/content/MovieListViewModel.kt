@@ -125,7 +125,7 @@ class MovieListViewModel @Inject constructor(
                             if (!movie.state.inWatchlist) {
                                 postViewEffect {
                                     MovieListViewEffect.ShowRemovedFromListMessage(
-                                        message = appStringProvider.generateMovieRemovedFromListMessage(
+                                        message = appStringProvider.generateContentRemovedFromListMessage(
                                             movie.title,
                                             action.movieList.name
                                         ),

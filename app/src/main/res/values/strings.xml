@@ -12,6 +12,10 @@
     <string name="generic_action_cancel">Cancel</string>
     <string name="generic_action_create">Create</string>
 
+    <!-- App-wide concepts -->
+    <string name="app_watchlist">Watchlist</string>
+    <string name="app_watched">Watched</string>
+
     <!-- Bottom navigation-->
     <string name="bottom_nav_shows">Shows</string>
     <string name="bottom_nav_movies">Movies</string>
@@ -38,14 +42,14 @@
     <string name="main_dialog_internet_required_positive_button">Try again</string>
 
     <!-- ShowsFragment -->
-    <string name="shows_tab_watchlist">Watchlist</string>
-    <string name="shows_tab_watched">Watched</string>
+    <string name="shows_tab_watchlist">@string/app_watchlist</string>
+    <string name="shows_tab_watched">@string/app_watched</string>
     <string name="shows_tab_history">History</string>
     <string name="shows_add_tv_show">Add a tv show</string>
 
     <!-- MoviesFragment -->
-    <string name="movies_tab_watchlist">Watchlist</string>
-    <string name="movies_tab_watched">Watched</string>
+    <string name="movies_tab_watchlist">@string/app_watchlist</string>
+    <string name="movies_tab_watched">@string/app_watched</string>
     <string name="movies_add_movie">Add a movie</string>
 
     <!-- MovieListFragment -->

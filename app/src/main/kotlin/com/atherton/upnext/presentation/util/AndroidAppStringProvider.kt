@@ -9,6 +9,8 @@ import javax.inject.Singleton
 @Singleton
 class AndroidAppStringProvider @Inject constructor(private val resources: Resources) : AppStringProvider {
 
+    override fun getWatchlistTitle(): String = resources.getString(R.string.app_watchlist)
+
     override fun getSeasonsHeader(): String = resources.getString(R.string.content_detail_seasons_header)
 
     override fun getVideosHeader(): String = resources.getString(R.string.content_detail_videos_header)
@@ -31,9 +33,9 @@ class AndroidAppStringProvider @Inject constructor(private val resources: Resour
         return resources.getString(R.string.new_list_created).format(listTitle)
     }
 
-    override fun generateMovieRemovedFromListMessage(movieTitle: String?, listTitle: String): String {
-        return if (movieTitle != null) {
-            resources.getString(R.string.movie_list_item_removed_from_list).format(movieTitle, listTitle)
+    override fun generateContentRemovedFromListMessage(contentTitle: String?, listTitle: String): String {
+        return if (contentTitle != null) {
+            resources.getString(R.string.movie_list_item_removed_from_list).format(contentTitle, listTitle)
         } else {
             resources.getString(R.string.movie_list_item_removed_from_list_no_movie_title)
         }
