@@ -14,7 +14,7 @@ import com.atherton.upnext.presentation.main.*
 import com.atherton.upnext.util.extension.getActivityViewModel
 import com.atherton.upnext.util.extension.getAppComponent
 import kotlinx.android.synthetic.main.base_app_bar.*
-import kotlinx.android.synthetic.main.fragment_settings.*
+import kotlinx.android.synthetic.main.fragment_licenses.*
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -55,10 +55,12 @@ class LicensesFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        recyclerView.setHasFixedSize(true)
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
-        recyclerView.adapter = recyclerViewAdapter
+        recyclerView.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(context)
+            addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
+            adapter = recyclerViewAdapter
+        }
         recyclerViewAdapter.submitList(generateLicenses(requireContext()))
     }
 
@@ -75,4 +77,10 @@ class LicensesFragment : Fragment() {
     }
 }
 
-data class License(val name: String, val contributor: String, val description: String, val url: String)
+data class License(
+    val id: Long, // used for RecyclerView stable id's
+    val name: String,
+    val contributor: String,
+    val description: String,
+    val url: String
+)

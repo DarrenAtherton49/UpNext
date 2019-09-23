@@ -14,6 +14,10 @@ import kotlinx.android.synthetic.main.item_open_source_license.view.*
 class LicensesAdapter(private val onClickListener: (License) -> Unit) :
     ListAdapter<License, LicensesAdapter.ViewHolder>(LicensesDiffCallback) {
 
+    init {
+        setHasStableIds(true)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View = parent.inflateLayout(R.layout.item_open_source_license)
         val viewHolder = ViewHolder(view)
@@ -26,6 +30,8 @@ class LicensesAdapter(private val onClickListener: (License) -> Unit) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
+
+    override fun getItemId(position: Int): Long = getItem(position).id
 
     class ViewHolder(override val containerView: View) :
         RecyclerView.ViewHolder(containerView),
