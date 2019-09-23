@@ -22,8 +22,6 @@ import kotlinx.android.synthetic.main.fragment_movies.*
 import javax.inject.Inject
 import javax.inject.Named
 
-
-
 class MoviesFragment : BaseFragment<MoviesAction, MoviesState, MoviesViewEffect, MoviesViewModel>() {
 
     override val layoutResId: Int = com.atherton.upnext.R.layout.fragment_movies
