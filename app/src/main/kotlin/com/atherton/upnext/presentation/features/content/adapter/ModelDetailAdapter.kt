@@ -31,6 +31,10 @@ class ModelDetailAdapter(
     private lateinit var childAdapters: SparseArray<ScrollingChildAdapter<*, *>>
     private lateinit var childAdapterStates: SparseArray<Parcelable?>
 
+    init {
+        setHasStableIds(true)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ModelDetailSectionViewHolder {
         return when (viewType) {
             ModelDetailSection.RUNTIME_RELEASE -> ModelDetailInfoPanelViewHolder(
@@ -129,6 +133,10 @@ class ModelDetailAdapter(
     }
 
     override fun getItemViewType(position: Int): Int = getItem(position).viewType
+
+    // we can use the viewType here because in this specific adapter, we only have at max 1 item
+    // per view type.
+    override fun getItemId(position: Int): Long = getItem(position).viewType.toLong()
 
     // Cache the scroll position of the lists so that we can restore it when re-binding.
     override fun onViewRecycled(holder: ModelDetailSectionViewHolder) {
