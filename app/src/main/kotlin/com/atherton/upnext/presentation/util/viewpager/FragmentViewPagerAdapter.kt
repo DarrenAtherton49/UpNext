@@ -1,6 +1,5 @@
 package com.atherton.upnext.presentation.util.viewpager
 
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
@@ -37,9 +36,5 @@ class FragmentViewPagerAdapter(fragmentManager: FragmentManager) : FragmentPager
         fragmentIdList.clear()
         fragmentTitleList.clear()
         fragmentList.clear()
-    }
-
-    override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        return super.instantiateItem(container, position)
     }
 }
