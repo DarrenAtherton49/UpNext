@@ -12,6 +12,7 @@ import com.atherton.upnext.presentation.main.MainAction
 import com.atherton.upnext.presentation.main.MainViewEffect
 import com.atherton.upnext.presentation.main.MainViewModel
 import com.atherton.upnext.presentation.main.MainViewModelFactory
+import com.atherton.upnext.presentation.util.extension.onPageChanged
 import com.atherton.upnext.presentation.util.toolbar.ToolbarOptions
 import com.atherton.upnext.presentation.util.viewpager.FragmentViewPagerAdapter
 import com.atherton.upnext.util.extension.getActivityViewModel
@@ -63,9 +64,14 @@ class MoviesFragment : BaseFragment<MoviesAction, MoviesState, MoviesViewEffect,
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        if (viewPager != null) {
-            outState.putInt(BUNDLE_VIEWPAGER_CURRENT_PAGE, viewPager.currentItem)
+        currentPage?.let {
+            outState.putInt(BUNDLE_VIEWPAGER_CURRENT_PAGE, it)
         }
+    }
+
+    override fun onDestroyView() {
+        viewPager.clearOnPageChangeListeners()
+        super.onDestroyView()
     }
 
     override fun onMenuItemClicked(menuItem: MenuItem): Boolean {
@@ -120,6 +126,10 @@ class MoviesFragment : BaseFragment<MoviesAction, MoviesState, MoviesViewEffect,
     override fun processSharedViewEffects(viewEffect: MainViewEffect) {}
 
     private fun initViewPager() {
+        viewPager.clearOnPageChangeListeners()
+        viewPager.onPageChanged { page ->
+            currentPage = page
+        }
         viewPager.adapter = viewPagerAdapter
         tabLayout.setupWithViewPager(viewPager)
     }
@@ -145,23 +155,23 @@ class MoviesFragment : BaseFragment<MoviesAction, MoviesState, MoviesViewEffect,
     }
 
     private fun scrollToPage(movieLists: List<ContentList>) {
-        arguments?.let { bundle ->
+        arguments?.let { args ->
 
             var currentItem: Int? = null
 
             // first we try to scroll to the initial list (page) if there is one (e.g. when user
             // has clicked 'see list' button).
-            val initialListId: Long = MoviesFragmentArgs.fromBundle(bundle).initialListId
+            val initialListId: Long = MoviesFragmentArgs.fromBundle(args).initialListId
             if (initialListId != 0L) {
                 val initialList: ContentList? = movieLists.find { list -> list.id == initialListId }
                 initialList?.let {
-                    bundle.remove("initialListId")
+                    args.remove("initialListId")
                     currentItem = it.id.toInt()
                 }
             }
 
             // if the current page saved (e.g. on rotation) is not the same as the initial page,
-            // then we scroll to the saved paged.
+            // then we scroll to the saved page.
             currentPage?.let {
                 if (it != initialListId.toInt()) {
                     currentItem = it

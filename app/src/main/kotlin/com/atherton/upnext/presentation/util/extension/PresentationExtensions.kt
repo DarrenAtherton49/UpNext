@@ -3,6 +3,7 @@ package com.atherton.upnext.presentation.util.extension
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
+import androidx.viewpager.widget.ViewPager
 import io.reactivex.Observable
 import java.util.concurrent.TimeUnit
 
@@ -26,4 +27,16 @@ inline fun View.setOnGesturesListener(crossinline onDoubleTap: () -> Unit, cross
         setIsLongpressEnabled(true)
     }
     this.setOnTouchListener { _, event -> detector.onTouchEvent(event) }
+}
+
+inline fun ViewPager.onPageChanged(crossinline block: (page: Int) -> Unit) {
+    this.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+        override fun onPageScrollStateChanged(state: Int) {}
+
+        override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+
+        override fun onPageSelected(position: Int) {
+            block.invoke(position)
+        }
+    })
 }
