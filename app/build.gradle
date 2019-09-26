@@ -36,7 +36,10 @@ android {
         resConfigs "en"
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+                arguments = [
+                    "room.schemaLocation": "$projectDir/schemas".toString(),
+                    "room.incremental": "true"
+                ]
             }
         }
     }
@@ -107,7 +110,6 @@ dependencies {
 
     kapt dependencies.daggerCompiler
     kapt dependencies.glideCompiler
-    kapt dependencies.lifecycleCompiler
     kapt dependencies.roomCompiler
 
     debugImplementation dependencies.leakCanary

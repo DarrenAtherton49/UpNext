@@ -14,13 +14,13 @@ ext {
     // dependency versions
     appCompatVersion = '1.1.0-rc01'
     constraintLayoutVersion = '2.0.0-alpha3'
-    daggerVersion = '2.17'
+    daggerVersion = '2.24'
     espressoVersion = '3.1.1'
     espressoIdlingResourceVersion = '3.0.1'
-    glideVersion = '4.8.0'
+    glideVersion = '4.9.0'
     junitVersion = '4.12'
     leakCanaryVersion = '1.6.3'
-    lifecycleVersion = '2.0.0'
+    lifecycleVersion = '2.1.0'
     materialComponentsVersion = '1.1.0-alpha10'
     mockitoVersion = '1.10.19'
     moshiVersion = '1.8.0'
@@ -28,7 +28,7 @@ ext {
     okHttpVersion = '3.12.1'
     recyclerViewVersion = '1.1.0-alpha06'
     retrofitVersion = '2.5.0'
-    roomVersion = '2.1.0'
+    roomVersion = '2.2.0-rc01'
     roxieVersion = '0.4.0'
     rulesVersion = '0.5'
     runnerVersion = '0.5'
@@ -51,7 +51,6 @@ ext {
         leakCanary:                "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion",
         leakCanaryFragments:       "com.squareup.leakcanary:leakcanary-support-fragment:$leakCanaryVersion",
         leakCanaryNoOp:            "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion",
-        lifecycleCompiler:         "androidx.lifecycle:lifecycle-compiler:$lifecycleVersion",
         lifecycleExtensions:       "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion",
         materialComponents:        "com.google.android.material:material:$materialComponentsVersion",
         moshi:                     "com.squareup.moshi:moshi:$moshiVersion",
