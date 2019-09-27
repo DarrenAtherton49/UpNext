@@ -19,19 +19,19 @@ class UpNextAppGlideModule : AppGlideModule() {
 
         val movieListRequestOptions: RequestOptions by lazy {
             RequestOptions()
-                .transforms(CenterCrop(), RoundedCorners(movieListItemRadius))
+                .transform(CenterCrop(), RoundedCorners(movieListItemRadius))
                 .error(R.drawable.ic_broken_image_white_24dp)
         }
 
         val searchModelGridRequestOptions: RequestOptions by lazy {
             RequestOptions()
-                .transforms(CenterCrop(), RoundedCorners(searchModelGridItemRadius))
+                .transform(CenterCrop(), RoundedCorners(searchModelGridItemRadius))
                 .error(R.drawable.ic_broken_image_white_24dp)
         }
 
         val searchModelPosterRequestOptions by lazy {
             RequestOptions()
-                .transforms(CenterCrop(), RoundedCorners(searchModelGridItemRadius))
+                .transform(CenterCrop(), RoundedCorners(searchModelGridItemRadius))
                 .error(R.drawable.ic_broken_image_white_24dp)
         }
 
@@ -43,7 +43,7 @@ class UpNextAppGlideModule : AppGlideModule() {
 
         val modelDetailVideoRequestOptions by lazy {
             RequestOptions()
-                .transforms(CenterInside(), RoundedCorners(itemDetailVideoRadius))
+                .transform(CenterInside(), RoundedCorners(itemDetailVideoRadius))
                 .error(R.drawable.ic_broken_image_white_24dp)
         }
     }
