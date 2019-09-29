@@ -8,10 +8,12 @@ import com.atherton.upnext.R
 import com.atherton.upnext.domain.model.*
 import com.atherton.upnext.util.extension.inflateLayout
 import com.atherton.upnext.presentation.util.glide.GlideRequests
+import com.atherton.upnext.presentation.util.image.ImageLoader
 
 //todo preload some images when scrolling https://bumptech.github.io/glide/int/recyclerview.html
 class SearchModelAdapter(
-    private val imageLoader: GlideRequests,
+    private val imageLoader: ImageLoader,
+    private val glideRequests: GlideRequests,
     private val onClickListener: (Searchable) -> Unit
 ) : ListAdapter<Searchable, SearchModelGridViewHolder>(SearchDiffCallback) {
 
@@ -22,19 +24,19 @@ class SearchModelAdapter(
             is GridViewMode.Grid -> {
                 val view: View = parent.inflateLayout(R.layout.item_search_model_grid)
                 when (viewType) {
-                    TV_VIEW_TYPE -> TvShowModelGridViewHolder(view, imageLoader).withClickListener()
-                    MOVIE_VIEW_TYPE -> MovieModelGridViewHolder(view, imageLoader).withClickListener()
-                    PERSON_VIEW_TYPE -> PersonModelGridViewHolder(view, imageLoader).withClickListener()
-                    else -> MovieModelGridViewHolder(view, imageLoader).withClickListener()
+                    TV_VIEW_TYPE -> TvShowModelGridViewHolder(view, imageLoader, glideRequests).withClickListener()
+                    MOVIE_VIEW_TYPE -> MovieModelGridViewHolder(view, imageLoader, glideRequests).withClickListener()
+                    PERSON_VIEW_TYPE -> PersonModelGridViewHolder(view, imageLoader, glideRequests).withClickListener()
+                    else -> MovieModelGridViewHolder(view, imageLoader, glideRequests).withClickListener()
                 }
             }
             is GridViewMode.List -> {
                 val view: View = parent.inflateLayout(R.layout.item_search_model_list)
                 when (viewType) {
-                    TV_VIEW_TYPE -> TvShowModelListViewHolder(view, imageLoader).withClickListener()
-                    MOVIE_VIEW_TYPE -> MovieModelListViewHolder(view, imageLoader).withClickListener()
-                    PERSON_VIEW_TYPE -> PersonModelListViewHolder(view, imageLoader).withClickListener()
-                    else -> MovieModelListViewHolder(view, imageLoader).withClickListener()
+                    TV_VIEW_TYPE -> TvShowModelListViewHolder(view, imageLoader, glideRequests).withClickListener()
+                    MOVIE_VIEW_TYPE -> MovieModelListViewHolder(view, imageLoader, glideRequests).withClickListener()
+                    PERSON_VIEW_TYPE -> PersonModelListViewHolder(view, imageLoader, glideRequests).withClickListener()
+                    else -> MovieModelListViewHolder(view, imageLoader, glideRequests).withClickListener()
                 }
             }
         }

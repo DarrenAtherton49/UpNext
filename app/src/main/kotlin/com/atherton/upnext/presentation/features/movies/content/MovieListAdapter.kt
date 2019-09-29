@@ -5,13 +5,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.atherton.upnext.R
-import com.atherton.upnext.util.extension.inflateLayout
 import com.atherton.upnext.presentation.util.glide.GlideRequests
+import com.atherton.upnext.presentation.util.image.ImageLoader
+import com.atherton.upnext.util.extension.inflateLayout
 import kotlinx.android.synthetic.main.item_movie.view.*
 
 //todo preload some images when scrolling https://bumptech.github.io/glide/int/recyclerview.html
 class MovieListAdapter(
-    private val imageLoader: GlideRequests,
+    private val imageLoader: ImageLoader,
+    private val glideRequests: GlideRequests,
     private val onItemClickListener: (MovieListItem) -> Unit,
     private val onWatchlistButtonClickListener: (MovieListItem) -> Unit,
     private val onWatchedButtonClickListener: (MovieListItem) -> Unit,
@@ -20,7 +22,7 @@ class MovieListAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         val view: View = parent.inflateLayout(R.layout.item_movie)
-        return MovieViewHolder(view, imageLoader).withClickListeners()
+        return MovieViewHolder(view, imageLoader, glideRequests).withClickListeners()
     }
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {

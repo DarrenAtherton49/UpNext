@@ -26,6 +26,7 @@ ext {
     moshiVersion = '1.8.0'
     navigationVersion = '2.1.0-alpha05'
     okHttpVersion = '3.12.1'
+    paletteVersion = '1.0.0'
     recyclerViewVersion = '1.1.0-alpha06'
     retrofitVersion = '2.5.0'
     roomVersion = '2.2.0-rc01'
@@ -58,6 +59,7 @@ ext {
         navigationFragmentKTX:     "androidx.navigation:navigation-fragment-ktx:$navigationVersion",
         navigationUiKTX:           "androidx.navigation:navigation-ui-ktx:$navigationVersion",
         okHttpLoggingInterceptor:  "com.squareup.okhttp3:logging-interceptor:$okHttpVersion",
+        palette:                   "androidx.palette:palette:$paletteVersion",
         recyclerView:              "androidx.recyclerview:recyclerview:$recyclerViewVersion",
         retrofit:                  "com.squareup.retrofit2:retrofit:$retrofitVersion",
         retrofitMoshiConverter:    "com.squareup.retrofit2:converter-moshi:$retrofitVersion",

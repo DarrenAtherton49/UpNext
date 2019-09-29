@@ -4,17 +4,19 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import com.atherton.upnext.R
 import com.atherton.upnext.domain.model.TvSeason
-import com.atherton.upnext.util.extension.inflateLayout
 import com.atherton.upnext.presentation.util.glide.GlideRequests
+import com.atherton.upnext.presentation.util.image.ImageLoader
+import com.atherton.upnext.util.extension.inflateLayout
 import kotlinx.android.synthetic.main.item_detail_season_item.*
 
 class ModelDetailSeasonAdapter(
-    private val imageLoader: GlideRequests,
+    private val imageLoader: ImageLoader,
+    private val glideRequests: GlideRequests,
     private val onSeasonClickListener: (TvSeason) -> Unit
 ) : ModelDetailAdapter.ScrollingChildAdapter<TvSeason, ModelDetailScrollingViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ModelDetailScrollingViewHolder {
-        return ModelDetailScrollingViewHolder(parent.inflateLayout(R.layout.item_detail_season_item), imageLoader).apply {
+        return ModelDetailScrollingViewHolder(parent.inflateLayout(R.layout.item_detail_season_item)).apply {
             itemView.setOnClickListener {
                 onSeasonClickListener.invoke(getItem(adapterPosition))
             }

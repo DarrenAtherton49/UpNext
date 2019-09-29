@@ -16,6 +16,7 @@ import com.atherton.upnext.presentation.main.MainViewEffect
 import com.atherton.upnext.presentation.main.MainViewModel
 import com.atherton.upnext.presentation.main.MainViewModelFactory
 import com.atherton.upnext.presentation.util.glide.GlideApp
+import com.atherton.upnext.presentation.util.image.ImageLoader
 import com.atherton.upnext.presentation.util.recyclerview.GridSpacingItemDecoration
 import com.atherton.upnext.presentation.util.recyclerview.LinearSpacingItemDecoration
 import com.atherton.upnext.presentation.util.toolbar.ToolbarOptions
@@ -61,14 +62,17 @@ class DiscoverContentFragment
 
     override val toolbarOptions: ToolbarOptions? = null
 
-    private lateinit var recyclerViewAdapter: SearchModelAdapter
+    @Inject lateinit var imageLoader: ImageLoader
+
+    private val recyclerViewAdapter: SearchModelAdapter by lazy {
+        SearchModelAdapter(imageLoader, GlideApp.with(this)) { searchModel ->
+            viewModel.dispatch(DiscoverContentAction.SearchModelClicked(searchModel))
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recyclerViewAdapter = SearchModelAdapter(GlideApp.with(this)) { searchModel ->
-            viewModel.dispatch(DiscoverContentAction.SearchModelClicked(searchModel))
-        }
         recyclerView.adapter = recyclerViewAdapter
 
         retryButton.setOnClickListener {

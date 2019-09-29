@@ -10,10 +10,9 @@ import com.atherton.upnext.domain.model.CrewMember
 import com.atherton.upnext.domain.model.Video
 import com.atherton.upnext.domain.model.Watchable
 import com.atherton.upnext.presentation.features.content.ModelDetailSection
+import com.atherton.upnext.presentation.util.recyclerview.LinearSpacingItemDecoration
 import com.atherton.upnext.util.extension.isVisible
 import com.atherton.upnext.util.extension.setTextOrHide
-import com.atherton.upnext.presentation.util.glide.GlideRequests
-import com.atherton.upnext.presentation.util.recyclerview.LinearSpacingItemDecoration
 import com.google.android.material.chip.Chip
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_detail_genres.*
@@ -62,9 +61,7 @@ class ModelDetailGenresViewHolder(override val containerView: View) : ModelDetai
 }
 
 class ModelDetailRatingsViewHolder(
-    override val containerView: View,
-    imageLoader: GlideRequests
-) : ModelDetailSectionViewHolder(containerView) {
+    override val containerView: View) : ModelDetailSectionViewHolder(containerView) {
 
     fun bind(section: ModelDetailSection.Ratings) {
         //todo
@@ -184,8 +181,7 @@ class ModelDetailRecommendedItemsViewHolder(
 }
 
 class ModelDetailExternalLinksViewHolder(
-    override val containerView: View,
-    imageLoader: GlideRequests
+    override val containerView: View
 ) : ModelDetailSectionViewHolder(containerView) {
 
     fun bind(section: ModelDetailSection.ExternalLinks) {
@@ -200,8 +196,9 @@ class ModelDetailEmptyViewHolder(
 
 // used for all scrolling CHILD ViewHolders - i.e. cast, crew and recommended movie/tv items as using this common type
 // allows for us to use a RecyclerViewPool to reuse views
-class ModelDetailScrollingViewHolder(override val containerView: View, private val imageLoader: GlideRequests)
-    : RecyclerView.ViewHolder(containerView),
+class ModelDetailScrollingViewHolder(
+    override val containerView: View
+) : RecyclerView.ViewHolder(containerView),
     LayoutContainer
 
 abstract class ModelDetailScrollableViewHolder<SECTION : ModelDetailSection, DATA: Any, ADAPTER: ListAdapter<DATA, *>>(

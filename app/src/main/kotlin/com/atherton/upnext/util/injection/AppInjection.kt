@@ -18,6 +18,7 @@ import com.atherton.upnext.data.repository.*
 import com.atherton.upnext.domain.repository.*
 import com.atherton.upnext.presentation.util.AndroidAppStringProvider
 import com.atherton.upnext.presentation.util.AppStringProvider
+import com.atherton.upnext.presentation.util.image.ImageLoader
 import com.atherton.upnext.util.network.manager.AndroidNetworkManager
 import com.atherton.upnext.util.network.manager.NetworkManager
 import com.atherton.upnext.util.network.retrofit.KotlinRxJava2CallAdapterFactory
@@ -46,6 +47,7 @@ interface AppComponent {
     fun schedulers(): RxSchedulers
     fun settings(): AppSettings
     fun appStringProvider(): AppStringProvider
+    fun imageLoader(): ImageLoader
     fun tvShowRepository(): TvShowRepository
     fun movieRepository(): MovieRepository
     fun personRepository(): PersonRepository

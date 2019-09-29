@@ -7,18 +7,23 @@ import androidx.recyclerview.widget.RecyclerView
 import com.atherton.upnext.R
 import com.atherton.upnext.domain.model.Video
 import com.atherton.upnext.presentation.util.glide.GlideRequests
-import com.atherton.upnext.presentation.util.glide.UpNextAppGlideModule
+import com.atherton.upnext.presentation.util.image.ImageLoader
 import com.atherton.upnext.util.extension.inflateLayout
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_detail_scrolling_video_item.*
 
 class ModelDetailVideoAdapter(
-    private val imageLoader: GlideRequests,
+    private val imageLoader: ImageLoader,
+    private val glideRequests: GlideRequests,
     private val onVideoClickListener: (Video) -> Unit
 ) : ModelDetailAdapter.ScrollingChildAdapter<Video, ModelDetailVideoAdapter.ViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(parent.inflateLayout(R.layout.item_detail_scrolling_video_item), imageLoader).apply {
+        return ViewHolder(
+            parent.inflateLayout(R.layout.item_detail_scrolling_video_item),
+            imageLoader,
+            glideRequests
+        ).apply {
             itemView.setOnClickListener {
                 onVideoClickListener.invoke(getItem(adapterPosition))
             }
@@ -29,16 +34,21 @@ class ModelDetailVideoAdapter(
         holder.bind(getItem(position))
     }
 
-    class ViewHolder(override val containerView: View, val imageLoader: GlideRequests)
-        : RecyclerView.ViewHolder(containerView),
+    class ViewHolder(
+        override val containerView: View,
+        private val imageLoader: ImageLoader,
+        private val glideRequests: GlideRequests
+    ) : RecyclerView.ViewHolder(containerView),
         LayoutContainer {
 
         fun bind(video: Video) {
-            //todo figure out correct width for this ImageView based - we want it to be full screen width minus margin each side
-            imageLoader
-                .load(video.thumbnail)
-                .apply(UpNextAppGlideModule.modelDetailVideoRequestOptions)
-                .into(thumbnailImageView)
+            //todo figure out correct width for this ImageView - we want it to be full screen width minus margin each side
+            imageLoader.load(
+                with = glideRequests,
+                url = video.thumbnail,
+                requestOptions = ImageLoader.modelDetailVideoRequestOptions,
+                into = thumbnailImageView
+            )
 
             videoTitleTextView.text = video.name
             videoTypeTextView.text = video.type

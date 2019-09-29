@@ -6,32 +6,39 @@ import com.atherton.upnext.domain.model.Movie
 import com.atherton.upnext.domain.model.Person
 import com.atherton.upnext.domain.model.TvShow
 import com.atherton.upnext.presentation.features.content.formatVoteAverage
-import com.atherton.upnext.util.extension.isVisible
 import com.atherton.upnext.presentation.util.glide.GlideRequests
-import com.atherton.upnext.presentation.util.glide.UpNextAppGlideModule
+import com.atherton.upnext.presentation.util.image.ImageLoader
+import com.atherton.upnext.util.extension.isVisible
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_search_model_grid.*
 
 sealed class SearchModelGridViewHolder(
     override val containerView: View,
-    private val imageLoader: GlideRequests
+    private val imageLoader: ImageLoader,
+    private val glideRequests: GlideRequests
 ) : RecyclerView.ViewHolder(containerView),
     LayoutContainer {
 
     fun bind(title: String?, imageUrl: String?) {
         searchModelTitleTextView.text = title
-        imageLoader.load(imageUrl).apply(UpNextAppGlideModule.searchModelGridRequestOptions).into(searchModelImageView)
+        imageLoader.load(
+            with = glideRequests,
+            url = imageUrl,
+            requestOptions = ImageLoader.searchModelGridRequestOptions,
+            into = searchModelImageView
+        )
     }
 
     fun clear() {
-        imageLoader.clear(searchModelImageView)
+        imageLoader.clear(with = glideRequests, imageView = searchModelImageView)
     }
 }
 
 class TvShowModelGridViewHolder(
     override val containerView: View,
-    imageLoader: GlideRequests
-) : SearchModelGridViewHolder(containerView, imageLoader) {
+    imageLoader: ImageLoader,
+    glideRequests: GlideRequests
+) : SearchModelGridViewHolder(containerView, imageLoader, glideRequests) {
 
     fun bind(tvShow: TvShow) {
         super.bind(tvShow.name, tvShow.posterPath)
@@ -48,8 +55,9 @@ class TvShowModelGridViewHolder(
 
 class MovieModelGridViewHolder(
     override val containerView: View,
-    imageLoader: GlideRequests
-) : SearchModelGridViewHolder(containerView, imageLoader) {
+    imageLoader: ImageLoader,
+    glideRequests: GlideRequests
+) : SearchModelGridViewHolder(containerView, imageLoader, glideRequests) {
 
     fun bind(movie: Movie) {
         super.bind(movie.title, movie.posterPath)
@@ -66,8 +74,9 @@ class MovieModelGridViewHolder(
 
 class PersonModelGridViewHolder(
     override val containerView: View,
-    imageLoader: GlideRequests
-) : SearchModelGridViewHolder(containerView, imageLoader) {
+    imageLoader: ImageLoader,
+    glideRequests: GlideRequests
+) : SearchModelGridViewHolder(containerView, imageLoader, glideRequests) {
 
     fun bind(person: Person) {
         super.bind(person.name, person.profilePath)
@@ -77,24 +86,32 @@ class PersonModelGridViewHolder(
 
 sealed class SearchModelListViewHolder(
     override val containerView: View,
-    private val imageLoader: GlideRequests
+    private val imageLoader: ImageLoader,
+    private val glideRequests: GlideRequests
 ) : RecyclerView.ViewHolder(containerView),
     LayoutContainer {
 
     fun bind(title: String?, imageUrl: String?) {
         searchModelTitleTextView.text = title
-        imageLoader.load(imageUrl).apply(UpNextAppGlideModule.searchModelGridRequestOptions).into(searchModelImageView)
+        imageLoader.load(
+            with = glideRequests,
+            url = imageUrl,
+            requestOptions = ImageLoader.searchModelGridRequestOptions,
+            into = searchModelImageView
+        )
     }
 
     fun clear() {
-        imageLoader.clear(searchModelImageView)
+        imageLoader.clear(with = glideRequests, imageView = searchModelImageView)
     }
 }
 
 class TvShowModelListViewHolder(
     override val containerView: View,
-    imageLoader: GlideRequests
-) : SearchModelGridViewHolder(containerView, imageLoader) {
+    imageLoader: ImageLoader,
+    glideRequests: GlideRequests
+) : SearchModelGridViewHolder(containerView, imageLoader, glideRequests) {
+    //todo change above line to SearchModelListViewHolder
 
     fun bind(tvShow: TvShow) {
         super.bind(tvShow.name, tvShow.posterPath)
@@ -103,8 +120,10 @@ class TvShowModelListViewHolder(
 
 class MovieModelListViewHolder(
     override val containerView: View,
-    imageLoader: GlideRequests
-) : SearchModelGridViewHolder(containerView, imageLoader) {
+    imageLoader: ImageLoader,
+    glideRequests: GlideRequests
+) : SearchModelGridViewHolder(containerView, imageLoader, glideRequests) {
+    //todo change above line to SearchModelListViewHolder
 
     fun bind(movie: Movie) {
         super.bind(movie.title, movie.posterPath)
@@ -113,8 +132,10 @@ class MovieModelListViewHolder(
 
 class PersonModelListViewHolder(
     override val containerView: View,
-    imageLoader: GlideRequests
-) : SearchModelGridViewHolder(containerView, imageLoader) {
+    imageLoader: ImageLoader,
+    glideRequests: GlideRequests
+) : SearchModelGridViewHolder(containerView, imageLoader, glideRequests) {
+    //todo change above line to SearchModelListViewHolder
 
     fun bind(person: Person) {
         super.bind(person.name, person.profilePath)

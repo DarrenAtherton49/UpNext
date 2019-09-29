@@ -29,11 +29,11 @@
     <string name="license_dagger_2_compiler_description">Activates code generation and generates implementations
         to manage a Dagger 2 graph.</string>
 
-    <string name="licence_glide_name">Glide</string>
+    <string name="license_glide_name">Glide</string>
     <string name="license_glide_description">An image loading and caching library for Android focused on
         smooth scrolling.</string>
 
-    <string name="licence_glide_compiler_name">Glide Compiler</string>
+    <string name="license_glide_compiler_name">Glide Compiler</string>
     <string name="license_glide_compiler_description">An annotation processor for Glide.</string>
 
     <string name="license_kotlin_name">Kotlin</string>
@@ -68,7 +68,7 @@
         Extensions.</string>
 
     <string name="license_moshi_name">Moshi</string>
-    <string name="license_moshi_description">a modern JSON library for Android and Java, making it easy to parse
+    <string name="license_moshi_description">A modern JSON library for Android and Java, making it easy to parse
         JSON into Java objects and vice-versa.</string>
 
     <string name="license_moshi_kotlin_name">Moshi-Kotlin</string>
@@ -85,6 +85,9 @@
     <string name="license_ok_http_logging_interceptor_name">OKHTTP Logging Interceptor</string>
     <string name="license_ok_http_logging_interceptor_description">An OkHttp interceptor which logs HTTP request
         and response data.</string>
+
+    <string name="license_palette_name">Palette</string>
+    <string name="license_palette_description">A library for extracting colours from images.</string>
 
     <string name="license_recycler_view_name">RecyclerView</string>
     <string name="license_recycler_view_description">A flexible view for providing a limited window into

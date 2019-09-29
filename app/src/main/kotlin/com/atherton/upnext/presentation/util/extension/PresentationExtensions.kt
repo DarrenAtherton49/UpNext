@@ -1,8 +1,11 @@
 package com.atherton.upnext.presentation.util.extension
 
+import android.content.Context
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
+import androidx.annotation.ColorRes
+import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager
 import io.reactivex.Observable
 import java.util.concurrent.TimeUnit
@@ -40,3 +43,5 @@ inline fun ViewPager.onPageChanged(crossinline block: (page: Int) -> Unit) {
         }
     })
 }
+
+fun Context.getColorCompat(@ColorRes colorResId: Int) = ContextCompat.getColor(this, colorResId)

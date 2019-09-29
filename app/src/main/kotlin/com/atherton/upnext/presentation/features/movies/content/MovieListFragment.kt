@@ -14,6 +14,7 @@ import com.atherton.upnext.presentation.main.MainViewEffect
 import com.atherton.upnext.presentation.main.MainViewModel
 import com.atherton.upnext.presentation.main.MainViewModelFactory
 import com.atherton.upnext.presentation.util.glide.GlideApp
+import com.atherton.upnext.presentation.util.image.ImageLoader
 import com.atherton.upnext.presentation.util.recyclerview.LinearSpacingItemDecoration
 import com.atherton.upnext.presentation.util.toolbar.ToolbarOptions
 import com.atherton.upnext.util.extension.*
@@ -39,9 +40,12 @@ class MovieListFragment : BaseFragment<MovieListAction, MovieListState, MovieLis
 
     override val toolbarOptions: ToolbarOptions? = null
 
+    @Inject lateinit var imageLoader: ImageLoader
+
     private val recyclerViewAdapter: MovieListAdapter by lazy {
         MovieListAdapter(
-            imageLoader = GlideApp.with(this),
+            imageLoader = imageLoader,
+            glideRequests = GlideApp.with(this),
             onItemClickListener = { movieListItem ->
                 viewModel.dispatch(MovieListAction.MovieClicked(movieListItem.movieId))
             },

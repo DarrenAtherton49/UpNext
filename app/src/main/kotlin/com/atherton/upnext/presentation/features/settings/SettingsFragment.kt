@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.atherton.upnext.R
 import com.atherton.upnext.presentation.main.*
 import com.atherton.upnext.presentation.util.glide.GlideApp
+import com.atherton.upnext.presentation.util.image.ImageLoader
 import com.atherton.upnext.util.extension.getActivityViewModel
 import com.atherton.upnext.util.extension.getAppComponent
 import kotlinx.android.synthetic.main.base_app_bar.*
@@ -28,8 +29,10 @@ class SettingsFragment : Fragment() {
 
     private val mainActivity: MainActivity by lazy { activity as MainActivity }
 
+    @Inject lateinit var imageLoader: ImageLoader
+
     private val recyclerViewAdapter: SettingsAdapter by lazy {
-        SettingsAdapter(GlideApp.with(this)) { setting ->
+        SettingsAdapter(imageLoader, GlideApp.with(this)) { setting ->
             onSettingClicked(setting)
         }
     }

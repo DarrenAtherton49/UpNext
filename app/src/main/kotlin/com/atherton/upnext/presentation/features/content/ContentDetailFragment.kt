@@ -16,7 +16,7 @@ import com.atherton.upnext.presentation.main.MainViewEffect
 import com.atherton.upnext.presentation.main.MainViewModel
 import com.atherton.upnext.presentation.main.MainViewModelFactory
 import com.atherton.upnext.presentation.util.glide.GlideApp
-import com.atherton.upnext.presentation.util.glide.UpNextAppGlideModule
+import com.atherton.upnext.presentation.util.image.ImageLoader
 import com.atherton.upnext.presentation.util.toolbar.ToolbarOptions
 import com.atherton.upnext.util.extension.getActivityViewModel
 import com.atherton.upnext.util.extension.getAppComponent
@@ -48,9 +48,12 @@ class ContentDetailFragment : BaseFragment<ContentDetailAction, ContentDetailSta
         menuResId = R.menu.menu_content_detail
     )
 
+    @Inject lateinit var imageLoader: ImageLoader
+
     private val recyclerViewAdapter: ModelDetailAdapter by lazy {
         ModelDetailAdapter(
-            imageLoader = GlideApp.with(this),
+            imageLoader = imageLoader,
+            glideRequests = GlideApp.with(this),
             childRecyclerItemSpacingPx = resources.getDimensionPixelSize(R.dimen.content_detail_child_items_spacing),
             onSeasonClickListener = { season -> viewModel.dispatch(ContentDetailAction.SeasonClicked(season)) },
             onCastMemberClickListener = { castMember -> viewModel.dispatch(ContentDetailAction.CastMemberClicked(castMember)) },
@@ -147,15 +150,19 @@ class ContentDetailFragment : BaseFragment<ContentDetailAction, ContentDetailSta
     }
 
     private fun renderContentImages(backdropPath: String?, posterPath: String?) {
-        GlideApp.with(this)
-            .load(backdropPath)
-            .apply(UpNextAppGlideModule.modelDetailBackdropRequestOptions)
-            .into(backdropImageView)
+        imageLoader.load(
+            with = GlideApp.with(this),
+            url = backdropPath,
+            requestOptions = ImageLoader.modelDetailBackdropRequestOptions,
+            into = backdropImageView
+        )
 
-        GlideApp.with(this)
-            .load(posterPath)
-            .apply(UpNextAppGlideModule.searchModelPosterRequestOptions)
-            .into(posterImageView)
+        imageLoader.load(
+            with = GlideApp.with(this),
+            url = posterPath,
+            requestOptions = ImageLoader.searchModelPosterRequestOptions,
+            into = backdropImageView
+        )
     }
 
     override fun processViewEffects(viewEffect: ContentDetailViewEffect) {

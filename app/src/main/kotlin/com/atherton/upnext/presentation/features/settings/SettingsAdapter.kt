@@ -6,13 +6,15 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.atherton.upnext.R
-import com.atherton.upnext.util.extension.inflateLayout
 import com.atherton.upnext.presentation.util.glide.GlideRequests
+import com.atherton.upnext.presentation.util.image.ImageLoader
+import com.atherton.upnext.util.extension.inflateLayout
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_setting.*
 
 class SettingsAdapter(
-    private val imageLoader: GlideRequests,
+    private val imageLoader: ImageLoader,
+    private val glideRequests: GlideRequests,
     private val onClickListener: (Setting) -> Unit
 ) : ListAdapter<Setting, SettingsAdapter.ViewHolder>(SettingsDiffCallback) {
 
@@ -22,7 +24,7 @@ class SettingsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View = parent.inflateLayout(R.layout.item_setting)
-        val viewHolder = ViewHolder(view, imageLoader)
+        val viewHolder = ViewHolder(view, imageLoader, glideRequests)
         viewHolder.itemView.setOnClickListener {
             onClickListener.invoke(getItem(viewHolder.adapterPosition))
         }
@@ -40,17 +42,24 @@ class SettingsAdapter(
         holder.clear()
     }
 
-    class ViewHolder(override val containerView: View, private val imageLoader: GlideRequests)
-        : RecyclerView.ViewHolder(containerView),
+    class ViewHolder(
+        override val containerView: View,
+        private val imageLoader: ImageLoader,
+        private val glideRequests: GlideRequests
+    ) : RecyclerView.ViewHolder(containerView),
         LayoutContainer {
 
         fun bind(setting: Setting) {
-            imageLoader.load(setting.logoResId).into(settingIconImageView)
+            imageLoader.load(
+                with = glideRequests,
+                drawableResId = setting.logoResId,
+                into = settingIconImageView
+            )
             settingTitleTextView.text = setting.title
         }
 
         fun clear() {
-            imageLoader.clear(settingIconImageView)
+            imageLoader.clear(with = glideRequests, imageView = settingIconImageView)
         }
     }
 
@@ -62,7 +71,9 @@ class SettingsAdapter(
             }
 
             override fun areContentsTheSame(oldItem: Setting, newItem: Setting): Boolean {
-                return oldItem == newItem
+                return oldItem.id == newItem.id &&
+                    oldItem.title == newItem.title &&
+                    oldItem.logoResId == newItem.logoResId
             }
         }
     }

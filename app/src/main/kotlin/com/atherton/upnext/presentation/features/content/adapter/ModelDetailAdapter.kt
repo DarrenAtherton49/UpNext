@@ -11,11 +11,13 @@ import com.atherton.upnext.domain.model.*
 import com.atherton.upnext.presentation.features.content.ModelDetailSection
 import com.atherton.upnext.util.extension.inflateLayout
 import com.atherton.upnext.presentation.util.glide.GlideRequests
+import com.atherton.upnext.presentation.util.image.ImageLoader
 import kotlinx.android.synthetic.main.item_detail_scrolling_section.view.*
 
 //todo preload some images when scrolling https://bumptech.github.io/glide/int/recyclerview.html
 class ModelDetailAdapter(
-    private val imageLoader: GlideRequests,
+    private val imageLoader: ImageLoader,
+    private val glideRequests: GlideRequests,
     private val childRecyclerItemSpacingPx: Int,
     private val onSeasonClickListener: (TvSeason) -> Unit,
     private val onCastMemberClickListener: (CastMember) -> Unit,
@@ -44,8 +46,7 @@ class ModelDetailAdapter(
             ModelDetailSection.GENRES -> ModelDetailGenresViewHolder(parent.inflateLayout(R.layout.item_detail_genres))
             //todo implement layout
             ModelDetailSection.RATINGS -> ModelDetailRatingsViewHolder(
-                parent.inflateLayout(R.layout.item_detail_ratings),
-                imageLoader
+                parent.inflateLayout(R.layout.item_detail_ratings)
             )
             ModelDetailSection.SEASONS -> ModelDetailSeasonsViewHolder(
                 parent.inflateLayout(R.layout.item_detail_scrolling_season_section)
@@ -82,8 +83,7 @@ class ModelDetailAdapter(
             )
             //todo implement layout
             ModelDetailSection.EXTERNAL_LINKS -> ModelDetailExternalLinksViewHolder(
-                parent.inflateLayout(R.layout.item_detail_external_links),
-                imageLoader
+                parent.inflateLayout(R.layout.item_detail_external_links)
             )
             else -> ModelDetailEmptyViewHolder(parent.inflateLayout(R.layout.item_detail_empty))
         }
@@ -164,12 +164,16 @@ class ModelDetailAdapter(
         // scrolling content and needs an adapter
         sections.forEach { section ->
             val adapter = when (section) {
-                is ModelDetailSection.Seasons -> ModelDetailSeasonAdapter(imageLoader, onSeasonClickListener)
-                is ModelDetailSection.Cast -> ModelDetailCastAdapter(imageLoader, onCastMemberClickListener)
-                is ModelDetailSection.Crew -> ModelDetailCrewAdapter(imageLoader, onCrewMemberClickListener)
-                is ModelDetailSection.Videos -> ModelDetailVideoAdapter(imageLoader, onVideoClickListener)
-                is ModelDetailSection.Photos -> ModelDetailPhotosAdapter(imageLoader)
-                is ModelDetailSection.RecommendedItems -> ModelDetailRecommendedItemsAdapter(imageLoader, onRecommendedItemClickListener)
+                is ModelDetailSection.Seasons -> ModelDetailSeasonAdapter(imageLoader, glideRequests, onSeasonClickListener)
+                is ModelDetailSection.Cast -> ModelDetailCastAdapter(imageLoader, glideRequests, onCastMemberClickListener)
+                is ModelDetailSection.Crew -> ModelDetailCrewAdapter(imageLoader, glideRequests, onCrewMemberClickListener)
+                is ModelDetailSection.Videos -> ModelDetailVideoAdapter(imageLoader, glideRequests,  onVideoClickListener)
+                is ModelDetailSection.Photos -> ModelDetailPhotosAdapter(imageLoader, glideRequests)
+                is ModelDetailSection.RecommendedItems -> ModelDetailRecommendedItemsAdapter(
+                    imageLoader,
+                    glideRequests,
+                    onRecommendedItemClickListener
+                )
                 else -> null
             }
             if (adapter != null) {

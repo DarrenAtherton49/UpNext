@@ -38,14 +38,14 @@ internal fun generateLicenses(context: Context): List<License> {
         )
         val glide = License(
             id = 5,
-            name = getString(R.string.licence_glide_name),
+            name = getString(R.string.license_glide_name),
             contributor = getString(R.string.license_contributor_google_inc),
             description = getString(R.string.license_glide_description),
             url = GLIDE_LICENSE_URL
         )
         val glideCompiler = License(
             id = 6,
-            name = getString(R.string.licence_glide_compiler_name),
+            name = getString(R.string.license_glide_compiler_name),
             contributor = getString(R.string.license_contributor_google_inc),
             description = getString(R.string.license_glide_compiler_description),
             url = GLIDE_LICENSE_URL
@@ -232,6 +232,13 @@ internal fun generateLicenses(context: Context): List<License> {
             description = getString(R.string.license_timber_description),
             url = APACHE_2_0_URL
         )
+        val palette = License(
+            id = 33,
+            name = getString(R.string.license_palette_name),
+            contributor = getString(R.string.license_contributor_android_open_source),
+            description = getString(R.string.license_palette_description),
+            url = APACHE_2_0_URL
+        )
         return listOf(
             appCompat,
             constraintLayout,
@@ -252,6 +259,7 @@ internal fun generateLicenses(context: Context): List<License> {
             navigationFragment,
             navigationUI,
             okHttpLoggingInterceptor,
+            palette,
             recyclerView,
             retrofit,
             retrofitMoshi,
