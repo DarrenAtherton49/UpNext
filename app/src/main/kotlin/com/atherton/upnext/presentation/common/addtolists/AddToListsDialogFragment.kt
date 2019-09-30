@@ -12,8 +12,6 @@ import com.atherton.upnext.util.extension.getViewModel
 import com.atherton.upnext.util.extension.isVisible
 import kotlinx.android.synthetic.main.dialog_add_to_lists.*
 import kotlinx.android.synthetic.main.error_retry_layout.*
-import kotlinx.android.synthetic.main.fragment_discover_content.progressBar
-import kotlinx.android.synthetic.main.fragment_discover_content.recyclerView
 import javax.inject.Inject
 import javax.inject.Named
 

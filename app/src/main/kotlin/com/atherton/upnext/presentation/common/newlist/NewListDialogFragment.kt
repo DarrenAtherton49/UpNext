@@ -70,14 +70,17 @@ class NewListDialogFragment
     override fun renderState(state: NewListState) {
         when (state) {
             is NewListState.Loading -> {
+                newListTitleTextInputLayout.isVisible = false
                 errorLayout.isVisible = false
                 progressBar.isVisible = true
             }
             is NewListState.Content -> {
+                newListTitleTextInputLayout.isVisible = true
                 progressBar.isVisible = false
                 errorLayout.isVisible = false
             }
             is NewListState.Error -> {
+                newListTitleTextInputLayout.isVisible = false
                 progressBar.isVisible = false
                 errorLayout.isVisible = true
                 retryButton.isVisible = false
