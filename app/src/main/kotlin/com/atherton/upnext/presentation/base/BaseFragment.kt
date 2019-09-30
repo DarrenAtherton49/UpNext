@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.CallSuper
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.navigation.ui.setupWithNavController
@@ -56,17 +57,15 @@ abstract class BaseFragment<Action : BaseAction,
        return inflater.inflate(layoutResId, container, false)
     }
 
+    @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupToolbar(toolbarOptions)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
 
         viewModel.observableState.observeLiveData(viewLifecycleOwner) { state ->
             state?.let { renderState(state) }
         }
+
+        setupToolbar(toolbarOptions)
     }
 
     override fun onResume() {

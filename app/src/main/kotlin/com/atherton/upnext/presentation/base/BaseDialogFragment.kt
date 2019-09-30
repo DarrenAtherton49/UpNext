@@ -5,6 +5,7 @@ import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.CallSuper
 import androidx.fragment.app.DialogFragment
 import com.atherton.upnext.presentation.main.MainModule
 import com.atherton.upnext.presentation.main.MainViewEffect
@@ -43,8 +44,9 @@ abstract class BaseDialogFragment<Action : BaseAction,
         return inflater.inflate(layoutResId, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    @CallSuper
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         viewModel.observableState.observeLiveData(viewLifecycleOwner) { state ->
             state?.let { renderState(state) }

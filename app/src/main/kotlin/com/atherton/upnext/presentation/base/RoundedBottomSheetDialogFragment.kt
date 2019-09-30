@@ -6,6 +6,7 @@ import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.CallSuper
 import com.atherton.upnext.R
 import com.atherton.upnext.presentation.main.MainActivity
 import com.atherton.upnext.presentation.main.MainModule
@@ -55,8 +56,9 @@ abstract class RoundedBottomSheetDialogFragment<Action : BaseAction,
         return inflater.inflate(layoutResId, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    @CallSuper
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         viewModel.observableState.observeLiveData(viewLifecycleOwner) { state ->
             state?.let { renderState(state) }
