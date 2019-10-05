@@ -7,9 +7,9 @@
     <!-- Movies -->
     <integer name="movies_menu_order_search">0</integer>
 
-    <!-- Movies list item -->
-    <integer name="movies_list_item_title_min_lines">1</integer>
-    <integer name="movies_list_item_title_max_lines">3</integer>
+    <!-- Movies/shows list item -->
+    <integer name="content_list_item_title_min_lines">1</integer>
+    <integer name="content_list_item_title_max_lines">3</integer>
 
     <!-- Discover -->
     <integer name="discover_menu_order_search">0</integer>

@@ -1,6 +1,7 @@
-package com.atherton.upnext.presentation.features.shows
+package com.atherton.upnext.presentation.features.shows.content
 
 import androidx.lifecycle.ViewModelProvider
+import com.atherton.upnext.domain.repository.ConfigRepository
 import com.atherton.upnext.domain.repository.TvShowRepository
 import com.atherton.upnext.presentation.main.MainComponent
 import com.atherton.upnext.presentation.main.MainModule
@@ -16,27 +17,29 @@ import javax.inject.Named
 @PerView
 @Component(
     dependencies = [AppComponent::class],
-    modules = [MainModule::class, ShowsModule::class]
+    modules = [MainModule::class, ShowListModule::class]
 )
-interface ShowsComponent : MainComponent {
+interface ShowListComponent : MainComponent {
 
-    fun inject(showsFragment: ShowsFragment)
+    fun inject(showListFragment: ShowListFragment)
 }
 
 
 @Module
-class ShowsModule(private val initialState: ShowsState?) {
+class ShowListModule(private val initialState: ShowListState?) {
 
     @Provides
-    @Named(ShowsViewModelFactory.NAME)
+    @Named(ShowListViewModelFactory.NAME)
     @PerView internal fun provideViewModelFactory(
         tvShowRepository: TvShowRepository,
+        configRepository: ConfigRepository,
         appStringProvider: AppStringProvider,
         schedulers: RxSchedulers
     ): ViewModelProvider.Factory {
-        return ShowsViewModelFactory(
+        return ShowListViewModelFactory(
             initialState,
             tvShowRepository,
+            configRepository,
             appStringProvider,
             schedulers
         )

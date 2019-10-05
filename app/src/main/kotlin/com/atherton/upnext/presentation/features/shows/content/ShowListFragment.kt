@@ -1,4 +1,4 @@
-package com.atherton.upnext.presentation.features.movies.content
+package com.atherton.upnext.presentation.features.shows.content
 
 import android.os.Bundle
 import android.view.MenuItem
@@ -23,48 +23,50 @@ import kotlinx.android.synthetic.main.fragment_content_list.*
 import javax.inject.Inject
 import javax.inject.Named
 
-class MovieListFragment : BaseFragment<MovieListAction, MovieListState, MovieListViewEffect, MovieListViewModel>() {
+class ShowListFragment : BaseFragment<ShowListAction, ShowListState, ShowListViewEffect, ShowListViewModel>() {
 
     override val layoutResId: Int = R.layout.fragment_content_list
-    override val stateBundleKey: String by lazy { "bundle_key_movie_list_${movieList.id}_state" }
-    private val movieList: ContentList by lazy { arguments?.getParcelable(BUNDLE_KEY_MOVIE_LIST) as ContentList }
+    override val stateBundleKey: String by lazy { "bundle_key_show_list_${showList.id}_state" }
+    private val showList: ContentList by lazy { arguments?.getParcelable(BUNDLE_KEY_SHOW_LIST) as ContentList }
 
-    @Inject @field:Named(MainViewModelFactory.NAME)
+    @Inject
+    @field:Named(MainViewModelFactory.NAME)
     lateinit var mainVmFactory: ViewModelProvider.Factory
 
-    @Inject @field:Named(MovieListViewModelFactory.NAME)
+    @Inject
+    @field:Named(ShowListViewModelFactory.NAME)
     lateinit var vmFactory: ViewModelProvider.Factory
 
     override val sharedViewModel: MainViewModel by lazy { getActivityViewModel<MainViewModel>(mainVmFactory) }
-    override val viewModel: MovieListViewModel by lazy { getViewModel<MovieListViewModel>(vmFactory) }
+    override val viewModel: ShowListViewModel by lazy { getViewModel<ShowListViewModel>(vmFactory) }
 
     override val toolbarOptions: ToolbarOptions? = null
 
     @Inject lateinit var imageLoader: ImageLoader
 
-    private val recyclerViewAdapter: MovieListAdapter by lazy {
-        MovieListAdapter(
-            imageLoader = imageLoader,
-            glideRequests = GlideApp.with(this),
-            onItemClickListener = { movieListItem ->
-                viewModel.dispatch(MovieListAction.MovieClicked(movieListItem.movieId))
-            },
-            onWatchlistButtonClickListener = { movieListItem ->
-                viewModel.dispatch(MovieListAction.ToggleWatchlistButtonClicked(movieList, movieListItem.movieId))
-            },
-            onWatchedButtonClickListener = { movieListItem ->
-                viewModel.dispatch(MovieListAction.ToggleWatchedButtonClicked(movieList, movieListItem.movieId))
-            },
-            onAddToListClickListener = { movieListItem ->
-                viewModel.dispatch(MovieListAction.AddToListButtonClicked(movieListItem.movieId))
-            }
-        )
-    }
-
-    private val movieListItemDecoration: LinearSpacingItemDecoration by lazy {
+    private val showListItemDecoration: LinearSpacingItemDecoration by lazy {
         LinearSpacingItemDecoration(
             spacingInPixels = resources.getDimensionPixelSize(R.dimen.content_list_spacing),
             orientation = LinearSpacingItemDecoration.Orientation.Vertical
+        )
+    }
+
+    private val recyclerViewAdapter: ShowListAdapter by lazy {
+        ShowListAdapter(
+            imageLoader = imageLoader,
+            glideRequests = GlideApp.with(this),
+            onItemClickListener = { showListItem ->
+                viewModel.dispatch(ShowListAction.ShowClicked(showListItem.showId))
+            },
+            onWatchlistButtonClickListener = { showListItem ->
+                viewModel.dispatch(ShowListAction.ToggleWatchlistButtonClicked(showList, showListItem.showId))
+            },
+            onWatchedButtonClickListener = { showListItem ->
+                viewModel.dispatch(ShowListAction.ToggleWatchedButtonClicked(showList, showListItem.showId))
+            },
+            onAddToListClickListener = { showListItem ->
+                viewModel.dispatch(ShowListAction.AddToListButtonClicked(showListItem.showId))
+            }
         )
     }
 
@@ -74,19 +76,19 @@ class MovieListFragment : BaseFragment<MovieListAction, MovieListState, MovieLis
         initRecyclerView()
 
         retryButton.setOnClickListener {
-            viewModel.dispatch(MovieListAction.RetryButtonClicked(movieList))
+            viewModel.dispatch(ShowListAction.RetryButtonClicked(showList))
         }
 
         if (savedInstanceState == null) {
-            viewModel.dispatch(MovieListAction.Load(movieList))
+            viewModel.dispatch(ShowListAction.Load(showList))
         }
     }
 
     override fun onMenuItemClicked(menuItem: MenuItem): Boolean = false
 
-    override fun renderState(state: MovieListState) {
+    override fun renderState(state: ShowListState) {
         when (state) {
-            is MovieListState.Loading -> {
+            is ShowListState.Loading -> {
                 errorLayout.isVisible = false
                 progressBar.isVisible = true
 
@@ -98,7 +100,7 @@ class MovieListFragment : BaseFragment<MovieListAction, MovieListState, MovieLis
                     recyclerView.isVisible = false
                 }
             }
-            is MovieListState.Content -> {
+            is ShowListState.Content -> {
                 progressBar.isVisible = false
                 if (state.results.isEmpty()) {
                     recyclerView.isVisible = false
@@ -110,7 +112,7 @@ class MovieListFragment : BaseFragment<MovieListAction, MovieListState, MovieLis
                     recyclerViewAdapter.submitList(state.results)
                 }
             }
-            is MovieListState.Error -> {
+            is ShowListState.Error -> {
 
                 progressBar.isVisible = false
 
@@ -128,32 +130,32 @@ class MovieListFragment : BaseFragment<MovieListAction, MovieListState, MovieLis
         }
     }
 
-    override fun processViewEffects(viewEffect: MovieListViewEffect) {
+    override fun processViewEffects(viewEffect: ShowListViewEffect) {
         when (viewEffect) {
-            is MovieListViewEffect.ShowMovieDetailScreen -> {
-                sharedViewModel.dispatch(MainAction.MovieClicked(viewEffect.movieId))
+            is ShowListViewEffect.ShowDetailScreen -> {
+                sharedViewModel.dispatch(MainAction.TvShowClicked(viewEffect.showId))
             }
-            is MovieListViewEffect.ShowAddToListMenu -> {
+            is ShowListViewEffect.ShowAddToListMenu -> {
                 navigator.showAddToListsMenu(
-                    contentId = viewEffect.movieId,
-                    contentType = ContentType.Movie,
+                    contentId = viewEffect.showId,
+                    contentType = ContentType.TvShow,
                     fragmentManager = childFragmentManager
                 )
             }
-            is MovieListViewEffect.ShowRemovedFromListMessage -> {
-                showMovieRemovedFromListMessage(viewEffect.message, viewEffect.movieId)
+            is ShowListViewEffect.ShowRemovedFromListMessage -> {
+                showRemovedFromListMessage(viewEffect.message, viewEffect.showId)
             }
         }
     }
 
     override fun processSharedViewEffects(viewEffect: MainViewEffect) {}
 
-    private fun showMovieRemovedFromListMessage(message: String, movieId: Long) {
+    private fun showRemovedFromListMessage(message: String, showId: Long) {
         contentListCoordinatorLayout.showLongSnackbar(
             text = message,
             actionText = getString(R.string.generic_action_undo),
             onClick = {
-                viewModel.dispatch(MovieListAction.ToggleWatchlistButtonClicked(movieList, movieId))
+                viewModel.dispatch(ShowListAction.ToggleWatchlistButtonClicked(showList, showId))
             }
         )
     }
@@ -164,15 +166,15 @@ class MovieListFragment : BaseFragment<MovieListAction, MovieListState, MovieLis
             if (itemDecorationCount > 0) {
                 removeItemDecorationAt(0)
             }
-            addItemDecoration(movieListItemDecoration)
+            addItemDecoration(showListItemDecoration)
             layoutManager = LinearLayoutManager(context)
             adapter = recyclerViewAdapter
         }
     }
 
-    override fun initInjection(initialState: MovieListState?) {
-        DaggerMovieListComponent.builder()
-            .movieListModule(MovieListModule(initialState))
+    override fun initInjection(initialState: ShowListState?) {
+        DaggerShowListComponent.builder()
+            .showListModule(ShowListModule(initialState))
             .mainModule(mainModule)
             .appComponent(getAppComponent())
             .build()
@@ -180,12 +182,12 @@ class MovieListFragment : BaseFragment<MovieListAction, MovieListState, MovieLis
     }
 
     companion object {
-        private const val BUNDLE_KEY_MOVIE_LIST = "bundle_key_movie_list_items"
+        private const val BUNDLE_KEY_SHOW_LIST = "bundle_key_show_list_items"
 
-        fun newInstance(movieList: ContentList): MovieListFragment {
-            return MovieListFragment().apply {
+        fun newInstance(showList: ContentList): ShowListFragment {
+            return ShowListFragment().apply {
                 arguments = Bundle().apply {
-                    putParcelable(BUNDLE_KEY_MOVIE_LIST, movieList)
+                    putParcelable(BUNDLE_KEY_SHOW_LIST, showList)
                 }
             }
         }

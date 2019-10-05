@@ -2,7 +2,7 @@
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/movieCardView"
+    android:id="@+id/showCardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -17,7 +17,7 @@
             android:layout_gravity="center_vertical">
 
             <ImageView
-                android:id="@+id/movieImageView"
+                android:id="@+id/showImageView"
                 android:layout_width="@dimen/search_model_poster_width"
                 android:layout_height="@dimen/search_model_poster_height"
                 android:layout_gravity="center_vertical"

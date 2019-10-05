@@ -19,7 +19,7 @@ import javax.inject.Singleton
 @Singleton
 class ImageLoader @Inject constructor(private val paletteManager: PaletteManager) {
 
-    fun loadMovieListItem(
+    fun loadContentListItem(
         with: GlideRequests,
         url: String?,
         into: ImageView,

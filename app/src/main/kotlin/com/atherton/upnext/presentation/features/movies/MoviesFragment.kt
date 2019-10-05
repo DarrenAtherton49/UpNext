@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import com.atherton.upnext.R
 import com.atherton.upnext.domain.model.ContentList
 import com.atherton.upnext.presentation.base.BaseFragment
 import com.atherton.upnext.presentation.features.movies.content.MovieListFragment
@@ -19,13 +20,13 @@ import com.atherton.upnext.util.extension.getActivityViewModel
 import com.atherton.upnext.util.extension.getAppComponent
 import com.atherton.upnext.util.extension.getViewModel
 import com.atherton.upnext.util.extension.isVisible
-import kotlinx.android.synthetic.main.fragment_movies.*
+import kotlinx.android.synthetic.main.fragment_content_tabs.*
 import javax.inject.Inject
 import javax.inject.Named
 
 class MoviesFragment : BaseFragment<MoviesAction, MoviesState, MoviesViewEffect, MoviesViewModel>() {
 
-    override val layoutResId: Int = com.atherton.upnext.R.layout.fragment_movies
+    override val layoutResId: Int = R.layout.fragment_content_tabs
     override val stateBundleKey: String = "bundle_key_movies_state"
 
     @Inject @field:Named(MainViewModelFactory.NAME)
@@ -38,9 +39,9 @@ class MoviesFragment : BaseFragment<MoviesAction, MoviesState, MoviesViewEffect,
     override val viewModel: MoviesViewModel by lazy { getViewModel<MoviesViewModel>(vmFactory) }
 
     override val toolbarOptions: ToolbarOptions? = ToolbarOptions(
-        toolbarResId = com.atherton.upnext.R.id.toolbar,
-        titleResId = com.atherton.upnext.R.string.fragment_label_movies,
-        menuResId = com.atherton.upnext.R.menu.menu_movies
+        toolbarResId = R.id.toolbar,
+        titleResId = R.string.fragment_label_movies,
+        menuResId = R.menu.menu_movies
     )
 
     private val viewPagerAdapter: FragmentViewPagerAdapter by lazy { FragmentViewPagerAdapter(childFragmentManager) }
@@ -53,9 +54,9 @@ class MoviesFragment : BaseFragment<MoviesAction, MoviesState, MoviesViewEffect,
         if (savedInstanceState == null) {
             viewModel.dispatch(MoviesAction.Load)
         } else {
-            val bundleCurrentPage = savedInstanceState.getInt(BUNDLE_VIEWPAGER_CURRENT_PAGE)
-            if (bundleCurrentPage != 0) {
-                currentPage = bundleCurrentPage
+            val savedInstanceStateCurrentPage = savedInstanceState.getInt(BUNDLE_VIEWPAGER_CURRENT_PAGE)
+            if (savedInstanceStateCurrentPage != 0) {
+                currentPage = savedInstanceStateCurrentPage
             }
         }
 
@@ -76,11 +77,11 @@ class MoviesFragment : BaseFragment<MoviesAction, MoviesState, MoviesViewEffect,
 
     override fun onMenuItemClicked(menuItem: MenuItem): Boolean {
         return when (menuItem.itemId) {
-            com.atherton.upnext.R.id.action_search -> {
-                sharedViewModel.dispatch(MainAction.SearchActionClicked)
+            R.id.action_search -> {
+                viewModel.dispatch(MoviesAction.SettingsActionClicked)
                 true
             }
-            com.atherton.upnext.R.id.action_settings -> {
+            R.id.action_settings -> {
                 viewModel.dispatch(MoviesAction.SettingsActionClicked)
                 true
             }
@@ -117,7 +118,10 @@ class MoviesFragment : BaseFragment<MoviesAction, MoviesState, MoviesViewEffect,
 
     override fun processViewEffects(viewEffect: MoviesViewEffect) {
         when (viewEffect) {
-           is MoviesViewEffect.ShowSettingsScreen -> {
+            is MoviesViewEffect.ShowSearchScreen -> {
+                sharedViewModel.dispatch(MainAction.SearchActionClicked)
+            }
+            is MoviesViewEffect.ShowSettingsScreen -> {
                sharedViewModel.dispatch(MainAction.SettingsActionClicked)
            }
         }
@@ -138,8 +142,8 @@ class MoviesFragment : BaseFragment<MoviesAction, MoviesState, MoviesViewEffect,
         viewPagerAdapter.clear()
         movieLists.forEach { movieList ->
             val listName = when (movieList.name) {
-                "Watchlist" -> getString(com.atherton.upnext.R.string.movies_tab_watchlist)
-                "Watched" -> getString(com.atherton.upnext.R.string.movies_tab_watched)
+                "Watchlist" -> getString(R.string.movies_tab_watchlist)
+                "Watched" -> getString(R.string.movies_tab_watched)
                 else -> movieList.name
             }
             viewPagerAdapter.addFragment(
@@ -195,6 +199,6 @@ class MoviesFragment : BaseFragment<MoviesAction, MoviesState, MoviesViewEffect,
     }
 
     companion object {
-        private const val BUNDLE_VIEWPAGER_CURRENT_PAGE = "bundle_viewpager_current_page"
+        private const val BUNDLE_VIEWPAGER_CURRENT_PAGE = "bundle_movies_viewpager_current_page"
     }
 }

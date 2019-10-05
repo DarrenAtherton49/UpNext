@@ -160,7 +160,14 @@ class CachingTvShowRepository @Inject constructor(
     }
 
     override fun getTvShowLists(): Observable<LceResponse<List<ContentList>>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return listDao.getTvShowListsObservable()
+            .map { showLists ->
+                if (showLists.isNotEmpty()) {
+                    LceResponse.Content(data = showLists.toDomainTvShowLists())
+                } else {
+                    LceResponse.Content(data = emptyList())
+                }
+            }
     }
 
     override fun toggleTvShowWatchlistStatus(tvShowId: Long): Observable<LceResponse<TvShow>> {

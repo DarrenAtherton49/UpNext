@@ -15,6 +15,7 @@ import com.atherton.upnext.util.threading.RxSchedulers
 import com.ww.roxie.BaseAction
 import com.ww.roxie.BaseState
 import com.ww.roxie.Reducer
+import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.plusAssign
 import kotlinx.android.parcel.Parcelize
@@ -72,10 +73,15 @@ class MoviesViewModel @Inject constructor(
                     .startWith(MoviesChange.Loading)
             }
 
+        val searchActionClickedViewEffect = actions.ofType<MoviesAction.SearchActionClicked>()
+            .preventMultipleClicks()
+            .map { MoviesViewEffect.ShowSearchScreen }
+
         val settingsActionClickedViewEffect = actions.ofType<MoviesAction.SettingsActionClicked>()
             .preventMultipleClicks()
-            .subscribeOn(schedulers.io)
             .map { MoviesViewEffect.ShowSettingsScreen }
+
+        val viewEffectChanges = Observable.merge(searchActionClickedViewEffect, settingsActionClickedViewEffect)
 
         disposables += loadDataChange
             .scan(initialState, reducer)
@@ -84,7 +90,7 @@ class MoviesViewModel @Inject constructor(
             .observeOn(schedulers.main)
             .subscribe(state::setValue, Timber::e)
 
-        disposables += settingsActionClickedViewEffect
+        disposables += viewEffectChanges
             .observeOn(schedulers.main)
             .subscribe(viewEffects::accept, Timber::e)
     }
@@ -96,6 +102,7 @@ class MoviesViewModel @Inject constructor(
 
 sealed class MoviesAction : BaseAction {
     object Load : MoviesAction()
+    object SearchActionClicked : MoviesAction()
     object SettingsActionClicked : MoviesAction()
 }
 
@@ -120,6 +127,7 @@ sealed class MoviesState: BaseState, Parcelable {
 }
 
 sealed class MoviesViewEffect : BaseViewEffect {
+    object ShowSearchScreen : MoviesViewEffect()
     object ShowSettingsScreen : MoviesViewEffect()
 }
 

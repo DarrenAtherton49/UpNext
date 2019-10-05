@@ -107,9 +107,9 @@
         <item name="tabGravity">center</item>
     </style>
 
-    <style name="MoviesListItemTitleText" parent="TextAppearance.MaterialComponents.Subtitle1">
-        <item name="android:minLines">@integer/movies_list_item_title_min_lines</item>
-        <item name="android:maxLines">@integer/movies_list_item_title_max_lines</item>
+    <style name="ContentListItemTitleText" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:minLines">@integer/content_list_item_title_min_lines</item>
+        <item name="android:maxLines">@integer/content_list_item_title_max_lines</item>
         <item name="android:ellipsize">end</item>
     </style>
 

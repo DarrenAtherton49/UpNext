@@ -17,7 +17,7 @@ class MovieViewHolder(
 
     fun bind(movieListItem: MovieListItem) {
 
-        imageLoader.loadMovieListItem(
+        imageLoader.loadContentListItem(
             with = glideRequests,
             url = movieListItem.posterPath,
             into = movieImageView,

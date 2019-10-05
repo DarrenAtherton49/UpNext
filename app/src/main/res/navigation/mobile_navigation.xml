@@ -10,7 +10,7 @@
         android:id="@+id/showsFragment"
         android:name="com.atherton.upnext.presentation.features.shows.ShowsFragment"
         android:label="@string/fragment_label_shows"
-        tools:layout="@layout/fragment_shows">
+        tools:layout="@layout/fragment_content_tabs">
         <argument
             android:name="initialListId"
             app:argType="long"
@@ -21,7 +21,7 @@
         android:id="@+id/moviesFragment"
         android:name="com.atherton.upnext.presentation.features.movies.MoviesFragment"
         android:label="@string/fragment_label_movies"
-        tools:layout="@layout/fragment_movies">
+        tools:layout="@layout/fragment_content_tabs">
         <argument
             android:name="initialListId"
             app:argType="long"
