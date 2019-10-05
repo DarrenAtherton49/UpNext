@@ -78,7 +78,7 @@ class MoviesFragment : BaseFragment<MoviesAction, MoviesState, MoviesViewEffect,
     override fun onMenuItemClicked(menuItem: MenuItem): Boolean {
         return when (menuItem.itemId) {
             R.id.action_search -> {
-                viewModel.dispatch(MoviesAction.SettingsActionClicked)
+                viewModel.dispatch(MoviesAction.SearchActionClicked)
                 true
             }
             R.id.action_settings -> {
