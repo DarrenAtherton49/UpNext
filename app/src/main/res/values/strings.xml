@@ -45,12 +45,10 @@
     <string name="shows_tab_watchlist">@string/app_watchlist</string>
     <string name="shows_tab_watched">@string/app_watched</string>
     <string name="shows_tab_history">History</string>
-    <string name="shows_add_tv_show">Add a tv show</string>
 
     <!-- MoviesFragment -->
     <string name="movies_tab_watchlist">@string/app_watchlist</string>
     <string name="movies_tab_watched">@string/app_watched</string>
-    <string name="movies_add_movie">Add a movie</string>
 
     <!-- MovieListFragment -->
     <string name="movie_list_item_removed_from_list">%1$s removed from %2$s</string>
