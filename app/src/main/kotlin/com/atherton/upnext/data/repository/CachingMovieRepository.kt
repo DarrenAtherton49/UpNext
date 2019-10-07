@@ -34,8 +34,8 @@ class CachingMovieRepository @Inject constructor(
     //todo modify this to check if movie is in database and if it is still valid (time based?)
     //todo modify this call to add a 'forceRefresh' parameter (e.g. in case of pull-to-refresh)
     override fun getMovie(id: Long): Observable<LceResponse<Movie>> {
-        return movieDao.getMovieForIdSingle(id)
-            .toObservable()
+        return movieDao.getMovieForIdObservable(id)
+            .distinctUntilChanged()
             .flatMap { movieList ->
                 if (movieList.isNotEmpty() && movieList[0].isModelComplete) { // movie is cached and has all data
                     val movie: Movie? = getFullMovieFromDatabase(id) // fetch the full movie and all relations

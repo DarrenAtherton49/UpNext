@@ -34,8 +34,8 @@ class CachingTvShowRepository @Inject constructor(
     //todo modify this to check if show is in database and if it is still valid (time based?)
     //todo modify this call to add a 'forceRefresh' parameter (e.g. in case of pull-to-refresh)
     override fun getTvShow(id: Long): Observable<LceResponse<TvShow>> {
-        return tvShowDao.getTvShowListForIdSingle(id)
-            .toObservable()
+        return tvShowDao.getTvShowListForIdObservable(id)
+            .distinctUntilChanged()
             .flatMap { tvShowList ->
                 if (tvShowList.isNotEmpty() && tvShowList[0].isModelComplete) {
                     val tvShow: TvShow? = getFullShowFromDatabase(id)

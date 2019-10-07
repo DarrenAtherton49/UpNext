@@ -3,6 +3,7 @@ package com.atherton.upnext.data.db.dao
 import androidx.room.*
 import com.atherton.upnext.data.db.model.list.RoomMovieListJoin
 import com.atherton.upnext.data.db.model.movie.*
+import io.reactivex.Observable
 import io.reactivex.Single
 
 private const val ROW_NOT_INSERTED: Long = -1L
@@ -222,6 +223,11 @@ interface MovieDao {
     @Transaction
     @Query("SELECT * FROM movie WHERE id = :id")
     fun getMovieForIdSingle(id: Long): Single<List<RoomMovie>>
+
+    // we use a List here because RxJava 2 can't emit nulls if the movie doesn't exist
+    @Transaction
+    @Query("SELECT * FROM movie WHERE id = :id")
+    fun getMovieForIdObservable(id: Long): Observable<List<RoomMovie>>
 
     @Transaction
     @Query("SELECT * FROM movie WHERE id = :id")

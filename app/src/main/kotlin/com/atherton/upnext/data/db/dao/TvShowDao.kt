@@ -3,6 +3,7 @@ package com.atherton.upnext.data.db.dao
 import androidx.room.*
 import com.atherton.upnext.data.db.model.list.RoomTvShowListJoin
 import com.atherton.upnext.data.db.model.tv.*
+import io.reactivex.Observable
 import io.reactivex.Single
 
 private const val ROW_NOT_INSERTED: Long = -1L
@@ -226,6 +227,11 @@ interface TvShowDao {
     @Transaction
     @Query("SELECT * FROM tv_show WHERE id = :id")
     fun getTvShowListForIdSingle(id: Long): Single<List<RoomTvShow>>
+
+    // we use a List here because RxJava 2 can't emit nulls if the tv show doesn't exist
+    @Transaction
+    @Query("SELECT * FROM tv_show WHERE id = :id")
+    fun getTvShowListForIdObservable(id: Long): Observable<List<RoomTvShow>>
 
     @Transaction
     @Query("SELECT * FROM tv_show WHERE id = :id")
