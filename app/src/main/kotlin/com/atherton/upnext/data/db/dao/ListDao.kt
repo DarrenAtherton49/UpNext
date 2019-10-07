@@ -4,6 +4,7 @@ import androidx.room.*
 import com.atherton.upnext.data.db.model.list.RoomMovieList
 import com.atherton.upnext.data.db.model.list.RoomTvShowList
 import com.atherton.upnext.data.db.model.movie.RoomMovieAllData
+import com.atherton.upnext.data.db.model.tv.RoomTvShowAllData
 import io.reactivex.Observable
 import io.reactivex.Single
 
@@ -28,18 +29,28 @@ interface ListDao {
     @Query("SELECT MAX(sort_order) FROM tv_show_list")
     fun getHighestTvShowListOrderSingle(): Single<Int>
 
-    @Query("SELECT * from movie_list ORDER BY sort_order")
+    @Query("SELECT * FROM movie_list ORDER BY sort_order")
+    fun getMovieLists(): List<RoomMovieList>
+
+    @Query("SELECT * FROM movie_list ORDER BY sort_order")
     fun getMovieListsObservable(): Observable<List<RoomMovieList>>
 
-    @Query("SELECT * from tv_show_list ORDER BY sort_order")
+    @Query("SELECT * FROM tv_show_list ORDER BY sort_order")
     fun getTvShowListsObservable(): Observable<List<RoomTvShowList>>
 
     @Query("SELECT l.* from movie_list_join mlj INNER JOIN movie m on mlj.movie_id = m.id INNER JOIN movie_list l ON mlj.list_id = l.id WHERE m.id = :movieId")
     fun getListsForMovie(movieId: Long): List<RoomMovieList>
 
+    @Query("SELECT l.* FROM tv_show_list_join tvlj INNER JOIN tv_show s ON tvlj.show_id = s.id INNER JOIN tv_show_list l ON tvlj.list_id = l.id WHERE s.id = :showId")
+    fun getListsForTvShow(showId: Long): List<RoomTvShowList>
+
     @Transaction
-    @Query("SELECT m.* FROM movie_list_join mlj INNER JOIN movie m on mlj.movie_id = m.id INNER JOIN movie_list l ON mlj.list_id = l.id WHERE l.id = :listId")
+    @Query("SELECT m.* FROM movie_list_join mlj INNER JOIN movie m ON mlj.movie_id = m.id INNER JOIN movie_list l ON mlj.list_id = l.id WHERE l.id = :listId")
     fun getMoviesForListObservable(listId: Long): Observable<List<RoomMovieAllData>>
+
+    @Transaction
+    @Query("SELECT s.* FROM tv_show_list_join tvlj INNER JOIN tv_show s ON tvlj.show_id = s.id INNER JOIN tv_show_list l ON tvlj.list_id = l.id WHERE l.id = :listId")
+    fun getTvShowsForListObservable(listId: Long): Observable<List<RoomTvShowAllData>>
 
     companion object {
         const val LIST_ID_MOVIE_WATCHLIST = 1L

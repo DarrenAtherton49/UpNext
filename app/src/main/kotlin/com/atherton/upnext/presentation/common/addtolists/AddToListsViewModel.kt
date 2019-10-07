@@ -75,7 +75,7 @@ class AddToListsViewModel @Inject constructor(
             contentType: ContentType
         ): Observable<AddToListsChange> {
             val listsObservable = when (contentType) {
-                is ContentType.TvShow -> TODO()
+                is ContentType.TvShow -> tvShowRepository.getTvShowListsForTvShow(contentId)
                 is ContentType.Movie -> movieRepository.getMovieListsForMovie(contentId)
             }
             return listsObservable

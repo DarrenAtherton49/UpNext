@@ -144,6 +144,12 @@ interface TvShowDao {
         }
     }
 
+    @Transaction
+    fun updateShowAndToggleListStatus(updatedShow: RoomTvShow, listId: Long) {
+        updateTvShow(updatedShow)
+        toggleTvShowListStatus(updatedShow.id, listId)
+    }
+
     /**
      * Function to toggle whether or not a tv show is joined to a list. First we try to insert a join from
      * the show id to the list id. If the insert fails, we can assume that the show is in the list. Thus,
@@ -223,7 +229,7 @@ interface TvShowDao {
 
     @Transaction
     @Query("SELECT * FROM tv_show WHERE id = :id")
-    fun getTvShowForId(id: Long): RoomTvShow?
+    fun getTvShowForIdSingle(id: Long): Single<List<RoomTvShow>>
 
     // we use this cut-down version of movie e.g. when preserving watchlist state as part of a movie update
     @Transaction

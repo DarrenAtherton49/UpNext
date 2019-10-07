@@ -3,8 +3,10 @@ package com.atherton.upnext.presentation.common.searchmodel
 import com.atherton.upnext.R
 import com.atherton.upnext.domain.model.*
 import com.atherton.upnext.presentation.features.content.formatReleaseYear
+import com.atherton.upnext.presentation.features.content.formatRunTimes
 import com.atherton.upnext.presentation.features.content.formatVoteAverage
 import com.atherton.upnext.presentation.features.movies.content.MovieListItem
+import com.atherton.upnext.presentation.features.shows.content.ShowListItem
 import com.atherton.upnext.presentation.util.AppStringProvider
 
 //todo write function to generate path based on device screen size?
@@ -42,10 +44,15 @@ internal fun List<Searchable>.withSearchModelListImageUrls(config: Config): List
     }.filterIsInstance(Searchable::class.java)
 }
 
-internal fun List<Movie>.formattedForMovieList(config: Config, appStringProvider: AppStringProvider): List<MovieListItem> {
+internal fun List<Movie>.formattedForMovieList(
+    config: Config,
+    appStringProvider: AppStringProvider
+): List<MovieListItem> {
     return this.map { movie ->
         val releaseYear: String? = formatReleaseYear(movie.releaseDate)
-        val runtimeMins: String? = movie.detail?.runtime?.toString()?.let { appStringProvider.getRuntimeString(it) }
+        val runtimeMins: String? = movie.detail?.runtime?.toString()?.let {
+            appStringProvider.getRuntimeString(it)
+        }
         val rating: String? = formatVoteAverage(movie.voteAverage)
 
         val genres: List<Genre>? = movie.detail?.genres
@@ -68,6 +75,45 @@ internal fun List<Movie>.formattedForMovieList(config: Config, appStringProvider
                 R.drawable.ic_archive_white_24dp
             },
             watchlistButtonResId = if (movie.state.inWatchlist) {
+                R.drawable.ic_check_circle_yellow_24dp
+            } else {
+                R.drawable.ic_check_circle_white_24dp
+            }
+        )
+    }
+}
+
+internal fun List<TvShow>.formattedForShowList(
+    config: Config,
+    appStringProvider: AppStringProvider
+): List<ShowListItem> {
+    return this.map { show ->
+        val releaseYear: String? = formatReleaseYear(show.firstAirDate)
+        val runtimeMins: String? = show.detail?.runTimes?.formatRunTimes()?.let {
+            appStringProvider.getRuntimeString(it)
+        }
+        val rating: String? = formatVoteAverage(show.voteAverage)
+
+        val genres: List<Genre>? = show.detail?.genres
+        val genresString: String? = if (genres != null && genres.isNotEmpty()) {
+            genres.mapNotNull { it.name }.joinToString(separator = ", ")
+        } else null
+
+        ShowListItem(
+            addToListButtonResId = R.drawable.ic_list_add_white_24dp,
+            genresString = genresString,
+            showId = show.id,
+            posterPath = buildPosterPath(show.posterPath, config),
+            releaseDate = releaseYear,
+            runtime = runtimeMins,
+            title = show.title,
+            voteAverage = rating,
+            watchedButtonResId = if (show.state.isWatched) {
+                R.drawable.ic_archive_yellow_24dp
+            } else {
+                R.drawable.ic_archive_white_24dp
+            },
+            watchlistButtonResId = if (show.state.inWatchlist) {
                 R.drawable.ic_check_circle_yellow_24dp
             } else {
                 R.drawable.ic_check_circle_white_24dp

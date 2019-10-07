@@ -165,8 +165,8 @@ class CachingMovieRepository @Inject constructor(
     override fun getMovieListsForMovie(movieId: Long): Observable<LceResponse<List<ContentListStatus>>> {
         return listDao.getMovieListsObservable()
             .map { allLists ->
-                val listsForMovie: List<RoomMovieList> = listDao.getListsForMovie(movieId = movieId)
                 if (allLists.isNotEmpty()) {
+                    val listsForMovie: List<RoomMovieList> = listDao.getListsForMovie(movieId = movieId)
                     val data = allLists.map { roomMovieList ->
                         val listContainsMovie: Boolean = listsForMovie.contains(roomMovieList)
                         roomMovieList.toDomainContentListStatus(movieId, listContainsMovie)

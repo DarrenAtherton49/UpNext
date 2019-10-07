@@ -252,7 +252,11 @@ private fun Int?.toVideoSize(): VideoSize {
     }
 }
 
-fun RoomTvShowAllData.toDomainTvShow(recommendations: List<RoomTvShow>): TvShow? {
+fun List<RoomTvShowAllData>.toDomainShows(): List<TvShow> {
+    return this.mapNotNull { it.toDomainTvShow(null) }
+}
+
+fun RoomTvShowAllData.toDomainTvShow(recommendations: List<RoomTvShow>?): TvShow? {
     return this.tvShow?.toDomainTvShow(
         cast = cast,
         createdBy = createdBy,
@@ -505,6 +509,19 @@ fun List<RoomTvShowList>.toDomainTvShowLists(): List<ContentList> {
 }
 
 fun RoomMovieList.toDomainContentListStatus(
+    contentId: Long,
+    contentIsInList: Boolean
+): ContentListStatus {
+    return ContentListStatus(
+        listId = id,
+        listName = name,
+        listSortOrder = sortOrder,
+        contentId = contentId,
+        contentIsInList = contentIsInList
+    )
+}
+
+fun RoomTvShowList.toDomainContentListStatus(
     contentId: Long,
     contentIsInList: Boolean
 ): ContentListStatus {

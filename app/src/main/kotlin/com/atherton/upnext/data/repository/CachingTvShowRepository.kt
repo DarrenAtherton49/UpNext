@@ -1,6 +1,8 @@
 package com.atherton.upnext.data.repository
 
 import com.atherton.upnext.data.db.dao.ListDao
+import com.atherton.upnext.data.db.dao.ListDao.Companion.LIST_ID_TV_WATCHED
+import com.atherton.upnext.data.db.dao.ListDao.Companion.LIST_ID_TV_WATCHLIST
 import com.atherton.upnext.data.db.dao.TvShowDao
 import com.atherton.upnext.data.db.dao.TvShowDao.Companion.PLAYLIST_AIRING_TODAY
 import com.atherton.upnext.data.db.dao.TvShowDao.Companion.PLAYLIST_ON_THE_AIR
@@ -14,6 +16,7 @@ import com.atherton.upnext.data.network.model.NetworkResponse
 import com.atherton.upnext.data.network.model.TmdbTvShow
 import com.atherton.upnext.data.network.service.TmdbTvShowService
 import com.atherton.upnext.domain.model.ContentList
+import com.atherton.upnext.domain.model.ContentListStatus
 import com.atherton.upnext.domain.model.LceResponse
 import com.atherton.upnext.domain.model.TvShow
 import com.atherton.upnext.domain.repository.TvShowRepository
@@ -35,7 +38,7 @@ class CachingTvShowRepository @Inject constructor(
             .toObservable()
             .flatMap { tvShowList ->
                 if (tvShowList.isNotEmpty() && tvShowList[0].isModelComplete) {
-                    val tvShow: TvShow? = getTvShowFromDatabase(id)
+                    val tvShow: TvShow? = getFullShowFromDatabase(id)
                     Observable.fromCallable {
                         if (tvShow != null) {
                             LceResponse.Content(data = tvShow) // fetch the full tv show and all relations
@@ -53,7 +56,7 @@ class CachingTvShowRepository @Inject constructor(
                             }
                         }
                         .map { networkResponse ->
-                            networkResponse.toDomainLceResponse(data = getTvShowFromDatabase(id))
+                            networkResponse.toDomainLceResponse(data = getFullShowFromDatabase(id))
                         }
                 }
             }
@@ -159,6 +162,22 @@ class CachingTvShowRepository @Inject constructor(
             }
     }
 
+    override fun getTvShowListsForTvShow(showId: Long): Observable<LceResponse<List<ContentListStatus>>> {
+        return listDao.getTvShowListsObservable()
+            .map { allLists ->
+                val listsForShow: List<RoomTvShowList> = listDao.getListsForTvShow(showId = showId)
+                if (allLists.isNotEmpty()) {
+                    val data = allLists.map { roomTvShowList ->
+                        val listContainsMovie: Boolean = listsForShow.contains(roomTvShowList)
+                        roomTvShowList.toDomainContentListStatus(showId, listContainsMovie)
+                    }
+                    LceResponse.Content(data = data)
+                } else {
+                    LceResponse.Content(data = emptyList())
+                }
+            }
+    }
+
     override fun getTvShowLists(): Observable<LceResponse<List<ContentList>>> {
         return listDao.getTvShowListsObservable()
             .map { showLists ->
@@ -170,12 +189,67 @@ class CachingTvShowRepository @Inject constructor(
             }
     }
 
+    override fun getTvShowsForList(listId: Long): Observable<LceResponse<List<TvShow>>> {
+        return listDao.getTvShowsForListObservable(listId)
+            .distinctUntilChanged()
+            .map { showDataList ->
+                val domainsShows = showDataList.toDomainShows()
+                if (domainsShows.isNotEmpty()) {
+                    LceResponse.Content(data = domainsShows)
+                } else {
+                    LceResponse.Content(data = emptyList())
+                }
+            }
+    }
+
     override fun toggleTvShowWatchlistStatus(tvShowId: Long): Observable<LceResponse<TvShow>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return toggleTvShowListStatus(tvShowId, LIST_ID_TV_WATCHLIST)
+    }
+
+    override fun toggleTvShowWatchedStatus(tvShowId: Long): Observable<LceResponse<TvShow>> {
+        return toggleTvShowListStatus(tvShowId, LIST_ID_TV_WATCHED)
     }
 
     override fun toggleTvShowListStatus(tvShowId: Long, listId: Long): Observable<LceResponse<TvShow>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return tvShowDao.getTvShowForIdSingle(tvShowId)
+            .toObservable()
+            .flatMap { showList ->
+                if (showList.isNotEmpty()) {
+                    when (listId) {
+                        LIST_ID_TV_WATCHLIST -> { // toggle watchlist state on show object too
+                            val dbShow: RoomTvShow = showList[0]
+                            val newWatchlistState: Boolean = !dbShow.state.inWatchlist
+                            val updatedShow = dbShow.copy(state = dbShow.state.copy(inWatchlist = newWatchlistState))
+                            tvShowDao.updateShowAndToggleListStatus(updatedShow, listId)
+                        }
+                        LIST_ID_TV_WATCHED -> { // toggle watched state on show object too
+                            val dbShow: RoomTvShow = showList[0]
+                            val newWatchedState: Boolean = !dbShow.state.isWatched
+                            val updatedShow = dbShow.copy(state = dbShow.state.copy(isWatched = newWatchedState))
+                            tvShowDao.updateShowAndToggleListStatus(updatedShow, listId)
+
+                            //todo need to update every episode where show id == tvShowId to set the episode to watched
+
+                        }
+                        //todo move this to the top of the function so we don't have to fetch movie when we don't need it here
+                        else -> tvShowDao.toggleTvShowListStatus(tvShowId, listId)
+                    }
+
+                    // return full show
+                    val domainShow: TvShow? = getFullShowFromDatabase(tvShowId)
+                    if (domainShow != null) {
+                        Observable.fromCallable { LceResponse.Content(domainShow) }
+                    } else {
+                        throw IllegalStateException("Show should be in database before toggling watchlist status.")
+                    }
+                }  else {
+                    val errorMessage = "Cannot toggle show list status for list id $listId if " +
+                        "movie is not in database. If trying to add a movie on search screen to " +
+                        "a list, we must first convert search results to be saved in the movie " +
+                        "table instead of just it's own table."
+                    throw IllegalStateException(errorMessage)
+                }
+            }
     }
 
     override fun createTvShowList(tvShowId: Long?, listTitle: String): Observable<LceResponse<Long>> {
@@ -208,7 +282,7 @@ class CachingTvShowRepository @Inject constructor(
         )
     }
 
-    private fun getTvShowFromDatabase(id: Long): TvShow? {
+    private fun getFullShowFromDatabase(id: Long): TvShow? {
         val dbTvShowData: RoomTvShowAllData? = tvShowDao.getFullTvShowForId(id)
         return if (dbTvShowData != null) {
             val tvShow: RoomTvShow? = dbTvShowData.tvShow
