@@ -161,7 +161,7 @@ class ContentDetailFragment : BaseFragment<ContentDetailAction, ContentDetailSta
             with = GlideApp.with(this),
             url = posterPath,
             requestOptions = ImageLoader.searchModelPosterRequestOptions,
-            into = backdropImageView
+            into = posterImageView
         )
     }
 
