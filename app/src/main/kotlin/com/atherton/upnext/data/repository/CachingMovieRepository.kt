@@ -203,61 +203,11 @@ class CachingMovieRepository @Inject constructor(
     }
 
     override fun toggleMovieWatchlistStatus(movieId: Long): Observable<LceResponse<Movie>> {
-        return movieDao.getMovieForIdSingle(movieId)
-            .toObservable()
-            .flatMap { movieList ->
-                if (movieList.isNotEmpty()) {
-                    val dbMovie: RoomMovie = movieList[0]
-
-                    // toggle watchlist state
-                    val newWatchlistState: Boolean = !dbMovie.state.inWatchlist
-                    val updatedMovie = dbMovie.copy(state = dbMovie.state.copy(inWatchlist = newWatchlistState))
-
-                    movieDao.updateMovieAndToggleListStatus(updatedMovie, LIST_ID_MOVIE_WATCHLIST)
-
-                    // return full movie
-                    val domainMovie: Movie? = getFullMovieFromDatabase(movieId)
-                    if (domainMovie != null) {
-                        Observable.fromCallable { LceResponse.Content(domainMovie) }
-                    } else {
-                        throw IllegalStateException("Movie should be in database before toggling watchlist status.")
-                    }
-                } else {
-                    val errorMessage = "Cannot toggle movie watchlist status if movie is not in database. If trying " +
-                        "to add a movie on search screen to watchlist, we must first convert search results to " +
-                        "be saved in the movie table instead of just it's own table."
-                    throw IllegalStateException(errorMessage)
-                }
-            }
+        return toggleMovieListStatus(movieId, LIST_ID_MOVIE_WATCHLIST)
     }
 
     override fun toggleMovieWatchedStatus(movieId: Long): Observable<LceResponse<Movie>> {
-        return movieDao.getMovieForIdSingle(movieId)
-            .toObservable()
-            .flatMap { movieList ->
-                if (movieList.isNotEmpty()) {
-                    val dbMovie: RoomMovie = movieList[0]
-
-                    // toggle watched state
-                    val newWatchedState: Boolean = !dbMovie.state.isWatched
-                    val updatedMovie = dbMovie.copy(state = dbMovie.state.copy(isWatched = newWatchedState))
-
-                    movieDao.updateMovieAndToggleListStatus(updatedMovie, LIST_ID_MOVIE_WATCHED)
-
-                    // return full movie
-                    val domainMovie: Movie? = getFullMovieFromDatabase(movieId)
-                    if (domainMovie != null) {
-                        Observable.fromCallable { LceResponse.Content(domainMovie) }
-                    } else {
-                        throw IllegalStateException("Movie should be in database before toggling watched status.")
-                    }
-                } else {
-                    val errorMessage = "Cannot toggle movie watched status if movie is not in database. If trying " +
-                        "to add a movie on search screen to watched, we must first convert search results to " +
-                        "be saved in the movie table instead of just it's own table."
-                    throw IllegalStateException(errorMessage)
-                }
-            }
+        return toggleMovieListStatus(movieId, LIST_ID_MOVIE_WATCHED)
     }
 
     override fun toggleMovieListStatus(movieId: Long, listId: Long): Observable<LceResponse<Movie>> {
@@ -265,7 +215,6 @@ class CachingMovieRepository @Inject constructor(
             .toObservable()
             .flatMap { movieList ->
                 if (movieList.isNotEmpty()) {
-
                     when (listId) {
                         LIST_ID_MOVIE_WATCHLIST -> { // toggle watchlist state on movie object too
                             val dbMovie: RoomMovie = movieList[0]
@@ -291,9 +240,10 @@ class CachingMovieRepository @Inject constructor(
                         throw IllegalStateException("Movie should be in database before toggling list status.")
                     }
                 } else {
-                    val errorMessage = "Cannot toggle movie list status if movie is not in database. If trying " +
-                        "to add a movie on search screen to a list, we must first convert search results to " +
-                        "be saved in the movie table instead of just it's own table."
+                    val errorMessage = "Cannot toggle movie list status for list id $listId if " +
+                        "movie is not in database. If trying to add a movie on search screen to " +
+                        "a list, we must first convert search results to be saved in the movie " +
+                        "table instead of just it's own table."
                     throw IllegalStateException(errorMessage)
                 }
             }
