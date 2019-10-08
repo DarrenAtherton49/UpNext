@@ -1,6 +1,7 @@
 package com.atherton.upnext
 
 import android.app.Application
+import android.os.Looper
 import com.atherton.upnext.util.extension.ioThread
 import com.atherton.upnext.util.extension.onAndroidPieOrLater
 import com.atherton.upnext.util.injection.AppComponent
@@ -8,6 +9,8 @@ import com.atherton.upnext.util.injection.AppModule
 import com.atherton.upnext.util.injection.DaggerAppComponent
 import com.squareup.leakcanary.LeakCanary
 import com.ww.roxie.Roxie
+import io.reactivex.android.plugins.RxAndroidPlugins
+import io.reactivex.android.schedulers.AndroidSchedulers
 import timber.log.Timber
 
 class App : Application() {
@@ -44,6 +47,11 @@ class App : Application() {
                 Timber.tag("Roxie").d(msg)
             }
         })
+
+        // https://www.zacsweers.dev/rxandroids-new-async-api/
+        RxAndroidPlugins.setInitMainThreadSchedulerHandler {
+            AndroidSchedulers.from(Looper.getMainLooper(), true)
+        }
 
         initInjection()
 

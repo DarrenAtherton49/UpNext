@@ -162,6 +162,7 @@ class CachingTvShowRepository @Inject constructor(
             }
     }
 
+    //todo filter out 'History' so that we can't manually add directly to it
     override fun getTvShowListsForTvShow(showId: Long): Observable<LceResponse<List<ContentListStatus>>> {
         return listDao.getTvShowListsObservable()
             .map { allLists ->

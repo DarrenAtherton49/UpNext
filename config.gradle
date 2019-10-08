@@ -33,7 +33,7 @@ ext {
     roxieVersion = '0.4.0'
     rulesVersion = '0.5'
     runnerVersion = '0.5'
-    rxAndroidVersion = '2.0.2'
+    rxAndroidVersion = '2.1.1'
     rxJavaVersion = '2.1.15'
     rxKotlinVersion = '2.3.0'
     rxRelayVersion = '2.1.0'
