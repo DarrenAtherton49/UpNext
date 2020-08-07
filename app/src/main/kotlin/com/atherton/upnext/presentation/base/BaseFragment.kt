@@ -65,7 +65,7 @@ abstract class BaseFragment<Action : BaseAction,
             state?.let { renderState(state) }
         }
 
-        setupToolbar(toolbarOptions)
+        toolbarOptions?.let { setupToolbar(it) }
     }
 
     override fun onResume() {
@@ -105,26 +105,24 @@ abstract class BaseFragment<Action : BaseAction,
 
     protected val mainModule: MainModule by lazy { MainModule(null) }
 
-    private fun setupToolbar(toolbarOptions: ToolbarOptions?) {
-        toolbarOptions?.let {
-            if (it.toolbarResId != null) {
-                toolbar = it.toolbarResId.let { id ->
-                    view?.findViewById(id)
+    private fun setupToolbar(toolbarOptions: ToolbarOptions) {
+        if (toolbarOptions.toolbarResId != null) {
+            toolbar = toolbarOptions.toolbarResId.let { id ->
+                view?.findViewById(id)
+            }
+            toolbar?.let { toolbar ->
+                toolbar.setupWithNavController(mainActivity.navController, mainActivity.appBarConfiguration)
+                toolbarOptions.titleResId?.let { titleResId ->
+                    toolbar.title = getString(titleResId)
                 }
-                toolbar?.let { toolbar ->
-                    toolbar.setupWithNavController(mainActivity.navController, mainActivity.appBarConfiguration)
-                    toolbarOptions.titleResId?.let { titleResId ->
-                        toolbar.title = getString(titleResId)
-                    }
 
-                    toolbarOptions.menuResId?.let { menuResId ->
-                        toolbar.inflateMenu(menuResId)
-                    }
+                toolbarOptions.menuResId?.let { menuResId ->
+                    toolbar.inflateMenu(menuResId)
+                }
 
-                    val menu = toolbar.menu
-                    for (i in 0 until menu.size()) {
-                        menu.getItem(i).setOnMenuItemClickListener { menuItem -> onMenuItemClicked(menuItem) }
-                    }
+                val menu = toolbar.menu
+                for (i in 0 until menu.size()) {
+                    menu.getItem(i).setOnMenuItemClickListener { menuItem -> onMenuItemClicked(menuItem) }
                 }
             }
         }

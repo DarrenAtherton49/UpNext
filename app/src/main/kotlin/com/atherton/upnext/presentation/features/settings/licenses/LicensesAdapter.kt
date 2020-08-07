@@ -11,8 +11,9 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_open_source_license.*
 import kotlinx.android.synthetic.main.item_open_source_license.view.*
 
-class LicensesAdapter(private val onClickListener: (License) -> Unit) :
-    ListAdapter<License, LicensesAdapter.ViewHolder>(LicensesDiffCallback) {
+class LicensesAdapter(
+    private val onClickListener: (License) -> Unit
+) : ListAdapter<License, LicensesAdapter.ViewHolder>(LicensesDiffCallback) {
 
     init {
         setHasStableIds(true)
